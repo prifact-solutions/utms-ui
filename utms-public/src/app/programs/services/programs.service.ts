@@ -10,7 +10,19 @@ export class ProgramsService {
 
   constructor(private http: HttpClient) { }
 
-  public getAllCourses() {
+  public getAllPrograms() {
     return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/`);
+  }
+  public getMyPrograms() {
+    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/learners/my_programs`);
+  }
+  public getProgramById(id: number) {
+    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}`);
+  }
+  public getProgramCatalog(id: number) {
+    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}/catalog`);
+  }
+  public enroll(id: number) {
+    return this.http.post(`${AppSettings.apiUrl}/learners/${id}/enroll/`, {});
   }
 }

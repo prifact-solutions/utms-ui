@@ -8,7 +8,7 @@ export class Program {
     created_at: string;
     created_by: number;
     categories: number[];
-
+    is_enrolled: boolean = false;
     constructor(
         id: number,
         title: string,
@@ -18,7 +18,8 @@ export class Program {
         is_active: boolean,
         created_at: string,
         created_by: number,
-        categories: number[]
+        categories: number[],
+
     ) {
         this.id = id;
         this.title = title;

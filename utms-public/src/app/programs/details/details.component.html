@@ -1,7 +1,6 @@
 <div class="container mt-4">
-
     <div *ngIf="program" class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <img *ngIf="program.thumbnail" class="card-img-top" [src]="program.thumbnail" alt="{{ program.title }}">
                 <div class="card-body">
@@ -27,17 +26,32 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card sticky-top">
-                <div class="card-body">
-                    <h5 class="card-title">Ready to join?</h5>
-                    <p class="card-text">Enroll now to start your journey in <strong>{{ program.title }}</strong>.</p>
-
-                    <button class="btn btn-secondary w-100 mt-2" (click)="enroll(program.id)">
-                        Enroll
-                    </button>
+    </div>
+    <div *ngIf="catalog" class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-4">Program Catalog</h2>
+            
+            <!-- Modules List -->
+            <div class="modules-list">
+                <div *ngFor="let module of catalog.modules; let moduleIdx = index" class="module-section mb-5">
+                    <h4 class="module-title">
+                        <span class="badge bg-primary me-2">Module {{ module.order }}</span>
+                        {{ module.title }}
+                    </h4>
+                    
+                    <!-- Lessons List -->
+                    <ul class="lessons-list ms-3">
+                        <li *ngFor="let lesson of module.module_contents; let lessonIdx = index" class="lesson-item" [ngClass]="'status-' + getStatus(lessonIdx)">
+                            <span class="status-marker" [title]="getStatus(lessonIdx)"></span>
+                            <a (click)="navigateToLesson(lesson.id)" class="lesson-link">
+                                {{ lesson.title }}
+                            </a>
+                            <span class="badge bg-info ms-2">{{ lesson.lesson_content_type }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+
 </div>

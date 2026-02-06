@@ -5,6 +5,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { ExploreComponent } from './programs/explore/explore.component';
 import { EnrollComponent } from './programs/enroll/enroll.component';
 import { LoginComponent } from './utms-auth/login/login.component';
+import { DetailsComponent } from './programs/details/details.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'programs/:id/enroll',
     component: EnrollComponent,
+    canActivate: [AuthGuard]
+  },
+   {
+    path: 'programs/:id/details',
+    component: DetailsComponent,
     canActivate: [AuthGuard]
   },
 ];

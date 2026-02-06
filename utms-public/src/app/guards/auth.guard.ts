@@ -13,6 +13,7 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const isAuthenticated = this.isUserAuthenticated();
+  console.log(isAuthenticated);
     
     if (isAuthenticated) {
       return true;
@@ -25,6 +26,9 @@ export class AuthGuard implements CanActivate {
   private isUserAuthenticated(): boolean {
     // Check if user is authenticated (e.g., from localStorage, session, etc.)
     const token = localStorage.getItem('auth_token');
-    return !!token;
+    if(token){
+      return true;
+    }
+    return false;
   }
 }

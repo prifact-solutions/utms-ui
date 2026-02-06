@@ -13,7 +13,8 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100" (click)="enrollProgram(program.id)">Enroll</button>
+                    <button *ngIf="!program.is_enrolled" class="btn btn-primary w-100" (click)="enrollProgram(program.id)">Enroll</button>
+                    <button *ngIf="program.is_enrolled" class="btn btn-primary w-100" (click)="viewProgram(program.id)">View Program</button>
                 </div>
             </div>
         </div>
