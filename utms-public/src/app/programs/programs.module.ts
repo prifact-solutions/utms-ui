@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ExploreComponent } from './explore/explore.component';
 import { EnrollComponent } from './enroll/enroll.component';
 import { DetailsComponent } from './details/details.component';
+import { ViewLessonComponent } from './view-lesson/view-lesson.component';
+import { TakeExamComponent } from './take-exam/take-exam.component';
 
 
 
@@ -10,7 +12,9 @@ import { DetailsComponent } from './details/details.component';
   declarations: [
     ExploreComponent,
     EnrollComponent,
-    DetailsComponent
+    DetailsComponent,
+    ViewLessonComponent,
+    TakeExamComponent
   ],
   imports: [
     CommonModule

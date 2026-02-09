@@ -6,6 +6,8 @@ import { ExploreComponent } from './programs/explore/explore.component';
 import { EnrollComponent } from './programs/enroll/enroll.component';
 import { LoginComponent } from './utms-auth/login/login.component';
 import { DetailsComponent } from './programs/details/details.component';
+import { ViewLessonComponent } from './programs/view-lesson/view-lesson.component';
+import { TakeExamComponent } from './programs/take-exam/take-exam.component';
 
 const routes: Routes = [
   {
@@ -21,9 +23,19 @@ const routes: Routes = [
     component: EnrollComponent,
     canActivate: [AuthGuard]
   },
-   {
+  {
     path: 'programs/:id/details',
     component: DetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'programs/:id/modules/:module_id/contents/:module_content_id/lesson',
+    component: ViewLessonComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'programs/:id/modules/:module_id/contents/:module_content_id/exam',
+    component: TakeExamComponent,
     canActivate: [AuthGuard]
   },
 ];

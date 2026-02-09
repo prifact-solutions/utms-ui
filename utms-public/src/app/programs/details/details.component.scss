@@ -38,7 +38,7 @@
           flex-shrink: 0;
         }
 
-        &.status-completed {
+        &.status-COMPLETED {
           border-left-color: #198754;
 
           .status-marker {
@@ -46,7 +46,7 @@
           }
         }
 
-        &.status-in-progress {
+        &.status-NOT_STARTED {
           border-left-color: #0d6efd;
           background-color: #e7f1ff;
 
@@ -55,7 +55,7 @@
           }
         }
 
-        &.status-pending {
+        &.status-IN_PROGRESS {
           border-left-color: #ffc107;
 
           .status-marker {

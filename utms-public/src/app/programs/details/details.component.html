@@ -1,27 +1,27 @@
 <div class="container mt-4">
-    <div *ngIf="program" class="row">
+    <div *ngIf="catalog" class="row">
         <div class="col-md-12">
             <div class="card">
-                <img *ngIf="program.thumbnail" class="card-img-top" [src]="program.thumbnail" alt="{{ program.title }}">
+                <img *ngIf="catalog.thumbnail" class="card-img-top" [src]="catalog.thumbnail" alt="{{ catalog.title }}">
                 <div class="card-body">
-                    <h1 class="card-title">{{ program.title }}</h1>
-                    <p class="card-text">{{ program.description }}</p>
+                    <h1 class="card-title">{{ catalog.title }}</h1>
+                    <p class="card-text">{{ catalog.description }}</p>
                     <div class="row mt-4">
                         <div class="col-md-6">
                             <h6 class="text-muted">Duration</h6>
-                            <p><strong>{{ program.duration }} days</strong></p>
+                            <p><strong>{{ catalog.duration }} days</strong></p>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Status</h6>
-                            <p><span *ngIf="program.is_active" class="badge bg-success">Active</span>
-                                <span *ngIf="!program.is_active" class="badge bg-secondary">Inactive</span>
+                            <p><span *ngIf="catalog.is_active" class="badge bg-success">Active</span>
+                                <span *ngIf="!catalog.is_active" class="badge bg-secondary">Inactive</span>
                             </p>
                         </div>
                     </div>
                     <div class="mt-4">
                         <h6 class="text-muted">Categories</h6>
-                        <p *ngIf="program.categories.length > 0">{{ program.categories.join(', ') }}</p>
-                        <p *ngIf="program.categories.length === 0" class="text-muted">No categories assigned</p>
+                        <p *ngIf="catalog.categories.length > 0">{{ catalog.categories.join(', ') }}</p>
+                        <p *ngIf="catalog.categories.length === 0" class="text-muted">No categories assigned</p>
                     </div>
                 </div>
             </div>
@@ -41,10 +41,10 @@
                     
                     <!-- Lessons List -->
                     <ul class="lessons-list ms-3">
-                        <li *ngFor="let lesson of module.module_contents; let lessonIdx = index" class="lesson-item" [ngClass]="'status-' + getStatus(lessonIdx)">
-                            <span class="status-marker" [title]="getStatus(lessonIdx)"></span>
-                            <a (click)="navigateToLesson(lesson.id)" class="lesson-link">
-                                {{ lesson.title }}
+                        <li *ngFor="let lesson of module.module_contents" class="lesson-item" [ngClass]="'status-' + getStatus(lesson)">
+                            <span class="status-marker" [title]="getStatus(lesson)"></span>
+                            <a (click)="navigateToLesson(lesson)" class="lesson-link">
+                                {{ lesson.title }} {{ lesson.content_id }}
                             </a>
                             <span class="badge bg-info ms-2">{{ lesson.lesson_content_type }}</span>
                         </li>

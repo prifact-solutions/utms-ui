@@ -11,31 +11,30 @@ import { switchMap } from 'rxjs';
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent extends ComponentBase {
-  public program: Program | null = null;
   public catalog: any = null;
+  public progress: { [id: string]: string; } = {}
 
   constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
 
-  public navigateToLesson(lessonId: number) {
-    this.router.navigate(['/lesson', lessonId]);
+  public navigateToLesson(lesson: any) {
+    if (this.catalog) {
+      if (lesson.content_type == "LESSON") {
+        this.router.navigate(["programs", this.catalog.id, "modules", lesson.module_id, "contents", lesson.id, "lesson"]);
+      } else {
+        this.router.navigate(["programs", this.catalog.id, "modules", lesson.module_id, "contents", lesson.id, "exam"]);
+      }
+    }
   }
 
-  public getStatus(index: number): 'completed' | 'in-progress' | 'pending' {
-    if (index === 0) return 'in-progress';
-    if (index > 0) return 'pending';
-    return 'completed';
+  public getStatus(lesson: any): string {
+    if (this.progress[lesson.id]) {
+      return this.progress[lesson.id];
+    }
+    return "NOT_STARTED";
   }
 
   ngOnInit() {
-    this.route.params.pipe(
-      switchMap(params => {
-        return this.programService.getProgramById(params["id"]);
-      })
-    )
-      .subscribe((res) => {
-        this.program = res;
-      });
-    this.route.params.pipe(
+    let sub1 = this.route.params.pipe(
       switchMap(params => {
         return this.programService.getProgramCatalog(params["id"]);
       })
@@ -43,5 +42,19 @@ export class DetailsComponent extends ComponentBase {
       .subscribe((res) => {
         this.catalog = res;
       });
+    this.registerSubscription(sub1);
+
+    let sub2 = this.route.params.pipe(
+      switchMap(params => {
+        return this.programService.getProgramProgress(params["id"]);
+      })
+    )
+      .subscribe((progresses) => {
+        progresses.forEach((progress) => {
+          this.progress[progress.content_id] = progress.status;
+        });
+        console.log(this.progress);
+      });
+    this.registerSubscription(sub2);
   }
 }
