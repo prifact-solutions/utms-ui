@@ -1,0 +1,20 @@
+<div class="file-viewer-contianer">
+    <ng-container *ngIf="file && fileUrl">
+
+        <div class="video-container" *ngIf="file.file_content_type=='VIDEO'">
+            <app-video-player [videoUrl]="fileUrl"></app-video-player>
+        </div>
+        <div class="pdf-container" *ngIf="file.file_content_type=='PDF'">
+            <app-pdf-viewer [pdfUrl]="fileUrl"></app-pdf-viewer>
+        </div>
+        <div class="image-container" *ngIf="file.file_content_type=='IMAGE'">
+            <app-img-viewer [imageUrl]="fileUrl"></app-img-viewer>
+        </div>
+        <div class="html-container" *ngIf="file.file_content_type=='TEXT'">
+            <app-html-viewer></app-html-viewer>
+        </div>
+        <div class="generic-container" *ngIf="file.file_content_type=='FILE'">
+            <app-generic-file [fileUrl]="fileUrl" [fileName]="file.file_name"></app-generic-file>
+        </div>
+    </ng-container>
+</div>

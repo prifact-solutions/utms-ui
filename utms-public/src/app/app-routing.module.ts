@@ -29,7 +29,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'programs/:id/modules/:module_id/contents/:module_content_id/lesson',
+    path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/lesson',
     component: ViewLessonComponent,
     canActivate: [AuthGuard]
   },

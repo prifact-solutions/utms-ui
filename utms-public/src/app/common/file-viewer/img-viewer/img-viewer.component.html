@@ -1,0 +1,3 @@
+<div class="image-container" *ngIf="imageUrl">
+    <img [src]="imageUrl" alt="{{fileName}}" (load)="onImageOpened($event)" />
+</div>

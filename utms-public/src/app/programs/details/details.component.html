@@ -44,9 +44,9 @@
                         <li *ngFor="let lesson of module.module_contents" class="lesson-item" [ngClass]="'status-' + getStatus(lesson)">
                             <span class="status-marker" [title]="getStatus(lesson)"></span>
                             <a (click)="navigateToLesson(lesson)" class="lesson-link">
-                                {{ lesson.title }} {{ lesson.content_id }}
+                                {{ lesson.title }}
                             </a>
-                            <span class="badge bg-info ms-2">{{ lesson.lesson_content_type }}</span>
+                            <span class="badge bg-info ms-2">{{ lesson.content_type }}</span>
                         </li>
                     </ul>
                 </div>

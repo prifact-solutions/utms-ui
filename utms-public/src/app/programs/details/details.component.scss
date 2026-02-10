@@ -63,6 +63,14 @@
           }
         }
 
+        &.status-LOCKED {
+          border-left-color: red;
+
+          .status-marker {
+            background-color: red;
+          }
+        }
+
         .lesson-link {
           flex-grow: 1;
           color: #212529;

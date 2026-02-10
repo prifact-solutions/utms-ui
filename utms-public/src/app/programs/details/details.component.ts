@@ -11,7 +11,7 @@ import { switchMap } from 'rxjs';
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent extends ComponentBase {
-  public catalog: any = null;
+  public catalog: Program | null = null;
   public progress: { [id: string]: string; } = {}
 
   constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
@@ -30,7 +30,7 @@ export class DetailsComponent extends ComponentBase {
     if (this.progress[lesson.id]) {
       return this.progress[lesson.id];
     }
-    return "NOT_STARTED";
+    return "LOCKED";
   }
 
   ngOnInit() {
@@ -53,7 +53,6 @@ export class DetailsComponent extends ComponentBase {
         progresses.forEach((progress) => {
           this.progress[progress.content_id] = progress.status;
         });
-        console.log(this.progress);
       });
     this.registerSubscription(sub2);
   }

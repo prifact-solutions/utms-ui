@@ -1,1 +1,21 @@
-<p>view-lesson works!</p>
+<div class="lesson-container">
+  <div class="lesson-header">
+    <h1>{{ lesson?.title }}</h1>
+    <span class="content-type-badge">{{ lesson?.content_type }}</span>
+  </div>
+  <div class="lesson-files" *ngIf="files.length > 0">
+    <h3>Lesson Files:</h3>
+    <div class="file-list">
+      <app-file-viewer *ngFor="let file of files" [file]="file" [program_id]="program_id" [module_id]="module_id"></app-file-viewer>
+    </div>
+
+  </div>
+  <div class="lesson-content">
+    <div [innerHTML]="lesson?.context_text"></div>
+  </div>
+
+  <div class="lesson-footer">
+    <button class="btn-primary">Mark as Complete</button>
+    <button class="btn-secondary" routerLink="/">Go Back</button>
+  </div>
+</div>

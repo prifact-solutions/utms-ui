@@ -1,4 +1,35 @@
-export class Program {
+export interface ModuleContentWithFiles {
+    content: ModuleContent;
+    files: ModuleContentFile[];
+}
+export interface ModuleContent {
+    id: number;
+    module_id: number;
+    title: string;
+    order: number;
+    content_type: string;
+    context_text?: string | null;
+    file_id?: number | null;
+    exam_id?: number | null;
+    created_at: string;
+}
+export interface ModuleContentFile {
+    id: number;
+    module_content_id: number;
+    file_name: string;
+    mime_type: string;
+    file_content_type: string;
+}
+
+export interface Module {
+    id: number;
+    program_id: number;
+    title: string;
+    order: number;
+    module_contents: ModuleContent[];
+}
+
+export interface Program {
     id: number;
     title: string;
     description: string;
@@ -8,27 +39,10 @@ export class Program {
     created_at: string;
     created_by: number;
     categories: number[];
-    is_enrolled: boolean = false;
-    constructor(
-        id: number,
-        title: string,
-        description: string,
-        thumbnail: string | null,
-        duration: number,
-        is_active: boolean,
-        created_at: string,
-        created_by: number,
-        categories: number[],
+    modules?: Module[];
+    is_enrolled?: boolean;
+}
 
-    ) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.thumbnail = thumbnail;
-        this.duration = duration;
-        this.is_active = is_active;
-        this.created_at = created_at;
-        this.created_by = created_by;
-        this.categories = categories;
-    }
+export interface ModuleContentFileUrl {
+    file_url: string;
 }
