@@ -14,7 +14,7 @@ export class VideoPlayerComponent extends ComponentBase {
 
   public onVideoEnded($event: any) {
     console.log($event);
-    this.onFileCompleted.emit("COMPLETE");
+    this.onFileCompleted.emit("COMPLETED");
   }
   public onSeek($event: any) {
 

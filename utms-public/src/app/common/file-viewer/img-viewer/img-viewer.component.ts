@@ -16,6 +16,6 @@ export class ImgViewerComponent extends ComponentBase {
   @Output() onFileCompleted = new EventEmitter<string>();
 
   public onImageOpened($event: any) {
-    this.onFileCompleted.emit("COMPLETE");
+    this.onFileCompleted.emit("COMPLETED");
   }
 }

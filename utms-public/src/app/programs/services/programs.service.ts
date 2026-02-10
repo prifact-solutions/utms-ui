@@ -35,4 +35,7 @@ export class ProgramsService {
   public enroll(id: number) {
     return this.http.post(`${AppSettings.apiUrl}/learners/${id}/enroll/`, {});
   }
+  public updateFileStatus(program_id: number, module_id: number, module_content_id: number, file_id: number, status: string) {
+    return this.http.post(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/${file_id}/status`, { "status": status });
+  }
 }

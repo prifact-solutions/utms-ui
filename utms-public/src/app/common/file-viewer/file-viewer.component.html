@@ -2,13 +2,13 @@
     <ng-container *ngIf="file && fileUrl">
 
         <div class="video-container" *ngIf="file.file_content_type=='VIDEO'">
-            <app-video-player [videoUrl]="fileUrl"></app-video-player>
+            <app-video-player [videoUrl]="fileUrl" (onFileCompleted)="onFileCompleted($event)"></app-video-player>
         </div>
         <div class="pdf-container" *ngIf="file.file_content_type=='PDF'">
             <app-pdf-viewer [pdfUrl]="fileUrl"></app-pdf-viewer>
         </div>
         <div class="image-container" *ngIf="file.file_content_type=='IMAGE'">
-            <app-img-viewer [imageUrl]="fileUrl"></app-img-viewer>
+            <app-img-viewer (onFileCompleted)="onFileCompleted($event)" [imageUrl]="fileUrl"></app-img-viewer>
         </div>
         <div class="html-container" *ngIf="file.file_content_type=='TEXT'">
             <app-html-viewer></app-html-viewer>

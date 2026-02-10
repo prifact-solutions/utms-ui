@@ -29,4 +29,12 @@ export class FileViewerComponent extends ComponentBase {
       this.registerSubscription(sub);
     }
   }
+  onFileCompleted(status: string) {
+    if (this.file) {
+      let sub = this.programService.updateFileStatus(this.program_id, this.module_id, this.file?.module_content_id, this.file?.id, status)
+        .subscribe((res) => {
+        });
+      this.registerSubscription(sub);
+    }
+  }
 }
