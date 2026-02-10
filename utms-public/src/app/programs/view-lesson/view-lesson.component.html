@@ -6,16 +6,19 @@
   <div class="lesson-files" *ngIf="files.length > 0">
     <h3>Lesson Files:</h3>
     <div class="file-list">
-      <app-file-viewer *ngFor="let file of files" [file]="file" [program_id]="program_id" [module_id]="module_id"></app-file-viewer>
+      <app-file-viewer *ngFor="let file of files" [file]="file" [program_id]="program_id"
+        [module_id]="module_id"></app-file-viewer>
     </div>
-
   </div>
+
   <div class="lesson-content">
     <div [innerHTML]="lesson?.context_text"></div>
   </div>
 
   <div class="lesson-footer">
-    <button class="btn-primary">Mark as Complete</button>
+    <div class="no-lesson-files" *ngIf="files.length === 0">
+      <button class="btn-primary" (click)="markAsComplete()">Mark as Complete</button>
+    </div>
     <button class="btn-secondary" routerLink="/">Go Back</button>
   </div>
 </div>

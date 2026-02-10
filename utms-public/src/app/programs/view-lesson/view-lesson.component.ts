@@ -43,7 +43,11 @@ export class ViewLessonComponent extends ComponentBase {
   }
 
   markAsComplete() {
-    console.log('Lesson marked as complete');
+    if (this.lesson) {
+      this.programService.updateLessonStatus(this.program_id, this.module_id, this.lesson?.id, "COMPLETED").subscribe((res) => {
+
+      });
+    }
   }
 
   goBack() {

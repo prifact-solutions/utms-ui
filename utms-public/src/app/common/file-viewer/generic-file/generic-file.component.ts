@@ -14,7 +14,7 @@ export class GenericFileComponent {
 
   @Output() onFileCompleted = new EventEmitter<string>();
 
-  public onPdfLoad($event: any) {
-    this.onFileCompleted.emit("COMPLETE");
+  public onClick($event: any) {
+    this.onFileCompleted.emit("COMPLETED");
   }
 }

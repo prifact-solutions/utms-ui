@@ -14,7 +14,7 @@
             <app-html-viewer></app-html-viewer>
         </div>
         <div class="generic-container" *ngIf="file.file_content_type=='FILE'">
-            <app-generic-file [fileUrl]="fileUrl" [fileName]="file.file_name"></app-generic-file>
+            <app-generic-file [fileUrl]="fileUrl" [fileName]="file.file_name" (onFileCompleted)="onFileCompleted($event)"></app-generic-file>
         </div>
     </ng-container>
 </div>

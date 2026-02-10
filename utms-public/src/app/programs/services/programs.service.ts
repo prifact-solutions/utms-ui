@@ -38,4 +38,7 @@ export class ProgramsService {
   public updateFileStatus(program_id: number, module_id: number, module_content_id: number, file_id: number, status: string) {
     return this.http.post(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/${file_id}/status`, { "status": status });
   }
+  public updateLessonStatus(program_id: number, module_id: number, module_content_id: number, status: string) {
+    return this.http.post(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/status`, { "status": status });
+  }
 }
