@@ -6,6 +6,7 @@ import { DetailsComponent } from './details/details.component';
 import { ViewLessonComponent } from './view-lesson/view-lesson.component';
 import { TakeExamComponent } from './take-exam/take-exam.component';
 import { FileViewerModule } from '../common/file-viewer/file-viewer.module';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -18,7 +19,7 @@ import { FileViewerModule } from '../common/file-viewer/file-viewer.module';
     TakeExamComponent
   ],
   imports: [
-    CommonModule, FileViewerModule
+    CommonModule, FileViewerModule, RouterModule
   ],
   exports: [ExploreComponent]
 })

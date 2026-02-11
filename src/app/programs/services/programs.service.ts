@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettings } from 'src/app/common/appsettings';
-import { ModuleContentFileUrl, ModuleContentWithFiles, Program } from '../models/program.model';
+import { ModuleContent, ModuleContentFileUrl, ModuleContentWithFiles, Program } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
 
 @Injectable({
@@ -29,6 +29,9 @@ export class ProgramsService {
   public getLesson(program_id: number, module_id: number, module_content_id: number) {
     return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson`);
   }
+  public getNextContentIfEligible(program_id: number, module_id: number, module_content_id: number) {
+    return this.http.get<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/next`);
+  }
   public getLessonFileUrl(program_id: number, module_id: number, module_content_id: number, file_id: number) {
     return this.http.get<ModuleContentFileUrl>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/${file_id}`);
   }
@@ -36,9 +39,9 @@ export class ProgramsService {
     return this.http.post(`${AppSettings.apiUrl}/learners/${id}/enroll/`, {});
   }
   public updateFileStatus(program_id: number, module_id: number, module_content_id: number, file_id: number, status: string) {
-    return this.http.post(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/${file_id}/status`, { "status": status });
+    return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/${file_id}/status`, { "status": status });
   }
   public updateLessonStatus(program_id: number, module_id: number, module_content_id: number, status: string) {
-    return this.http.post(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/status`, { "status": status });
+    return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/status`, { "status": status });
   }
 }

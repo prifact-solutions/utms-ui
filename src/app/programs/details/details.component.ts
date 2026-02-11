@@ -3,7 +3,8 @@ import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from '../services/programs.service';
 import { Program } from '../models/program.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
+import { AuthService } from 'src/app/utms-auth/services/auth.service';
 
 @Component({
   selector: 'app-details',
@@ -14,7 +15,7 @@ export class DetailsComponent extends ComponentBase {
   public catalog: Program | null = null;
   public progress: { [id: string]: string; } = {}
 
-  constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
+  constructor(private programService: ProgramsService, private authService: AuthService, private route: ActivatedRoute, private router: Router) { super(); }
 
   public navigateToLesson(lesson: any) {
     if (this.catalog) {
@@ -44,7 +45,11 @@ export class DetailsComponent extends ComponentBase {
       });
     this.registerSubscription(sub1);
 
-    let sub2 = this.route.params.pipe(
+    let sub2 = this.authService.currentUser$.pipe(
+      filter(user => {
+        return user != null;
+      }),
+      switchMap((user) => this.route.params),
       switchMap(params => {
         return this.programService.getProgramProgress(params["id"]);
       })

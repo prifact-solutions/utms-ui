@@ -5,6 +5,7 @@ import { Program } from '../models/program.model';
 import { ComponentBase } from "../../common/componentbase";
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { filter, switchMap } from 'rxjs';
+import { Utils } from "../../common/utils";
 @Component({
   selector: 'app-explore',
   templateUrl: './explore.component.html',
@@ -18,6 +19,7 @@ export class ExploreComponent extends ComponentBase {
 
   public programs: Array<Program> = [];
   public myPrograms: Array<Program> = [];
+  public isStaff: boolean = false;
 
   ngOnInit() {
     let sub1 = this.programsService.getAllPrograms()
@@ -41,6 +43,8 @@ export class ExploreComponent extends ComponentBase {
         });
       });
     this.registerSubscription(sub2);
+
+    this.isStaff = Utils.decodeAuthToken().is_staff;
   }
 
   enrollProgram(programId: number) {

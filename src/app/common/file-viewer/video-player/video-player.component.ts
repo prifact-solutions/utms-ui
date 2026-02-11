@@ -13,7 +13,6 @@ export class VideoPlayerComponent extends ComponentBase {
   @Output() onFileCompleted = new EventEmitter<string>();
 
   public onVideoEnded($event: any) {
-    console.log($event);
     this.onFileCompleted.emit("COMPLETED");
   }
   public onSeek($event: any) {
@@ -27,7 +26,7 @@ export class VideoPlayerComponent extends ComponentBase {
         // Some browsers require the playsInline property
         (videoEl as any).playsInline = true;
         const playPromise = videoEl.play();
-        if (playPromise ) {
+        if (playPromise) {
           playPromise.catch(() => {
             // ignore play errors (user gesture required), keep muted so subsequent attempts may work
           });

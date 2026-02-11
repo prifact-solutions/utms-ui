@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComponentBase } from '../componentbase';
-import { ModuleContentFile } from 'src/app/programs/models/program.model';
+import { ModuleContent, ModuleContentFile } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
 export class FileViewerComponent extends ComponentBase {
   @Input()
   public file: ModuleContentFile | null = null;
-
+  @Output() onNextContentAvailable = new EventEmitter<ModuleContent>();
   public fileUrl: string | null = null;
 
   @Input()
@@ -33,6 +33,9 @@ export class FileViewerComponent extends ComponentBase {
     if (this.file) {
       let sub = this.programService.updateFileStatus(this.program_id, this.module_id, this.file?.module_content_id, this.file?.id, status)
         .subscribe((res) => {
+          if (res) {
+            this.onNextContentAvailable.emit(res);
+          }
         });
       this.registerSubscription(sub);
     }

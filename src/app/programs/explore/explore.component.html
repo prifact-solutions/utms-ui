@@ -1,5 +1,8 @@
 <div class="container mt-4">
     <h2 class="mb-4">Welcome!</h2>
+    <div class="manage-program-countainer" *ngIf="isStaff">
+        <a routerLink="/programs-builder">Manage programs</a>
+    </div>
     <div class="row">
         <div class="col-md-4 mb-4" *ngFor="let program of programs">
             <div class="card h-100">
@@ -13,8 +16,12 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent">
-                    <button *ngIf="!program.is_enrolled" class="btn btn-primary w-100" (click)="enrollProgram(program.id)">Enroll</button>
-                    <button *ngIf="program.is_enrolled" class="btn btn-primary w-100" (click)="viewProgram(program.id)">View Program</button>
+                    <button *ngIf="!program.is_enrolled" class="btn btn-primary w-50"
+                        (click)="enrollProgram(program.id)">Enroll</button>
+                    <button *ngIf="!program.is_enrolled" class="btn btn-primary w-50"
+                        (click)="viewProgram(program.id)">View Details</button>
+                    <button *ngIf="program.is_enrolled" class="btn btn-primary w-100"
+                        (click)="viewProgram(program.id)">View Program</button>
                 </div>
             </div>
         </div>

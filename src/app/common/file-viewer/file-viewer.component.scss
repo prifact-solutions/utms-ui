@@ -1,0 +1,100 @@
+.file-viewer-contianer {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+// Responsive and properly sized containers
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  overflow: hidden;
+
+  app-video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.pdf-container {
+  width: 100%;
+  min-height: 600px;
+  max-height: 800px;
+  overflow: auto;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  app-pdf-viewer {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.image-container {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  overflow: auto;
+
+  app-img-viewer {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+.html-container {
+  width: 100%;
+  min-height: 400px;
+  padding: 20px;
+  background-color: #f8f9fa;
+
+  app-html-viewer {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.generic-container {
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 20px;
+
+  app-generic-file {
+    width: 100%;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .pdf-container {
+    min-height: 400px;
+    max-height: 600px;
+  }
+
+  .image-container {
+    max-height: 400px;
+  }
+
+  .html-container {
+    min-height: 300px;
+    padding: 15px;
+  }
+}

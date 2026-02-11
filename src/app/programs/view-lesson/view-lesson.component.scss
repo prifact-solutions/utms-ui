@@ -9,40 +9,41 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 1px solid #dee2e6;
   padding-bottom: 20px;
 
   h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: #333;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #212529;
     margin: 0;
   }
 }
 
 .content-type-badge {
-  background: #007bff;
+  background-color: #007bff;
   color: white;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
 .lesson-content {
-  background: #f9f9f9;
-  padding: 30px;
-  border-radius: 8px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 0.25rem;
   margin-bottom: 40px;
-  line-height: 1.8;
+  line-height: 1.6;
   font-size: 1rem;
-  color: #555;
+  color: #212529;
 
   h3 {
-    color: #333;
-    font-size: 1.4rem;
-    margin-top: 30px;
+    color: #212529;
+    font-size: 1.25rem;
+    margin-top: 25px;
     margin-bottom: 15px;
+    font-weight: 500;
 
     &:first-child {
       margin-top: 0;
@@ -50,66 +51,75 @@
   }
 
   p {
-    margin: 15px 0;
+    margin: 10px 0;
   }
 
   ul {
-    margin: 15px 0 15px 20px;
+    margin: 10px 0 10px 20px;
 
     li {
-      margin: 10px 0;
+      margin: 8px 0;
+      color: #212529;
     }
   }
 
   strong {
-    color: #333;
+    color: #212529;
     font-weight: 600;
   }
 }
 
 .lesson-footer {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   justify-content: center;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  border-top: 2px solid rgba(102, 126, 234, 0.15);
+  animation: fadeInUp 0.6s ease-out 0.4s both;
 }
+
 
 .btn-primary,
 .btn-secondary {
-  padding: 12px 30px;
-  border: none;
-  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
   font-size: 1rem;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .btn-primary {
-  background: #007bff;
-  color: white;
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
 
   &:hover {
-    background: #0056b3;
+    background-color: #0056b3;
+    border-color: #004085;
   }
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
 
   &:hover {
-    background: #e8e8e8;
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+}
+
+.lesson-files {
+  margin-bottom: 40px;
+
+  h3 {
+    font-size: 1.25rem;
+    color: #212529;
+    font-weight: 500;
+    margin-bottom: 20px;
   }
 }
