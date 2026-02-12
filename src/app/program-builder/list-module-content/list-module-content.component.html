@@ -27,37 +27,33 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div *ngIf="module" class="row">
         <div class="col-md-12">
-            <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()" class="p-4 border rounded">
+            <div class="card">
 
+                <div class="card-body">
+                    <h1 class="card-title">{{ module.title }}</h1>
 
-
-                <!-- Module Title -->
-                <div class="mb-3">
-                    <label class="form-label">Module Title</label>
-                    <input type="text" class="form-control" formControlName="title" placeholder="Enter module title" />
-                    <div class="text-danger" *ngIf="f.title.touched && f.title.invalid">
-                        Title is required
-                    </div>
                 </div>
-
-                <!-- Order -->
-                <div class="mb-3">
-                    <label class="form-label">Order</label>
-                    <input type="number" class="form-control" formControlName="order" placeholder="Display order" />
-                    <div class="text-danger" *ngIf="f.order.touched && f.order.invalid">
-                        Order must be a number
-                    </div>
-                </div>
-
-                <!-- Submit -->
-                <button class="btn btn-primary" [disabled]="moduleForm.invalid">
-                    Create Module
-                </button>
-
-            </form>
+            </div>
         </div>
     </div>
+    <div *ngIf="module && module_contents">
+        <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'lessons','add']">Add new lesson</a> <br/>
+        <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'exams','add']">Add new exam</a>
+        <div *ngFor="let module_content of module_contents" class="module-card">
+            <div class="module-content">
+                <h3>{{ module_content.title }}</h3>
 
+                <div class="module-actions">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                    <button class="btn-view" *ngIf="module_content.content_type=='LESSON'"
+                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons',module_content.id]">Manage Lesson</button>
+                        <button class="btn-view" *ngIf="module_content.content_type=='EXAM'"
+                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'exams',module_content.id]">Manage Exam</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProgramsModule } from './programs/programs.module';
 import { UtmsAuthModule } from './utms-auth/utms-auth.module';
+import { ProgramBuilderModule } from './program-builder/program-builder.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { UtmsAuthModule } from './utms-auth/utms-auth.module';
     BrowserModule,
     AppRoutingModule,
     ProgramsModule,
+    ProgramBuilderModule,
     UtmsAuthModule,
     HttpClientModule
   ],

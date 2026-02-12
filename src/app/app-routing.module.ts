@@ -10,6 +10,11 @@ import { ViewLessonComponent } from './programs/view-lesson/view-lesson.componen
 import { TakeExamComponent } from './programs/take-exam/take-exam.component';
 import { ProgramListComponent } from './program-builder/program-list/program-list.component';
 import { StaffAuthGuard } from './guards/staffauth.guard';
+import { CreateProgramComponent } from './program-builder/create-program/create-program.component';
+import { ListModulesComponent } from './program-builder/list-modules/list-modules.component';
+import { ListModuleContentComponent } from './program-builder/list-module-content/list-module-content.component';
+import { CreateModuleComponent } from './program-builder/create-module/create-module.component';
+import { CreateLessonComponent } from './program-builder/create-lesson/create-lesson.component';
 
 const routes: Routes = [
   {
@@ -28,7 +33,7 @@ const routes: Routes = [
   {
     path: 'programs/:id/details',
     component: DetailsComponent,
-    
+
   },
   {
     path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/lesson',
@@ -43,6 +48,31 @@ const routes: Routes = [
   {
     path: 'programs-builder',
     component: ProgramListComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/add',
+    component: CreateProgramComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules',
+    component: ListModulesComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/add',
+    component: CreateModuleComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/lessons',
+    component: ListModuleContentComponent,
+    canActivate: [StaffAuthGuard]
+  },
+    {
+    path: 'programs-builder/:program_id/modules/:module_id/lessons/add',
+    component: CreateLessonComponent,
     canActivate: [StaffAuthGuard]
   },
 ];

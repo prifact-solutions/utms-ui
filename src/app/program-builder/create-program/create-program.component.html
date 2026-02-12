@@ -1,1 +1,153 @@
-<p>create-program works!</p>
+<div class="create-program-container">
+  <div class="form-card">
+    <h2>Create New Program</h2>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
+      <!-- Title Field -->
+      <div class="form-group">
+        <label for="title">Program Title *</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Enter program title"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': programForm.get('title')?.invalid && programForm.get('title')?.touched }"
+        />
+        <div class="error-message" *ngIf="programForm.get('title')?.invalid && programForm.get('title')?.touched">
+          {{ getErrorMessage('title') }}
+        </div>
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Enter program description"
+          rows="5"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': programForm.get('description')?.invalid && programForm.get('description')?.touched }"
+        ></textarea>
+        <div class="error-message" *ngIf="programForm.get('description')?.invalid && programForm.get('description')?.touched">
+          {{ getErrorMessage('description') }}
+        </div>
+      </div>
+
+      <!-- Duration Field -->
+      <div class="form-group">
+        <label for="duration">Duration (hours) *</label>
+        <input
+          id="duration"
+          type="number"
+          formControlName="duration"
+          placeholder="e.g., 10"
+          step="0.5"
+          min="0"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': programForm.get('duration')?.invalid && programForm.get('duration')?.touched }"
+        />
+        <div class="error-message" *ngIf="programForm.get('duration')?.invalid && programForm.get('duration')?.touched">
+          {{ getErrorMessage('duration') }}
+        </div>
+      </div>
+
+      <!-- Thumbnail Field -->
+      <div class="form-group">
+        <label for="thumbnail">Thumbnail Image</label>
+        <div class="file-input-wrapper">
+          <input
+            id="thumbnail"
+            type="file"
+            accept="image/*"
+            (change)="onThumbnailSelected($event)"
+            class="file-input"
+          />
+          <label for="thumbnail" class="file-label">Choose Image</label>
+        </div>
+        <div *ngIf="thumbnailPreview" class="thumbnail-preview">
+          <img [src]="thumbnailPreview" alt="Thumbnail preview" />
+          <button type="button" (click)="thumbnailPreview = null; programForm.patchValue({ thumbnail: null })" class="remove-btn">
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <!-- Categories Field -->
+      <div class="form-group">
+        <label for="categories">Categories *</label>
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input
+              id="cat1"
+              type="checkbox"
+              [checked]="isCategoryChecked(1)"
+              (change)="onCategoryChange(1, $event)"
+            />
+            <label for="cat1">Technology</label>
+          </div>
+          <div class="checkbox-item">
+            <input
+              id="cat2"
+              type="checkbox"
+              [checked]="isCategoryChecked(2)"
+              (change)="onCategoryChange(2, $event)"
+            />
+            <label for="cat2">Business</label>
+          </div>
+          <div class="checkbox-item">
+            <input
+              id="cat3"
+              type="checkbox"
+              [checked]="isCategoryChecked(3)"
+              (change)="onCategoryChange(3, $event)"
+            />
+            <label for="cat3">Design</label>
+          </div>
+          <div class="checkbox-item">
+            <input
+              id="cat4"
+              type="checkbox"
+              [checked]="isCategoryChecked(4)"
+              (change)="onCategoryChange(4, $event)"
+            />
+            <label for="cat4">Marketing</label>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="programForm.get('categories')?.invalid && programForm.get('categories')?.touched">
+          Please select at least one category
+        </div>
+      </div>
+
+      <!-- Active Status Field -->
+      <div class="form-group form-group-checkbox">
+        <label for="is_active"> </label>
+        <div class="toggle-switch">
+          <input id="is_active" type="checkbox" formControlName="is_active" />
+          <label for="is_active" class="toggle-label">Active</label>
+          <span class="toggle-indicator"></span>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Create Program</span>
+          <span *ngIf="isSubmitting">Creating...</span>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()" [disabled]="isSubmitting">
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

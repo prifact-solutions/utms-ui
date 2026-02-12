@@ -1,1 +1,35 @@
-<p>program-list works!</p>
+<div class="program-list-container">
+    <h2>My Created Programs</h2>
+    <a routerLink="/programs-builder/add">Add new program</a>
+    <div *ngIf="isLoading" class="loading">
+        <p>Loading programs...</p>
+    </div>
+
+
+    <div *ngIf="!isLoading && !errorMessage && programs.length === 0" class="empty-state">
+        <p>No programs created yet.</p>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && programs.length > 0" class="programs-grid">
+        <div *ngFor="let program of programs" class="program-card">
+            <div class="program-thumbnail" *ngIf="program.thumbnail">
+                <img [src]="program.thumbnail" [alt]="program.title" />
+            </div>
+            <div class="program-content">
+                <h3>{{ program.title }}</h3>
+                <p class="description">{{ program.description }}</p>
+                <div class="program-meta">
+                    <span class="duration">Duration: {{ program.duration }} hours</span>
+                    <span class="status" [ngClass]="program.is_active ? 'active' : 'inactive'">
+                        {{ program.is_active ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+                <div class="program-actions">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                    <button class="btn-view" [routerLink]="['/','programs-builder',program.id,'modules']">View</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

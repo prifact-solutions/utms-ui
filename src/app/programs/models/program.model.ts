@@ -24,8 +24,8 @@ export interface ModuleContentFile {
 export interface Module {
     id: number;
     program_id: number;
-    title: string;
-    order: number;
+    title?: string;
+    order?: number;
     module_contents: ModuleContent[];
 }
 

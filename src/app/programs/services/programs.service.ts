@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettings } from 'src/app/common/appsettings';
-import { ModuleContent, ModuleContentFileUrl, ModuleContentWithFiles, Program } from '../models/program.model';
+import { Module, ModuleContent, ModuleContentFileUrl, ModuleContentWithFiles, Program } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
 
 @Injectable({
@@ -16,6 +16,9 @@ export class ProgramsService {
   }
   public getMyPrograms() {
     return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/learners/my_programs`);
+  }
+  public getCreatedPrograms() {
+    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/created-by-me`);
   }
   public getProgramById(id: number) {
     return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}`);
@@ -43,5 +46,21 @@ export class ProgramsService {
   }
   public updateLessonStatus(program_id: number, module_id: number, module_content_id: number, status: string) {
     return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/status`, { "status": status });
+  }
+  public createProgram(program: Partial<Program>) {
+    return this.http.post<Program>(`${AppSettings.apiUrl}/programs/`, program);
+  }
+  public updateProgram(id: number, program: Partial<Program>) {
+    return this.http.put<Program>(`${AppSettings.apiUrl}/programs/${id}/`, program);
+  }
+
+  public createModule(program_id: number, module_payload: any) {
+    return this.http.post<Module>(`${AppSettings.apiUrl}/programs/${program_id}/modules`, module_payload);
+  }
+  public getModulesForProgram(program_id: number) {
+    return this.http.get<Array<Module>>(`${AppSettings.apiUrl}/programs/${program_id}/modules`);
+  }
+  public getModuleContentsForModule(program_id: number, module_id: number) {
+    return this.http.get<Array<ModuleContent>>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents`);
   }
 }
