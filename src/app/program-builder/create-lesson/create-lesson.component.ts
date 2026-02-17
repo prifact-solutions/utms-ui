@@ -1,10 +1,177 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { ModuleContent } from 'src/app/programs/models/program.model';
+
+interface UploadFile {
+  file: File;
+  progress: number;
+  uploaded: boolean;
+  error: string | null;
+}
 
 @Component({
   selector: 'app-create-lesson',
   templateUrl: './create-lesson.component.html',
   styleUrls: ['./create-lesson.component.scss']
 })
-export class CreateLessonComponent {
+export class CreateLessonComponent implements OnInit, OnDestroy {
+  lessonForm!: FormGroup;
+  programId!: number;
+  moduleId!: number;
+  moduleContentId: number | null = null;
 
+  filesToUpload: UploadFile[] = [];
+  isSubmitting = false;
+  successMessage = '';
+  errorMessage = '';
+
+  contentTypes = ['text', 'video', 'pdf', 'image', 'file', 'exam'];
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private fb: FormBuilder,
+    private programsService: ProgramsService,
+    private route: ActivatedRoute,
+    public router: Router
+  ) {
+    this.initializeForm();
+  }
+
+  ngOnInit(): void {
+    this.programId = this.route.snapshot.params['program_id'];
+    this.moduleId = this.route.snapshot.params['module_id'];
+    this.moduleContentId = this.route.snapshot.params['module_content_id'] || null;
+  }
+
+  private initializeForm(): void {
+    this.lessonForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      content_type: ['text', Validators.required],
+      context_text: [''],
+      order: [1, Validators.required]
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      Array.from(input.files).forEach(file => {
+        const uploadFile: UploadFile = {
+          file,
+          progress: 0,
+          uploaded: false,
+          error: null
+        };
+        this.filesToUpload.push(uploadFile);
+      });
+    }
+    // Reset input
+    if (input) input.value = '';
+  }
+
+  removeFile(index: number): void {
+    this.filesToUpload.splice(index, 1);
+  }
+
+  onSubmit(): void {
+    if (this.lessonForm.invalid) {
+      this.errorMessage = 'Please fill in all required fields';
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const lessonPayload: Partial<ModuleContent> = {
+      title: this.lessonForm.get('title')?.value,
+      content_type: this.lessonForm.get('content_type')?.value,
+      context_text: this.lessonForm.get('context_text')?.value,
+      order: this.lessonForm.get('order')?.value
+    };
+
+    this.programsService.createLesson(this.programId, this.moduleId, lessonPayload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (lesson: ModuleContent) => {
+          this.moduleContentId = lesson.id;
+          this.uploadFiles();
+        },
+        error: (error) => {
+          this.errorMessage = error?.error?.message || 'Failed to create lesson';
+          this.isSubmitting = false;
+        }
+      });
+  }
+
+  private uploadFiles(): void {
+    if (this.filesToUpload.length === 0 || !this.moduleContentId) {
+      this.successMessage = 'Lesson created successfully!';
+      this.isSubmitting = false;
+      setTimeout(() => {
+        this.router.navigate([`/program-builder/modules/${this.programId}/${this.moduleId}`]);
+      }, 2000);
+      return;
+    }
+
+    let uploadedCount = 0;
+    this.filesToUpload.forEach((uploadFile, index) => {
+      this.programsService.getSignedUrlForUpload(
+        this.programId,
+        this.moduleId,
+        this.moduleContentId!,
+        uploadFile.file.name,
+        uploadFile.file.type
+      )
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response: { url: string; mime_type: string; }) => {
+            this.uploadFileToSignedUrl(uploadFile, response.url, response.mime_type, index, () => {
+              uploadedCount++;
+              if (uploadedCount === this.filesToUpload.length) {
+                this.successMessage = 'Lesson and files created successfully!';
+                this.isSubmitting = false;
+                setTimeout(() => {
+                  this.router.navigate([`/program-builder/modules/${this.programId}/${this.moduleId}`]);
+                }, 2000);
+              }
+            });
+          },
+          error: (error) => {
+            uploadFile.error = error?.error?.message || 'Failed to get signed URL';
+            uploadedCount++;
+            if (uploadedCount === this.filesToUpload.length) {
+              this.errorMessage = 'Some files failed to upload';
+              this.isSubmitting = false;
+            }
+          }
+        });
+    });
+  }
+
+  private uploadFileToSignedUrl(uploadFile: UploadFile, signedUrl: string, mimeType: string, index: number, onComplete: () => void): void {
+    this.programsService.uploadFileToSignedUrl(signedUrl, mimeType, uploadFile.file)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          uploadFile.uploaded = true;
+          uploadFile.progress = 100;
+          onComplete();
+        },
+        error: (error) => {
+          uploadFile.error = error?.message || 'Upload failed';
+          onComplete();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

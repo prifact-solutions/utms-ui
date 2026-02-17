@@ -38,4 +38,10 @@ export class ListModuleContentComponent extends ComponentBase {
         this.module_contents = contents;
       });
   }
+  onDelete(id: number) {
+    this.programService.deleteModuleContent(this.program_id, this.module_id, id)
+      .subscribe((res) => {
+        this.module_contents = this.module_contents.filter(mc => mc.id !== id);
+      });
+  }
 }

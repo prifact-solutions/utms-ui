@@ -47,7 +47,7 @@
 
                 <div class="module-actions">
                     <button class="btn-edit">Edit</button>
-                    <button class="btn-delete">Delete</button>
+                    <button class="btn-delete" (click)="onDelete(module_content.id)">Delete</button>
                     <button class="btn-view" *ngIf="module_content.content_type=='LESSON'"
                         [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons',module_content.id]">Manage Lesson</button>
                         <button class="btn-view" *ngIf="module_content.content_type=='EXAM'"

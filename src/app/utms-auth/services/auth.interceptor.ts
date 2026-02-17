@@ -10,6 +10,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { AppSettings } from 'src/app/common/appsettings';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -20,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.authService.getToken();
 
     // Clone the request and add the Authorization header if token exists
-    if (token) {
+    if (token && request.url.startsWith(AppSettings.apiUrl)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

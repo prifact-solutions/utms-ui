@@ -1,1 +1,171 @@
-<p>create-lesson works!</p>
+<div class="lesson-container">
+  <div class="lesson-header">
+    <h2>Create Lesson</h2>
+    <p class="subtitle">Add a new lesson to your module</p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="icon-check"></i>
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-error">
+    <i class="icon-close"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Lesson Form -->
+  <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()" class="lesson-form">
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title" class="form-label">
+        Lesson Title
+        <span class="required">*</span>
+      </label>
+      <input
+        id="title"
+        type="text"
+        class="form-control"
+        formControlName="title"
+        placeholder="Enter lesson title"
+        [class.is-invalid]="lessonForm.get('title')?.invalid && lessonForm.get('title')?.touched"
+      />
+      <div class="form-error" *ngIf="lessonForm.get('title')?.invalid && lessonForm.get('title')?.touched">
+        <span *ngIf="lessonForm.get('title')?.getError('required')">Title is required</span>
+        <span *ngIf="lessonForm.get('title')?.getError('minlength')">Title must be at least 3 characters</span>
+      </div>
+    </div>
+
+    <!-- Content Type -->
+    <div class="form-group">
+      <label for="content_type" class="form-label">
+        Content Type
+        <span class="required">*</span>
+      </label>
+      <select
+        id="content_type"
+        class="form-control"
+        formControlName="content_type"
+      >
+        <option *ngFor="let type of contentTypes" [value]="type">
+          {{ type | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Context Text -->
+    <div class="form-group">
+      <label for="context_text" class="form-label">Description</label>
+      <textarea
+        id="context_text"
+        class="form-control"
+        formControlName="context_text"
+        placeholder="Enter description or instructions for this lesson"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <!-- Order -->
+    <div class="form-group">
+      <label for="order" class="form-label">
+        Order
+        <span class="required">*</span>
+      </label>
+      <input
+        id="order"
+        type="number"
+        class="form-control"
+        formControlName="order"
+        min="1"
+      />
+    </div>
+
+    <!-- File Upload Section -->
+    <div class="file-upload-section">
+      <h3 class="section-title">Upload Files (Optional)</h3>
+      
+      <div class="file-input-wrapper">
+        <input
+          type="file"
+          #fileInput
+          multiple
+          (change)="onFileSelected($event)"
+          class="file-input"
+          accept=".pdf,.doc,.docx,.jpg,.png,.gif,.mp4,.webm,.txt,.pptx,.xlsx"
+        />
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="fileInput.click()"
+        >
+          <i class="icon-upload"></i>
+          Choose Files
+        </button>
+        <span class="file-hint">You can select multiple files (PDF, images, video, documents)</span>
+      </div>
+
+      <!-- File List -->
+      <div *ngIf="filesToUpload.length > 0" class="file-list">
+        <div *ngFor="let uploadFile of filesToUpload; let i = index" class="file-item">
+          <div class="file-info">
+            <i [ngClass]="{'icon-file': !uploadFile.uploaded, 'icon-check-circle': uploadFile.uploaded}"></i>
+            <div class="file-details">
+              <p class="file-name">{{ uploadFile.file.name }}</p>
+              <p class="file-size">{{ (uploadFile.file.size / 1024 / 1024).toFixed(2) }} MB</p>
+            </div>
+          </div>
+          
+          <!-- Progress Bar -->
+          <div *ngIf="!uploadFile.uploaded && !isSubmitting" class="file-progress">
+            <div class="progress-bar" [style.width.%]="uploadFile.progress"></div>
+          </div>
+
+          <!-- Status -->
+          <div class="file-status">
+            <span *ngIf="uploadFile.error" class="status-error">
+              <i class="icon-close"></i>
+              {{ uploadFile.error }}
+            </span>
+            <span *ngIf="uploadFile.uploaded && !uploadFile.error" class="status-success">
+              <i class="icon-check"></i>
+              Uploaded
+            </span>
+          </div>
+
+          <!-- Remove Button -->
+          <button
+            *ngIf="!isSubmitting"
+            type="button"
+            class="btn-remove"
+            (click)="removeFile(i)"
+            title="Remove file"
+          >
+            <i class="icon-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isSubmitting"
+      >
+        <span *ngIf="!isSubmitting">Create Lesson</span>
+        <span *ngIf="isSubmitting">Creating...</span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="router.navigate(['/program-builder/modules', programId, moduleId])"
+        [disabled]="isSubmitting"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

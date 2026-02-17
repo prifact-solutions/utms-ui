@@ -15,19 +15,19 @@ export class ProgramsService {
     return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/`);
   }
   public getMyPrograms() {
-    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/learners/my_programs`);
+    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/learners/my_programs/`);
   }
   public getCreatedPrograms() {
-    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/created-by-me`);
+    return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/created-by-me/`);
   }
   public getProgramById(id: number) {
     return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}`);
   }
   public getProgramCatalog(id: number) {
-    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}/catalog`);
+    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}/catalog/`);
   }
   public getProgramProgress(id: number) {
-    return this.http.get<Array<ProgramProgress>>(`${AppSettings.apiUrl}/programs/${id}/progress`);
+    return this.http.get<Array<ProgramProgress>>(`${AppSettings.apiUrl}/programs/${id}/progress/`);
   }
   public getLesson(program_id: number, module_id: number, module_content_id: number) {
     return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson`);
@@ -62,5 +62,25 @@ export class ProgramsService {
   }
   public getModuleContentsForModule(program_id: number, module_id: number) {
     return this.http.get<Array<ModuleContent>>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents`);
+  }
+  public createLesson(program_id: number, module_id: number, lesson: Partial<ModuleContent>) {
+    return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents`, lesson);
+  }
+  public getSignedUrlForUpload(program_id: number, module_id: number, module_content_id: number, file_name: string, file_type: string) {
+    return this.http.post<{ url: string;mime_type:string; }>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/upload-url`, {
+      file_name: file_name,
+      file_type: file_type
+    });
+  }
+
+  public deleteModuleContent(program_id: number, module_id: number, module_content_id: number) {
+    return this.http.delete(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/`);
+  }
+  public uploadFileToSignedUrl(signed_url: string, mime_type: string, file: File) {
+    return this.http.put(signed_url, file, {
+      headers: {
+        'Content-Type': mime_type
+      }
+    });
   }
 }
