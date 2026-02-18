@@ -39,20 +39,23 @@
         </div>
     </div>
     <div *ngIf="module && module_contents">
-        <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'lessons','add']">Add new lesson</a> <br/>
-        <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'exams','add']">Add new exam</a>
         <div *ngFor="let module_content of module_contents" class="module-card">
             <div class="module-content">
                 <h3>{{ module_content.title }}</h3>
-
                 <div class="module-actions">
                     <button class="btn-edit">Edit</button>
                     <button class="btn-delete" (click)="onDelete(module_content.id)">Delete</button>
                     <button class="btn-view" *ngIf="module_content.content_type=='LESSON'"
-                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons',module_content.id]">Manage Lesson</button>
-                        <button class="btn-view" *ngIf="module_content.content_type=='EXAM'"
-                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'exams',module_content.id]">Manage Exam</button>
+                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons',module_content.id]">Manage
+                        Lesson</button>
+                    <button class="btn-view" *ngIf="module_content.content_type=='EXAM'"
+                        [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'exams',module_content.id]">Manage
+                        Exam</button>
                 </div>
+                <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'lessons','add']"
+                    [queryParams]="{ previous_content_id: module_content.id, previous_order:module_content.order }">Add new lesson</a> <br />
+                <a [routerLink]="['/','programs-builder',program?.id,'modules', module.id, 'exams','add']"
+                    [queryParams]="{ previous_content_id: module_content.id , previous_order:module_content.order}">Add new exam</a>
             </div>
         </div>
     </div>

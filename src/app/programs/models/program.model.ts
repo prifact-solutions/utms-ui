@@ -12,6 +12,7 @@ export interface ModuleContent {
     file_id?: number | null;
     exam_id?: number | null;
     created_at: string;
+    previous_content_id:number|null;
 }
 export interface ModuleContentFile {
     id: number;
