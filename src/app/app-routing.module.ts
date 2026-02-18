@@ -15,6 +15,7 @@ import { ListModulesComponent } from './program-builder/list-modules/list-module
 import { ListModuleContentComponent } from './program-builder/list-module-content/list-module-content.component';
 import { CreateModuleComponent } from './program-builder/create-module/create-module.component';
 import { CreateLessonComponent } from './program-builder/create-lesson/create-lesson.component';
+import { CreateExamComponent } from './program-builder/create-exam/create-exam.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,11 @@ const routes: Routes = [
     component: CreateLessonComponent,
     canActivate: [StaffAuthGuard]
   },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/exams/add',
+    component: CreateExamComponent,
+    canActivate: [StaffAuthGuard]
+  }
 ];
 
 @NgModule({
