@@ -3,6 +3,6 @@
 		Loading ...
 	</div>
 	<div *ngIf="!loading">
-		<app-form-designer (back)="onBack($event)" (save)="onSave($event)"></app-form-designer>
+		<app-form-designer [qpId]="moduleId" (back)="onBack($event)" (save)="onSave($event)"></app-form-designer>
 	</div>
 </div>

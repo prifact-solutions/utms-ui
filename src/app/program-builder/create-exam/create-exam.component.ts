@@ -1,17 +1,22 @@
 import { Component, Renderer2, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilderBackendService } from 'form-builder';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { ExamBackendService } from '../services/exam-backend.service';
 
 @Component({
   selector: 'app-create-exam',
   templateUrl: './create-exam.component.html',
   styleUrls: ['./create-exam.component.scss'],
+    providers: [{ provide: FormBuilderBackendService, useClass: ExamBackendService }],
   encapsulation: ViewEncapsulation.None,
 })
 export class CreateExamComponent extends ComponentBase {
   loading: boolean = true;
   programId!: number;
   moduleId!: number;
+  qpId: number = 5;
+
   constructor(
     private renderer: Renderer2,
     private route: ActivatedRoute,
