@@ -167,7 +167,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
     // Prepare content updates array
     const contentUpdates = allContents.map(content => ({
       content_id: content.id,
-      previous_content_id: content.previous_content_id,
+      previous_content_id: content.previous_content_id == 0 ? null : content.previous_content_id,
       order: content.order
     }));
 

@@ -12,7 +12,7 @@ export interface ModuleContent {
     file_id?: number | null;
     exam_id?: number | null;
     created_at: string;
-    previous_content_id:number|null;
+    previous_content_id: number | null;
 }
 export interface ModuleContentFile {
     id: number;
@@ -40,6 +40,10 @@ export interface Program {
     created_at: string;
     created_by: number;
     categories: number[];
+    difficulty?: string;
+    video_hours?: number;
+    preview_video_url?: string;
+    short_description?: string;
     modules?: Module[];
     is_enrolled?: boolean;
 }

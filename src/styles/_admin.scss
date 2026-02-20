@@ -1,0 +1,415 @@
+@import 'variables';
+@import 'forms';
+
+.admin-page-container {
+    padding: 3rem 0;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0;
+    }
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.admin-card {
+    @extend .card;
+    display: flex;
+    flex-direction: column;
+
+    .admin-card-header {
+        height: 160px;
+        background: $bg-off-white;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .admin-card-body {
+        padding: 1.5rem;
+        flex: 1;
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: $text-muted;
+            line-height: 1.5;
+        }
+    }
+
+    .admin-card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid $border-color;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem;
+    background: $bg-off-white;
+    border-radius: $border-radius-lg;
+    border: 2px dashed $border-color;
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: $text-muted;
+        margin-bottom: 2rem;
+    }
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+
+    &:hover {
+        background: rgba($accent-color, 0.05);
+        border-color: rgba($accent-color, 0.1);
+        color: $accent-color;
+    }
+
+    &.text-error:hover {
+        background: rgba($error-color, 0.05);
+        border-color: rgba($error-color, 0.1);
+        color: $error-color;
+    }
+}
+
+// Builder Unified Layout
+.builder-layout {
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
+    padding-top: 1rem;
+}
+
+.builder-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 100px;
+}
+
+.builder-main {
+    flex: 1;
+}
+
+.program-mini-card {
+    border-radius: $border-radius-md;
+    border: 1px solid rgba($border-color, 0.5);
+
+    img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-bottom: 1px solid $border-color;
+    }
+
+    h4 {
+        font-size: 1rem;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: $text-muted;
+
+        strong {
+            color: $text-main;
+        }
+    }
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    a {
+        padding: 0.75rem 1rem;
+        border-radius: $border-radius-sm;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: $transition-base;
+        border-left: 3px solid transparent;
+
+        &:hover {
+            background: $bg-off-white;
+            color: $accent-color;
+            padding-left: 1.25rem;
+        }
+
+        &.active {
+            background: rgba($accent-color, 0.05);
+            color: $accent-color;
+            font-weight: 600;
+            border-left-color: $accent-color;
+        }
+    }
+}
+
+// Curriculum Items (Modules/Lessons)
+.curriculum-item {
+    display: flex;
+    align-items: center;
+    padding: 1.75rem 2.5rem;
+    margin-bottom: 1.25rem;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    border-left: 5px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: $border-radius-md;
+
+    &:hover {
+        border-color: $accent-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+    }
+
+    .item-number {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: $text-muted;
+        width: 100px;
+        letter-spacing: 0.08em;
+        flex-shrink: 0;
+    }
+
+    .curriculum-content {
+        flex: 1;
+        padding: 0 2rem;
+
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            color: $primary-color;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .curriculum-meta {
+            font-size: 0.8rem;
+            color: $text-muted;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    }
+
+    .curriculum-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+    }
+}
+
+.modules-grid,
+.curriculum-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+
+.btn-primary-sm {
+    @extend .btn-primary;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+.text-error {
+    color: $error-color;
+}
+
+// Dropdown Button Group
+.dropdown-group {
+    position: relative;
+    display: inline-block;
+
+    &:hover .dropdown-content {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .dropdown-content {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        min-width: 160px;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        box-shadow: $shadow-lg;
+        z-index: 10;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: $transition-base;
+        padding: 0.5rem 0;
+
+        a {
+            display: block;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            color: $text-main;
+
+            &:hover {
+                background: $bg-off-white;
+                color: $accent-color;
+            }
+        }
+    }
+}
+
+.dot {
+    margin: 0 0.5rem;
+    color: $border-color;
+}
+
+.type-icon {
+    font-size: 1.2rem;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+// Reorder Styles
+.reorder-item {
+    background: $bg-off-white;
+    border-style: dashed;
+
+    .drag-handle {
+        cursor: move;
+        font-size: 1.5rem;
+        opacity: 0.3;
+    }
+
+    .type-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: white;
+        background: $primary-color;
+        padding: 0.1rem 0.4rem;
+        border-radius: 3px;
+    }
+}
+
+.mini-input {
+    label {
+        display: block;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: $text-muted;
+        margin-bottom: 2px;
+    }
+
+    input,
+    select {
+        padding: 0.3rem 0.5rem;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        width: 100%;
+    }
+
+    input {
+        width: 60px;
+        text-align: center;
+    }
+}
+
+.section-badge {
+    background: rgba($accent-color, 0.1);
+    color: $accent-color;
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+// Alerts
+.alert-success-compact,
+.alert-error-compact {
+    padding: 1rem 1.5rem;
+    border-radius: $border-radius-sm;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+}
+
+.alert-success-compact {
+    background: rgba($success-color, 0.05);
+    color: $success-color;
+    border-color: rgba($success-color, 0.1);
+}
+
+.alert-error-compact {
+    background: rgba($error-color, 0.05);
+    color: $error-color;
+    border-color: rgba($error-color, 0.1);
+}

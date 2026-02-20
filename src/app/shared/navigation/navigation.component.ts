@@ -14,10 +14,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
   isStaff = false;
   private authSubscription: Subscription | null = null;
 
+  userName = '';
+  userEmail = '';
+
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.updateAuthStatus();
@@ -37,9 +40,18 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (this.isAuthenticated) {
       const tokenData = Utils.decodeAuthToken();
       this.isStaff = tokenData.is_staff || false;
+      this.userName = tokenData.username || 'User';
+      this.userEmail = tokenData.email || '';
     } else {
       this.isStaff = false;
+      this.userName = '';
+      this.userEmail = '';
     }
+  }
+
+  getUserInitials(): string {
+    if (!this.userName) return 'U';
+    return this.userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   }
 
   logout(): void {

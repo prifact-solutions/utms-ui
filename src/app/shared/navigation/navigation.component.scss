@@ -1,47 +1,211 @@
-.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+@import 'src/styles/variables';
+
+.main-header {
+  height: 72px;
+  background: $bg-light;
+  border-bottom: 1px solid $border-color;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
 }
 
-.navbar-brand {
-  font-weight: 600;
-  font-size: 1.25rem;
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: $accent-color;
+  letter-spacing: -0.5px;
+  margin-right: 1rem;
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-link {
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.2s ease;
+  color: $text-main;
+  padding: 0.5rem 0.8rem;
+  border-radius: $border-radius-sm;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: $transition-base;
+  cursor: pointer;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: $accent-color;
+    background-color: rgba($accent-color, 0.05);
+  }
+
+  &.active {
+    color: $accent-color;
+    font-weight: 600;
   }
 }
 
-.dropdown-menu {
-  border: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,.1);
+.search-bar {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+
+  input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    background: $bg-off-white;
+    border: 1px solid $border-color;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    transition: $transition-base;
+
+    &:focus {
+      outline: none;
+      background: white;
+      border-color: $accent-color;
+      box-shadow: 0 0 0 4px rgba($accent-color, 0.1);
+    }
+  }
+
+  &::before {
+    content: '🔍';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
 }
 
-.dropdown-item {
-  font-weight: 400;
+.auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: $primary-color;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: $transition-base;
 
   &:hover {
-    background-color: #f8f9fa;
-    color: #212529;
+    transform: scale(1.05);
   }
 }
 
-.navbar-toggler {
-  border: none;
+// Dropdown Logic
+.nav-item-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
 
-  &:focus {
-    box-shadow: none;
+  &:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 991.98px) {
-  .navbar-collapse {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 1rem;
-    padding-top: 1rem;
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-lg;
+  padding: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: $transition-base;
+  z-index: 1001;
+
+  &.right {
+    left: auto;
+    right: 0;
   }
+
+  a {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    border-radius: $border-radius-sm;
+
+    &:hover {
+      background: $bg-off-white;
+      color: $accent-color;
+    }
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid $border-color;
+    margin: 0.5rem 0;
+  }
+}
+
+.user-info {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: 0.9rem;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+}
+
+.logout-link {
+  color: $error-color !important;
+  cursor: pointer;
+}
+
+.chevron {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.nav-item-dropdown:hover .chevron {
+  transform: rotate(-135deg) translateY(-1px);
 }

@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { ModuleContent, ModuleContentWithFiles } from 'src/app/programs/models/program.model';
+import { Module, ModuleContent, ModuleContentWithFiles, Program } from 'src/app/programs/models/program.model';
+import { ComponentBase } from 'src/app/common/componentbase';
 
 interface UploadFile {
   file: File;
@@ -18,7 +19,9 @@ interface UploadFile {
   templateUrl: './edit-lesson.component.html',
   styleUrls: ['./edit-lesson.component.scss']
 })
-export class EditLessonComponent implements OnInit, OnDestroy {
+export class EditLessonComponent extends ComponentBase implements OnInit, OnDestroy {
+  program: Program | null = null;
+  module: Module | null = null;
   lessonForm!: FormGroup;
   programId!: number;
   moduleId!: number;
@@ -40,13 +43,28 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     private programsService: ProgramsService,
     private route: ActivatedRoute,
     public router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.programId = this.route.snapshot.params['program_id'];
-    this.moduleId = this.route.snapshot.params['module_id'];
-    this.lessonId = this.route.snapshot.params['lesson_id'];
+    this.programId = +this.route.snapshot.params['program_id'];
+    this.moduleId = +this.route.snapshot.params['module_id'];
+    this.lessonId = +this.route.snapshot.params['lesson_id'];
+    this.fetchData();
     this.loadLesson();
+  }
+
+  private fetchData(): void {
+    this.programsService.getProgramById(this.programId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(program => this.program = program);
+
+    this.programsService.getModulesForProgram(this.programId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(modules => {
+        this.module = modules.find(m => m.id === this.moduleId) || null;
+      });
   }
 
   private loadLesson(): void {
@@ -188,7 +206,7 @@ export class EditLessonComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

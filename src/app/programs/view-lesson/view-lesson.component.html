@@ -1,27 +1,75 @@
-<div class="lesson-container">
-  <div class="lesson-header">
-    <h1>{{ lesson?.title }}</h1>
-    <span class="content-type-badge">{{ lesson?.content_type }}</span>
-  </div>
-  <div class="lesson-files" *ngIf="files.length > 0">
-    <h3>Lesson Files:</h3>
-    <div class="file-list">
-      <app-file-viewer *ngFor="let file of files" [file]="file"
-        (onNextContentAvailable)="onNextContentAvailable($event)" [program_id]="program_id"
-        [module_id]="module_id"></app-file-viewer>
+<div class="learning-environment" *ngIf="lesson">
+  <!-- Top Navigation (Sub-header) -->
+  <nav class="learning-header">
+    <div class="header-left">
+      <a (click)="goToCatalog()" class="back-link">✕</a>
+      <span class="brand-text">Upskill</span>
+      <span class="vertical-divider">|</span>
+      <span class="lesson-title">{{ lesson.title }}</span>
     </div>
-  </div>
-
-  <div class="lesson-content">
-    <div [innerHTML]="lesson?.context_text"></div>
-  </div>
-
-  <div class="lesson-footer">
-    <div class="no-lesson-files" *ngIf="files.length === 0 && !next_module_content">
-      <button class="btn-primary" (click)="markAsComplete()">Next</button>
+    <div class="header-right">
+      <button class="btn-share">Share</button>
+      <div class="progress-circle">
+        <span>75%</span>
+      </div>
     </div>
-    
-    <button *ngIf="next_module_content" class="btn-primary" (click)="goToNextContent()">Next</button>
-    <button class="btn-secondary" (click)="goToCatalog()">Go Back</button>
+  </nav>
+
+  <div class="learning-main">
+    <!-- Main Content Area -->
+    <main class="player-area">
+      <div class="content-viewport">
+        <!-- If it's a video, show video player. Placeholder for now -->
+        <div class="video-container" *ngIf="lesson.content_type === 'VIDEO'">
+          <img
+            src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+            alt="Video Placeholder">
+          <div class="play-button-large">▶</div>
+        </div>
+
+        <div class="document-container" *ngFor="let file of files">
+          <app-file-viewer [file]="file" (onNextContentAvailable)="onNextContentAvailable($event)"
+            [program_id]="program_id" [module_id]="module_id"></app-file-viewer>
+        </div>
+
+        <div class="text-content py-4" *ngIf="lesson.context_text">
+          <div class="article-body" [innerHTML]="lesson.context_text"></div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <footer class="player-footer">
+        <div class="footer-left">
+          <button class="btn-footer active">Overview</button>
+          <button class="btn-footer">Q&A</button>
+          <button class="btn-footer">Notes</button>
+          <button class="btn-footer">Resources</button>
+        </div>
+        <div class="footer-right">
+          <button class="btn-primary" *ngIf="next_module_content" (click)="goToNextContent()">Next Lecture ⮕</button>
+          <button class="btn-primary" *ngIf="!next_module_content" (click)="markAsComplete()">Finish Section ⮕</button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Sidebar: Course Content -->
+    <aside class="learning-sidebar">
+      <div class="sidebar-header">
+        <h3>Course content</h3>
+        <button class="close-sidebar">✕</button>
+      </div>
+      <div class="sidebar-list">
+        <!-- This would normally be a full list of all modules in the course -->
+        <!-- For now, we just show simplicity -->
+        <div class="sidebar-section">
+          <div class="section-title">Current Section</div>
+          <div class="sidebar-item active">
+            <span class="item-index">1.</span>
+            <span class="item-title">{{ lesson.title }}</span>
+            <span class="item-meta">5min</span>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>

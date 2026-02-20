@@ -15,14 +15,14 @@ interface UploadFile {
 }
 
 @Component({
-  selector: 'app-create-lesson',
-  templateUrl: './create-lesson.component.html',
-  styleUrls: ['./create-lesson.component.scss']
+  selector: 'app-create-exam',
+  templateUrl: './create-exam.component.html',
+  styleUrls: ['./create-exam.component.scss']
 })
-export class CreateLessonComponent extends ComponentBase implements OnInit, OnDestroy {
+export class CreateExamComponent extends ComponentBase implements OnInit, OnDestroy {
   program: Program | null = null;
   module: Module | null = null;
-  lessonForm!: FormGroup;
+  examForm!: FormGroup;
   programId!: number;
   moduleId!: number;
   previous_content_id: number | null = null;
@@ -33,8 +33,6 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
-
-  contentTypes = ['EXAM', 'LESSON'];
 
   private destroy$ = new Subject<void>();
 
@@ -70,9 +68,8 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   }
 
   private initializeForm(): void {
-    this.lessonForm = this.fb.group({
+    this.examForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
-      content_type: ['LESSON', Validators.required],
       context_text: [''],
       order: [this.previous_order + 1, Validators.required]
     });
@@ -100,7 +97,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   }
 
   onSubmit(): void {
-    if (this.lessonForm.invalid) {
+    if (this.examForm.invalid) {
       this.errorMessage = 'Please fill in all required fields';
       return;
     }
@@ -109,23 +106,23 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
     this.errorMessage = '';
     this.successMessage = '';
 
-    const lessonPayload: Partial<ModuleContent> = {
-      title: this.lessonForm.get('title')?.value,
-      content_type: this.lessonForm.get('content_type')?.value,
-      context_text: this.lessonForm.get('context_text')?.value,
-      order: this.lessonForm.get('order')?.value,
+    const examPayload: Partial<ModuleContent> = {
+      title: this.examForm.get('title')?.value,
+      content_type: this.examForm.get('content_type')?.value,
+      context_text: this.examForm.get('context_text')?.value,
+      order: this.examForm.get('order')?.value,
       previous_content_id: this.previous_content_id
     };
 
-    this.programsService.createLesson(this.programId, this.moduleId, lessonPayload)
+    this.programsService.createExam(this.programId, this.moduleId, examPayload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (lesson: ModuleContent) => {
-          this.moduleContentId = lesson.id;
+        next: (exam: ModuleContent) => {
+          this.moduleContentId = exam.id;
           this.uploadFiles();
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Failed to create lesson';
+          this.errorMessage = error?.error?.message || 'Failed to create exam';
           this.isSubmitting = false;
         }
       });

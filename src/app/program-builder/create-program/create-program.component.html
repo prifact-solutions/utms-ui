@@ -1,153 +1,146 @@
-<div class="create-program-container">
-  <div class="form-card">
-    <h2>Create New Program</h2>
-
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-
-    <div *ngIf="errorMessage" class="alert alert-error">
-      {{ errorMessage }}
-    </div>
-
-    <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
-      <!-- Title Field -->
-      <div class="form-group">
-        <label for="title">Program Title *</label>
-        <input
-          id="title"
-          type="text"
-          formControlName="title"
-          placeholder="Enter program title"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': programForm.get('title')?.invalid && programForm.get('title')?.touched }"
-        />
-        <div class="error-message" *ngIf="programForm.get('title')?.invalid && programForm.get('title')?.touched">
-          {{ getErrorMessage('title') }}
+<div class="admin-page-container container">
+  <div class="builder-layout">
+    <!-- Sidebar: Info -->
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <div class="p-4">
+          <h4 class="m-0">New Program</h4>
+          <p class="text-muted small">Getting started</p>
         </div>
       </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/programs-builder']">⬅ Back to Programs</a>
+        <a class="active">Basic Information</a>
+      </nav>
+    </aside>
 
-      <!-- Description Field -->
-      <div class="form-group">
-        <label for="description">Description *</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          placeholder="Enter program description"
-          rows="5"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': programForm.get('description')?.invalid && programForm.get('description')?.touched }"
-        ></textarea>
-        <div class="error-message" *ngIf="programForm.get('description')?.invalid && programForm.get('description')?.touched">
-          {{ getErrorMessage('description') }}
+    <!-- Main Content: Create Program Form -->
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Create New Program</h1>
+          <p class="text-muted">Define the basic structure and landing page for your new course.</p>
         </div>
+      </header>
+
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact mb-4">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
       </div>
 
-      <!-- Duration Field -->
-      <div class="form-group">
-        <label for="duration">Duration (hours) *</label>
-        <input
-          id="duration"
-          type="number"
-          formControlName="duration"
-          placeholder="e.g., 10"
-          step="0.5"
-          min="0"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': programForm.get('duration')?.invalid && programForm.get('duration')?.touched }"
-        />
-        <div class="error-message" *ngIf="programForm.get('duration')?.invalid && programForm.get('duration')?.touched">
-          {{ getErrorMessage('duration') }}
-        </div>
-      </div>
-
-      <!-- Thumbnail Field -->
-      <div class="form-group">
-        <label for="thumbnail">Thumbnail Image</label>
-        <div class="file-input-wrapper">
-          <input
-            id="thumbnail"
-            type="file"
-            accept="image/*"
-            (change)="onThumbnailSelected($event)"
-            class="file-input"
-          />
-          <label for="thumbnail" class="file-label">Choose Image</label>
-        </div>
-        <div *ngIf="thumbnailPreview" class="thumbnail-preview">
-          <img [src]="thumbnailPreview" alt="Thumbnail preview" />
-          <button type="button" (click)="thumbnailPreview = null; programForm.patchValue({ thumbnail: null })" class="remove-btn">
-            Remove
-          </button>
-        </div>
-      </div>
-
-      <!-- Categories Field -->
-      <div class="form-group">
-        <label for="categories">Categories *</label>
-        <div class="checkbox-group">
-          <div class="checkbox-item">
-            <input
-              id="cat1"
-              type="checkbox"
-              [checked]="isCategoryChecked(1)"
-              (change)="onCategoryChange(1, $event)"
-            />
-            <label for="cat1">Technology</label>
+      <div class="card p-5">
+        <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
+          <div class="form-group mb-4">
+            <label for="title">Program Title</label>
+            <input id="title" type="text" formControlName="title" placeholder="e.g. Master Class in Web Development"
+              [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
+            <div class="invalid-feedback"
+              *ngIf="programForm.get('title')?.invalid && programForm.get('title')?.touched">
+              {{ getErrorMessage('title') }}
+            </div>
           </div>
-          <div class="checkbox-item">
-            <input
-              id="cat2"
-              type="checkbox"
-              [checked]="isCategoryChecked(2)"
-              (change)="onCategoryChange(2, $event)"
-            />
-            <label for="cat2">Business</label>
-          </div>
-          <div class="checkbox-item">
-            <input
-              id="cat3"
-              type="checkbox"
-              [checked]="isCategoryChecked(3)"
-              (change)="onCategoryChange(3, $event)"
-            />
-            <label for="cat3">Design</label>
-          </div>
-          <div class="checkbox-item">
-            <input
-              id="cat4"
-              type="checkbox"
-              [checked]="isCategoryChecked(4)"
-              (change)="onCategoryChange(4, $event)"
-            />
-            <label for="cat4">Marketing</label>
-          </div>
-        </div>
-        <div class="error-message" *ngIf="programForm.get('categories')?.invalid && programForm.get('categories')?.touched">
-          Please select at least one category
-        </div>
-      </div>
 
-      <!-- Active Status Field -->
-      <div class="form-group form-group-checkbox">
-        <label for="is_active"> </label>
-        <div class="toggle-switch">
-          <input id="is_active" type="checkbox" formControlName="is_active" />
-          <label for="is_active" class="toggle-label">Active</label>
-          <span class="toggle-indicator"></span>
-        </div>
-      </div>
+          <div class="form-group mb-4">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description"
+              placeholder="What will students learn in this program?" rows="6"></textarea>
+            <div class="invalid-feedback"
+              *ngIf="programForm.get('description')?.invalid && programForm.get('description')?.touched">
+              {{ getErrorMessage('description') }}
+            </div>
+          </div>
 
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-          <span *ngIf="!isSubmitting">Create Program</span>
-          <span *ngIf="isSubmitting">Creating...</span>
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="resetForm()" [disabled]="isSubmitting">
-          Reset
-        </button>
+          <div class="grid-auto mb-4" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="form-group">
+              <label for="duration">Duration (days)</label>
+              <input id="duration" type="number" formControlName="duration" min="0">
+            </div>
+            <div class="form-group">
+              <label for="difficulty">Level</label>
+              <select id="difficulty" formControlName="difficulty">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="video_hours">Video Content (hrs)</label>
+              <input id="video_hours" type="number" formControlName="video_hours" min="0">
+            </div>
+          </div>
+
+          <div class="form-group mb-5">
+            <label for="preview_video_url">Preview Video URL</label>
+            <input id="preview_video_url" type="text" formControlName="preview_video_url"
+              placeholder="https://example.com/promo-video.mp4">
+          </div>
+
+          <!-- Thumbnail Upload -->
+          <div class="form-group mb-5">
+            <label>Featured Image</label>
+            <div class="d-flex align-items-center gap-4 p-4 bg-off-white rounded-md border border-dashed">
+              <div class="thumbnail-preview-box" *ngIf="thumbnailPreview"
+                style="width: 120px; height: 80px; overflow: hidden; border-radius: 4px;">
+                <img [src]="thumbnailPreview" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div class="flex-1">
+                <input id="thumbnail" type="file" accept="image/*" (change)="onThumbnailSelected($event)"
+                  style="display: none;" #thumbInput>
+                <button type="button" class="btn-primary-sm" (click)="thumbInput.click()">
+                  {{ thumbnailPreview ? 'Change Image' : 'Select Image' }}
+                </button>
+                <p class="text-muted small mt-2 m-0">Recommended: 1600x900px (JPG or PNG)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="form-group mb-5">
+            <label>Categories</label>
+            <div class="d-flex flex-wrap gap-4 mt-2">
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(1)" (change)="onCategoryChange(1, $event)">
+                Technology
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(2)" (change)="onCategoryChange(2, $event)">
+                Business
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(3)" (change)="onCategoryChange(3, $event)">
+                Design
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(4)" (change)="onCategoryChange(4, $event)">
+                Marketing
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group mb-5">
+            <label class="d-flex align-items-center gap-3 cursor-pointer" style="text-transform: none;">
+              <input type="checkbox" formControlName="is_active" style="width: 20px; height: 20px;">
+              <span>Visible to public (Active Status)</span>
+            </label>
+          </div>
+
+          <div class="form-actions mt-5">
+            <button type="button" class="btn-outline" (click)="resetForm()" [disabled]="isSubmitting">Reset
+              Values</button>
+            <button type="submit" class="btn-primary" [disabled]="programForm.invalid || isSubmitting">
+              <span *ngIf="!isSubmitting">Create Program</span>
+              <span *ngIf="isSubmitting">Creating...</span>
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </main>
   </div>
 </div>

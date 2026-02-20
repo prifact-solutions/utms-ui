@@ -14,11 +14,42 @@ import { AuthService } from 'src/app/utms-auth/services/auth.service';
 export class DetailsComponent extends ComponentBase {
   public catalog: Program | null = null;
   public progress: { [id: string]: string; } = {}
+  public openSections: Set<number> = new Set([0]); // Default first section open
 
   constructor(private programService: ProgramsService, private authService: AuthService, private route: ActivatedRoute, private router: Router) { super(); }
 
+  public getTotalContents(): number {
+    if (!this.catalog) return 0;
+    return (this.catalog.modules || []).reduce((acc, m) => acc + (m.module_contents?.length || 0), 0);
+  }
+
+  public toggleAccordion(index: number): void {
+    if (this.openSections.has(index)) {
+      this.openSections.delete(index);
+    } else {
+      this.openSections.add(index);
+    }
+  }
+
+  public isOpen(index: number): boolean {
+    return this.openSections.has(index);
+  }
+
+  public getContentIcon(type: string): string {
+    switch (type) {
+      case 'VIDEO': return '📹';
+      case 'DOCUMENT': return '📄';
+      case 'EXAM': return '📝';
+      default: return '📖';
+    }
+  }
+
+  public playPreview(): void {
+    console.log('Playing preview...');
+  }
+
   public navigateToLesson(lesson: any) {
-    if (this.catalog) {
+    if (this.catalog && lesson) {
       if (lesson.content_type == "LESSON") {
         this.router.navigate(["programs", this.catalog.id, "modules", lesson.module_id, "contents", lesson.id, "lesson"]);
       } else {
@@ -28,7 +59,7 @@ export class DetailsComponent extends ComponentBase {
   }
 
   public getStatus(lesson: any): string {
-    if (this.progress[lesson.id]) {
+    if (lesson && this.progress[lesson.id]) {
       return this.progress[lesson.id];
     }
     return "LOCKED";
@@ -55,7 +86,7 @@ export class DetailsComponent extends ComponentBase {
       })
     )
       .subscribe((progresses) => {
-        progresses.forEach((progress) => {
+        progresses?.forEach((progress) => {
           this.progress[progress.content_id] = progress.status;
         });
       });

@@ -1,57 +1,104 @@
-<div class="container mt-4">
-    <div *ngIf="catalog" class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <img *ngIf="catalog.thumbnail" class="card-img-top" [src]="catalog.thumbnail" alt="{{ catalog.title }}">
-                <div class="card-body">
-                    <h1 class="card-title">{{ catalog.title }}</h1>
-                    <p class="card-text">{{ catalog.description }}</p>
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Duration</h6>
-                            <p><strong>{{ catalog.duration }} days</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Status</h6>
-                            <p><span *ngIf="catalog.is_active" class="badge bg-success">Active</span>
-                                <span *ngIf="!catalog.is_active" class="badge bg-secondary">Inactive</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <h6 class="text-muted">Categories</h6>
-                        <p *ngIf="catalog.categories.length > 0">{{ catalog.categories.join(', ') }}</p>
-                        <p *ngIf="catalog.categories.length === 0" class="text-muted">No categories assigned</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="catalog" class="row mt-5">
-        <div class="col-md-12">
-            <h2 class="mb-4">Program Catalog</h2>
-            
-            <!-- Modules List -->
-            <div class="modules-list">
-                <div *ngFor="let module of catalog.modules; let moduleIdx = index" class="module-section mb-5">
-                    <h4 class="module-title">
-                        <span class="badge bg-primary me-2">Module {{ module.order }}</span>
-                        {{ module.title }}
-                    </h4>
-                    
-                    <!-- Lessons List -->
-                    <ul class="lessons-list ms-3">
-                        <li *ngFor="let lesson of module.module_contents" class="lesson-item" [ngClass]="'status-' + getStatus(lesson)">
-                            <span class="status-marker" [title]="getStatus(lesson)"></span>
-                            <a (click)="navigateToLesson(lesson)" class="lesson-link">
-                                {{ lesson.title }}
-                            </a>
-                            <span class="badge bg-info ms-2">{{ lesson.content_type }}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="program-detail-page" *ngIf="catalog">
+    <!-- Dark Banner Area -->
+    <header class="detail-header">
+        <div class="container header-container">
+            <div class="header-main-content">
+                <nav class="breadcrumb">
+                    <a routerLink="/">Programs</a>
+                    <span class="separator">/</span>
+                    <span>{{ catalog.categories[0] || 'Learning' }}</span>
+                </nav>
 
+                <h1 class="program-title">{{ catalog.title }}</h1>
+                <p class="program-subtitle">{{ catalog.description }}</p>
+
+                <div class="header-meta">
+                    <span class="meta-item"><span class="icon">★</span> 4.8 Rating</span>
+                    <span class="meta-item" *ngIf="catalog.difficulty">Level: <strong>{{ catalog.difficulty
+                            }}</strong></span>
+                    <span class="meta-item">Duration: <strong>{{ catalog.duration }} days</strong></span>
+                    <span class="meta-item">English</span>
+                </div>
+            </div>
+
+            <!-- Floating Side Card -->
+            <aside class="side-card-container">
+                <div class="side-card card">
+                    <div class="video-preview" (click)="playPreview()">
+                        <img [src]="catalog.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+                            alt="Preview">
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                            <span>Preview this course</span>
+                        </div>
+                    </div>
+
+                    <div class="card-pricing">
+                        <span class="price">$19.99</span>
+                        <span class="original-price">$84.99</span>
+                        <span class="discount">76% off</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn-primary w-100 mb-2">Enroll Now</button>
+                        <button class="btn-outline w-100">Add to cart</button>
+                    </div>
+
+                    <div class="card-features">
+                        <h6>This course includes:</h6>
+                        <ul>
+                            <li><span>📹</span> {{ (catalog.modules?.length || 0) * 4 }} hours on-demand video</li>
+                            <li><span>📄</span> 12 articles</li>
+                            <li><span>♾️</span> Full lifetime access</li>
+                            <li><span>🏆</span> Certificate of completion</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </header>
+
+    <main class="container detail-body">
+        <div class="main-column">
+            <!-- What you'll learn -->
+            <section class="learning-outcomes card mb-5">
+                <h3>What you'll learn</h3>
+                <div class="outcomes-grid">
+                    <div class="outcome-item"><span>✓</span> Master the core concepts and advanced techniques</div>
+                    <div class="outcome-item"><span>✓</span> Build real-world projects to add to your portfolio</div>
+                    <div class="outcome-item"><span>✓</span> Understand best practices and industry standards</div>
+                    <div class="outcome-item"><span>✓</span> Get lifetime access to all future updates</div>
+                </div>
+            </section>
+
+            <!-- Course Content -->
+            <section class="course-content mb-5">
+                <div class="section-header-flex">
+                    <h3>Course content</h3>
+                    <div class="content-summary">
+                        {{ catalog.modules?.length || 0 }} sections • {{ getTotalContents() }} lectures
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-item" *ngFor="let module of catalog.modules; let i = index">
+                        <button class="accordion-header" (click)="toggleAccordion(i)">
+                            <span class="chevron" [class.open]="isOpen(i)"></span>
+                            <span class="module-title">{{ module.title }}</span>
+                            <span class="module-meta ms-auto">{{ module.module_contents.length }} lectures</span>
+                        </button>
+
+                        <div class="accordion-panel" [class.open]="isOpen(i)">
+                            <div class="lesson-item" *ngFor="let content of module.module_contents"
+                                (click)="navigateToLesson(content)">
+                                <span class="content-icon">{{ getContentIcon(content.content_type) }}</span>
+                                <span class="content-title">{{ content.title }}</span>
+                                <span class="content-duration ms-auto">05:24</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 </div>

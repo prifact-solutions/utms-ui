@@ -1,49 +1,54 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">Upskill Platform</a>
+<header class="main-header">
+  <div class="container header-inner">
+    <div class="header-left">
+      <a class="brand" routerLink="/">
+        <span class="brand-text">Upskill</span>
+      </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <nav class="desktop-nav">
+        <a class="nav-link" routerLink="/" routerLinkActive="active">Programs</a>
+        <div class="nav-item-dropdown" *ngIf="isStaff">
+          <span class="nav-link dropdown-trigger">Admin <i class="chevron"></i></span>
+          <div class="dropdown-content">
+            <a routerLink="/programs-builder">Program Builder</a>
+            <a href="#">User Management</a>
+            <a href="#">Reports</a>
+          </div>
+        </div>
+      </nav>
+    </div>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
-        <!-- Public Links -->
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">Programs</a>
-        </li>
+    <div class="header-right">
+      <div class="search-bar">
+        <input type="text" placeholder="Search for anything...">
+      </div>
 
-        <!-- Staff/Admin Links -->
-        <li class="nav-item dropdown" *ngIf="isStaff">
-          <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Admin
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-            <li><a class="dropdown-item" routerLink="/programs-builder" routerLinkActive="active">Program Builder</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">User Management</a></li>
-            <li><a class="dropdown-item" href="#">Reports</a></li>
-          </ul>
-        </li>
-      </ul>
+      <div class="auth-actions">
+        <ng-container *ngIf="!isAuthenticated; else userMenu">
+          <a class="nav-link login-btn" routerLink="/login">Log in</a>
+          <a class="btn-primary signup-btn" routerLink="/login">Sign up</a>
+        </ng-container>
 
-      <!-- Authentication Links -->
-      <ul class="navbar-nav">
-        <li class="nav-item" *ngIf="!isAuthenticated">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-        </li>
-        <li class="nav-item dropdown" *ngIf="isAuthenticated">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle"></i> Account
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
+        <ng-template #userMenu>
+          <div class="nav-item-dropdown">
+            <div class="user-avatar dropdown-trigger">
+              {{ getUserInitials() }}
+            </div>
+            <div class="dropdown-content right">
+              <div class="user-info">
+                <strong>{{ userName }}</strong>
+                <span>{{ userEmail }}</span>
+              </div>
+              <hr>
+              <a href="#">My Learning</a>
+              <a href="#">Profile</a>
+              <a href="#">Settings</a>
+              <hr>
+              <a (click)="logout()" class="logout-link">Log out</a>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
-</nav>
+</header>

@@ -1,100 +1,100 @@
-<div class="organize-contents-container">
-  <div class="header">
-    <h2>Organize Module Contents</h2>
-    <p *ngIf="program">Program: {{ program.title }}</p>
-  </div>
-
-  <!-- Loading -->
-  <div *ngIf="isLoading" class="loading">
-    <p>Loading content organization...</p>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="alert alert-error">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Success Message -->
-  <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div>
-
-  <!-- Content Organization -->
-  <div *ngIf="!isLoading && organizedModules.length > 0" class="content-organization">
-    <div class="instructions">
-      <p>Use the order field to set the sequence of content within each module. Contents cannot be moved between modules.</p>
-      <p>The previous content will be automatically set based on the order. You can manually adjust it using the dropdown if needed.</p>
-    </div>
-
-    <div class="modules-container">
-      <div *ngFor="let moduleGroup of organizedModules" class="module-group">
-        <div class="module-header">
-          <h3>{{ moduleGroup.module.title }}</h3>
-          <span class="module-order">Module Order: {{ moduleGroup.module.order }}</span>
+<div class="admin-page-container container" *ngIf="program">
+  <div class="builder-layout">
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+          alt="Program">
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">{{ program.description | slice:0:80 }}...</p>
+          <hr>
+          <div class="meta-row">
+            <span>Duration: <strong>{{ program.duration }}d</strong></span>
+            <span class="badge" [class.bg-success]="program.is_active">{{ program.is_active ? 'Active' : 'Draft'
+              }}</span>
+          </div>
         </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
+        <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
+        <a class="active">Order Management</a>
+      </nav>
+    </aside>
 
-        <div *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId" class="content-item">
-          <div class="content-card">
-            <div class="content-header">
-              <h4>{{ content.title }}</h4>
-              <span class="content-type">{{ content.content_type }}</span>
-            </div>
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Order Management</h1>
+          <p class="text-muted">Manually adjust the sequence and logical flow of your curriculum.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-primary" (click)="saveAllChanges()" [disabled]="isSaving || isLoading">
+            <span *ngIf="!isSaving">Save All Changes</span>
+            <span *ngIf="isSaving">Saving...</span>
+          </button>
+        </div>
+      </header>
 
-            <div class="content-controls">
-              <div class="form-group">
-                <label>Order (within module)</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [value]="content.order"
-                  (input)="onOrderChange(content, $any($event.target).value)"
-                  [min]="moduleGroup.contents[0].order"
-                  [max]="moduleGroup.contents[moduleGroup.contents.length - 1].order"
-                />
-              </div>
+      <div *ngIf="isLoading" class="py-5 text-center">
+        <p class="text-muted">Loading course structure...</p>
+      </div>
 
-              <div class="form-group">
-                <label>Previous Content</label>
-                <select
-                  class="form-control"
-                  [(ngModel)]="content.previous_content_id"
-                  (ngModelChange)="onPreviousContentChange(content, $event)"
-                >
-                  <option *ngFor="let option of content.previous_content_options" [value]="option.id">
-                    {{ option.title }}
-                  </option>
-                </select>
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact mb-4">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="!isLoading && organizedModules.length > 0" class="organized-view">
+        <div *ngFor="let moduleGroup of organizedModules" class="mb-5">
+          <div class="section-header d-flex align-items-center gap-3 mb-4">
+            <span class="section-badge">Section {{ moduleGroup.module.order }}</span>
+            <h2 class="m-0" style="font-size: 1.5rem;">{{ moduleGroup.module.title }}</h2>
+          </div>
+
+          <div class="curriculum-list">
+            <div *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId"
+              class="reorder-item card p-4 mb-3">
+              <div class="d-flex align-items-center gap-4">
+                <span class="drag-handle" style="font-size: 1.5rem; opacity: 0.3; cursor: grab;">≡</span>
+
+                <div class="content-info flex-1">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="type-badge">{{ content.content_type | titlecase }}</span>
+                  </div>
+                  <h4 class="m-0" style="font-size: 1.1rem;">{{ content.title }}</h4>
+                </div>
+
+                <div class="reorder-inputs d-flex gap-3 align-items-end" style="min-width: 300px;">
+                  <div class="mini-input" style="width: 80px;">
+                    <label>Order</label>
+                    <input type="number" [value]="content.order"
+                      (input)="onOrderChange(content, $any($event.target).value)" [min]="1">
+                  </div>
+                  <div class="mini-input flex-1">
+                    <label>Previous Item</label>
+                    <select [(ngModel)]="content.previous_content_id"
+                      (ngModelChange)="onPreviousContentChange(content, $event)">
+                      <option *ngFor="let option of content.previous_content_options" [value]="option.id">
+                        {{ option.title }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="actions">
-      <button
-        class="btn btn-primary"
-        (click)="saveAllChanges()"
-        [disabled]="isSaving"
-      >
-        <span *ngIf="!isSaving">Save All Changes</span>
-        <span *ngIf="isSaving">Saving...</span>
-      </button>
-      <button
-        class="btn btn-secondary"
-        (click)="router.navigate(['/programs-builder', programId, 'modules'])"
-        [disabled]="isSaving"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && organizedModules.length === 0" class="empty-state">
-    <p>No content found for this program.</p>
-    <button class="btn btn-primary" (click)="router.navigate(['/programs-builder', programId, 'modules'])">
-      Back to Modules
-    </button>
+      <div *ngIf="!isLoading && organizedModules.length === 0" class="empty-state">
+        <p>No content has been added to this program yet.</p>
+        <a [routerLink]="['/programs-builder', programId, 'modules']" class="btn-primary mt-3">Add Content</a>
+      </div>
+    </main>
   </div>
 </div>

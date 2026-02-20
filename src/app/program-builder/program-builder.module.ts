@@ -12,6 +12,7 @@ import { EditProgramComponent } from './edit-program/edit-program.component';
 import { EditModuleComponent } from './edit-module/edit-module.component';
 import { EditLessonComponent } from './edit-lesson/edit-lesson.component';
 import { OrganizeContentsComponent } from './organize-contents/organize-contents.component';
+import { CreateExamComponent } from './create-exam/create-exam.component';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { OrganizeContentsComponent } from './organize-contents/organize-contents
     EditModuleComponent,
     EditLessonComponent,
     OrganizeContentsComponent,
-    
+    CreateExamComponent
   ],
   imports: [
     CommonModule,
