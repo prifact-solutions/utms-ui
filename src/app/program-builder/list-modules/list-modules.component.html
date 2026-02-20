@@ -28,13 +28,16 @@
         </div>
     </div>
     <div *ngIf="modules">
-        <a [routerLink]="['/','programs-builder',program?.id,'modules', 'add']">Add new module</a>
+        <div class="module-actions-header">
+            <a [routerLink]="['/','programs-builder',program?.id,'modules', 'add']" class="btn btn-primary">Add new module</a>
+            <a [routerLink]="['/','programs-builder',program?.id,'organize-contents']" class="btn btn-secondary">Organize Contents</a>
+        </div>
         <div *ngFor="let module of modules" class="module-card">
             <div class="module-content">
                 <h3>{{ module.title }}</h3>
 
                 <div class="module-actions">
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-edit" [routerLink]="['/programs-builder', program?.id, 'modules', module.id, 'edit']">Edit</button>
                     <button class="btn-delete">Delete</button>
                     <button class="btn-view"
                         [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons']">Manage

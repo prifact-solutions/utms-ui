@@ -15,6 +15,10 @@ import { ListModulesComponent } from './program-builder/list-modules/list-module
 import { ListModuleContentComponent } from './program-builder/list-module-content/list-module-content.component';
 import { CreateModuleComponent } from './program-builder/create-module/create-module.component';
 import { CreateLessonComponent } from './program-builder/create-lesson/create-lesson.component';
+import { EditProgramComponent } from './program-builder/edit-program/edit-program.component';
+import { EditModuleComponent } from './program-builder/edit-module/edit-module.component';
+import { EditLessonComponent } from './program-builder/edit-lesson/edit-lesson.component';
+import { OrganizeContentsComponent } from './program-builder/organize-contents/organize-contents.component';
 
 const routes: Routes = [
   {
@@ -56,13 +60,28 @@ const routes: Routes = [
     canActivate: [StaffAuthGuard]
   },
   {
+    path: 'programs-builder/:program_id/edit',
+    component: EditProgramComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
     path: 'programs-builder/:program_id/modules',
     component: ListModulesComponent,
     canActivate: [StaffAuthGuard]
   },
   {
+    path: 'programs-builder/:program_id/organize-contents',
+    component: OrganizeContentsComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
     path: 'programs-builder/:program_id/modules/add',
     component: CreateModuleComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/edit',
+    component: EditModuleComponent,
     canActivate: [StaffAuthGuard]
   },
   {
@@ -73,6 +92,11 @@ const routes: Routes = [
     {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/add',
     component: CreateLessonComponent,
+    canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/lessons/:lesson_id/edit',
+    component: EditLessonComponent,
     canActivate: [StaffAuthGuard]
   },
 ];

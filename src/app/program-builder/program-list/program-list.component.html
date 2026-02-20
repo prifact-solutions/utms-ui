@@ -25,7 +25,7 @@
                     </span>
                 </div>
                 <div class="program-actions">
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-edit" [routerLink]="['/programs-builder', program.id, 'edit']">Edit</button>
                     <button class="btn-delete">Delete</button>
                     <button class="btn-view" [routerLink]="['/','programs-builder',program.id,'modules']">View</button>
                 </div>

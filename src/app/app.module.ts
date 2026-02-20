@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { ProgramsModule } from './programs/programs.module';
 import { UtmsAuthModule } from './utms-auth/utms-auth.module';
 import { ProgramBuilderModule } from './program-builder/program-builder.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ProgramBuilderModule } from './program-builder/program-builder.module';
     ProgramsModule,
     ProgramBuilderModule,
     UtmsAuthModule,
+    SharedModule,
     HttpClientModule
   ],
   providers: [],

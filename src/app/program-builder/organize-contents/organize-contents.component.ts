@@ -1,0 +1,201 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { ComponentBase } from 'src/app/common/componentbase';
+import { Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
+import { ProgramsService } from 'src/app/programs/services/programs.service';
+
+interface OrganizedContent extends ModuleContent {
+  module_title?: string;
+  previous_content_options?: { id: number; title: string }[];
+}
+
+interface OrganizedModule {
+  module: Module;
+  contents: OrganizedContent[];
+}
+
+@Component({
+  selector: 'app-organize-contents',
+  templateUrl: './organize-contents.component.html',
+  styleUrls: ['./organize-contents.component.scss']
+})
+export class OrganizeContentsComponent extends ComponentBase implements OnInit {
+  program: Program | null = null;
+  organizedModules: OrganizedModule[] = [];
+  isLoading = false;
+  isSaving = false;
+  programId: number = 0;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    public router: Router,
+    private programsService: ProgramsService
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.programId = +this.route.snapshot.params['program_id'];
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.route.params.pipe(
+      switchMap(params => {
+        return this.programsService.getProgramCatalog(params["program_id"]);
+      })
+    ).subscribe({
+      next: (program) => {
+        this.program = program;
+        this.organizeContents(program.modules || []);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading program catalog:', error);
+        this.errorMessage = 'Failed to load program data. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  organizeContents(modules: Module[]): void {
+    this.organizedModules = [];
+
+    // Sort modules by order
+    const sortedModules = modules.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    sortedModules.forEach(module => {
+      // Sort contents by order
+      const sortedContents = module.module_contents.sort((a, b) => a.order - b.order);
+
+      const organizedContents: OrganizedContent[] = sortedContents.map(content => ({
+        ...content,
+        module_title: module.title
+      }));
+
+      this.organizedModules.push({
+        module,
+        contents: organizedContents
+      });
+    });
+
+    this.updateOrderAndPrevious();
+  }
+
+  updateOrderAndPrevious(): void {
+    let globalOrder = 1;
+    const allContents: OrganizedContent[] = [];
+
+    // First pass: collect all contents in order and assign global orders
+    this.organizedModules.forEach(moduleGroup => {
+      moduleGroup.contents.forEach(content => {
+        content.order = globalOrder++;
+        allContents.push(content);
+      });
+    });
+
+    // Second pass: set previous content options and relationships
+    this.organizedModules.forEach(moduleGroup => {
+      moduleGroup.contents.forEach((content, moduleContentIndex) => {
+        const contentIndex = allContents.indexOf(content);
+
+        // Previous content options: all contents before this one in the global sequence
+        content.previous_content_options = [
+          { id: 0, title: 'None (First Content)' },
+          ...allContents.slice(0, contentIndex).map(c => ({ id: c.id, title: c.title }))
+        ];
+
+        // Auto-set previous content to the immediately previous content in sequence
+        if (contentIndex > 0) {
+          content.previous_content_id = allContents[contentIndex - 1].id;
+        } else {
+          content.previous_content_id = null;
+        }
+      });
+    });
+  }
+
+  onOrderChange(content: OrganizedContent, newOrder: number): void {
+    // Find which module this content belongs to
+    const moduleGroup = this.organizedModules.find(mg =>
+      mg.contents.some(c => c.id === content.id)
+    );
+
+    if (!moduleGroup) return;
+
+    // Only allow reordering within the same module
+    const moduleContents = moduleGroup.contents;
+    const currentIndex = moduleContents.findIndex(c => c.id === content.id);
+
+    if (currentIndex === -1) return;
+
+    // Validate new order is within module bounds
+    const minOrder = moduleContents[0].order;
+    const maxOrder = moduleContents[moduleContents.length - 1].order;
+    const clampedOrder = Math.max(minOrder, Math.min(maxOrder, newOrder));
+
+    // Update the order
+    content.order = clampedOrder;
+
+    // Re-sort contents within this module
+    moduleGroup.contents.sort((a, b) => a.order - b.order);
+
+    // Update all orders and previous content relationships
+    this.updateOrderAndPrevious();
+  }
+
+  onPreviousContentChange(content: OrganizedContent, previousId: number): void {
+    content.previous_content_id = previousId || null;
+  }
+
+  saveAllChanges(): void {
+    if (!this.program) return;
+
+    this.isSaving = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    // Collect all contents from all modules
+    const allContents = this.organizedModules.flatMap(mg => mg.contents);
+
+    // Prepare content updates array
+    const contentUpdates = allContents.map(content => ({
+      content_id: content.id,
+      previous_content_id: content.previous_content_id,
+      order: content.order
+    }));
+
+    // Make single API call
+    this.programsService.updateContentOrganization(this.program.id, contentUpdates).subscribe({
+      next: () => {
+        this.successMessage = 'Content organization saved successfully!';
+        this.isSaving = false;
+        setTimeout(() => {
+          this.router.navigate(['/programs-builder', this.programId, 'modules']);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('Error saving changes:', error);
+        this.errorMessage = 'Failed to save changes. Please try again.';
+        this.isSaving = false;
+      }
+    });
+  }
+
+  getPreviousContentTitle(content: OrganizedContent): string {
+    if (!content.previous_content_id) return 'None';
+    const allContents = this.organizedModules.flatMap(mg => mg.contents);
+    const prevContent = allContents.find(c => c.id === content.previous_content_id);
+    return prevContent ? prevContent.title : 'Unknown';
+  }
+
+  trackByContentId(index: number, content: OrganizedContent): number {
+    return content.id;
+  }
+}

@@ -43,7 +43,7 @@
             <div class="module-content">
                 <h3>{{ module_content.title }}</h3>
                 <div class="module-actions">
-                    <button class="btn-edit">Edit</button>
+                    <button class="btn-edit" [routerLink]="['/programs-builder', program_id, 'modules', module_id, 'lessons', module_content.id, 'edit']">Edit</button>
                     <button class="btn-delete" (click)="onDelete(module_content.id)">Delete</button>
                     <button class="btn-view" *ngIf="module_content.content_type=='LESSON'"
                         [routerLink]="['/','programs-builder',program?.id,'modules', module.id,'lessons',module_content.id]">Manage

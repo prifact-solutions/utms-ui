@@ -8,6 +8,10 @@ import { CreateLessonComponent } from './create-lesson/create-lesson.component';
 import { RouterModule } from '@angular/router';
 import { ListModulesComponent } from './list-modules/list-modules.component';
 import { ListModuleContentComponent } from './list-module-content/list-module-content.component';
+import { EditProgramComponent } from './edit-program/edit-program.component';
+import { EditModuleComponent } from './edit-module/edit-module.component';
+import { EditLessonComponent } from './edit-lesson/edit-lesson.component';
+import { OrganizeContentsComponent } from './organize-contents/organize-contents.component';
 
 
 @NgModule({
@@ -18,6 +22,10 @@ import { ListModuleContentComponent } from './list-module-content/list-module-co
     CreateLessonComponent,
     ListModulesComponent,
     ListModuleContentComponent,
+    EditProgramComponent,
+    EditModuleComponent,
+    EditLessonComponent,
+    OrganizeContentsComponent,
     
   ],
   imports: [

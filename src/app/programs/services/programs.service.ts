@@ -57,6 +57,9 @@ export class ProgramsService {
   public createModule(program_id: number, module_payload: any) {
     return this.http.post<Module>(`${AppSettings.apiUrl}/programs/${program_id}/modules`, module_payload);
   }
+  public updateModule(program_id: number, module_id: number, module_payload: any) {
+    return this.http.put<Module>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}`, module_payload);
+  }
   public getModulesForProgram(program_id: number) {
     return this.http.get<Array<Module>>(`${AppSettings.apiUrl}/programs/${program_id}/modules`);
   }
@@ -65,6 +68,12 @@ export class ProgramsService {
   }
   public createLesson(program_id: number, module_id: number, lesson: Partial<ModuleContent>) {
     return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents`, lesson);
+  }
+  public updateLesson(program_id: number, module_id: number, lesson_id: number, lesson: Partial<ModuleContent>) {
+    return this.http.put<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${lesson_id}/`, lesson);
+  }
+  public updateContentOrganization(program_id: number, contentUpdates: Array<{content_id: number, previous_content_id: number | null, order: number}>) {
+    return this.http.put(`${AppSettings.apiUrl}/programs/${program_id}/organize-contents/`, { contents: contentUpdates });
   }
   public getSignedUrlForUpload(program_id: number, module_id: number, module_content_id: number, file_name: string, file_type: string) {
     return this.http.post<{ url: string;mime_type:string; }>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/upload-url`, {
