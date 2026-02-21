@@ -1,0 +1,133 @@
+@import 'src/styles/variables';
+
+.organized-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.reorder-section {
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  padding: 2rem !important;
+  box-shadow: $shadow-sm;
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 1.5rem !important;
+  }
+}
+
+.reorder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+
+.reorder-item {
+  background: $bg-off-white !important;
+  border: 1px solid transparent !important;
+  border-radius: $border-radius-md !important;
+  padding: 1rem 1.25rem !important;
+  transition: all 0.2s ease;
+  box-shadow: none !important;
+
+  &:hover {
+    border-color: rgba($accent-color, 0.3) !important;
+    background: white !important;
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm !important;
+  }
+
+  .content-info {
+    h4 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: $primary-color;
+    }
+
+    .type-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: $text-muted;
+      background: white;
+      border: 1px solid $border-color;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+  }
+
+  .drag-handle {
+    color: $border-color;
+    font-size: 1.2rem;
+    cursor: move;
+    margin-right: 0.5rem;
+
+    &:hover {
+      color: $text-muted;
+    }
+  }
+}
+
+
+.reorder-inputs {
+  min-width: 320px;
+  gap: 1.5rem !important;
+}
+
+
+.mini-input {
+  label {
+    margin-bottom: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  input,
+  select {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid $border-color;
+    border-radius: 0;
+    padding: 0.25rem 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $accent-color;
+      box-shadow: none;
+    }
+  }
+
+  input {
+    width: 50px !important;
+    text-align: left;
+  }
+
+  select {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 992px) {
+  .reorder-item .d-flex {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .reorder-inputs {
+    width: 100%;
+    min-width: 100%;
+  }
+}

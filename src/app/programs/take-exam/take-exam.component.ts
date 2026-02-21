@@ -35,15 +35,10 @@ lesson: ModuleContent | null = null;
         this.module_id = params.module_id;
       }),
       switchMap((params) => {
-        return combineLatest(
-          [this.programService.getLesson(params.program_id, params.module_id, params.module_content_id),
-          this.programService.getNextContentIfEligible(params.program_id, params.module_id, params.module_content_id)]
-        );
+        return this.programService.getExam(params.program_id, params.module_id, params.module_content_id)
       }))
-      .subscribe(([lesson, next_content]) => {
-        this.lesson = lesson.content;
-        this.files = lesson.files;
-        this.next_module_content = next_content;
+      .subscribe(examContent => {
+        console.log(examContent);
       });
     this.registerSubscription(sub);
   }

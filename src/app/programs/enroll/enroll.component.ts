@@ -12,6 +12,7 @@ import { combineLatest, switchMap } from 'rxjs';
 })
 export class EnrollComponent extends ComponentBase {
   public program: Program | null = null;
+  public isSubmitting = false;
 
   constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
   ngOnInit() {
@@ -29,9 +30,15 @@ export class EnrollComponent extends ComponentBase {
 
   }
   enroll(id: number) {
+    this.isSubmitting = true;
     return this.programService.enroll(id)
-      .subscribe((res) => {
-        this.router.navigateByUrl(`/programs/${this.program?.id}/details`)
+      .subscribe({
+        next: (res) => {
+          this.router.navigateByUrl(`/programs/${this.program?.id}/details`)
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+        }
       });
   }
 

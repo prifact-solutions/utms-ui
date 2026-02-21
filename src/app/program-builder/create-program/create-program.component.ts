@@ -36,7 +36,9 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
       duration: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
       is_active: [true, Validators.required],
-      categories: [[]],
+      difficulty: ['Beginner', Validators.required],
+      video_hours: [0],
+      preview_video_url: [''],
       thumbnail: [null]
     });
   }
@@ -99,6 +101,9 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       duration: parseFloat(formValue.duration),
       is_active: formValue.is_active,
       categories: formValue.categories,
+      difficulty: formValue.difficulty,
+      video_hours: formValue.video_hours,
+      preview_video_url: formValue.preview_video_url,
       thumbnail: this.thumbnailPreview || null
     };
 

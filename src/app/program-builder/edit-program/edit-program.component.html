@@ -1,0 +1,154 @@
+<div class="admin-page-container container" *ngIf="program">
+  <div class="builder-layout">
+    <!-- Sidebar: Program Info & Nav -->
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="thumbnailPreview || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+          alt="Program">
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">Program Management</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a class="active">Settings</a>
+        <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
+        <a [routerLink]="['/programs-builder', program.id, 'organize-contents']">Order Management</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content: Edit Program Form -->
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Program Settings</h1>
+          <p class="text-muted">General configuration and landing page details.</p>
+        </div>
+      </header>
+
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact mb-4">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
+      </div>
+
+      <div class="card p-5">
+        <div *ngIf="isLoading" class="py-5 text-center">
+          <p class="text-muted">Loading program details...</p>
+        </div>
+
+        <form *ngIf="!isLoading && programForm" [formGroup]="programForm" (ngSubmit)="onSubmit()">
+          <div class="form-group mb-4">
+            <label for="title">Program Title</label>
+            <input id="title" type="text" formControlName="title" placeholder="e.g. Master Class in Web Development"
+              [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
+            <div class="invalid-feedback"
+              *ngIf="programForm.get('title')?.invalid && programForm.get('title')?.touched">
+              {{ getErrorMessage('title') }}
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description"
+              placeholder="What will students learn in this program?" rows="6"></textarea>
+            <div class="invalid-feedback"
+              *ngIf="programForm.get('description')?.invalid && programForm.get('description')?.touched">
+              {{ getErrorMessage('description') }}
+            </div>
+          </div>
+
+          <div class="grid-auto mb-4" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="form-group">
+              <label for="duration">Duration (days)</label>
+              <input id="duration" type="number" formControlName="duration" min="0">
+            </div>
+            <div class="form-group">
+              <label for="difficulty">Level</label>
+              <select id="difficulty" formControlName="difficulty">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="video_hours">Video Content (hrs)</label>
+              <input id="video_hours" type="number" formControlName="video_hours" min="0">
+            </div>
+          </div>
+
+          <div class="form-group mb-5">
+            <label for="preview_video_url">Preview Video URL</label>
+            <input id="preview_video_url" type="text" formControlName="preview_video_url"
+              placeholder="https://example.com/promo-video.mp4">
+          </div>
+
+          <!-- Thumbnail Upload -->
+          <div class="form-group mb-5">
+            <label>Featured Image</label>
+            <div class="d-flex align-items-center gap-4 p-4 bg-off-white rounded-md border border-dashed">
+              <div class="thumbnail-preview-box" *ngIf="thumbnailPreview"
+                style="width: 120px; height: 80px; overflow: hidden; border-radius: 4px;">
+                <img [src]="thumbnailPreview" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div class="flex-1">
+                <input id="thumbnail" type="file" accept="image/*" (change)="onThumbnailSelected($event)"
+                  style="display: none;" #thumbInput>
+                <button type="button" class="btn-primary-sm" (click)="thumbInput.click()">
+                  {{ thumbnailPreview ? 'Change Image' : 'Select Image' }}
+                </button>
+                <p class="text-muted small mt-2 m-0">Recommended: 1600x900px (JPG or PNG)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="form-group mb-5">
+            <label>Categories</label>
+            <div class="d-flex flex-wrap gap-4 mt-2">
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(1)" (change)="onCategoryChange(1, $event)">
+                Technology
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(2)" (change)="onCategoryChange(2, $event)">
+                Business
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(3)" (change)="onCategoryChange(3, $event)">
+                Design
+              </label>
+              <label class="d-flex align-items-center gap-2 cursor-pointer"
+                style="text-transform: none; font-weight: 500;">
+                <input type="checkbox" [checked]="isCategoryChecked(4)" (change)="onCategoryChange(4, $event)">
+                Marketing
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group mb-5">
+            <label class="d-flex align-items-center gap-3 cursor-pointer" style="text-transform: none;">
+              <input type="checkbox" formControlName="is_active" style="width: 20px; height: 20px;">
+              <span>Visible to public (Active Status)</span>
+            </label>
+          </div>
+
+          <div class="form-actions mt-5">
+            <button type="button" class="btn-outline" (click)="resetForm()" [disabled]="isSubmitting">Reset
+              Values</button>
+            <button type="submit" class="btn-primary" [disabled]="programForm.invalid || isSubmitting">
+              <span *ngIf="!isSubmitting">Update Program</span>
+              <span *ngIf="isSubmitting">Updating...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>

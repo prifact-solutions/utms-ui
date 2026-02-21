@@ -1,0 +1,54 @@
+<header class="main-header">
+  <div class="container header-inner">
+    <div class="header-left">
+      <a class="brand" routerLink="/">
+        <span class="brand-text">Upskill</span>
+      </a>
+
+      <nav class="desktop-nav">
+        <a class="nav-link" routerLink="/" routerLinkActive="active">Programs</a>
+        <div class="nav-item-dropdown" *ngIf="isStaff">
+          <span class="nav-link dropdown-trigger">Admin <i class="chevron"></i></span>
+          <div class="dropdown-content">
+            <a routerLink="/programs-builder">Program Builder</a>
+            <a href="#">User Management</a>
+            <a href="#">Reports</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <div class="search-bar">
+        <input type="text" placeholder="Search for anything...">
+      </div>
+
+      <div class="auth-actions">
+        <ng-container *ngIf="!isAuthenticated; else userMenu">
+          <a class="nav-link login-btn" routerLink="/login">Log in</a>
+          <a class="btn-primary signup-btn" routerLink="/login">Sign up</a>
+        </ng-container>
+
+        <ng-template #userMenu>
+          <div class="nav-item-dropdown">
+            <div class="user-avatar dropdown-trigger">
+              {{ getUserInitials() }}
+            </div>
+            <div class="dropdown-content right">
+              <div class="user-info">
+                <strong>{{ userName }}</strong>
+                <span>{{ userEmail }}</span>
+              </div>
+              <hr>
+              <a href="#">My Learning</a>
+              <a href="#">Profile</a>
+              <a href="#">Settings</a>
+              <hr>
+              <a (click)="logout()" class="logout-link">Log out</a>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,74 @@
+<div class="admin-page-container container" *ngIf="program">
+    <div class="builder-layout">
+        <!-- Sidebar: Program Info -->
+        <aside class="builder-sidebar">
+            <div class="program-mini-card card">
+                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+                    alt="Program">
+                <div class="p-4">
+                    <h4>{{ program.title }}</h4>
+                    <p class="text-muted small">{{ program.description | slice:0:100 }}...</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav mt-4">
+                <a [routerLink]="['/programs-builder', program.id, 'modules']">⬅ Back to Modules</a>
+                <a class="active">Edit Module</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content: Edit Module Form -->
+        <main class="builder-main">
+            <header class="page-header">
+                <div class="header-text">
+                    <h1>Edit Module</h1>
+                    <p class="text-muted">Modify the details for this curriculum section.</p>
+                </div>
+            </header>
+
+            <div *ngIf="successMessage" class="alert-success-compact mb-4">
+                {{ successMessage }}
+            </div>
+
+            <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+                {{ errorMessage }}
+            </div>
+
+            <div class="card p-5">
+                <div *ngIf="isLoading" class="py-5 text-center">
+                    <p class="text-muted">Loading module data...</p>
+                </div>
+
+                <form *ngIf="!isLoading" [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="moduleTitle">Module Title</label>
+                        <input type="text" id="moduleTitle" formControlName="title"
+                            placeholder="e.g. Introduction to Advanced Concepts"
+                            [class.is-invalid]="f.title.touched && f.title.invalid">
+                        <div class="invalid-feedback" *ngIf="f.title.touched && f.title.invalid">
+                            Title is required
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="moduleOrder">Display Order</label>
+                        <input type="number" id="moduleOrder" formControlName="order"
+                            placeholder="Enter position (e.g. 1)"
+                            [class.is-invalid]="f.order.touched && f.order.invalid">
+                        <div class="invalid-feedback" *ngIf="f.order.touched && f.order.invalid">
+                            Order must be a positive number
+                        </div>
+                    </div>
+
+                    <div class="form-actions mt-5">
+                        <button type="button" class="btn-outline"
+                            [routerLink]="['/programs-builder', program.id, 'modules']">Cancel</button>
+                        <button type="submit" class="btn-primary" [disabled]="moduleForm.invalid || isSubmitting">
+                            <span *ngIf="!isSubmitting">Update Module</span>
+                            <span *ngIf="isSubmitting">Updating...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>

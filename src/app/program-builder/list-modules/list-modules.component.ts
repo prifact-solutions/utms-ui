@@ -22,11 +22,12 @@ export class ListModulesComponent extends ComponentBase {
   ngOnInit() {
     this.route.params.pipe(
       switchMap(params => {
-        return combineLatest([this.programService.getProgramById(params["program_id"]), this.programService.getModulesForProgram(params["program_id"])])
+        const programId = params["program_id"];
+        return this.programService.getProgramCatalog(programId);
       }))
-      .subscribe(([program, modules]) => {
+      .subscribe(program => {
         this.program = program;
-        this.modules = modules;
+        this.modules = program.modules || [];
       });
   }
 

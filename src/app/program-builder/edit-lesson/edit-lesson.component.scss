@@ -1,0 +1,14 @@
+@import 'src/styles/variables';
+
+.bg-off-white {
+  background-color: $bg-off-white;
+}
+
+.rounded-md {
+  border-radius: $border-radius-md;
+}
+
+// Use standard curriculum-item styles from global admin.scss
+.existing-files-section {
+  margin-top: 2rem;
+}

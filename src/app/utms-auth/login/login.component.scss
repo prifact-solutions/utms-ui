@@ -1,0 +1,106 @@
+@import 'src/styles/variables';
+
+.auth-page {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $bg-off-white;
+    padding: 2rem;
+}
+
+.auth-card {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 3rem;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    border: 1px solid $border-color;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: $primary-color;
+    }
+
+    p {
+        color: $text-muted;
+        font-size: 0.95rem;
+    }
+}
+
+.alert-error {
+    background: rgba($error-color, 0.1);
+    color: $error-color;
+    padding: 1rem;
+    border-radius: $border-radius-sm;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+        font-weight: 700;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+}
+
+.auth-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+
+    p {
+        margin-bottom: 0.75rem;
+        color: $text-muted;
+
+        a {
+            color: $accent-color;
+            font-weight: 700;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .forgot-password {
+        color: $text-muted;
+        font-size: 0.85rem;
+
+        &:hover {
+            color: $accent-color;
+        }
+    }
+}
+
+.spinner-sm {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

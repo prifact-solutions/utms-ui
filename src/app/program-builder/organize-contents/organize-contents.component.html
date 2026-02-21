@@ -1,0 +1,100 @@
+<div class="admin-page-container container" *ngIf="program">
+  <div class="builder-layout">
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+          alt="Program">
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">{{ program.description | slice:0:80 }}...</p>
+          <hr>
+          <div class="meta-row">
+            <span>Duration: <strong>{{ program.duration }}d</strong></span>
+            <span class="badge" [class.bg-success]="program.is_active">{{ program.is_active ? 'Active' : 'Draft'
+              }}</span>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
+        <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
+        <a class="active">Order Management</a>
+      </nav>
+    </aside>
+
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Order Management</h1>
+          <p class="text-muted">Manually adjust the sequence and logical flow of your curriculum.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-primary" (click)="saveAllChanges()" [disabled]="isSaving || isLoading">
+            <span *ngIf="!isSaving">Save All Changes</span>
+            <span *ngIf="isSaving">Saving...</span>
+          </button>
+        </div>
+      </header>
+
+      <div *ngIf="isLoading" class="py-5 text-center">
+        <p class="text-muted">Loading course structure...</p>
+      </div>
+
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact mb-4">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="!isLoading && organizedModules.length > 0" class="organized-view">
+        <div *ngFor="let moduleGroup of organizedModules" class="mb-5">
+          <div class="section-header d-flex align-items-center gap-3 mb-4">
+            <span class="section-badge">Section {{ moduleGroup.module.order }}</span>
+            <h2 class="m-0" style="font-size: 1.5rem;">{{ moduleGroup.module.title }}</h2>
+          </div>
+
+          <div class="curriculum-list">
+            <div *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId"
+              class="reorder-item card p-4 mb-3">
+              <div class="d-flex align-items-center gap-4">
+                <span class="drag-handle" style="font-size: 1.5rem; opacity: 0.3; cursor: grab;">≡</span>
+
+                <div class="content-info flex-1">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="type-badge">{{ content.content_type | titlecase }}</span>
+                  </div>
+                  <h4 class="m-0" style="font-size: 1.1rem;">{{ content.title }}</h4>
+                </div>
+
+                <div class="reorder-inputs d-flex gap-3 align-items-end" style="min-width: 300px;">
+                  <div class="mini-input" style="width: 80px;">
+                    <label>Order</label>
+                    <input type="number" [value]="content.order"
+                      (input)="onOrderChange(content, $any($event.target).value)" [min]="1">
+                  </div>
+                  <div class="mini-input flex-1">
+                    <label>Previous Item</label>
+                    <select [(ngModel)]="content.previous_content_id"
+                      (ngModelChange)="onPreviousContentChange(content, $event)">
+                      <option *ngFor="let option of content.previous_content_options" [value]="option.id">
+                        {{ option.title }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && organizedModules.length === 0" class="empty-state">
+        <p>No content has been added to this program yet.</p>
+        <a [routerLink]="['/programs-builder', programId, 'modules']" class="btn-primary mt-3">Add Content</a>
+      </div>
+    </main>
+  </div>
+</div>

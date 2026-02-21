@@ -1,0 +1,127 @@
+<div class="admin-page-container container" *ngIf="program && module">
+  <div class="builder-layout">
+    <!-- Sidebar: Program Info -->
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+          alt="Program">
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">Module: <strong>{{ module.title }}</strong></p>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'lessons']">⬅ Back to Content</a>
+        <a class="active">Edit Content</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content: Edit Lesson Form -->
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Edit Content</h1>
+          <p class="text-muted">Modify details for "<strong>{{ lesson?.content?.title }}</strong>"</p>
+        </div>
+      </header>
+
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact mb-4">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
+      </div>
+
+      <div class="card p-5">
+        <div *ngIf="isLoading" class="py-5 text-center">
+          <p class="text-muted">Loading content details...</p>
+        </div>
+
+        <form *ngIf="!isLoading && lessonForm" [formGroup]="lessonForm" (ngSubmit)="onSubmit()">
+          <div class="form-group mb-4">
+            <label for="title">Content Title</label>
+            <input id="title" type="text" formControlName="title" placeholder="e.g. Getting Started with Angular"
+              [class.is-invalid]="lessonForm.get('title')?.invalid && lessonForm.get('title')?.touched">
+            <div class="invalid-feedback" *ngIf="lessonForm.get('title')?.invalid && lessonForm.get('title')?.touched">
+              <span *ngIf="lessonForm.get('title')?.getError('required')">Title is required</span>
+              <span *ngIf="lessonForm.get('title')?.getError('minlength')">Title must be at least 3 characters</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="context_text">Description / Instructions</label>
+            <textarea id="context_text" formControlName="context_text"
+              placeholder="Provide some context for this content..." rows="4"></textarea>
+          </div>
+
+          <div class="form-group" style="max-width: 15rem;">
+            <label for="order">Display Order</label>
+            <input id="order" type="number" formControlName="order" min="1">
+          </div>
+
+          <!-- Existing Files Section -->
+          <div *ngIf="lesson && lesson.files && lesson.files.length > 0" class="mt-5">
+            <h3 class="mb-3" style="font-size: 1.1rem;">Existing Attachments</h3>
+            <div class="curriculum-list">
+              <div *ngFor="let file of lesson.files"
+                class="card p-3 d-flex flex-row align-items-center gap-3 bg-off-white">
+                <span class="type-icon" style="font-size: 1.5rem;">📁</span>
+                <div class="flex-1">
+                  <strong class="small d-block mb-1">{{ file.file_name }}</strong>
+                  <span class="text-muted small">{{ file.mime_type }}</span>
+                </div>
+                <span class="section-badge" style="font-size: 0.7rem;">Stored</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Upload Section -->
+          <div class="mt-5 p-4 bg-off-white rounded-md border border-dashed">
+            <h3 class="mb-3" style="font-size: 1.1rem;">Add New Files</h3>
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none;">
+              <button type="button" class="btn-primary-sm" (click)="fileInput.click()">Choose Files</button>
+              <span class="text-muted small">PDF, Images, Video, Documents</span>
+            </div>
+
+            <div *ngIf="filesToUpload.length > 0" class="curriculum-list mt-3">
+              <div *ngFor="let uploadFile of filesToUpload; let i = index"
+                class="card p-3 d-flex flex-row align-items-center gap-3">
+                <span class="type-icon" style="font-size: 1.5rem;">
+                  {{ uploadFile.uploaded ? '✅' : '📎' }}
+                </span>
+                <div class="flex-1">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="small">{{ uploadFile.file.name }}</strong>
+                    <span class="text-muted small">{{ (uploadFile.file.size / 1024 / 1024).toFixed(2) }} MB</span>
+                  </div>
+                  <div class="progress-bar-container" *ngIf="!uploadFile.uploaded && !isSubmitting"
+                    style="height: 4px; background: #eee; border-radius: 2px; overflow: hidden;">
+                    <div [style.width.%]="uploadFile.progress"
+                      style="height: 100%; background: var(--accent-color, #a435f0); transition: width 0.3s;"></div>
+                  </div>
+                  <div *ngIf="uploadFile.error" class="text-error small mt-1">{{ uploadFile.error }}</div>
+                </div>
+                <button type="button" class="btn-icon text-error" (click)="removeFile(i)"
+                  *ngIf="!isSubmitting && !uploadFile.uploaded">🗑️</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions mt-5">
+            <button type="button" class="btn-outline"
+              (click)="router.navigate(['/','programs-builder',programId,'modules',moduleId,'lessons'])"
+              [disabled]="isSubmitting">Cancel</button>
+            <button type="submit" class="btn-primary" [disabled]="lessonForm.invalid || isSubmitting">
+              <span *ngIf="!isSubmitting">Save Changes</span>
+              <span *ngIf="isSubmitting">Saving...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>

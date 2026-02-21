@@ -8,8 +8,13 @@ import { CreateLessonComponent } from './create-lesson/create-lesson.component';
 import { RouterModule } from '@angular/router';
 import { ListModulesComponent } from './list-modules/list-modules.component';
 import { ListModuleContentComponent } from './list-module-content/list-module-content.component';
+import { EditProgramComponent } from './edit-program/edit-program.component';
+import { EditModuleComponent } from './edit-module/edit-module.component';
+import { EditLessonComponent } from './edit-lesson/edit-lesson.component';
+import { OrganizeContentsComponent } from './organize-contents/organize-contents.component';
 import { CreateExamComponent } from './create-exam/create-exam.component';
-import { DesignModule } from 'form-builder'
+import { DesignModule } from 'form-builder';
+import { QuestionPapersModule } from './question-papers/question-papers.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +24,10 @@ import { DesignModule } from 'form-builder'
     CreateLessonComponent,
     ListModulesComponent,
     ListModuleContentComponent,
+    EditProgramComponent,
+    EditModuleComponent,
+    EditLessonComponent,
+    OrganizeContentsComponent,
     CreateExamComponent
   ],
   imports: [
@@ -26,7 +35,8 @@ import { DesignModule } from 'form-builder'
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    DesignModule
+    DesignModule,
+    QuestionPapersModule
   ]
 })
 export class ProgramBuilderModule { }

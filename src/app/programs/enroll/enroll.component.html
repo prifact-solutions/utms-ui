@@ -1,43 +1,94 @@
-<div class="container mt-4">
+<div class="enrollment-page container py-5" *ngIf="program">
+    <div class="enrollment-container">
+        <!-- Back Link -->
+        <a [routerLink]="['/programs', program.id, 'details']" class="back-link mb-4 d-inline-block">
+            ← Back to Program Details
+        </a>
 
-    <div *ngIf="program" class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <img *ngIf="program.thumbnail" class="card-img-top" [src]="program.thumbnail" alt="{{ program.title }}">
-                <div class="card-body">
-                    <h1 class="card-title">{{ program.title }}</h1>
-                    <p class="card-text">{{ program.description }}</p>
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Duration</h6>
-                            <p><strong>{{ program.duration }} days</strong></p>
+        <div class="grid-layout">
+            <!-- Left Side: Program Summary -->
+            <div class="summary-section">
+                <header class="mb-5">
+                    <span class="badge bg-success mb-2">Enrollment Request</span>
+                    <h1 class="display-title">Complete your enrollment</h1>
+                    <p class="text-muted">You're about to join <strong>{{ program.title }}</strong>. Confirm the details
+                        below to start your learning journey.</p>
+                </header>
+
+                <div class="program-preview-card card p-4 mb-4">
+                    <div class="d-flex gap-4">
+                        <div class="preview-img">
+                            <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+                                alt="Program">
                         </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Status</h6>
-                            <p><span *ngIf="program.is_active" class="badge bg-success">Active</span>
-                                <span *ngIf="!program.is_active" class="badge bg-secondary">Inactive</span>
-                            </p>
+                        <div class="flex-1">
+                            <h3 class="mb-2">{{ program.title }}</h3>
+                            <div class="meta-info d-flex gap-3 text-muted small">
+                                <span>⏱ <strong>{{ program.duration }} days</strong> duration</span>
+                                <span *ngIf="program.difficulty">⏺ <strong>{{ program.difficulty }}</strong>
+                                    level</span>
+                            </div>
+                            <p class="mt-3 text-muted small description-clamped">{{ program.description }}</p>
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <h6 class="text-muted">Categories</h6>
-                        <p *ngIf="program.categories.length > 0">{{ program.categories.join(', ') }}</p>
-                        <p *ngIf="program.categories.length === 0" class="text-muted">No categories assigned</p>
+                </div>
+
+                <div class="learning-perks mt-5">
+                    <h4 class="mb-4">What's included in your enrollment:</h4>
+                    <div class="perks-grid">
+                        <div class="perk-item">
+                            <span class="perk-icon">♾️</span>
+                            <div>
+                                <strong>Full lifetime access</strong>
+                                <p class="text-muted small">Learn at your own pace, anytime, anywhere.</p>
+                            </div>
+                        </div>
+                        <div class="perk-item">
+                            <span class="perk-icon">🏆</span>
+                            <div>
+                                <strong>Certificate of completion</strong>
+                                <p class="text-muted small">Validated proof of your achievement.</p>
+                            </div>
+                        </div>
+                        <div class="perk-item">
+                            <span class="perk-icon">📁</span>
+                            <div>
+                                <strong>Downloadable resources</strong>
+                                <p class="text-muted small">Get access to all project files and documents.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card sticky-top">
-                <div class="card-body">
-                    <h5 class="card-title">Ready to join?</h5>
-                    <p class="card-text">Enroll now to start your journey in <strong>{{ program.title }}</strong>.</p>
 
-                    <button class="btn btn-secondary w-100 mt-2" (click)="enroll(program.id)">
-                        Enroll
+            <!-- Right Side: Action Card -->
+            <aside class="action-sidebar">
+                <div class="sticky-card card p-5 text-center">
+                    <div class="pricing-display mb-4">
+                        <span class="price-label">Program Access</span>
+                        <div class="price-value">FREE</div>
+                        <p class="text-muted small">Community Edition</p>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="benefit-points text-start mb-4">
+                        <div class="point">✓ No hidden charges</div>
+                        <div class="point">✓ Instant access to all content</div>
+                        <div class="point">✓ Direct instructor support</div>
+                    </div>
+
+                    <button class="btn-primary w-100 py-3 mt-2" (click)="enroll(program.id)" [disabled]="isSubmitting">
+                        <span *ngIf="!isSubmitting">Confirm Enrollment</span>
+                        <span *ngIf="isSubmitting">Joining...</span>
                     </button>
+
+                    <p class="terms-text mt-4 text-muted small">
+                        By clicking "Confirm Enrollment", you agree to our <a href="#">Terms of Service</a> and <a
+                            href="#">Privacy Policy</a>.
+                    </p>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
 </div>

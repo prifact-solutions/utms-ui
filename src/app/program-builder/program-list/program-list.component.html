@@ -1,34 +1,60 @@
-<div class="program-list-container">
-    <h2>My Created Programs</h2>
-    <a routerLink="/programs-builder/add">Add new program</a>
-    <div *ngIf="isLoading" class="loading">
-        <p>Loading programs...</p>
+<div class="admin-page-container container">
+    <header class="page-header">
+        <div class="header-text">
+            <h1>Instructor Dashboard</h1>
+            <p class="text-muted">Manage your programs and curriculum</p>
+        </div>
+        <a routerLink="/programs-builder/add" class="btn-primary">Create New Program</a>
+    </header>
+
+    <div *ngIf="isLoading" class="py-5 text-center">
+        <div class="spinner mb-3"></div>
+        <p class="text-muted">Loading your programs...</p>
     </div>
 
+    <!-- Alerts -->
+    <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+        {{ errorMessage }}
+    </div>
 
     <div *ngIf="!isLoading && !errorMessage && programs.length === 0" class="empty-state">
-        <p>No programs created yet.</p>
+        <div class="empty-icon" style="font-size: 3rem; margin-bottom: 1.5rem;">📂</div>
+        <h2>No programs yet</h2>
+        <p>Jumpstart your teaching career by creating your first program today.</p>
+        <a routerLink="/programs-builder/add" class="btn-primary mt-3">Get Started</a>
     </div>
 
-    <div *ngIf="!isLoading && !errorMessage && programs.length > 0" class="programs-grid">
-        <div *ngFor="let program of programs" class="program-card">
-            <div class="program-thumbnail" *ngIf="program.thumbnail">
-                <img [src]="program.thumbnail" [alt]="program.title" />
+    <div *ngIf="!isLoading && !errorMessage && programs.length > 0" class="admin-grid">
+        <div *ngFor="let program of programs" class="admin-card">
+            <div class="admin-card-header">
+                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
+                    [alt]="program.title" />
+                <div class="status-chip badge" [class.bg-success]="program.is_active">
+                    {{ program.is_active ? 'Published' : 'Draft' }}
+                </div>
             </div>
-            <div class="program-content">
+
+            <div class="admin-card-body">
                 <h3>{{ program.title }}</h3>
-                <p class="description">{{ program.description }}</p>
-                <div class="program-meta">
-                    <span class="duration">Duration: {{ program.duration }} hours</span>
-                    <span class="status" [ngClass]="program.is_active ? 'active' : 'inactive'">
-                        {{ program.is_active ? 'Active' : 'Inactive' }}
-                    </span>
+                <p class="description">{{ program.description | slice:0:120 }}...</p>
+
+                <div class="admin-meta mt-3 d-flex gap-4">
+                    <span class="meta-item small text-muted"><strong>{{ program.duration }}</strong> days</span>
+                    <span class="meta-item small text-muted"><strong>{{ program.modules?.length || 0 }}</strong>
+                        modules</span>
                 </div>
-                <div class="program-actions">
-                    <button class="btn-edit">Edit</button>
-                    <button class="btn-delete">Delete</button>
-                    <button class="btn-view" [routerLink]="['/','programs-builder',program.id,'modules']">View</button>
+            </div>
+
+            <div class="admin-card-footer">
+                <div class="action-group d-flex gap-2">
+                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'edit']"
+                        title="Settings">⚙️</button>
+                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'modules']"
+                        title="Curriculum">📚</button>
+                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'organize-contents']"
+                        title="Reorder">≡</button>
                 </div>
+                <button class="btn-outline-sm">Public View</button>
             </div>
         </div>
     </div>

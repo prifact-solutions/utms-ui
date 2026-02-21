@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { ModuleContent } from 'src/app/programs/models/program.model';
+import { Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
+import { ComponentBase } from 'src/app/common/componentbase';
 
 interface UploadFile {
   file: File;
@@ -18,18 +19,22 @@ interface UploadFile {
   templateUrl: './create-lesson.component.html',
   styleUrls: ['./create-lesson.component.scss']
 })
-export class CreateLessonComponent implements OnInit, OnDestroy {
+export class CreateLessonComponent extends ComponentBase implements OnInit, OnDestroy {
+  program: Program | null = null;
+  module: Module | null = null;
   lessonForm!: FormGroup;
   programId!: number;
   moduleId!: number;
+  previous_content_id: number | null = null;
   moduleContentId: number | null = null;
+  previous_order: number = 1;
 
   filesToUpload: UploadFile[] = [];
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
 
-  contentTypes = ['text', 'video', 'pdf', 'image', 'file', 'exam'];
+  contentTypes = ['EXAM', 'LESSON'];
 
   private destroy$ = new Subject<void>();
 
@@ -39,21 +44,37 @@ export class CreateLessonComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public router: Router
   ) {
-    this.initializeForm();
+    super();
   }
 
   ngOnInit(): void {
-    this.programId = this.route.snapshot.params['program_id'];
-    this.moduleId = this.route.snapshot.params['module_id'];
+    this.programId = +this.route.snapshot.params['program_id'];
+    this.moduleId = +this.route.snapshot.params['module_id'];
     this.moduleContentId = this.route.snapshot.params['module_content_id'] || null;
+    this.previous_content_id = this.route.snapshot.queryParams['previous_content_id'] || null;
+    this.previous_order = +this.route.snapshot.queryParams['previous_order'] || 1;
+    this.initializeForm();
+    this.fetchData();
+  }
+
+  private fetchData(): void {
+    this.programsService.getProgramById(this.programId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(program => this.program = program);
+
+    this.programsService.getModulesForProgram(this.programId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(modules => {
+        this.module = modules.find(m => m.id === this.moduleId) || null;
+      });
   }
 
   private initializeForm(): void {
     this.lessonForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
-      content_type: ['text', Validators.required],
+      content_type: ['LESSON', Validators.required],
       context_text: [''],
-      order: [1, Validators.required]
+      order: [this.previous_order + 1, Validators.required]
     });
   }
 
@@ -92,7 +113,8 @@ export class CreateLessonComponent implements OnInit, OnDestroy {
       title: this.lessonForm.get('title')?.value,
       content_type: this.lessonForm.get('content_type')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
-      order: this.lessonForm.get('order')?.value
+      order: this.lessonForm.get('order')?.value,
+      previous_content_id: this.previous_content_id
     };
 
     this.programsService.createLesson(this.programId, this.moduleId, lessonPayload)
@@ -114,7 +136,7 @@ export class CreateLessonComponent implements OnInit, OnDestroy {
       this.successMessage = 'Lesson created successfully!';
       this.isSubmitting = false;
       setTimeout(() => {
-        this.router.navigate([`/program-builder/modules/${this.programId}/${this.moduleId}`]);
+        this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
       }, 2000);
       return;
     }
@@ -137,7 +159,7 @@ export class CreateLessonComponent implements OnInit, OnDestroy {
                 this.successMessage = 'Lesson and files created successfully!';
                 this.isSubmitting = false;
                 setTimeout(() => {
-                  this.router.navigate([`/program-builder/modules/${this.programId}/${this.moduleId}`]);
+                  this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
                 }, 2000);
               }
             });
@@ -170,7 +192,7 @@ export class CreateLessonComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
