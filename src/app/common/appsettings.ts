@@ -1,3 +1,3 @@
 export class AppSettings {
-    public static apiUrl: string = "/";
+    public static apiUrl: string = "";
 }
