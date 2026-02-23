@@ -121,7 +121,10 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
     });
   }
 
-  onOrderChange(content: OrganizedContent, newOrder: number): void {
+  onOrderChange(content: OrganizedContent, newOrderStr: string): void {
+    const newOrder = parseInt(newOrderStr, 10);
+    if (isNaN(newOrder)) return;
+
     // Find which module this content belongs to
     const moduleGroup = this.organizedModules.find(mg =>
       mg.contents.some(c => c.id === content.id)
@@ -129,28 +132,31 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
 
     if (!moduleGroup) return;
 
-    // Only allow reordering within the same module
+    // Remove the content from current position
     const moduleContents = moduleGroup.contents;
     const currentIndex = moduleContents.findIndex(c => c.id === content.id);
-
     if (currentIndex === -1) return;
 
-    // Validate new order is within module bounds
-    const minOrder = moduleContents[0].order;
-    const maxOrder = moduleContents[moduleContents.length - 1].order;
-    const clampedOrder = Math.max(minOrder, Math.min(maxOrder, newOrder));
+    const [item] = moduleContents.splice(currentIndex, 1);
 
-    // Update the order
-    content.order = clampedOrder;
+    // Insert at new position (clamped between 1 and max contents)
+    const normalizedOrder = Math.max(1, Math.min(newOrder, moduleContents.length + 1));
+    moduleContents.splice(normalizedOrder - 1, 0, item);
 
-    // Re-sort contents within this module
-    moduleGroup.contents.sort((a, b) => a.order - b.order);
+    // Reassign continuous ordering 1...N
+    moduleContents.forEach((c, index) => {
+      c.order = index + 1;
+    });
 
-    // Update all orders and previous content relationships
+    // Update all internal relationships (like previous_content_id)
     this.updateOrderAndPrevious();
+
+    // Trigger explicit change detection by re-assigning organizedModules reference
+    this.organizedModules = [...this.organizedModules];
   }
 
   onPreviousContentChange(content: OrganizedContent, previousId: number): void {
+    // No longer used directly from UI, but kept if needed programatically
     content.previous_content_id = previousId || null;
   }
 

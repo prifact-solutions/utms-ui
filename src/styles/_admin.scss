@@ -19,7 +19,7 @@
 
 .admin-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: 2rem;
 }
 
@@ -127,6 +127,19 @@
 
 .builder-main {
     flex: 1;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .builder-layout {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .builder-sidebar {
+        width: 100%;
+        position: static;
+    }
 }
 
 .program-mini-card {
@@ -254,6 +267,30 @@
     gap: 1.25rem;
 }
 
+@media (max-width: 600px) {
+    .curriculum-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem;
+        gap: 1rem;
+
+        .item-number {
+            width: auto;
+        }
+
+        .curriculum-content {
+            padding: 0;
+            width: 100%;
+        }
+
+        .curriculum-actions {
+            margin-left: 0;
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+}
+
 
 .btn-primary-sm {
     @extend .btn-primary;
@@ -378,6 +415,24 @@
     input {
         width: 60px;
         text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .reorder-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        min-width: 100% !important;
+
+        .mini-input {
+            width: 100% !important;
+        }
+    }
+
+    .reorder-item .d-flex.gap-4 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem !important;
     }
 }
 

@@ -288,3 +288,40 @@
     }
   }
 }
+
+// Mobile overrides
+@media (max-width: 900px) {
+  .learning-main {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .player-area {
+    overflow: visible; // let the parent scroll
+  }
+
+  .learning-sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid $border-color;
+    height: auto;
+  }
+
+  .player-footer {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+    justify-content: center;
+
+    .footer-left {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .content-viewport .text-content {
+    padding: 2rem 1rem;
+  }
+}
