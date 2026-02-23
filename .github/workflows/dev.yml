@@ -51,11 +51,11 @@ jobs:
       # --- Sync to S3 (dist/utms folder) ---
       - name: Sync dist/utms to S3
         run: |
-          aws s3 sync dist/utms "s3://${S3_BUCKET}/utms"
+          aws s3 sync dist/utms "s3://${S3_BUCKET}/static/utms"
 
       # --- CloudFront invalidate only updated paths ---
       - name: Invalidate CloudFront paths
         run: |
           aws cloudfront create-invalidation \
             --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
-            --paths "/utms/*"
+            --paths "/static/utms/*"
