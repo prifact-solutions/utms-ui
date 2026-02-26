@@ -112,12 +112,12 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       return;
     }
 
-    const categories = this.programForm.get('categories')?.value || [];
-    if (categories.length === 0) {
-      this.errorMessage = 'Please select at least one category';
-      this.programForm.get('categories')?.markAsTouched();
-      return;
-    }
+    // const categories = this.programForm.get('categories')?.value || [];
+    // if (categories.length === 0) {
+    //   this.errorMessage = 'Please select at least one category';
+    //   this.programForm.get('categories')?.markAsTouched();
+    //   return;
+    // }
 
     this.isSubmitting = true;
     this.errorMessage = null;
@@ -129,7 +129,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       description: formValue.description,
       duration: parseFloat(formValue.duration),
       is_active: formValue.is_active,
-      categories: formValue.categories,
+      categories: [1],
       difficulty: formValue.difficulty,
       video_hours: formValue.video_hours,
       preview_video_url: formValue.preview_video_url,
