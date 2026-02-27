@@ -6,7 +6,7 @@
                 <nav class="breadcrumb">
                     <a routerLink="/">Programs</a>
                     <span class="separator">/</span>
-                    <span>{{ catalog.categories[0] || 'Learning' }}</span>
+                    <span>{{ catalog.title  }}</span>
                 </nav>
 
                 <h1 class="program-title">{{ catalog.title }}</h1>
@@ -34,14 +34,13 @@
                     </div>
 
                     <div class="card-pricing">
-                        <span class="price">$19.99</span>
-                        <span class="original-price">$84.99</span>
-                        <span class="discount">76% off</span>
+                        <span class="price">Free</span>
                     </div>
 
                     <div class="card-actions">
-                        <button class="btn-primary w-100 mb-2">Enroll Now</button>
-                        <button class="btn-outline w-100">Add to cart</button>
+                        <button class="btn-primary"
+                            style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem;"
+                            [routerLink]="['/programs', catalog.id, 'enroll']">Enroll Now</button>
                     </div>
 
                     <div class="card-features">
@@ -90,8 +89,18 @@
 
                         <div class="accordion-panel" [class.open]="isOpen(i)">
                             <div class="lesson-item" *ngFor="let content of module.module_contents"
-                                (click)="navigateToLesson(content)">
-                                <span class="content-icon">{{ getContentIcon(content.content_type) }}</span>
+                                (click)="navigateToLesson(content)"
+                                [class.status-completed]="getStatus(content) === 'COMPLETED'">
+                                <span class="content-icon">
+                                    <ng-container *ngIf="getStatus(content) === 'COMPLETED'">
+                                        <div class="completed-check text-success"
+                                            style="color: #1e7232; font-weight: 900; font-size: 1.1rem; width: 24px;">✓
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="getStatus(content) !== 'COMPLETED'">
+                                        {{ getContentIcon(content.content_type) }}
+                                    </ng-container>
+                                </span>
                                 <span class="content-title">{{ content.title }}</span>
                                 <span class="content-duration ms-auto">05:24</span>
                             </div>

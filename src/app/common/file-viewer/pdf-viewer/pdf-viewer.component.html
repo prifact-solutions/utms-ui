@@ -1,3 +1,3 @@
-<div class="pdf-container" *ngIf="pdfUrl">
-    <iframe [src]="pdfUrl" width="100%" height="600px" (load)="onPdfLoad($event)"></iframe>
+<div class="pdf-container" *ngIf="pdfUrlSanitized">
+    <iframe [src]="pdfUrlSanitized" width="100%" height="600px" (load)="onPdfLoad($event)"></iframe>
 </div>

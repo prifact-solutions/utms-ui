@@ -209,3 +209,43 @@
 .nav-item-dropdown:hover .chevron {
   transform: rotate(-135deg) translateY(-1px);
 }
+
+// Mobile Responsiveness
+@media (max-width: 900px) {
+
+  .header-left,
+  .header-right {
+    gap: 0.5rem;
+  }
+
+  .brand {
+    margin-right: 0.5rem;
+  }
+
+  .search-bar {
+    min-width: 150px;
+
+    input {
+      padding: 0.5rem 0.5rem 0.5rem 2rem;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .search-bar {
+    display: none; // hide search on very small screens for now
+  }
+
+  .auth-actions {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}

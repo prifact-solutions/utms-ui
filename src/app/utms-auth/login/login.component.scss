@@ -104,3 +104,9 @@
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 600px) {
+    .auth-card {
+        padding: 1.5rem;
+    }
+}

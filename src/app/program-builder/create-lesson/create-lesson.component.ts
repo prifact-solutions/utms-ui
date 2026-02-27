@@ -25,9 +25,8 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   lessonForm!: FormGroup;
   programId!: number;
   moduleId!: number;
-  previous_content_id: number | null = null;
   moduleContentId: number | null = null;
-  previous_order: number = 1;
+  previous_order: number = 0;
 
   filesToUpload: UploadFile[] = [];
   isSubmitting = false;
@@ -51,8 +50,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
     this.programId = +this.route.snapshot.params['program_id'];
     this.moduleId = +this.route.snapshot.params['module_id'];
     this.moduleContentId = this.route.snapshot.params['module_content_id'] || null;
-    this.previous_content_id = this.route.snapshot.queryParams['previous_content_id'] || null;
-    this.previous_order = +this.route.snapshot.queryParams['previous_order'] || 1;
+    this.previous_order = +this.route.snapshot.queryParams['previous_order'] || 0;
     this.initializeForm();
     this.fetchData();
   }
@@ -113,8 +111,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       title: this.lessonForm.get('title')?.value,
       content_type: this.lessonForm.get('content_type')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
-      order: this.lessonForm.get('order')?.value,
-      previous_content_id: this.previous_content_id
+      order: this.lessonForm.get('order')?.value
     };
 
     this.programsService.createLesson(this.programId, this.moduleId, lessonPayload)

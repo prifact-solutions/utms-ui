@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.authService.getToken();
 
     // Clone the request and add the Authorization header if token exists
-    if (token && request.url.startsWith(AppSettings.apiUrl)) {
+    if (token && !request.url.includes("s3.amazonaws.com")) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

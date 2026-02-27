@@ -54,14 +54,8 @@ export class ProgramsService {
       `${AppSettings.apiUrl}/programs/${id}/progress/`,
     );
   }
-  public getLesson(
-    program_id: number,
-    module_id: number,
-    module_content_id: number,
-  ) {
-    return this.http.get<ModuleContentWithFiles>(
-      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson`,
-    );
+  public getLesson(program_id: number, module_id: number, module_content_id: number) {
+    return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson/`);
   }
   public getNextContentIfEligible(
     program_id: number,

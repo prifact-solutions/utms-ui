@@ -134,3 +134,16 @@
         font-weight: 500;
     }
 }
+
+// Mobile specific overrides
+@media (max-width: 600px) {
+    .program-preview-card .d-flex {
+        flex-direction: column;
+        gap: 1.5rem !important;
+    }
+
+    .preview-img {
+        width: 100%;
+        height: 180px;
+    }
+}

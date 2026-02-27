@@ -14,7 +14,7 @@
       <nav class="sidebar-nav mt-4">
         <a class="active">Settings</a>
         <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
-        <a [routerLink]="['/programs-builder', program.id, 'organize-contents']">Order Management</a>
+        <a [routerLink]="['/programs-builder', program.id, 'organize-contents']">Publish Course</a>
       </nav>
     </aside>
 
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <div class="grid-auto mb-4" style="grid-template-columns: 1fr 1fr 1fr;">
+          <div class="grid-auto mb-4">
             <div class="form-group">
               <label for="duration">Duration (days)</label>
               <input id="duration" type="number" formControlName="duration" min="0">

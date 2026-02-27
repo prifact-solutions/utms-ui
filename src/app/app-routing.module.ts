@@ -99,7 +99,7 @@ const routes: Routes = [
     component: ListModuleContentComponent,
     canActivate: [StaffAuthGuard]
   },
-    {
+  {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/add',
     component: CreateLessonComponent,
     canActivate: [StaffAuthGuard]
@@ -132,7 +132,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    enableTracing: false,
+    useHash: true,
+    onSameUrlNavigation: 'reload',
+    scrollPositionRestoration: 'enabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
