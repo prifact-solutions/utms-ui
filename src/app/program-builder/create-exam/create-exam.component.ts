@@ -25,7 +25,7 @@ export class CreateExamComponent extends ComponentBase implements OnInit, OnDest
   examForm!: FormGroup;
   programId!: number;
   moduleId!: number;
-  previous_content_id: number | null = null;
+  
   moduleContentId: number | null = null;
   previous_order: number = 1;
 
@@ -49,7 +49,6 @@ export class CreateExamComponent extends ComponentBase implements OnInit, OnDest
     this.programId = +this.route.snapshot.params['program_id'];
     this.moduleId = +this.route.snapshot.params['module_id'];
     this.moduleContentId = this.route.snapshot.params['module_content_id'] || null;
-    this.previous_content_id = this.route.snapshot.queryParams['previous_content_id'] || null;
     this.previous_order = +this.route.snapshot.queryParams['previous_order'] || 1;
     this.initializeForm();
     this.fetchData();
@@ -110,8 +109,7 @@ export class CreateExamComponent extends ComponentBase implements OnInit, OnDest
       title: this.examForm.get('title')?.value,
       content_type: this.examForm.get('content_type')?.value,
       context_text: this.examForm.get('context_text')?.value,
-      order: this.examForm.get('order')?.value,
-      previous_content_id: this.previous_content_id
+      order: this.examForm.get('order')?.value
     };
 
     this.programsService.createExam(this.programId, this.moduleId, examPayload)

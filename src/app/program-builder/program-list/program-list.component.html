@@ -29,8 +29,8 @@
             <div class="admin-card-header">
                 <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
                     [alt]="program.title" />
-                <div class="status-chip badge" [class.bg-success]="program.is_active">
-                    {{ program.is_active ? 'Published' : 'Draft' }}
+                <div class="status-chip badge" [class.bg-success]="program.status == 'ACTIVE'">
+                    {{ program.status  }}
                 </div>
             </div>
 

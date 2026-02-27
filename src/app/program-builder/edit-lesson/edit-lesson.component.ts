@@ -128,8 +128,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     const lessonPayload: Partial<ModuleContent> = {
       title: this.lessonForm.get('title')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
-      order: this.lessonForm.get('order')?.value,
-      previous_content_id: this.lesson?.content.previous_content_id
+      order: this.lessonForm.get('order')?.value
     };
 
     this.programsService.updateLesson(this.programId, this.moduleId, this.lessonId, lessonPayload)

@@ -37,6 +37,7 @@ export interface Program {
     thumbnail: string | null;
     duration: number;
     is_active: boolean;
+    status:string;
     created_at: string;
     created_by: number;
     categories: number[];

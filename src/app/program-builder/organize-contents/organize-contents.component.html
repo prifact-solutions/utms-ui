@@ -19,19 +19,19 @@
       <nav class="sidebar-nav mt-4">
         <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
         <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
-        <a class="active">Order Management</a>
+        <a class="active">Publish Course</a>
       </nav>
     </aside>
 
     <main class="builder-main">
       <header class="page-header">
         <div class="header-text">
-          <h1>Order Management</h1>
-          <p class="text-muted">Manually adjust the sequence and logical flow of your curriculum.</p>
+          <h1>Publish Course</h1>
+          <p class="text-muted">Review the order of content and make the course available to public.</p>
         </div>
         <div class="header-actions">
           <button class="btn-primary" (click)="saveAllChanges()" [disabled]="isSaving || isLoading">
-            <span *ngIf="!isSaving">Save All Changes</span>
+            <span *ngIf="!isSaving">Publish</span>
             <span *ngIf="isSaving">Saving...</span>
           </button>
         </div>
