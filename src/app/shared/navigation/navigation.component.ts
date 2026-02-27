@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { Utils } from 'src/app/common/utils';
+import { ProgramsService } from 'src/app/programs/services/programs.service';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
@@ -19,14 +20,31 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private route: ActivatedRoute,
+    private programsService: ProgramsService,
+  ) {}
 
   ngOnInit(): void {
     this.updateAuthStatus();
     this.authSubscription = this.authService.currentUser$.subscribe(() => {
       this.updateAuthStatus();
     });
+
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+      )
+      .subscribe(() => {
+        let activeRoute = this.route.root;
+        while (activeRoute.firstChild) {
+          activeRoute = activeRoute.firstChild;
+        }
+        const programId = activeRoute.snapshot.paramMap.get('program_id');
+        if (programId) {
+          this.programsService.setProgramId(programId);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -51,7 +69,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   getUserInitials(): string {
     if (!this.userName) return 'U';
-    return this.userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    return this.userName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   logout(): void {

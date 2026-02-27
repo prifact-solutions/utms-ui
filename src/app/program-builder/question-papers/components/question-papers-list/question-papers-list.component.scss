@@ -1,0 +1,117 @@
+$bodyBg:#fff;
+$bodyfontcolor:#333;
+$lightFontColor:rgb(66, 82, 110);
+$borderColor:rgba(229, 230, 235,.6);
+$headerBg:#fff;
+$lightBg:#fff;
+$greyBg:#f9f9f9;
+$fontSize:14px;
+$primaryButton:#693bb3;
+$darkColor:#222;
+$primaryColor:#693bb3;
+$headerHeight:50px;
+$statusbarBg:#334296;
+
+/*left-menu*/
+$hamburgerMenuColor:#777;
+$menuBg:#fff;
+$menuFontColor:#333;
+$menuIconColor:#909090;
+$menuHoverBg:#fafafa;
+$menuActiveBg:#fafafa;
+$leftmenuWidth:250px;
+$leftsubmenuWidth:300px;
+$leftsubmenuHeight:100px;
+$leftmenuWidthCollapsed:100px;
+$leftsubmenuBg:#fff;
+$leftsubmenuActive:#e0e0e0;
+
+
+
+
+/*sub nav*/
+$eventColor:#b56dd8;
+$examColor:#ca487c;
+$holidayCOlor:#3bb273;
+$homeworkColor:#00bcca;
+$timetableColor:#3bb273;
+$subjectColor:#3bb273;
+/*inner-page*/
+$innerpagePadding:20px 50px;
+$innerpagesubPadding:10px 50px;
+
+/*dashboard*/
+$dashboardStatusbarBg:#334296;
+$dashboardHeaderBg:#3f4fa5;
+$divisionTitleColor:#3f4fa5;
+$timetableSubjectBg:#f4f5f7;
+
+$messageBoxBg:#fff;
+$messageColor:#000;
+$dimmerColor:rgba(0,0,0,.2);
+
+.qp-page-heading {
+    padding:20px 50px;
+    border-bottom:1px solid $borderColor;
+    font-weight: 500;
+    color: $darkColor;
+    font-size: 1.3em;
+}
+.qp-list {
+	display: table;
+	width: 100%;
+	padding-bottom: 80px;
+}
+.qp-list > div {
+	display: table-row;
+}
+.qp-list > div > span {
+	display: table-cell;
+	padding: 10px 0 10px 50px;
+	border-bottom: 1px solid $borderColor;
+	vertical-align: middle;
+}
+.qp-list > div > span:last-child {
+	padding-right: 20px;
+}
+.qp-list-heading{
+	background-color: #eee;
+	font-size: 1.1em;
+	font-weight: 600;
+}
+.nodata {
+    font-size: 0.85em;
+    padding: 20px 100px;
+    opacity: 0.5;
+    text-align: center;
+}
+.qp-option-holder {
+    position: relative;
+}
+.qp-option-holder .setting-icon {
+    right: 40px;
+    top: 4px;
+    padding: 0;
+}
+.qp-option-holder .setting-icon .threedots {
+	padding-right: 20px;
+}
+
+.no-action{
+	font-style: italic;
+}
+.title-buttons {
+	padding-top: 5px;
+}
+.title-btn {
+	height: 25px !important;
+	line-height: 25px !important;
+	padding: 0 15px !important;
+}
+.rename-input {
+	height: 25px;
+	width: -webkit-fill-available;
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}

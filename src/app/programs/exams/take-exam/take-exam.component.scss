@@ -1,0 +1,101 @@
+.edit-ans-btn {
+	height: 25px;
+    line-height: 25px;
+    border: 1px solid #07d62b;
+    padding: 0 10px;
+    border-radius: 3px;
+    margin: 0px 15px 5px 10px;
+    -webkit-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+	margin-bottom: 5px;
+    background: #07d62b;
+    color: #fff;
+	font-size: 0.8em;
+}
+.enter-ans-btn {
+    height: 25px;
+    line-height: 25px;
+    border: 1px solid #c92003;
+    padding: 0 10px;
+    border-radius: 3px;
+    margin: 0px 15px 5px 10px;
+    -webkit-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+	margin-bottom: 5px;
+    background: #c92003;
+    color: #fff;
+	font-size: 0.8em;
+}
+.enter-ans {
+    color: #c92003;
+}   
+.question-item {
+	padding-bottom: 20px;
+}
+.answer-content {
+    font-size: 1.1em;
+    white-space: pre-wrap;
+}
+.end-exam-btn {
+    height: 30px;
+    line-height: 29px;
+    border: 1px solid #693bb3;
+    padding: 0 10px;
+    border-radius: 3px;
+    -webkit-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+	background: #693bb3;
+	color: #fff;
+	font-size: 1em;
+}
+.qp-container {
+    background: #fff;
+    box-shadow: 0 2px 2px rgba(0,0,0,.05), 0 1px 0 rgba(0,0,0,.05);
+    border: 1px solid #dee5e7;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+.qp-heading {
+    font-weight: 600;
+    font-size: 1.5em;
+    text-align: center;
+    padding-bottom: 15px;
+}
+.qp-details {
+    background: #fff;
+    box-shadow: 0 2px 2px rgba(0,0,0,.05), 0 1px 0 rgba(0,0,0,.05);
+    border: 1px solid #dee5e7;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.qp-ans span {
+    display: block;
+}
+.common-confirm .message-text {
+    white-space: pre-wrap;
+}
+.no-answer {
+    font-size: 0.85em;
+    opacity: 0.5;
+    padding: 20px 0px;
+}
+.file-upload-session {
+    border: 1px solid #eee;
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 3px;
+}

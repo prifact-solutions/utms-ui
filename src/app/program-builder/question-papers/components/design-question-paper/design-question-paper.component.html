@@ -1,0 +1,8 @@
+<div class="secondary-page-content-wrapper">
+	<div class="nodata" *ngIf="loading">
+		Loading ...
+	</div>
+	<div *ngIf="!loading && qpId">
+		<app-form-designer [qpId]="qpId" (back)="onBack($event)" (save)="onSave($event)"></app-form-designer>
+	</div>
+</div>

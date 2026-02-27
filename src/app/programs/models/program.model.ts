@@ -58,13 +58,14 @@ export interface ModuleContentFileUrl {
 export interface Exam {
     id: number;
     module_id: number;
-    title: string;
-    qp_id: number;
-    total_marks: number;
-    min_marks: number;
+    name: string;
+    question_paper: number;
+    total_score: number;
+    minimum_score: number;
     created_at: string;
 }
 
-export interface ExamContent extends Exam {
-    question_paper: QuestionPaper;
+export interface ModuleContentWithExam {
+    content: ModuleContent;
+    exam: Exam;
 }

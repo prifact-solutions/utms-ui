@@ -3,20 +3,30 @@ import { Injectable } from '@angular/core';
 import { AppSettings } from 'src/app/common/appsettings';
 import {
   Exam,
-  ExamContent,
   Module,
   ModuleContent,
   ModuleContentFileUrl,
+  ModuleContentWithExam,
   ModuleContentWithFiles,
   Program,
 } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
+import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramsService {
   constructor(private http: HttpClient) {}
+
+  private _currentProgramId = new BehaviorSubject<string | null>(null);
+
+  public programId$ = this._currentProgramId.asObservable();
+
+  setProgramId(id: string | null) {
+    this._currentProgramId.next(id);
+  }
 
   public getAllPrograms() {
     return this.http.get<Array<Program>>(`${AppSettings.apiUrl}/programs/`);
@@ -114,8 +124,15 @@ export class ProgramsService {
       module_payload,
     );
   }
-  public updateModule(program_id: number, module_id: number, module_payload: any) {
-    return this.http.put<Module>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}`, module_payload);
+  public updateModule(
+    program_id: number,
+    module_id: number,
+    module_payload: any,
+  ) {
+    return this.http.put<Module>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}`,
+      module_payload,
+    );
   }
   public getModulesForProgram(program_id: number) {
     return this.http.get<Array<Module>>(
@@ -137,20 +154,50 @@ export class ProgramsService {
       lesson,
     );
   }
-  public createExam(program_id: number, module_id: number, exam: Partial<ModuleContent>) {
-    return this.http.post<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/exam`, exam);
+  public createExam(program_id: number, module_id: number, exam: any) {
+    return this.http.post<ModuleContent>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/exam`,
+      exam,
+    );
   }
-  public updateLesson(program_id: number, module_id: number, lesson_id: number, lesson: Partial<ModuleContent>) {
-    return this.http.put<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${lesson_id}/`, lesson);
+  public updateLesson(
+    program_id: number,
+    module_id: number,
+    lesson_id: number,
+    lesson: Partial<ModuleContent>,
+  ) {
+    return this.http.put<ModuleContent>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${lesson_id}/`,
+      lesson,
+    );
   }
-  public updateContentOrganization(program_id: number, contentUpdates: Array<{ content_id: number, previous_content_id: number | null, order: number }>) {
-    return this.http.put(`${AppSettings.apiUrl}/programs/${program_id}/organize-contents/`, { contents: contentUpdates });
+  public updateContentOrganization(
+    program_id: number,
+    contentUpdates: Array<{
+      content_id: number;
+      previous_content_id: number | null;
+      order: number;
+    }>,
+  ) {
+    return this.http.put(
+      `${AppSettings.apiUrl}/programs/${program_id}/organize-contents/`,
+      { contents: contentUpdates },
+    );
   }
-  public getSignedUrlForUpload(program_id: number, module_id: number, module_content_id: number, file_name: string, file_type: string) {
-    return this.http.post<{ url: string; mime_type: string; }>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/upload-url`, {
-      file_name: file_name,
-      file_type: file_type
-    });
+  public getSignedUrlForUpload(
+    program_id: number,
+    module_id: number,
+    module_content_id: number,
+    file_name: string,
+    file_type: string,
+  ) {
+    return this.http.post<{ url: string; mime_type: string }>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/upload-url`,
+      {
+        file_name: file_name,
+        file_type: file_type,
+      },
+    );
   }
 
   public deleteModuleContent(
@@ -174,20 +221,13 @@ export class ProgramsService {
     });
   }
 
-  public createExam(
+  public getExam(
     program_id: number,
     module_id: number,
-    exam: Partial<Exam>,
+    module_content_id: number,
   ) {
-    return this.http.post<Exam>(
-      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/exams`,
-      exam,
-    );
-  }
-
-  public getExam(program_id: number, module_id: number, exam_id: number) {
-    return this.http.get<ExamContent>(
-      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/exams/${exam_id}`,
+    return this.http.get<ModuleContentWithExam>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/exam`,
     );
   }
 }

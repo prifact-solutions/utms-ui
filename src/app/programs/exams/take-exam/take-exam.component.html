@@ -1,4 +1,4 @@
-<div class="lesson-container">
+<!-- <div class="lesson-container">
   <div class="lesson-header">
     <h1>{{ lesson?.title }}</h1>
     <span class="content-type-badge">{{ lesson?.content_type }}</span>
@@ -11,4 +11,18 @@
     </div>
     <button *ngIf="next_module_content" class="btn-primary" (click)="goToNextContent()">Next</button>
   </div>
+</div> -->
+
+<div class="nodata" *ngIf="loading">
+	Loading ...
 </div>
+<div *ngIf="!loading && attemptId && exam">
+	<!-- <app-form-attempt [attemptId]="attemptId" [examTitle]="exam.examination_name"
+		[subjectTitle]="exam.subject_title" [timeDiff]="timeDiff" (save)="onSave($event)">
+	</app-form-attempt> -->
+  <app-form-attempt [attemptId]="attemptId" [subjectTitle]="exam.name"
+		(save)="onSave($event)">
+	</app-form-attempt>
+</div> 
+
+<!-- <app-errors [errors]="errors"></app-errors> -->

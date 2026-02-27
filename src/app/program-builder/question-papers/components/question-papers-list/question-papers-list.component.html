@@ -1,0 +1,62 @@
+<div class="secondary-page-content-wrapper">
+  <div class="qp-page-heading">Question Papers</div>
+  <div *ngIf="loading" class="nodata">Loading ...</div>
+  <div *ngIf="!loading && questionPapers">
+    <div *ngIf="questionPapers.length" class="qp-list">
+      <div class="qp-list-heading">
+        <span>Title</span>
+        <span>Total Marks</span>
+        <span>Created by</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+      <div *ngFor="let qp of questionPapers">
+        <span *ngIf="!editQpId || editQpId != qp.id">
+          {{ qp.name }}
+        </span>
+        <span *ngIf="editQpId && editQpId == qp.id">
+          <input class="rename-input" #qpTitle type="text" [value]="qp.name" />
+          <div class="title-buttons">
+            <button
+              class="button primary title-btn"
+              (click)="updateTitle(qpTitle.value, qp)"
+            >
+              Save
+            </button>
+            <button class="button title-btn" (click)="editQpId = null">
+              Cancel
+            </button>
+          </div>
+        </span>
+        <span>
+          {{ qp.total_score }}
+        </span>
+        <span>
+          {{ qp.created_by_full_name }}
+        </span>
+        <span>
+          {{ qp.status_display}}
+        </span>
+        <span class="qp-option-holder">
+          <app-dot-menu
+            *ngIf="qp.actions.length"
+            [menuItems]="qp.actions"
+            (selectedOption)="dotMenuOptionSelected($event, qp)"
+          ></app-dot-menu>
+          <span *ngIf="!qp.actions.length" class="no-action">No action</span>
+        </span>
+      </div>
+    </div>
+    <div class="nodata" *ngIf="!questionPapers.length">No Question papers</div>
+    <div>
+      <a class="float-button" (click)="addQuestionPaper()">Add</a>
+    </div>
+  </div>
+</div>
+
+<lib-confirm
+  [showConfirm]="showDelConfirm"
+  [confirmMessage]="'Are you sure you want to delete this question paper?'"
+  (onPrimaryAction)="delConfirmAction($event)"
+  (onSecondaryAction)="cancelDelAction($event)"
+></lib-confirm>
