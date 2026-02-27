@@ -30,7 +30,7 @@ export class ProgramsService {
     return this.http.get<Array<ProgramProgress>>(`${AppSettings.apiUrl}/programs/${id}/progress/`);
   }
   public getLesson(program_id: number, module_id: number, module_content_id: number) {
-    return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson`);
+    return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson/`);
   }
   public getNextContentIfEligible(program_id: number, module_id: number, module_content_id: number) {
     return this.http.get<ModuleContent>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/next`);

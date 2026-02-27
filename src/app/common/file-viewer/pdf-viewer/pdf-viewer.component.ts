@@ -22,6 +22,6 @@ export class PdfViewerComponent {
   @Output() onFileCompleted = new EventEmitter<string>();
 
   public onPdfLoad($event: any) {
-    this.onFileCompleted.emit("COMPLETE");
+    this.onFileCompleted.emit("COMPLETED");
   }
 }

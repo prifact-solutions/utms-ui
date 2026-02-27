@@ -5,7 +5,7 @@
             <app-video-player [videoUrl]="fileUrl" (onFileCompleted)="onFileCompleted($event)"></app-video-player>
         </div>
         <div class="pdf-container" *ngIf="file.file_content_type=='PDF'">
-            <app-pdf-viewer [pdfUrl]="fileUrl"></app-pdf-viewer>
+            <app-pdf-viewer (onFileCompleted)="onFileCompleted($event)" [pdfUrl]="fileUrl"></app-pdf-viewer>
         </div>
         <div class="image-container" *ngIf="file.file_content_type=='IMAGE'">
             <app-img-viewer (onFileCompleted)="onFileCompleted($event)" [imageUrl]="fileUrl"></app-img-viewer>
@@ -14,7 +14,8 @@
             <app-html-viewer></app-html-viewer>
         </div>
         <div class="generic-container" *ngIf="file.file_content_type=='FILE'">
-            <app-generic-file [fileUrl]="fileUrl" [fileName]="file.file_name" (onFileCompleted)="onFileCompleted($event)"></app-generic-file>
+            <app-generic-file [fileUrl]="fileUrl" [fileName]="file.file_name"
+                (onFileCompleted)="onFileCompleted($event)"></app-generic-file>
         </div>
     </ng-container>
 </div>
