@@ -101,7 +101,7 @@
               formControlName="total_score"
               min="1"
             />
-			<div
+            <div
               class="invalid-feedback"
               *ngIf="
                 examForm.get('total_score')?.invalid &&
@@ -130,7 +130,28 @@
               "
             >
               <span *ngIf="examForm.get('min_score')?.getError('required')"
-                >Minimum score is required</span
+                >Qualifying score is required</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group" style="max-width: 15rem">
+            <label for="duration">Exam duration (in hours)</label>
+            <input
+              id="duration"
+              type="number"
+              formControlName="duration"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('duration')?.invalid &&
+                examForm.get('duration')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('duration')?.getError('required')"
+                >Exam duration is required</span
               >
             </div>
           </div>

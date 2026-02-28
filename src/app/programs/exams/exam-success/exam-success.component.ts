@@ -52,9 +52,6 @@ export class ExamSuccessComponent extends ComponentBase {
         }),
       )
       .subscribe((attempt) => {
-        // this.lesson = lesson.content;
-        // this.files = lesson.files;
-        console.log(attempt);
         if (
           attempt &&
           attempt.status == ExamAttemptStatus.COMPLETED &&
@@ -67,7 +64,6 @@ export class ExamSuccessComponent extends ComponentBase {
             `/programs/${this.program_id}/modules/${this.module_id}/contents/${this.module_content_id}/exam`,
           );
         }
-        //this.next_module_content = next_content;
       });
     this.registerSubscription(sub);
   }

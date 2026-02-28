@@ -35,7 +35,7 @@ export class TakeExamComponent extends ComponentBase {
   loading: boolean = true;
   errors: Error[] = [];
   attemptId!: number;
-  timeDiff: number | undefined;
+  timeDiff!: number;
   exam!: Exam;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
@@ -77,6 +77,7 @@ export class TakeExamComponent extends ComponentBase {
               .pipe(
                 switchMap((examDetails) => {
                   this.exam = examDetails.exam;
+                  this.timeDiff = examDetails.exam.duration_hours * 60 * 60 * 1000;
                   return this.examService
                     .getExamAttempt(this.program_id, examDetails.exam.id)
                     .pipe(

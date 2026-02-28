@@ -15,7 +15,6 @@ import { OrganizeContentsComponent } from './organize-contents/organize-contents
 import { CreateExamComponent } from './create-exam/create-exam.component';
 import { DesignModule } from 'form-builder';
 import { QuestionPapersModule } from './question-papers/question-papers.module';
-
 @NgModule({
   declarations: [
     ProgramListComponent,

@@ -11,7 +11,10 @@ import {
   Program,
 } from 'src/app/programs/models/program.model';
 import { ComponentBase } from 'src/app/common/componentbase';
-import { QuestionPaper, QuestionPaperStatus } from '../question-papers/models/question-paper';
+import {
+  QuestionPaper,
+  QuestionPaperStatus,
+} from '../question-papers/models/question-paper';
 import { QuestionPapersService } from '../question-papers/services/question-papers.service';
 
 interface UploadFile {
@@ -35,7 +38,7 @@ export class CreateExamComponent
   examForm!: FormGroup;
   programId!: number;
   moduleId!: number;
-  
+
   moduleContentId: number | null = null;
   previous_order: number = 1;
 
@@ -60,8 +63,10 @@ export class CreateExamComponent
   ngOnInit(): void {
     this.programId = +this.route.snapshot.params['program_id'];
     this.moduleId = +this.route.snapshot.params['module_id'];
-    this.moduleContentId = this.route.snapshot.params['module_content_id'] || null;
-    this.previous_order = +this.route.snapshot.queryParams['previous_order'] || 1;
+    this.moduleContentId =
+      this.route.snapshot.params['module_content_id'] || null;
+    this.previous_order =
+      +this.route.snapshot.queryParams['previous_order'] || 1;
     this.initializeForm();
     this.fetchData();
   }
@@ -84,7 +89,9 @@ export class CreateExamComponent
     this.qpService
       .getAllQuestionPapersForProgram(this.programId)
       .subscribe((questionPapers) => {
-        this.questionPapers = questionPapers.filter(qp => qp.status == QuestionPaperStatus.ACTIVE);
+        this.questionPapers = questionPapers.filter(
+          (qp) => qp.status == QuestionPaperStatus.ACTIVE,
+        );
         this.examForm = this.fb.group({
           title: ['', [Validators.required, Validators.minLength(3)]],
           context_text: [''],
@@ -131,14 +138,15 @@ export class CreateExamComponent
       title: this.examForm.get('title')?.value,
       content_type: this.examForm.get('content_type')?.value,
       context_text: this.examForm.get('context_text')?.value,
-      order: this.examForm.get('order')?.value
+      order: this.examForm.get('order')?.value,
     };
 
     const examPayload: Partial<Exam> = {
       name: this.examForm.get('title')?.value,
       total_score: this.examForm.get('total_score')?.value,
       minimum_score: this.examForm.get('total_score')?.value,
-      question_paper: this.examForm.get('question_paper')?.value
+      duration_hours: this.examForm.get('duration')?.value,
+      question_paper: this.examForm.get('question_paper')?.value,
     };
 
     this.programsService
@@ -150,6 +158,13 @@ export class CreateExamComponent
       .subscribe({
         next: (exam: ModuleContent) => {
           this.moduleContentId = exam.id;
+          this.successMessage = 'Exam created successfully!';
+          this.isSubmitting = false;
+          setTimeout(() => {
+            this.router.navigateByUrl(
+              `/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`,
+            );
+          }, 2000);
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Failed to create exam';
