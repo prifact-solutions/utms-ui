@@ -1,82 +1,183 @@
 <div class="admin-page-container container" *ngIf="program && module">
-    <div class="builder-layout">
-        <!-- Sidebar: Program Info -->
-        <aside class="builder-sidebar">
-            <div class="program-mini-card card">
-                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                    alt="Program">
-                <div class="p-4">
-                    <h4>{{ program.title }}</h4>
-                    <p class="text-muted small">Module: <strong>{{ module.title }}</strong></p>
-                </div>
+  <div class="builder-layout">
+    <!-- Sidebar: Program Info -->
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="
+            program.thumbnail ||
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+          "
+          alt="Program"
+        />
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">
+            Module: <strong>{{ module.title }}</strong>
+          </p>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/', 'programs-builder', program.id, 'modules']"
+          >⬅ Back to Modules</a
+        >
+        <a class="active">Module Content</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content: Course Content List -->
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>{{ module.title }}</h1>
+          <p class="text-muted">
+            Review and manage lessons or exams for this section.
+          </p>
+        </div>
+        <div class="header-actions">
+          <div class="dropdown-group">
+            <button class="btn-primary">Add Content ▾</button>
+            <div class="dropdown-content">
+              <a
+                [routerLink]="[
+                  '/',
+                  'programs-builder',
+                  program.id,
+                  'modules',
+                  module.id,
+                  'lessons',
+                  'add',
+                ]"
+                [queryParams]="{
+                  previous_order:
+                    module_contents.length > 0
+                      ? module_contents[module_contents.length - 1].order
+                      : 0,
+                }"
+              >
+                Add Lesson
+              </a>
+              <a
+                [routerLink]="[
+                  '/',
+                  'programs-builder',
+                  program.id,
+                  'modules',
+                  module.id,
+                  'exams',
+                  'add',
+                ]"
+                [queryParams]="{
+                  previous_order:
+                    module_contents.length > 0
+                      ? module_contents[module_contents.length - 1].order
+                      : 0,
+                }"
+              >
+                Add Exam
+              </a>
             </div>
-            <nav class="sidebar-nav mt-4">
-                <a [routerLink]="['/','programs-builder', program.id, 'modules']">⬅ Back to Modules</a>
-                <a class="active">Module Content</a>
-            </nav>
-        </aside>
+          </div>
+        </div>
+      </header>
 
-        <!-- Main Content: Course Content List -->
-        <main class="builder-main">
-            <header class="page-header">
-                <div class="header-text">
-                    <h1>{{ module.title }}</h1>
-                    <p class="text-muted">Review and manage lessons or exams for this section.</p>
+      <div class="curriculum-list" *ngIf="module_contents">
+        <div
+          *ngFor="let content of module_contents; let i = index"
+          class="curriculum-item card"
+        >
+          <div class="item-number">{{ i + 1 }}</div>
+          <div class="curriculum-content">
+            <div class="d-flex align-items-center gap-3">
+              <span class="type-icon" style="font-size: 1.4rem">{{
+                content.content_type === "LESSON" ? "📖" : "📝"
+              }}</span>
+              <div>
+                <h3 class="m-0">{{ content.title }}</h3>
+                <div class="curriculum-meta mt-1">
+                  <span
+                    class="section-badge"
+                    style="font-size: 0.65rem; padding: 0.1rem 0.6rem"
+                    >{{ content.content_type }}</span
+                  >
+                  <span class="dot">•</span>
+                  <span>Order: {{ content.order }}</span>
                 </div>
-                <div class="header-actions">
-                    <div class="dropdown-group">
-                        <button class="btn-primary">Add Content ▾</button>
-                        <div class="dropdown-content">
-                            <a [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'lessons', 'add']"
-                                [queryParams]="{previous_order: module_contents.length > 0 ? module_contents[module_contents.length-1].order : 0}">
-                                Add Lesson
-                            </a>
-                            <a
-                                [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'exams', 'add']" 
-                                [queryParams]="{previous_order: module_contents.length > 0 ? module_contents[module_contents.length-1].order : 0}">
-                                Add Exam
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div class="curriculum-list" *ngIf="module_contents">
-                <div *ngFor="let content of module_contents; let i = index" class="curriculum-item card">
-                    <div class="item-number">{{ i + 1 }}</div>
-                    <div class="curriculum-content">
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="type-icon" style="font-size: 1.4rem;">{{ content.content_type === 'LESSON' ?
-                                '📖' : '📝' }}</span>
-                            <div>
-                                <h3 class="m-0">{{ content.title }}</h3>
-                                <div class="curriculum-meta mt-1">
-                                    <span class="section-badge" style="font-size: 0.65rem; padding: 0.1rem 0.6rem;">{{
-                                        content.content_type }}</span>
-                                    <span class="dot">•</span>
-                                    <span>Order: {{ content.order }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="curriculum-actions">
-                        <button class="btn-icon"
-                            [routerLink]="['/programs-builder', program_id, 'modules', module_id, 'lessons', content.id, 'edit']"
-                            title="Edit">⚙️</button>
-                        <button class="btn-icon text-error" (click)="onDelete(content.id)" title="Delete">🗑️</button>
-                    </div>
-                </div>
-
-                <div *ngIf="module_contents.length === 0" class="empty-state">
-                    <p>This module is empty. Add your first lesson or exam to get started.</p>
-                    <div class="d-flex gap-3 justify-content-center mt-3">
-                        <a [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'lessons', 'add']"
-                            class="btn-outline">Add Lesson</a>
-                        <a [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'exams', 'add']"
-                            class="btn-outline">Add Exam</a>
-                    </div>
-                </div>
+              </div>
             </div>
-        </main>
-    </div>
+          </div>
+          <div class="curriculum-actions">
+            <button
+              class="btn-icon"
+              [routerLink]="
+                content.content_type == 'LESSON'
+                  ? [
+                      '/programs-builder',
+                      program_id,
+                      'modules',
+                      module_id,
+                      'lessons',
+                      content.id,
+                      'edit',
+                    ]
+                  : [
+                      '/programs-builder',
+                      program_id,
+                      'modules',
+                      module_id,
+                      'exams',
+                      content.id,
+                      'edit',
+                    ]
+              "
+              title="Edit"
+            >
+              ⚙️
+            </button>
+            <button
+              class="btn-icon text-error"
+              (click)="onDelete(content.id)"
+              title="Delete"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="module_contents.length === 0" class="empty-state">
+          <p>
+            This module is empty. Add your first lesson or exam to get started.
+          </p>
+          <div class="d-flex gap-3 justify-content-center mt-3">
+            <a
+              [routerLink]="[
+                '/',
+                'programs-builder',
+                program.id,
+                'modules',
+                module.id,
+                'lessons',
+                'add',
+              ]"
+              class="btn-outline"
+              >Add Lesson</a
+            >
+            <a
+              [routerLink]="[
+                '/',
+                'programs-builder',
+                program.id,
+                'modules',
+                module.id,
+                'exams',
+                'add',
+              ]"
+              class="btn-outline"
+              >Add Exam</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>

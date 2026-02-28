@@ -15,6 +15,7 @@ import { OrganizeContentsComponent } from './organize-contents/organize-contents
 import { CreateExamComponent } from './create-exam/create-exam.component';
 import { DesignModule } from 'form-builder';
 import { QuestionPapersModule } from './question-papers/question-papers.module';
+import { EditExamComponent } from './edit-exam/edit-exam.component';
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -27,7 +28,8 @@ import { QuestionPapersModule } from './question-papers/question-papers.module';
     EditModuleComponent,
     EditLessonComponent,
     OrganizeContentsComponent,
-    CreateExamComponent
+    CreateExamComponent,
+    EditExamComponent
   ],
   imports: [
     CommonModule,

@@ -24,6 +24,7 @@ import { CreateQuestionPaperComponent } from './program-builder/question-papers/
 import { DesignQuestionPaperComponent } from './program-builder/question-papers/components/design-question-paper/design-question-paper.component';
 import { ExamSuccessComponent } from './programs/exams/exam-success/exam-success.component';
 import { TakeExamComponent } from './programs/exams/take-exam/take-exam.component';
+import { EditExamComponent } from './program-builder/edit-exam/edit-exam.component';
 
 const routes: Routes = [
   {
@@ -113,6 +114,11 @@ const routes: Routes = [
     path: 'programs-builder/:program_id/modules/:module_id/exams/add',
     component: CreateExamComponent,
     canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/exams/:content_id/edit',
+    component: EditExamComponent,
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/question-papers',

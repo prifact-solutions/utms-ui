@@ -29,7 +29,7 @@
           ]"
           >⬅ Back to Content</a
         >
-        <a class="active">Add Exam</a>
+        <a class="active">Edit Exam</a>
       </nav>
     </aside>
 
@@ -37,13 +37,8 @@
     <main class="builder-main">
       <header class="page-header">
         <div class="header-text">
-          <h1>Add New Exam</h1>
-          <p class="text-muted">
-            Create a formal assessment for the "<strong>{{
-              module.title
-            }}</strong
-            >" section.
-          </p>
+          <h1>Edit Exam</h1>
+          <p class="text-muted">Modify details for "<strong>{{ examContent?.content?.title }}</strong>"</p>
         </div>
       </header>
 
@@ -56,7 +51,10 @@
       </div>
 
       <div class="card p-5">
-        <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="isLoading" class="py-5 text-center">
+          <p class="text-muted">Loading content details...</p>
+        </div>
+        <form *ngIf="!isLoading && examForm" [formGroup]="examForm" (ngSubmit)="onSubmit()">
           <div class="form-group mb-4">
             <label for="title">Exam Title</label>
             <input
@@ -217,8 +215,8 @@
               class="btn-primary"
               [disabled]="examForm.invalid || isSubmitting"
             >
-              <span *ngIf="!isSubmitting">Create Exam</span>
-              <span *ngIf="isSubmitting">Creating...</span>
+              <span *ngIf="!isSubmitting">Save Changes</span>
+              <span *ngIf="isSubmitting">Saving...</span>
             </button>
           </div>
         </form>
