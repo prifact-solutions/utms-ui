@@ -1,67 +1,118 @@
 <div class="admin-page-container container" *ngIf="program">
-    <div class="builder-layout">
-        <!-- Mini Sidebar with Program Info -->
-        <aside class="builder-sidebar">
-            <div class="program-mini-card card">
-                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                    alt="Program">
-                <div class="p-4">
-                    <h4>{{ program.title }}</h4>
-                    <p class="text-muted small">{{ program.description | slice:0:100 }}...</p>
-                    <hr>
-                    <div class="meta-row">
-                        <span>Duration: <strong>{{ program.duration }}d</strong></span>
-                        <span class="badge" [class.bg-success]="program.is_active">{{ program.is_active ? 'Active' :
-                            'Draft' }}</span>
-                    </div>
-                </div>
+  <div class="builder-layout">
+    <!-- Mini Sidebar with Program Info -->
+    <aside class="builder-sidebar">
+      <div class="program-mini-card card">
+        <img
+          [src]="
+            program.thumbnail ||
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+          "
+          alt="Program"
+        />
+        <div class="p-4">
+          <h4>{{ program.title }}</h4>
+          <p class="text-muted small">
+            {{ program.description | slice: 0 : 100 }}...
+          </p>
+          <hr />
+          <div class="meta-row">
+            <span
+              >Duration: <strong>{{ program.duration }}d</strong></span
+            >
+            <span class="badge" [class.bg-success]="program.is_active">{{
+              program.is_active ? "Active" : "Draft"
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
+        <a class="active">Curriculum</a>
+        <a [routerLink]="['/programs-builder', program.id, 'organize-contents']"
+          >Publish Course</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main Content: Modules List -->
+    <main class="builder-main">
+      <header class="page-header">
+        <div class="header-text">
+          <h1>Course Curriculum</h1>
+          <p class="text-muted">Create and manage modules for your program.</p>
+        </div>
+        <div class="header-actions">
+          <a
+            [routerLink]="['/programs-builder', program.id, 'modules', 'add']"
+            class="btn-primary"
+            >Add Module</a
+          >
+          <a
+            [routerLink]="[
+              '/',
+              'programs-builder',
+              program.id,
+              'question-papers',
+            ]"
+            class="btn-primary"
+            >Manage question papers</a
+          >
+        </div>
+      </header>
+
+      <div class="modules-grid" *ngIf="modules">
+        <div
+          *ngFor="let module of modules; let i = index"
+          class="curriculum-item card"
+        >
+          <div class="item-number">Section {{ i + 1 }}</div>
+          <div class="curriculum-content">
+            <h3>{{ module.title }}</h3>
+            <div class="curriculum-meta" *ngIf="module.module_contents">
+              <span>{{ module.module_contents.length }} lectures</span>
             </div>
-            <nav class="sidebar-nav mt-4">
-                <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
-                <a class="active">Curriculum</a>
-                <a [routerLink]="['/programs-builder', program.id, 'organize-contents']">Publish Course</a>
-            </nav>
-        </aside>
+          </div>
+          <div class="curriculum-actions">
+            <button
+              class="btn-icon"
+              [routerLink]="[
+                '/programs-builder',
+                program.id,
+                'modules',
+                module.id,
+                'edit',
+              ]"
+              title="Edit"
+            >
+              ⚙️
+            </button>
+            <button
+              class="btn-primary-sm"
+              [routerLink]="[
+                '/',
+                'programs-builder',
+                program.id,
+                'modules',
+                module.id,
+                'lessons',
+              ]"
+            >
+              Manage Content
+            </button>
+            <button class="btn-icon text-error">🗑️</button>
+          </div>
+        </div>
 
-        <!-- Main Content: Modules List -->
-        <main class="builder-main">
-            <header class="page-header">
-                <div class="header-text">
-                    <h1>Course Curriculum</h1>
-                    <p class="text-muted">Create and manage modules for your program.</p>
-                </div>
-                <div class="header-actions">
-                    <a [routerLink]="['/programs-builder', program.id, 'modules', 'add']" class="btn-primary">Add
-                        Module</a>
-                </div>
-            </header>
-
-            <div class="modules-grid" *ngIf="modules">
-                <div *ngFor="let module of modules; let i = index" class="curriculum-item card">
-                    <div class="item-number">Section {{ i + 1 }}</div>
-                    <div class="curriculum-content">
-                        <h3>{{ module.title }}</h3>
-                        <div class="curriculum-meta" *ngIf="module.module_contents">
-                            <span>{{ module.module_contents.length }} lectures</span>
-                        </div>
-                    </div>
-                    <div class="curriculum-actions">
-                        <button class="btn-icon"
-                            [routerLink]="['/programs-builder', program.id, 'modules', module.id, 'edit']"
-                            title="Edit">⚙️</button>
-                        <button class="btn-primary-sm"
-                            [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'lessons']">Manage
-                            Content</button>
-                        <button class="btn-icon text-error">🗑️</button>
-                    </div>
-                </div>
-
-                <div *ngIf="modules.length === 0" class="empty-state">
-                    <p>No modules added yet. Start by creating your first section.</p>
-                    <a [routerLink]="['/programs-builder', program.id, 'modules', 'add']" class="btn-outline mt-3">Add
-                        First Module</a>
-                </div>
-            </div>
-        </main>
-    </div>
+        <div *ngIf="modules.length === 0" class="empty-state">
+          <p>No modules added yet. Start by creating your first section.</p>
+          <a
+            [routerLink]="['/programs-builder', program.id, 'modules', 'add']"
+            class="btn-outline mt-3"
+            >Add First Module</a
+          >
+        </div>
+      </div>
+    </main>
+  </div>
 </div>

@@ -13,8 +13,8 @@ import { EditModuleComponent } from './edit-module/edit-module.component';
 import { EditLessonComponent } from './edit-lesson/edit-lesson.component';
 import { OrganizeContentsComponent } from './organize-contents/organize-contents.component';
 import { CreateExamComponent } from './create-exam/create-exam.component';
-
-
+import { DesignModule } from 'form-builder';
+import { QuestionPapersModule } from './question-papers/question-papers.module';
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -33,7 +33,9 @@ import { CreateExamComponent } from './create-exam/create-exam.component';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    DesignModule,
+    QuestionPapersModule
   ]
 })
 export class ProgramBuilderModule { }

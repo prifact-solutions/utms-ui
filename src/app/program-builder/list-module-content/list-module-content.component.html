@@ -32,7 +32,8 @@
                                 Add Lesson
                             </a>
                             <a
-                                [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'exams', 'add']">
+                                [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'exams', 'add']" 
+                                [queryParams]="{previous_order: module_contents.length > 0 ? module_contents[module_contents.length-1].order : 0}">
                                 Add Exam
                             </a>
                         </div>

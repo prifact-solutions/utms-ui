@@ -1,3 +1,6 @@
+import { QuestionPaperSchemaDefn } from "form-builder";
+import { QuestionPaper } from "src/app/program-builder/question-papers/models/question-paper";
+
 export interface ModuleContentWithFiles {
     content: ModuleContent;
     files: ModuleContentFile[];
@@ -51,4 +54,20 @@ export interface Program {
 
 export interface ModuleContentFileUrl {
     file_url: string;
+}
+
+export interface Exam {
+    id: number;
+    module_id: number;
+    name: string;
+    question_paper: number;
+    total_score: number;
+    minimum_score: number;
+    duration_hours: number;
+    created_at: string;
+}
+
+export interface ModuleContentWithExam {
+    content: ModuleContent;
+    exam: Exam;
 }

@@ -4,15 +4,31 @@
     <aside class="builder-sidebar">
       <div class="program-mini-card card">
         <img
-          [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-          alt="Program">
+          [src]="
+            program.thumbnail ||
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+          "
+          alt="Program"
+        />
         <div class="p-4">
           <h4>{{ program.title }}</h4>
-          <p class="text-muted small">Module: <strong>{{ module.title }}</strong></p>
+          <p class="text-muted small">
+            Module: <strong>{{ module.title }}</strong>
+          </p>
         </div>
       </div>
       <nav class="sidebar-nav mt-4">
-        <a [routerLink]="['/','programs-builder', program.id, 'modules', module.id, 'lessons']">⬅ Back to Content</a>
+        <a
+          [routerLink]="[
+            '/',
+            'programs-builder',
+            program.id,
+            'modules',
+            module.id,
+            'lessons',
+          ]"
+          >? Back to Content</a
+        >
         <a class="active">Add Exam</a>
       </nav>
     </aside>
@@ -22,7 +38,12 @@
       <header class="page-header">
         <div class="header-text">
           <h1>Add New Exam</h1>
-          <p class="text-muted">Create a formal assessment for the "<strong>{{ module.title }}</strong>" section.</p>
+          <p class="text-muted">
+            Create a formal assessment for the "<strong>{{
+              module.title
+            }}</strong
+            >" section.
+          </p>
         </div>
       </header>
 
@@ -38,64 +59,164 @@
         <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
           <div class="form-group mb-4">
             <label for="title">Exam Title</label>
-            <input id="title" type="text" formControlName="title" placeholder="e.g. Final Assessment: Web Fundamentals"
-              [class.is-invalid]="examForm.get('title')?.invalid && examForm.get('title')?.touched">
-            <div class="invalid-feedback" *ngIf="examForm.get('title')?.invalid && examForm.get('title')?.touched">
-              <span *ngIf="examForm.get('title')?.getError('required')">Title is required</span>
-              <span *ngIf="examForm.get('title')?.getError('minlength')">Title must be at least 3 characters</span>
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              placeholder="e.g. Final Assessment: Web Fundamentals"
+              [class.is-invalid]="
+                examForm.get('title')?.invalid && examForm.get('title')?.touched
+              "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('title')?.invalid && examForm.get('title')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('title')?.getError('required')"
+                >Title is required</span
+              >
+              <span *ngIf="examForm.get('title')?.getError('minlength')"
+                >Title must be at least 3 characters</span
+              >
             </div>
           </div>
 
           <div class="form-group">
             <label for="context_text">Overview / Instructions</label>
-            <textarea id="context_text" formControlName="context_text"
-              placeholder="Provide some context for this exam..." rows="4"></textarea>
+            <textarea
+              id="context_text"
+              formControlName="context_text"
+              placeholder="Provide some context for this exam..."
+              rows="4"
+            ></textarea>
           </div>
 
-          <div class="form-group" style="max-width: 15rem;">
+          <div class="form-group" style="max-width: 15rem">
+            <label for="total_score">Total score</label>
+            <input
+              id="total_score"
+              type="number"
+              formControlName="total_score"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('total_score')?.invalid &&
+                examForm.get('total_score')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('total_score')?.getError('required')"
+                >Total score is required</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group" style="max-width: 15rem">
+            <label for="min_score">Qualifying score</label>
+            <input
+              id="min_score"
+              type="number"
+              formControlName="min_score"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('min_score')?.invalid &&
+                examForm.get('min_score')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('min_score')?.getError('required')"
+                >Qualifying score is required</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group" style="max-width: 15rem">
+            <label for="duration">Exam duration (in hours)</label>
+            <input
+              id="duration"
+              type="number"
+              formControlName="duration"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('duration')?.invalid &&
+                examForm.get('duration')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('duration')?.getError('required')"
+                >Exam duration is required</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="question_paper" class="form-label">
+              Select Question Paper
+              <span class="required">*</span>
+            </label>
+            <select
+              id="question_paper"
+              class="form-control"
+              formControlName="question_paper"
+              [class.is-invalid]="
+                examForm.get('question_paper')?.invalid &&
+                examForm.get('question_paper')?.touched
+              "
+            >
+              <option value="" disabled selected>
+                -- Select a Question Paper --
+              </option>
+              <option *ngFor="let paper of questionPapers" [value]="paper.id">
+                {{ paper.name }}
+              </option>
+            </select>
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('question_paper')?.invalid &&
+                examForm.get('question_paper')?.touched
+              "
+            >
+              <span>Please select a question paper</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="max-width: 15rem">
             <label for="order">Display Order</label>
-            <input id="order" type="number" formControlName="order" min="1">
-          </div>
-
-          <!-- File Upload Section -->
-          <div class="mt-5 p-4 bg-off-white rounded-md border border-dashed">
-            <h3 class="mb-3" style="font-size: 1.1rem;">Related Documents</h3>
-
-            <div class="d-flex align-items-center gap-3 mb-4">
-              <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none;">
-              <button type="button" class="btn-primary-sm" (click)="fileInput.click()">Choose Files</button>
-              <span class="text-muted small">PDF, Images, Video, Documents</span>
-            </div>
-
-            <div *ngIf="filesToUpload.length > 0" class="curriculum-list mt-3">
-              <div *ngFor="let uploadFile of filesToUpload; let i = index"
-                class="card p-3 d-flex flex-row align-items-center gap-3">
-                <span class="type-icon" style="font-size: 1.5rem;">
-                  {{ uploadFile.uploaded ? '✅' : '📎' }}
-                </span>
-                <div class="flex-1">
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <strong class="small">{{ uploadFile.file.name }}</strong>
-                    <span class="text-muted small">{{ (uploadFile.file.size / 1024 / 1024).toFixed(2) }} MB</span>
-                  </div>
-                  <div class="progress-bar-container" *ngIf="!uploadFile.uploaded && !isSubmitting"
-                    style="height: 4px; background: #eee; border-radius: 2px; overflow: hidden;">
-                    <div [style.width.%]="uploadFile.progress"
-                      style="height: 100%; background: var(--accent-color, #a435f0); transition: width 0.3s;"></div>
-                  </div>
-                  <div *ngIf="uploadFile.error" class="text-error small mt-1">{{ uploadFile.error }}</div>
-                </div>
-                <button type="button" class="btn-icon text-error" (click)="removeFile(i)"
-                  *ngIf="!isSubmitting && !uploadFile.uploaded">🗑️</button>
-              </div>
-            </div>
+            <input id="order" type="number" formControlName="order" min="1" />
           </div>
 
           <div class="form-actions mt-5">
-            <button type="button" class="btn-outline"
-              (click)="router.navigate(['/','programs-builder',programId,'modules',moduleId,'lessons'])"
-              [disabled]="isSubmitting">Cancel</button>
-            <button type="submit" class="btn-primary" [disabled]="examForm.invalid || isSubmitting">
+            <button
+              type="button"
+              class="btn-outline"
+              (click)="
+                router.navigate([
+                  '/',
+                  'programs-builder',
+                  programId,
+                  'modules',
+                  moduleId,
+                  'lessons',
+                ])
+              "
+              [disabled]="isSubmitting"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="examForm.invalid || isSubmitting"
+            >
               <span *ngIf="!isSubmitting">Create Exam</span>
               <span *ngIf="isSubmitting">Creating...</span>
             </button>

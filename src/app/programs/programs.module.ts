@@ -4,11 +4,12 @@ import { ExploreComponent } from './explore/explore.component';
 import { EnrollComponent } from './enroll/enroll.component';
 import { DetailsComponent } from './details/details.component';
 import { ViewLessonComponent } from './view-lesson/view-lesson.component';
-import { TakeExamComponent } from './take-exam/take-exam.component';
 import { FileViewerModule } from '../common/file-viewer/file-viewer.module';
 import { RouterModule } from '@angular/router';
-
-
+import { AttemptModule, FormBuilderBackendService } from 'form-builder';
+import { ExamBackendService } from '../shared/services/exam-backend.service';
+import { ExamSuccessComponent } from './exams/exam-success/exam-success.component';
+import { TakeExamComponent } from './exams/take-exam/take-exam.component';
 
 @NgModule({
   declarations: [
@@ -16,11 +17,13 @@ import { RouterModule } from '@angular/router';
     EnrollComponent,
     DetailsComponent,
     ViewLessonComponent,
-    TakeExamComponent
+    TakeExamComponent,
+    ExamSuccessComponent,
   ],
-  imports: [
-    CommonModule, FileViewerModule, RouterModule
+  imports: [CommonModule, FileViewerModule, RouterModule, AttemptModule],
+  providers: [
+    { provide: FormBuilderBackendService, useClass: ExamBackendService },
   ],
-  exports: [ExploreComponent]
+  exports: [ExploreComponent],
 })
-export class ProgramsModule { }
+export class ProgramsModule {}

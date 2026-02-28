@@ -18,9 +18,12 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
+    "@angular/cdk": "^15.2.9",
+    "@kolkov/angular-editor": "^2.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.12.0",
+    "form-builder": "https://prifact-libs.s3-ap-southeast-1.amazonaws.com/form-builder-0.0.8.tgz"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.11",

@@ -1,0 +1,46 @@
+.setting-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    cursor: pointer;
+    padding-top: 5px;
+  }
+  .setting-popup {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    min-width: 200px;  
+    overflow: hidden;
+    z-index: 1;
+  }
+  .setting-popup ul {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    list-style: none;
+    font-size: 0.70em;
+  }
+  .setting-popup ul a {
+    display: block;
+    padding: 10px 25px;
+    color: #2b2f3b;
+  }
+  .setting-popup ul a:hover {
+    background: rgba(245, 246, 250, 0.9);
+  }
+  .setting-popup ul li i {
+    float: right;
+  }
+  .threedots:after {
+    content: "\2807";
+    font-size: 20px;
+  }
+.setting-popup a {
+    font-size: 1.2em;
+    padding: 10px 15px;
+  }

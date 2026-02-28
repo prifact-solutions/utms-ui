@@ -1,0 +1,10 @@
+<div class="setting-icon" appClickOutside (clickOutside)="clickedOutside()">
+  <div class="threedots" (click)="dotClicked(); $event.stopPropagation();"></div>
+  <div *ngIf="showMenu" class="setting-popup">
+    <ul>
+      <li *ngFor="let menuItem of menuItems;let i=index">
+        <a (click)="itemClicked(i)"> {{menuItem}}</a>
+      </li>
+    </ul>
+  </div>
+</div>
