@@ -97,6 +97,7 @@ export class CreateExamComponent
           context_text: [''],
           total_score: [null, [Validators.required, Validators.min(1)]],
           min_score: [null, [Validators.required, Validators.min(1)]],
+          duration: [null, [Validators.required, Validators.min(1)]],
           question_paper: ['', Validators.required],
           order: [this.previous_order + 1, Validators.required],
         });
