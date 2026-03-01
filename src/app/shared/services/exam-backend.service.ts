@@ -167,10 +167,16 @@ export class ExamAttempt {
   public id!: number;
   public exam_id!: number;
   public score?: number;
+  public result?: ExamResultStatus;
   public status!: ExamAttemptStatus;
 }
 
 export enum ExamAttemptStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
+}
+
+export enum ExamResultStatus {
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
 }

@@ -13,7 +13,6 @@ import { EditModuleComponent } from './edit-module/edit-module.component';
 import { EditLessonComponent } from './edit-lesson/edit-lesson.component';
 import { OrganizeContentsComponent } from './organize-contents/organize-contents.component';
 import { CreateExamComponent } from './create-exam/create-exam.component';
-import { DesignModule } from 'form-builder';
 import { QuestionPapersModule } from './question-papers/question-papers.module';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 @NgModule({
@@ -36,7 +35,6 @@ import { EditExamComponent } from './edit-exam/edit-exam.component';
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    DesignModule,
     QuestionPapersModule
   ]
 })
