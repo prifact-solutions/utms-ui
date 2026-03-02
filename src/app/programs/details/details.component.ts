@@ -5,6 +5,7 @@ import { Program } from '../models/program.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
+import { RecentProgramsService } from 'src/app/common/recent-programs.service';
 
 @Component({
   selector: 'app-details',
@@ -16,7 +17,7 @@ export class DetailsComponent extends ComponentBase {
   public progress: { [id: string]: string; } = {}
   public openSections: Set<number> = new Set([0]); // Default first section open
 
-  constructor(private programService: ProgramsService, private authService: AuthService, private route: ActivatedRoute, private router: Router) { super(); }
+  constructor(private programService: ProgramsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private recentProgramsService: RecentProgramsService) { super(); }
 
   public getTotalContents(): number {
     if (!this.catalog) return 0;
@@ -73,6 +74,10 @@ export class DetailsComponent extends ComponentBase {
     )
       .subscribe((res) => {
         this.catalog = res;
+        // Record access for the dashboard's recently accessed section
+        if (res) {
+          this.recentProgramsService.recordAccess(res.id, res.title, res.thumbnail);
+        }
       });
     this.registerSubscription(sub1);
 

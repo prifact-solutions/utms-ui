@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 import { EnrollComponent } from './enroll/enroll.component';
 import { DetailsComponent } from './details/details.component';
@@ -20,10 +21,10 @@ import { TakeExamComponent } from './exams/take-exam/take-exam.component';
     TakeExamComponent,
     ExamSuccessComponent,
   ],
-  imports: [CommonModule, FileViewerModule, RouterModule, AttemptModule],
+  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, AttemptModule],
   providers: [
     { provide: FormBuilderBackendService, useClass: ExamBackendService },
   ],
   exports: [ExploreComponent],
 })
-export class ProgramsModule {}
+export class ProgramsModule { }

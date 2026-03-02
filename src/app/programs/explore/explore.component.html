@@ -1,52 +1,127 @@
-<div class="hero-section">
-    <div class="container hero-content">
-        <div class="hero-text">
-            <h1>Learn without limits</h1>
-            <p>Start, switch, or advance your career with more than 5,000 courses, Professional Certificates, and
-                degrees from world-class universities and companies.</p>
-        </div>
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Learning">
-        </div>
-    </div>
-</div>
-
-<div class="container main-content mt-4">
+<div class="explore-page">
+    <h1></h1>
+    <!-- Page Header -->
     <div class="section-header">
-        <h2 class="section-title">A broad selection of programs</h2>
-        <p class="section-subtitle">Choose from over 210,000 online video courses with new additions published every
-            month</p>
+        <h2>Explore Courses</h2>
+        <p>Find the right course for your learning journey.</p>
     </div>
-
-    <div class="grid-auto">
-        <div class="program-card card" *ngFor="let program of programs" (click)="viewProgram(program.id)">
-            <div class="card-image">
-                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                    [alt]="program.title">
-                <div class="image-overlay" *ngIf="program.is_enrolled">
-                    <span class="enrolled-badge">Enrolled</span>
-                </div>
-            </div>
-
-            <div class="card-content">
-                <h3 class="program-title">{{program.title}}</h3>
-                <p class="program-description">{{program.short_description || program.description | slice:0:100}}...</p>
-
-                <div class="program-meta">
-                    <span class="duration">{{program.duration}} days</span>
-                    <span class="difficulty" *ngIf="program.difficulty">{{program.difficulty}}</span>
-                </div>
-
-                <div class="card-actions" (click)="$event.stopPropagation()">
-                    <button *ngIf="!program.is_enrolled" class="btn-primary w-100" (click)="enrollProgram(program.id)">
-                        Enroll Now
-                    </button>
-                    <button *ngIf="program.is_enrolled" class="btn-outline w-100" (click)="viewProgram(program.id)">
-                        Go to Course
-                    </button>
-                </div>
-            </div>
+    <div class="explore-search-filters">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path
+                    d="M14.3598 24.4001C12.3741 24.4001 10.433 23.8113 8.78191 22.7081C7.13084 21.6049 5.84399 20.0368 5.08408 18.2022C4.32417 16.3677 4.12535 14.3489 4.51275 12.4014C4.90015 10.4538 5.85636 8.66484 7.26048 7.26072C8.6646 5.8566 10.4536 4.90039 12.4011 4.51299C14.3486 4.12559 16.3674 4.32442 18.202 5.08432C20.0365 5.84423 21.6046 7.13108 22.7078 8.78215C23.811 10.4332 24.3998 12.3744 24.3998 14.3601C24.3998 15.6785 24.1401 16.9841 23.6356 18.2022C23.131 19.4204 22.3914 20.5272 21.4592 21.4594C20.5269 22.3917 19.4201 23.1313 18.202 23.6358C16.9838 24.1404 15.6782 24.4001 14.3598 24.4001ZM14.3598 6.3334C12.7776 6.3334 11.2309 6.8026 9.91527 7.68166C8.59968 8.5607 7.57429 9.81014 6.9688 11.2719C6.36329 12.7338 6.20487 14.3422 6.51355 15.8941C6.82223 17.446 7.58416 18.8714 8.70297 19.9902C9.8218 21.109 11.2473 21.871 12.7991 22.1797C14.3509 22.4884 15.9594 22.33 17.4213 21.7245C18.883 21.1189 20.1325 20.0936 21.0116 18.778C21.8906 17.4624 22.3598 15.9157 22.3598 14.3334C22.3598 12.2117 21.517 10.1768 20.0166 8.67655C18.5164 7.17626 16.4816 6.3334 14.3598 6.3334Z"
+                    fill="black"></path>
+                <path
+                    d="M26.6668 27.6666C26.5355 27.6671 26.4052 27.6415 26.2839 27.5911C26.1625 27.5408 26.0524 27.4667 25.9601 27.3732L20.4535 21.8666C20.2768 21.677 20.1807 21.4262 20.1852 21.1671C20.1897 20.908 20.2948 20.661 20.478 20.4776C20.6612 20.2944 20.9084 20.1895 21.1675 20.185C21.4265 20.1804 21.6772 20.2766 21.8668 20.4532L27.3735 25.9599C27.5607 26.1474 27.6659 26.4015 27.6659 26.6666C27.6659 26.9315 27.5607 27.1856 27.3735 27.3732C27.2812 27.4667 27.1711 27.5408 27.0497 27.5911C26.9284 27.6415 26.7981 27.6671 26.6668 27.6666Z"
+                    fill="black"></path>
+            </svg>
+            <input type="text" placeholder="Search programs by name or description..." [(ngModel)]="searchTerm">
+            <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm = ''">✕</button>
         </div>
+
+
+
+        <div class="course-access" *ngIf="isAuthenticated">
+            <select [(ngModel)]="enrollmentFilter">
+                <option value="all">All Programs</option>
+                <option value="enrolled">Enrolled</option>
+                <option value="unenrolled">Not Enrolled</option>
+            </select>
+        </div>
+
+        <ng-container *ngIf="!isLoading && availableCategories.length > 0" class="filter-container">
+
+            <div class="filter-options">
+                <label [class.selected]="isCategorySelected(cat.id)" *ngFor="let cat of availableCategories">
+                    <input type="checkbox" [checked]="isCategorySelected(cat.id)" (change)="toggleCategory(cat.id)" />
+                    <span>{{ cat.label }}</span>
+                </label>
+            </div>
+
+
+        </ng-container>
+    </div>
+    <!-- Category Bubble Filters -->
+
+
+    <!-- Results Count -->
+    <p class="search-count" *ngIf="!isLoading">
+        {{ filteredPrograms.length }} program{{ filteredPrograms.length !== 1 ? 's' : '' }} found
+        <ng-container *ngIf="selectedCategories.size > 0">
+            in {{ selectedCategories.size }} categor{{ selectedCategories.size === 1 ? 'y' : 'ies' }}
+        </ng-container>
+        <ng-container *ngIf="hasActiveFilters">
+            <a (click)="clearAllFilters()">
+                Clear all search filters
+            </a>
+        </ng-container>
+    </p>
+    <div class="no-results" *ngIf="!isLoading && filteredPrograms.length === 0">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path d="M9 17C9.85038 16.3697 10.8846 16 12 16C13.1154 16 14.1496 16.3697 15 17" stroke="#eee"
+                    stroke-width="1.5" stroke-linecap="round"></path>
+                <ellipse cx="15" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                <ellipse cx="9" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                <path
+                    d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                    stroke="#eee" stroke-width="1.5"></path>
+            </g>
+        </svg>
+    </div>
+    <div class="course-listing">
+        <!-- Skeleton Loading -->
+        <ng-container *ngIf="isLoading">
+            <div class="skeleton-card" *ngFor="let _ of [1,2,3,4,5,6,7,8]">
+                <div class="skeleton-bubble" style="position: absolute; top: 10px; right: 10px; width: 60px;"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-text"></div>
+                <div style="margin-top: 10px;">
+                    <div class="skeleton-bubble"></div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Empty State -->
+
+
+        <!-- Actual Program Cards -->
+        <ng-container *ngIf="!isLoading">
+
+            <div class="c-card" *ngFor="let program of filteredPrograms" (click)="clickProgram(program)"
+                [style.background]="program.thumbnail ? 'url(' + program.thumbnail + ') center/cover no-repeat' : '#232323'">
+
+                <span class="c-top-bubble">{{program.duration}} days</span>
+
+
+
+                <div class="card-image">
+
+                    <div class="image-overlay" *ngIf="isAuthenticated && program.is_enrolled">
+                        <span class="enrolled-badge">✓ Enrolled</span>
+                    </div>
+
+                </div>
+
+                <div class="card-content">
+                    <h3>{{program.title}}</h3>
+                    <p>{{program.short_description || program.description |
+                        slice:0:100}}...
+                    </p>
+
+                    <div class="card-categories" *ngIf="program.categories && program.categories.length > 0">
+                        <span class="card-category-bubble" *ngFor="let catId of program.categories">
+                            {{ getCategoryLabel(catId) }}
+                        </span>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </ng-container>
     </div>
 </div>

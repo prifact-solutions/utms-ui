@@ -1,7 +1,7 @@
 // Modern "Plush" Color Palette (Udemy-inspired)
-$primary-color: #2d2f31; // Dark Slate/Charcoal
-$accent-color: #a435f0; // Deep Purple
-$accent-hover: #8710d8;
+$primary-color: #111; // Dark Slate/Charcoal
+$accent-color: #1c7347;
+$accent-hover: #145332;
 $success-color: #1e7232;
 $error-color: #b32d0f;
 $warning-color: #f7e1ad;
@@ -12,8 +12,8 @@ $bg-off-white: #f7f9fa;
 $border-color: #d1d7dc;
 
 // Typography
-$font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-$text-main: #2d2f31;
+$font-family: "Inter", sans-serif;
+$text-main: #111;
 $text-muted: #6a6f73;
 
 // Spacing & Borders

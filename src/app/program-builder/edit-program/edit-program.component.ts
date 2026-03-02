@@ -112,31 +112,29 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       return;
     }
 
-    // const categories = this.programForm.get('categories')?.value || [];
-    // if (categories.length === 0) {
-    //   this.errorMessage = 'Please select at least one category';
-    //   this.programForm.get('categories')?.markAsTouched();
-    //   return;
-    // }
-
     this.isSubmitting = true;
     this.errorMessage = null;
     this.successMessage = null;
 
     const formValue = this.programForm.value;
-    const programData: Partial<Program> = {
-      title: formValue.title,
-      description: formValue.description,
-      duration: parseFloat(formValue.duration),
-      is_active: formValue.is_active,
-      categories: [1],
-      difficulty: formValue.difficulty,
-      video_hours: formValue.video_hours,
-      preview_video_url: formValue.preview_video_url,
-      thumbnail: this.thumbnailPreview || null
-    };
+    const thumbnailFile: File | null = formValue.thumbnail;
+    // Hardcode category to 1 as requested temporarily
+    const categories: number[] = [1];
 
-    const subscription = this.programsService.updateProgram(this.programId, programData).subscribe({
+    const fd = new FormData();
+    fd.append('title', formValue.title);
+    fd.append('description', formValue.description);
+    fd.append('duration', parseFloat(formValue.duration).toString());
+    fd.append('is_active', formValue.is_active ? 'true' : 'false');
+    fd.append('difficulty', formValue.difficulty);
+    fd.append('video_hours', (formValue.video_hours ?? 0).toString());
+    fd.append('preview_video_url', formValue.preview_video_url || '');
+    categories.forEach(c => fd.append('categories', c.toString()));
+    if (thumbnailFile) {
+      fd.append('thumbnail', thumbnailFile, thumbnailFile.name);
+    }
+
+    const subscription = this.programsService.updateProgram(this.programId, fd).subscribe({
       next: (program) => {
         this.successMessage = 'Program updated successfully!';
         this.isSubmitting = false;

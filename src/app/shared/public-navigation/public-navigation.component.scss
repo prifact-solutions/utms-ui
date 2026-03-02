@@ -1,0 +1,124 @@
+@import 'src/styles/variables';
+
+.main-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-right: 1rem;
+}
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 0.9rem;
+    border-radius: $border-radius-sm;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: $transition-base;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+}
+
+.auth-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.public-header {
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+
+    .brand-text {
+        color: $primary-color;
+    }
+}
+
+.public-desktop-nav {
+    margin-left: 2rem;
+    gap: 1.5rem;
+
+    .nav-link {
+        color: $text-main;
+        font-weight: 500;
+
+        &:hover {
+            color: $primary-color;
+            background: transparent;
+        }
+    }
+}
+
+.public-auth-actions {
+    .login-btn {
+        font-weight: 600;
+    }
+
+    .style-btn {
+        padding: 0.6rem 1.25rem;
+        border-radius: $border-radius-md;
+        font-weight: 600;
+        transition: $transition-base;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+        }
+    }
+}
+
+// Mobile Responsiveness
+@media (max-width: 900px) {
+
+    .header-left,
+    .header-right {
+        gap: 0.5rem;
+    }
+
+    .brand {
+        margin-right: 0.5rem;
+    }
+
+    .public-desktop-nav {
+        margin-left: 1rem;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .auth-actions {
+        gap: 0.5rem;
+    }
+}

@@ -1,0 +1,95 @@
+<div class="banner">
+    <div class="banner-text">
+        <h1><span> Learn </span> and Achieve Your Goals</h1>
+        <p>At your pace, learn and turn your skills into success</p>
+        <div class="search-box-container" #searchContainer [class.show-filter]="showFilter">
+            <div class="search-box">
+                <input type="text" placeholder="Search Course .." [(ngModel)]="searchTerm" (input)="onSearchInput()"
+                    (focus)="onFocus()">
+                <a href="javascript:void(0)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                        <path
+                            d="M14.3598 24.4001C12.3741 24.4001 10.433 23.8113 8.78191 22.7081C7.13084 21.6049 5.84399 20.0368 5.08408 18.2022C4.32417 16.3677 4.12535 14.3489 4.51275 12.4014C4.90015 10.4538 5.85636 8.66484 7.26048 7.26072C8.6646 5.8566 10.4536 4.90039 12.4011 4.51299C14.3486 4.12559 16.3674 4.32442 18.202 5.08432C20.0365 5.84423 21.6046 7.13108 22.7078 8.78215C23.811 10.4332 24.3998 12.3744 24.3998 14.3601C24.3998 15.6785 24.1401 16.9841 23.6356 18.2022C23.131 19.4204 22.3914 20.5272 21.4592 21.4594C20.5269 22.3917 19.4201 23.1313 18.202 23.6358C16.9838 24.1404 15.6782 24.4001 14.3598 24.4001ZM14.3598 6.3334C12.7776 6.3334 11.2309 6.8026 9.91527 7.68166C8.59968 8.5607 7.57429 9.81014 6.9688 11.2719C6.36329 12.7338 6.20487 14.3422 6.51355 15.8941C6.82223 17.446 7.58416 18.8714 8.70297 19.9902C9.8218 21.109 11.2473 21.871 12.7991 22.1797C14.3509 22.4884 15.9594 22.33 17.4213 21.7245C18.883 21.1189 20.1325 20.0936 21.0116 18.778C21.8906 17.4624 22.3598 15.9157 22.3598 14.3334C22.3598 12.2117 21.517 10.1768 20.0166 8.67655C18.5164 7.17626 16.4816 6.3334 14.3598 6.3334Z">
+                        </path>
+                        <path
+                            d="M26.6668 27.6666C26.5355 27.6671 26.4052 27.6415 26.2839 27.5911C26.1625 27.5408 26.0524 27.4667 25.9601 27.3732L20.4535 21.8666C20.2768 21.677 20.1807 21.4262 20.1852 21.1671C20.1897 20.908 20.2948 20.661 20.478 20.4776C20.6612 20.2944 20.9084 20.1895 21.1675 20.185C21.4265 20.1804 21.6772 20.2766 21.8668 20.4532L27.3735 25.9599C27.5607 26.1474 27.6659 26.4015 27.6659 26.6666C27.6659 26.9315 27.5607 27.1856 27.3735 27.3732C27.2812 27.4667 27.1711 27.5408 27.0497 27.5911C26.9284 27.6415 26.7981 27.6671 26.6668 27.6666Z">
+                        </path>
+                    </svg>
+                    <strong> Search</strong>
+                </a>
+            </div>
+            <div class="search-filter-container">
+                <div class="search-filter-box" [class.show]="showFilter">
+                    <h2>Search by category</h2>
+                    <div class="filter-options">
+                        <label>
+                            <input type="checkbox" name="category" checked value="all">
+                            <span>All</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="safety">
+                            <span>Safety</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="technical">
+                            <span>Technical</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="soft">
+                            <span>Soft Skills</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="health">
+                            <span>Health</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banner-image">
+
+    </div>
+
+
+</div>
+<div class="featured-container">
+    <h2>Featured Courses</h2>
+    <p>Master the in-demand skills you need to advance your journey</p>
+    <div class="course-listing">
+        <ng-container *ngIf="isLoading">
+            <div class="skeleton-card" *ngFor="let _ of [1,2,3,4,5,6]">
+                <div class="skeleton-bubble" style="position: absolute; top: 10px; right: 10px; width: 60px;"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-text"></div>
+                <div style="margin-top: 10px;">
+                    <div class="skeleton-bubble"></div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Actual Content -->
+        <ng-container *ngIf="!isLoading">
+            <div class="c-card" *ngFor="let program of programs" (click)="viewProgram(program.id)"
+                [style.background]="program.thumbnail ? 'url(' + program.thumbnail + ') center/cover no-repeat' : '#232323'">
+                <span class="c-top-bubble">{{program.duration}} days</span>
+                <div class="card-content">
+                    <h3>{{program.title}}</h3>
+                    <p>{{program.short_description || program.description | slice:0:100}}...</p>
+
+                    <div *ngIf="program.categories && program.categories.length > 0">
+                        <span class="card-category-bubble" *ngFor="let catId of program.categories">
+                            {{ getCategoryLabel(catId) }}
+                        </span>
+                    </div>
+
+
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div class="landing-footer">
+    &copy; 2026 UPSKILL CRS Learning. All rights reserved.
+
+</div>

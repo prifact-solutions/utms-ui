@@ -1,0 +1,349 @@
+@import 'src/styles/variables';
+
+// ── Greeting Banner ─────────────────────────────────────────────────────────
+
+.greeting-banner {
+    background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 12%) 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 0;
+
+    .greeting-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .greeting-title {
+        font-size: 2rem;
+        margin-bottom: 0.4rem;
+        color: white;
+    }
+
+    .greeting-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin: 0;
+    }
+
+    .btn-explore {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.75rem;
+        background: rgba(white, 0.15);
+        color: white;
+        border: 1.5px solid rgba(white, 0.4);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: $transition-base;
+        white-space: nowrap;
+        font-family: $font-family;
+
+        &:hover {
+            background: rgba(white, 0.25);
+            border-color: rgba(white, 0.7);
+        }
+
+        .arrow {
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover .arrow {
+            transform: translateX(4px);
+        }
+    }
+}
+
+// ── Dashboard Content ────────────────────────────────────────────────────────
+
+.dashboard-content {
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+}
+
+// ── Section Common ───────────────────────────────────────────────────────────
+
+.section {
+    margin-bottom: 3rem;
+
+    .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+
+        .section-title {
+            font-size: 1.35rem;
+            margin: 0;
+        }
+
+        .section-meta {
+            font-size: 0.82rem;
+            color: $text-muted;
+        }
+    }
+}
+
+// ── Recently Accessed Row ────────────────────────────────────────────────────
+
+.recent-scroll-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $bg-off-white;
+        border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 2px;
+    }
+}
+
+.recent-card {
+    flex: 0 0 200px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid $border-color;
+    background: white;
+    transition: $transition-base;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: $shadow-md;
+
+        .recent-overlay {
+            opacity: 1;
+        }
+    }
+
+    .recent-thumbnail {
+        position: relative;
+        height: 120px;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recent-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+
+            .play-icon {
+                font-size: 1.5rem;
+                color: white;
+            }
+        }
+    }
+
+    .recent-info {
+        padding: 0.65rem 0.75rem;
+
+        .recent-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: $text-main;
+            margin: 0 0 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.35;
+        }
+
+        .recent-time {
+            font-size: 0.72rem;
+            color: $text-muted;
+        }
+    }
+}
+
+// ── Enrolled Program Cards ────────────────────────────────────────────────────
+
+.enrolled-card {
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: $transition-base;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
+
+        .card-image img {
+            transform: scale(1.05);
+        }
+    }
+
+    .card-image {
+        height: 160px;
+        overflow: hidden;
+        position: relative;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: $transition-base;
+        }
+
+        .enrolled-badge-overlay {
+            position: absolute;
+            top: 0.6rem;
+            left: 0.6rem;
+        }
+
+        .enrolled-chip {
+            background: $accent-color;
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            letter-spacing: 0.03em;
+        }
+    }
+
+    .card-content {
+        padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .program-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .program-description {
+            font-size: 0.82rem;
+            color: $text-muted;
+            margin-bottom: 0.5rem;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .card-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .card-category-bubble {
+            display: inline-block;
+            padding: 0.18rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba($accent-color, 0.1);
+            color: $accent-color;
+            border: 1px solid rgba($accent-color, 0.25);
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .program-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: $text-muted;
+            margin-bottom: 0.85rem;
+
+            .duration::before {
+                content: '⏱️ ';
+            }
+
+            .badge {
+                font-size: 0.65rem;
+                padding: 0.15rem 0.45rem;
+            }
+        }
+
+        .card-actions {
+            margin-top: auto;
+        }
+    }
+}
+
+// ── Empty State ────────────────────────────────────────────────────────────
+
+.empty-state {
+    text-align: center;
+    padding: 3.5rem 2rem;
+    background: $bg-off-white;
+    border-radius: 12px;
+    border: 1.5px dashed $border-color;
+
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+        color: $text-main;
+        margin-bottom: 0.4rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: $text-muted;
+        margin-bottom: 1.25rem;
+    }
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────
+
+.w-100 {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .greeting-title {
+        font-size: 1.5rem !important;
+    }
+
+    .greeting-content {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+}

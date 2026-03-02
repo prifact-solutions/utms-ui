@@ -6,6 +6,7 @@
       </a>
 
       <nav class="desktop-nav">
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" *ngIf="isAuthenticated">Home</a>
         <a class="nav-link" routerLink="/" routerLinkActive="active">Programs</a>
         <div class="nav-item-dropdown" *ngIf="isStaff">
           <span class="nav-link dropdown-trigger">Admin <i class="chevron"></i></span>

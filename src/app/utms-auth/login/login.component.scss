@@ -1,93 +1,72 @@
 @import 'src/styles/variables';
 
 .auth-page {
-    min-height: calc(100vh - 72px);
+    min-height: calc(100vh - 100px);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 48px;
+    padding-left: calc(2vw + 48px);
+    padding-bottom: 150px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    background-color: $bg-off-white;
-    padding: 2rem;
-}
-
-.auth-card {
-    background: white;
-    width: 100%;
-    max-width: 400px;
-    padding: 3rem;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-lg;
-    border: 1px solid $border-color;
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-
-    h2 {
-        font-size: 1.75rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        color: $primary-color;
-    }
-
-    p {
-        color: $text-muted;
-        font-size: 0.95rem;
-    }
-}
-
-.alert-error {
-    background: rgba($error-color, 0.1);
-    color: $error-color;
-    padding: 1rem;
-    border-radius: $border-radius-sm;
-    margin-bottom: 2rem;
-    font-size: 0.85rem;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
 
-    strong {
-        font-weight: 700;
-    }
+    .auth-header {
+        padding-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
 
-    .btn-close {
-        background: none;
-        border: none;
-        color: inherit;
-        cursor: pointer;
-        font-size: 1rem;
+        svg {
+            width: 100px;
+            height: 100px;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-align: left;
+
+            strong {
+                display: block;
+                font-weight: 300;
+                font-size: 2.2rem;
+            }
+        }
+
+        p {
+            font-size: 1.25rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+
+        }
     }
 }
 
 .auth-footer {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
+    padding: 24px 0;
+    margin-top: 24px;
+    border-top: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .875rem;
 
-    p {
-        margin-bottom: 0.75rem;
-        color: $text-muted;
-
-        a {
-            color: $accent-color;
-            font-weight: 700;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-
-    .forgot-password {
-        color: $text-muted;
-        font-size: 0.85rem;
+    a {
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: 600;
 
         &:hover {
-            color: $accent-color;
+            text-decoration: underline;
         }
     }
+
+
 }
+
 
 .spinner-sm {
     width: 16px;

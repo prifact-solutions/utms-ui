@@ -24,11 +24,27 @@ import { CreateQuestionPaperComponent } from './program-builder/question-papers/
 import { DesignQuestionPaperComponent } from './program-builder/question-papers/components/design-question-paper/design-question-paper.component';
 import { ExamSuccessComponent } from './programs/exams/exam-success/exam-success.component';
 import { TakeExamComponent } from './programs/exams/take-exam/take-exam.component';
+import { LandingComponent } from './public/landing/landing.component';
+import { DashboardComponent } from './public/dashboard/dashboard.component';
+import { HowitworksComponent } from './public/howitworks/howitworks.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: LandingComponent,
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'explore',
     component: ExploreComponent,
+  },
+  {
+    path: 'howitworks',
+    component: HowitworksComponent,
   },
   {
     path: 'login',

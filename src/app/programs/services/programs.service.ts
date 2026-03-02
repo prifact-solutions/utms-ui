@@ -18,7 +18,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class ProgramsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private _currentProgramId = new BehaviorSubject<string | null>(null);
 
@@ -102,10 +102,10 @@ export class ProgramsService {
       { status: status },
     );
   }
-  public createProgram(program: Partial<Program>) {
+  public createProgram(program: Partial<Program> | FormData) {
     return this.http.post<Program>(`${AppSettings.apiUrl}/programs/`, program);
   }
-  public updateProgram(id: number, program: Partial<Program>) {
+  public updateProgram(id: number, program: Partial<Program> | FormData) {
     return this.http.put<Program>(
       `${AppSettings.apiUrl}/programs/${id}/`,
       program,
