@@ -110,6 +110,22 @@ export class CreateExamComponent
       return;
     }
 
+    if (
+      this.examForm.get('total_score')?.value <
+      this.examForm.get('min_score')?.value
+    ) {
+      this.errorMessage = 'Total score must be greater than Qualifying score';
+      return;
+    }
+
+    const selectedQPId = this.examForm.get('question_paper')?.value;
+    const selectedQP = this.questionPapers.find((qp) => qp.id == selectedQPId);
+    if (selectedQP?.total_score != this.examForm.get('total_score')?.value) {
+      this.errorMessage =
+        'Total scores of the exam and the selected question paper must match';
+      return;
+    }
+
     this.isSubmitting = true;
     this.errorMessage = '';
     this.successMessage = '';

@@ -12,7 +12,7 @@ export class QuestionPaper {
 	public created_by_full_name!: string;
 	public updated_date!: string;
 	public is_shared!: boolean;
-	public is_qplinked!: boolean;
+	public is_linked!: boolean;
 	public actions!: string[];
 }
 

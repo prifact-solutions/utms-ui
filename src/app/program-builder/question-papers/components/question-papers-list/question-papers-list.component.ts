@@ -1,7 +1,7 @@
 import { Component, Renderer2 } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { QuestionPapersService } from '../../services/question-papers.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, switchMap } from 'rxjs';
 import { CreateQuestionPaper } from '../../models/create-question-paper';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -69,15 +69,14 @@ export class QuestionPapersListComponent extends ComponentBase {
   }
 
   loadOptionForQP(qp: QuestionPaper) {
-    qp.is_qplinked = true;
-    if (qp.is_qplinked && qp.status == QuestionPaperStatus.ACTIVE) {
+    if (qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
       qp.actions = ['Clone'];
-    } else if (!qp.is_qplinked && qp.status == QuestionPaperStatus.ACTIVE) {
+    } else if (!qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
       qp.actions = ['Mark as Draft', 'Clone', 'Rename', 'Delete'];
     } else if (qp.status == QuestionPaperStatus.DRAFT) {
       qp.actions = [
         'Design question paper',
-        'Mark as Final',
+        'Mark as Active',
         'Clone',
         'Rename',
         'Delete',
@@ -98,21 +97,29 @@ export class QuestionPapersListComponent extends ComponentBase {
         this.editQpId = qp.id;
         break;
       }
-      case 'Mark as Final': {
+      case 'Mark as Active': {
         this.qpService
           .changeQuestionPaperStatus(
             qp.id,
             this.programId,
             QuestionPaperStatus.ACTIVE,
           )
-          .subscribe(
-            (updatedQP) => {
-              qp.status = QuestionPaperStatus.ACTIVE;
-              //qp.updated_date = new Date().toDateString();
-              this.loadOptionForQP(updatedQP);
-              this.questionPapers = this.questionPapers.map((qp) =>
-                qp.id === updatedQP.id ? updatedQP : qp,
+          .pipe(
+            switchMap((_) => {
+              return this.qpService.getAllQuestionPapersForProgram(
+                this.programId,
               );
+            }),
+          )
+          .subscribe(
+            (questionPaperList) => {
+              this.loading = false;
+              this.questionPapers = questionPaperList.sort((a, b) =>
+                a.updated_date > b.updated_date ? -1 : 1,
+              );
+              this.questionPapers.forEach((qp) => {
+                this.loadOptionForQP(qp);
+              });
             },
             (err) => {
               //this.alertService.newAlert(err.error.message);
@@ -127,14 +134,22 @@ export class QuestionPapersListComponent extends ComponentBase {
             this.programId,
             QuestionPaperStatus.DRAFT,
           )
-          .subscribe(
-            (updatedQP) => {
-              qp.status = QuestionPaperStatus.DRAFT;
-              //qp.updated_date = new Date().toDateString();
-              this.loadOptionForQP(qp);
-              this.questionPapers = this.questionPapers.map((qp) =>
-                qp.id === updatedQP.id ? updatedQP : qp,
+          .pipe(
+            switchMap((_) => {
+              return this.qpService.getAllQuestionPapersForProgram(
+                this.programId,
               );
+            }),
+          )
+          .subscribe(
+            (questionPaperList) => {
+              this.loading = false;
+              this.questionPapers = questionPaperList.sort((a, b) =>
+                a.updated_date > b.updated_date ? -1 : 1,
+              );
+              this.questionPapers.forEach((qp) => {
+                this.loadOptionForQP(qp);
+              });
             },
             (err) => {
               //this.alertService.newAlert(err.error.message);
@@ -145,11 +160,21 @@ export class QuestionPapersListComponent extends ComponentBase {
       case 'Clone': {
         this.qpService
           .cloneQuestionPaper(qp.id, this.programId)
-          .subscribe((res: QuestionPaper) => {
-            res.created_by_full_name = '';
-            res.is_shared = false;
-            this.loadOptionForQP(res);
-            this.questionPapers.push(res);
+          .pipe(
+            switchMap((_) => {
+              return this.qpService.getAllQuestionPapersForProgram(
+                this.programId,
+              );
+            }),
+          )
+          .subscribe((questionPaperList) => {
+            this.loading = false;
+            this.questionPapers = questionPaperList.sort((a, b) =>
+              a.updated_date > b.updated_date ? -1 : 1,
+            );
+            this.questionPapers.forEach((qp) => {
+              this.loadOptionForQP(qp);
+            });
             //this.alertService.newAlert('Question paper cloned successfully');
           });
         break;
@@ -160,19 +185,6 @@ export class QuestionPapersListComponent extends ComponentBase {
         break;
       }
     }
-
-    let sub = this.qpService
-      .getAllQuestionPapersForProgram(this.programId)
-      .subscribe((questionPaperList) => {
-        this.loading = false;
-        this.questionPapers = questionPaperList.sort((a, b) =>
-          a.updated_date > b.updated_date ? -1 : 1,
-        );
-        this.questionPapers.forEach((qp) => {
-          this.loadOptionForQP(qp);
-        });
-      });
-    this.registerSubscription(sub);
   }
 
   delConfirmAction(event: any) {
@@ -184,12 +196,22 @@ export class QuestionPapersListComponent extends ComponentBase {
           this.programId,
           QuestionPaperStatus.ARCHIVED,
         )
-        .subscribe(
-          (_) => {
-            let index = this.questionPapers.indexOf(
-              this.selectedQP as QuestionPaper,
+        .pipe(
+          switchMap((_) => {
+            return this.qpService.getAllQuestionPapersForProgram(
+              this.programId,
             );
-            this.questionPapers.splice(index, 1);
+          }),
+        )
+        .subscribe(
+          (questionPaperList) => {
+            this.loading = false;
+            this.questionPapers = questionPaperList.sort((a, b) =>
+              a.updated_date > b.updated_date ? -1 : 1,
+            );
+            this.questionPapers.forEach((qp) => {
+              this.loadOptionForQP(qp);
+            });
             this.selectedQP = null;
           },
           (err) => {
@@ -216,10 +238,22 @@ export class QuestionPapersListComponent extends ComponentBase {
       QpObj.name = newTitle;
       let sub = this.qpService
         .updateQuestionPaperTitle(qp.id, this.programId, QpObj)
-        .subscribe((_) => {
+        .pipe(
+          switchMap((_) => {
+            return this.qpService.getAllQuestionPapersForProgram(
+              this.programId,
+            );
+          }),
+        )
+        .subscribe((questionPaperList) => {
+          this.loading = false;
+          this.questionPapers = questionPaperList.sort((a, b) =>
+            a.updated_date > b.updated_date ? -1 : 1,
+          );
+          this.questionPapers.forEach((qp) => {
+            this.loadOptionForQP(qp);
+          });
           this.editQpId = null;
-          qp.updated_date = new Date().toDateString();
-          qp.name = newTitle;
         });
       this.registerSubscription(sub);
     }
