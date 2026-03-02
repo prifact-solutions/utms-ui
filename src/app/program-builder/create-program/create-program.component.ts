@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
-import { Program } from 'src/app/programs/models/program.model';
+import { Category, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
   thumbnailPreview: string | null = null;
+  categories: Array<Category> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +29,9 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.programsService.getAllCategories().subscribe((categories) => {
+      this.categories = categories;
+    });
   }
 
   initializeForm(): void {
@@ -38,6 +42,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       is_active: [true, Validators.required],
       difficulty: ['Beginner', Validators.required],
       video_hours: [0],
+      categories:[],
       preview_video_url: [''],
       thumbnail: [null]
     });
@@ -89,21 +94,20 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
 
     const formValue = this.programForm.value;
     const thumbnailFile: File | null = formValue.thumbnail;
-    // Hardcode category to 1 as requested temporarily
-    const categories: number[] = [1];
+    console.log(formValue.categories);
+    const categories: number[] = formValue.categories || [];
 
-    const fd = new FormData();
-    fd.append('title', formValue.title);
-    fd.append('description', formValue.description);
-    fd.append('duration', parseFloat(formValue.duration).toString());
-    fd.append('is_active', formValue.is_active ? 'true' : 'false');
-    fd.append('difficulty', formValue.difficulty);
-    fd.append('video_hours', (formValue.video_hours ?? 0).toString());
-    fd.append('preview_video_url', formValue.preview_video_url || '');
-    categories.forEach(c => fd.append('categories', c.toString()));
-    if (thumbnailFile) {
-      fd.append('thumbnail', thumbnailFile, thumbnailFile.name);
-    }
+    const fd: any = {
+      title: formValue.title,
+      description: formValue.description,
+      duration: parseFloat(formValue.duration),
+      is_active: formValue.is_active,
+      difficulty: formValue.difficulty,
+      video_hours: formValue.video_hours ?? 0,
+      preview_video_url: formValue.preview_video_url || '',
+      categories: categories,
+      thumbnail: null
+    };
 
     const subscription = this.programsService.createProgram(fd).subscribe({
       next: (program) => {

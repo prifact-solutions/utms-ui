@@ -110,25 +110,12 @@
             <label>Categories</label>
             <div class="d-flex flex-wrap gap-4 mt-2">
               <label class="d-flex align-items-center gap-2 cursor-pointer"
-                style="text-transform: none; font-weight: 500;">
-                <input type="checkbox" [checked]="isCategoryChecked(1)" (change)="onCategoryChange(1, $event)">
-                Technology
+                style="text-transform: none; font-weight: 500;" *ngFor="let category of categories">
+                <input type="checkbox" [checked]="isCategoryChecked(category.id)"
+                  (change)="onCategoryChange(category.id, $event)">
+                {{ category.name }}
               </label>
-              <label class="d-flex align-items-center gap-2 cursor-pointer"
-                style="text-transform: none; font-weight: 500;">
-                <input type="checkbox" [checked]="isCategoryChecked(2)" (change)="onCategoryChange(2, $event)">
-                Business
-              </label>
-              <label class="d-flex align-items-center gap-2 cursor-pointer"
-                style="text-transform: none; font-weight: 500;">
-                <input type="checkbox" [checked]="isCategoryChecked(3)" (change)="onCategoryChange(3, $event)">
-                Design
-              </label>
-              <label class="d-flex align-items-center gap-2 cursor-pointer"
-                style="text-transform: none; font-weight: 500;">
-                <input type="checkbox" [checked]="isCategoryChecked(4)" (change)="onCategoryChange(4, $event)">
-                Marketing
-              </label>
+
             </div>
           </div>
 

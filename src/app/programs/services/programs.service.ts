@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettings } from 'src/app/common/appsettings';
 import {
+  Category,
   Exam,
   Module,
   ModuleContent,
@@ -26,6 +27,10 @@ export class ProgramsService {
 
   setProgramId(id: string | null) {
     this._currentProgramId.next(id);
+  }
+  
+  public getAllCategories() {
+    return this.http.get<Array<Category>>(`${AppSettings.apiUrl}/categories/`);
   }
 
   public getAllPrograms() {
@@ -102,7 +107,7 @@ export class ProgramsService {
       { status: status },
     );
   }
-  public createProgram(program: Partial<Program> | FormData) {
+  public createProgram(program: Partial<Program>) {
     return this.http.post<Program>(`${AppSettings.apiUrl}/programs/`, program);
   }
   public updateProgram(id: number, program: Partial<Program> | FormData) {

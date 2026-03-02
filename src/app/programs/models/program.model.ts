@@ -40,7 +40,7 @@ export interface Program {
     thumbnail: string | null;
     duration: number;
     is_active: boolean;
-    status:string;
+    status: string;
     created_at: string;
     created_by: number;
     categories: number[];
@@ -70,4 +70,9 @@ export interface Exam {
 export interface ModuleContentWithExam {
     content: ModuleContent;
     exam: Exam;
+}
+
+export interface Category {
+    id: number;
+    name: string;
 }
