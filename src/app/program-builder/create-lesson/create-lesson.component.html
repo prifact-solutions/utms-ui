@@ -3,9 +3,7 @@
     <!-- Sidebar: Program Info -->
     <aside class="builder-sidebar">
       <div class="program-mini-card card">
-        <img
-          [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-          alt="Program">
+        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
         <div class="p-4">
           <h4>{{ program.title }}</h4>
           <p class="text-muted small">Module: <strong>{{ module.title }}</strong></p>

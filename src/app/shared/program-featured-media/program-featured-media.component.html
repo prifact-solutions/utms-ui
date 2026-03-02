@@ -1,0 +1,10 @@
+<ng-container *ngIf="url">
+    <ng-container *ngIf="media_type=='VIDEO'">
+        <video controls>
+            <source [src]="url" type="video/mp4">
+        </video>
+    </ng-container>
+    <ng-container *ngIf="media_type=='IMAGE'">
+        <img [src]="url" alt="">
+    </ng-container>
+</ng-container>

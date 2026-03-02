@@ -76,7 +76,7 @@ export class DetailsComponent extends ComponentBase {
         this.catalog = res;
         // Record access for the dashboard's recently accessed section
         if (res) {
-          this.recentProgramsService.recordAccess(res.id, res.title, res.thumbnail);
+          this.recentProgramsService.recordAccess(res.id, res.title, res.thumbnail, res.preview_video);
         }
       });
     this.registerSubscription(sub1);

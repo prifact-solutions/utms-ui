@@ -11,6 +11,7 @@ import { AttemptModule, FormBuilderBackendService } from 'form-builder';
 import { ExamBackendService } from '../shared/services/exam-backend.service';
 import { ExamSuccessComponent } from './exams/exam-success/exam-success.component';
 import { TakeExamComponent } from './exams/take-exam/take-exam.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { TakeExamComponent } from './exams/take-exam/take-exam.component';
     TakeExamComponent,
     ExamSuccessComponent,
   ],
-  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, AttemptModule],
+  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, AttemptModule, SharedModule],
   providers: [
     { provide: FormBuilderBackendService, useClass: ExamBackendService },
   ],

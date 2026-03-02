@@ -15,6 +15,7 @@ import { OrganizeContentsComponent } from './organize-contents/organize-contents
 import { CreateExamComponent } from './create-exam/create-exam.component';
 import { QuestionPapersModule } from './question-papers/question-papers.module';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -35,7 +36,8 @@ import { EditExamComponent } from './edit-exam/edit-exam.component';
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    QuestionPapersModule
+    QuestionPapersModule,
+    SharedModule
   ]
 })
 export class ProgramBuilderModule { }

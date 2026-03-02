@@ -46,7 +46,7 @@ export interface Program {
     categories: number[];
     difficulty?: string;
     video_hours?: number;
-    preview_video_url?: string;
+    preview_video: string | null;
     short_description?: string;
     modules?: Module[];
     is_enrolled?: boolean;

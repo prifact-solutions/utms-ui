@@ -28,8 +28,8 @@
                 <div class="recent-scroll-row">
                     <div class="recent-card" *ngFor="let program of recentPrograms" (click)="goToProgram(program.id)">
                         <div class="recent-thumbnail">
-                            <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                                [alt]="program.title" />
+                            <app-program-featured-media [program]="program"
+                                media_type="IMAGE"></app-program-featured-media>
                             <div class="recent-overlay">
                                 <span class="play-icon">▶</span>
                             </div>
@@ -78,8 +78,7 @@
                 <div class="enrolled-card card" *ngFor="let program of enrolledPrograms"
                     (click)="goToProgram(program.id)">
                     <div class="card-image">
-                        <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                            [alt]="program.title" />
+                        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
                         <div class="enrolled-badge-overlay">
                             <span class="enrolled-chip">✓ Enrolled</span>
                         </div>

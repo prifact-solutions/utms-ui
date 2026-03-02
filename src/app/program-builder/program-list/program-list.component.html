@@ -27,10 +27,9 @@
     <div *ngIf="!isLoading && !errorMessage && programs.length > 0" class="admin-grid">
         <div *ngFor="let program of programs" class="admin-card">
             <div class="admin-card-header">
-                <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                    [alt]="program.title" />
+                <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
                 <div class="status-chip badge" [class.bg-success]="program.status == 'ACTIVE'">
-                    {{ program.status  }}
+                    {{ program.status }}
                 </div>
             </div>
 

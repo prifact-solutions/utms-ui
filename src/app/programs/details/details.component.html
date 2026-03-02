@@ -6,7 +6,7 @@
                 <nav class="breadcrumb">
                     <a routerLink="/">Programs</a>
                     <span class="separator">/</span>
-                    <span>{{ catalog.title  }}</span>
+                    <span>{{ catalog.title }}</span>
                 </nav>
 
                 <h1 class="program-title">{{ catalog.title }}</h1>
@@ -25,8 +25,7 @@
             <aside class="side-card-container">
                 <div class="side-card card">
                     <div class="video-preview" (click)="playPreview()">
-                        <img [src]="catalog.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                            alt="Preview">
+                        <app-program-featured-media [program]="catalog" media_type="VIDEO"></app-program-featured-media>
                         <div class="play-overlay">
                             <div class="play-icon">▶</div>
                             <span>Preview this course</span>

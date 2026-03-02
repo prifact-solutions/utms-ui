@@ -231,6 +231,22 @@ export class ProgramsService {
     );
   }
 
+  public getProgramThumbnailViewUrl(
+    program_id: number,
+  ) {
+    return this.http.post<{ file_url: string }>(
+      `${AppSettings.apiUrl}/programs/${program_id}/get-thumbnail/`, {}
+    );
+  }
+
+  public getProgramVideoViewUrl(
+    program_id: number,
+  ) {
+    return this.http.post<{ file_url: string }>(
+      `${AppSettings.apiUrl}/programs/${program_id}/get-preview-video/`, {}
+    );
+  }
+
   public deleteModuleContent(
     program_id: number,
     module_id: number,

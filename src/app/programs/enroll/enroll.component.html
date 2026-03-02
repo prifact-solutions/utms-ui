@@ -17,10 +17,7 @@
 
                 <div class="program-preview-card card p-4 mb-4">
                     <div class="d-flex gap-4">
-                        <div class="preview-img">
-                            <img [src]="program.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'"
-                                alt="Program">
-                        </div>
+                        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
                         <div class="flex-1">
                             <h3 class="mb-2">{{ program.title }}</h3>
                             <div class="meta-info d-flex gap-3 text-muted small">

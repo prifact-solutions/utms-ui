@@ -82,8 +82,8 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       this.thumbnailPreview = this.program.thumbnail;
     }
 
-    if (this.program.preview_video_url) {
-      this.videoPreviewUrl = this.program.preview_video_url;
+    if (this.program.preview_video) {
+      this.videoPreviewUrl = this.program.preview_video;
     }
   }
 

@@ -4,6 +4,7 @@ export interface RecentProgram {
     id: number;
     title: string;
     thumbnail: string | null;
+    preview_video_url: string | null;
     accessedAt: number; // timestamp ms
 }
 
@@ -15,13 +16,13 @@ const MAX_RECENT = 6;
 })
 export class RecentProgramsService {
 
-    recordAccess(id: number, title: string, thumbnail: string | null): void {
+    recordAccess(id: number, title: string, thumbnail: string | null, preview_video_url: string | null): void {
         const existing = this.readAll();
         // Remove any previous entry for this program
         const filtered = existing.filter(p => p.id !== id);
         // Prepend the new entry
         const updated: RecentProgram[] = [
-            { id, title, thumbnail, accessedAt: Date.now() },
+            { id, title, thumbnail, preview_video_url: preview_video_url, accessedAt: Date.now() },
             ...filtered
         ].slice(0, MAX_RECENT);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
