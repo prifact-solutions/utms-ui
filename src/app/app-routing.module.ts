@@ -27,6 +27,7 @@ import { TakeExamComponent } from './programs/exams/take-exam/take-exam.componen
 import { LandingComponent } from './public/landing/landing.component';
 import { DashboardComponent } from './public/dashboard/dashboard.component';
 import { HowitworksComponent } from './public/howitworks/howitworks.component';
+import { EditExamComponent } from './program-builder/edit-exam/edit-exam.component';
 
 const routes: Routes = [
   {
@@ -129,6 +130,11 @@ const routes: Routes = [
     path: 'programs-builder/:program_id/modules/:module_id/exams/add',
     component: CreateExamComponent,
     canActivate: [StaffAuthGuard]
+  },
+  {
+    path: 'programs-builder/:program_id/modules/:module_id/exams/:content_id/edit',
+    component: EditExamComponent,
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/question-papers',

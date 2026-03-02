@@ -154,6 +154,18 @@ export class ProgramsService {
       exam,
     );
   }
+
+  public updateExam(
+    program_id: number,
+    module_id: number,
+    exam_id: number,
+    exam: any,
+  ) {
+    return this.http.put<ModuleContent>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/exams/${exam_id}`,
+      exam,
+    );
+  }
   public updateLesson(
     program_id: number,
     module_id: number,

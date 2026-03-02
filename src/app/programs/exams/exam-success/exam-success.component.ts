@@ -4,6 +4,7 @@ import { ProgramsService } from '../../services/programs.service';
 import {
   ExamAttemptStatus,
   ExamBackendService,
+  ExamResultStatus,
 } from 'src/app/shared/services/exam-backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, switchMap, tap } from 'rxjs';
@@ -29,6 +30,7 @@ export class ExamSuccessComponent extends ComponentBase {
   errors: Error[] = [];
   examId!: number;
   score!: number;
+  isExamPassed: boolean = false;
 
   ngOnInit() {
     let sub = this.route.params
@@ -58,6 +60,9 @@ export class ExamSuccessComponent extends ComponentBase {
           attempt.score
         ) {
           this.score = attempt.score;
+          this.isExamPassed =
+            attempt.result != undefined &&
+            attempt.result == ExamResultStatus.PASSED;
           this.loading = false;
         } else {
           this.router.navigateByUrl(

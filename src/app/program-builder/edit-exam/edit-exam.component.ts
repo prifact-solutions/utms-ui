@@ -1,48 +1,40 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { ComponentBase } from 'src/app/common/componentbase';
 import {
   Exam,
   Module,
   ModuleContent,
+  ModuleContentWithExam,
   Program,
 } from 'src/app/programs/models/program.model';
-import { ComponentBase } from 'src/app/common/componentbase';
 import {
   QuestionPaper,
   QuestionPaperStatus,
 } from '../question-papers/models/question-paper';
+import { Subject, takeUntil } from 'rxjs';
+import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionPapersService } from '../question-papers/services/question-papers.service';
 
-interface UploadFile {
-  file: File;
-  progress: number;
-  uploaded: boolean;
-  error: string | null;
-}
-
 @Component({
-  selector: 'app-create-exam',
-  templateUrl: './create-exam.component.html',
-  styleUrls: ['./create-exam.component.scss'],
+  selector: 'app-edit-exam',
+  templateUrl: './edit-exam.component.html',
+  styleUrls: ['./edit-exam.component.scss'],
 })
-export class CreateExamComponent
-  extends ComponentBase
-  implements OnInit, OnDestroy
-{
+export class EditExamComponent extends ComponentBase {
   program: Program | null = null;
   module: Module | null = null;
   examForm!: FormGroup;
   programId!: number;
   moduleId!: number;
+  exam_id!: number;
+  examContent!: ModuleContentWithExam;
 
-  moduleContentId: number | null = null;
+  moduleContentId!: number;
   previous_order: number = 1;
+  isLoading = false;
 
-  filesToUpload: UploadFile[] = [];
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
@@ -63,12 +55,12 @@ export class CreateExamComponent
   ngOnInit(): void {
     this.programId = +this.route.snapshot.params['program_id'];
     this.moduleId = +this.route.snapshot.params['module_id'];
-    this.moduleContentId =
-      this.route.snapshot.params['module_content_id'] || null;
+    this.moduleContentId = +this.route.snapshot.params['content_id'];
     this.previous_order =
       +this.route.snapshot.queryParams['previous_order'] || 1;
-    this.initializeForm();
+    this.exam_id = +this.route.snapshot.params['exam_id'];
     this.fetchData();
+    this.loadExam();
   }
 
   private fetchData(): void {
@@ -85,6 +77,24 @@ export class CreateExamComponent
       });
   }
 
+  private loadExam(): void {
+    this.isLoading = true;
+    this.programsService
+      .getExam(this.programId, this.moduleId, this.moduleContentId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (content: ModuleContentWithExam) => {
+          this.examContent = content;
+          this.initializeForm();
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.errorMessage = error?.error?.message || 'Failed to load exam';
+          this.isLoading = false;
+        },
+      });
+  }
+
   private initializeForm(): void {
     this.qpService
       .getAllQuestionPapersForProgram(this.programId)
@@ -93,13 +103,28 @@ export class CreateExamComponent
           (qp) => qp.status == QuestionPaperStatus.ACTIVE,
         );
         this.examForm = this.fb.group({
-          title: ['', [Validators.required, Validators.minLength(3)]],
-          context_text: [''],
-          total_score: [null, [Validators.required, Validators.min(1)]],
-          min_score: [null, [Validators.required, Validators.min(1)]],
-          duration: [null, [Validators.required, Validators.min(1)]],
-          question_paper: ['', Validators.required],
-          order: [this.previous_order + 1, Validators.required],
+          title: [
+            this.examContent.exam.name,
+            [Validators.required, Validators.minLength(3)],
+          ],
+          context_text: [this.examContent.content.context_text],
+          total_score: [
+            this.examContent.exam.total_score,
+            [Validators.required, Validators.min(1)],
+          ],
+          min_score: [
+            this.examContent.exam.minimum_score,
+            [Validators.required, Validators.min(1)],
+          ],
+          duration: [
+            this.examContent.exam.duration_hours,
+            [Validators.required, Validators.min(1)],
+          ],
+          question_paper: [
+            this.examContent.exam.question_paper,
+            Validators.required,
+          ],
+          order: [this.examContent.content.order, Validators.required],
         });
       });
   }
@@ -130,7 +155,7 @@ export class CreateExamComponent
     };
 
     this.programsService
-      .createExam(this.programId, this.moduleId, {
+      .updateExam(this.programId, this.moduleId, this.examContent.exam.id, {
         content: contentPayload,
         exam: examPayload,
       })
