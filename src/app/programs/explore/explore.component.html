@@ -29,12 +29,12 @@
             </select>
         </div>
 
-        <ng-container *ngIf="!isLoading && availableCategories.length > 0" class="filter-container">
+        <ng-container *ngIf="!isLoading && categories.length > 0" class="filter-container">
 
             <div class="filter-options">
-                <label [class.selected]="isCategorySelected(cat.id)" *ngFor="let cat of availableCategories">
+                <label [class.selected]="isCategorySelected(cat.id)" *ngFor="let cat of categories">
                     <input type="checkbox" [checked]="isCategorySelected(cat.id)" (change)="toggleCategory(cat.id)" />
-                    <span>{{ cat.label }}</span>
+                    <span>{{ cat.name }}</span>
                 </label>
             </div>
 

@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { Program } from 'src/app/programs/models/program.model';
+import { Category, Program } from 'src/app/programs/models/program.model';
 import { ComponentBase } from 'src/app/common/componentbase';
 
 @Component({
@@ -18,25 +18,8 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
   public isLoading: boolean = true;
   public showFilter: boolean = false;
   public searchTerm: string = '';
-
+  public categories: Array<Category> = [];
   @ViewChild('searchContainer') searchContainer!: ElementRef;
-
-  private readonly CATEGORY_LABELS: Record<number, string> = {
-    1: 'Technology',
-    2: 'Business',
-    3: 'Design',
-    4: 'Marketing',
-    5: 'Data Science',
-    6: 'Personal Development',
-    7: 'Finance',
-    8: 'Health & Wellness',
-    9: 'Language',
-    10: 'Engineering',
-  };
-
-  getCategoryLabel(id: number): string {
-    return this.CATEGORY_LABELS[id] || `Category ${id}`;
-  }
 
   constructor(
     private authService: AuthService,
@@ -60,9 +43,14 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
         this.isLoading = false;
       });
     this.registerSubscription(sub);
+    this.programsService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
+    });
     this.renderer.addClass(this.document.body, 'home-showing');
   }
-
+  getCategoryLabel(id: number) {
+    return this.categories.find(c => c.id === id)?.name;
+  }
   override ngOnDestroy() {
     this.renderer.removeClass(this.document.body, 'home-showing');
     super.ngOnDestroy();

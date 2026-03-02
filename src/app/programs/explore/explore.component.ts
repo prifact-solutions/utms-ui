@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramsService } from '../services/programs.service';
-import { Program } from '../models/program.model';
+import { Category, Program } from '../models/program.model';
 import { ComponentBase } from "../../common/componentbase";
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
-import { filter, switchMap } from 'rxjs';
+import { combineLatest, filter, switchMap } from 'rxjs';
 import { Utils } from "../../common/utils";
 
 export interface CategoryOption {
@@ -37,21 +37,8 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   public selectedCategories: Set<number> = new Set();
 
   // Available categories derived from loaded programs
-  public availableCategories: CategoryOption[] = [];
+  public categories: Category[] = [];
 
-  // Static label map — extend as your backend category IDs grow
-  private readonly CATEGORY_LABELS: Record<number, string> = {
-    1: 'Technology',
-    2: 'Business',
-    3: 'Design',
-    4: 'Marketing',
-    5: 'Data Science',
-    6: 'Personal Development',
-    7: 'Finance',
-    8: 'Health & Wellness',
-    9: 'Language',
-    10: 'Engineering',
-  };
 
   get filteredPrograms(): Array<Program> {
     let result = this.programs;
@@ -88,11 +75,11 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
 
-    let sub1 = this.programsService.getAllPrograms()
-      .subscribe(programs => {
+    let sub1 = combineLatest(this.programsService.getAllPrograms(), this.programsService.getAllCategories())
+      .subscribe(([programs, categories]) => {
         this.programs = programs;
         this.isLoading = false;
-        this.buildCategoryOptions();
+        this.categories = categories;
 
         // Only fetch enrolled programs if the user is logged in
         if (this.isAuthenticated) {
@@ -108,18 +95,6 @@ export class ExploreComponent extends ComponentBase implements OnInit {
     }
   }
 
-  private buildCategoryOptions() {
-    // Gather all unique category IDs from the programs list
-    const idSet = new Set<number>();
-    this.programs.forEach(p => (p.categories || []).forEach(c => idSet.add(c)));
-
-    this.availableCategories = Array.from(idSet)
-      .sort((a, b) => a - b)
-      .map(id => ({
-        id,
-        label: this.CATEGORY_LABELS[id] || `Category ${id}`
-      }));
-  }
 
   toggleCategory(id: number) {
     if (this.selectedCategories.has(id)) {
@@ -135,9 +110,6 @@ export class ExploreComponent extends ComponentBase implements OnInit {
     return this.selectedCategories.has(id);
   }
 
-  getCategoryLabel(id: number): string {
-    return this.CATEGORY_LABELS[id] || `Category ${id}`;
-  }
 
   clearAllFilters() {
     this.searchTerm = '';
@@ -180,5 +152,8 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   viewProgram(event: Event, programId: number) {
     event.stopPropagation();
     this.router.navigate([`/programs/${programId}/details`]);
+  }
+  getCategoryLabel(id: number) {
+    return this.categories.find(c => c.id === id)?.name;
   }
 }

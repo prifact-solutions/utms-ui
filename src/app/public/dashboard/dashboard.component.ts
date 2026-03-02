@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { Program } from 'src/app/programs/models/program.model';
+import { Category, Program } from 'src/app/programs/models/program.model';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { Utils } from 'src/app/common/utils';
 import { RecentProgramsService, RecentProgram } from 'src/app/common/recent-programs.service';
@@ -17,22 +17,10 @@ export class DashboardComponent extends ComponentBase implements OnInit {
     public recentPrograms: Array<RecentProgram> = [];
     public isLoadingEnrolled: boolean = true;
     public username: string = 'there';
+    public categories: Array<Category> = [];
 
-    private readonly CATEGORY_LABELS: Record<number, string> = {
-        1: 'Technology',
-        2: 'Business',
-        3: 'Design',
-        4: 'Marketing',
-        5: 'Data Science',
-        6: 'Personal Development',
-        7: 'Finance',
-        8: 'Health & Wellness',
-        9: 'Language',
-        10: 'Engineering',
-    };
-
-    getCategoryLabel(id: number): string {
-        return this.CATEGORY_LABELS[id] || `Category ${id}`;
+    getCategoryLabel(id: number) {
+        return this.categories.find(c => c.id === id)?.name;
     }
 
     constructor(
@@ -64,6 +52,10 @@ export class DashboardComponent extends ComponentBase implements OnInit {
 
         // Load recent programs from localStorage
         this.recentPrograms = this.recentProgramsService.getRecentPrograms();
+
+        this.programsService.getAllCategories().subscribe(categories => {
+            this.categories = categories;
+        });
     }
 
     goToProgram(programId: number) {
