@@ -80,13 +80,7 @@
             </div>
           </div>
 
-          <div class="form-group mb-5">
-            <label for="preview_video_url">Preview Video URL</label>
-            <input id="preview_video_url" type="text" formControlName="preview_video_url"
-              placeholder="https://example.com/promo-video.mp4">
-          </div>
-
-          <!-- Thumbnail Upload -->
+          <!-- Featured Image Upload -->
           <div class="form-group mb-5">
             <label>Featured Image</label>
             <div class="d-flex align-items-center gap-4 p-4 bg-off-white rounded-md border border-dashed">
@@ -97,10 +91,31 @@
               <div class="flex-1">
                 <input id="thumbnail" type="file" accept="image/*" (change)="onThumbnailSelected($event)"
                   style="display: none;" #thumbInput>
-                <button type="button" class="btn-primary-sm" (click)="thumbInput.click()">
+                <button type="button" class="btn-primary-sm" (click)="thumbInput.click()" [disabled]="isSubmitting">
                   {{ thumbnailPreview ? 'Change Image' : 'Select Image' }}
                 </button>
-                <p class="text-muted small mt-2 m-0">Recommended: 1600x900px (JPG or PNG)</p>
+                <p class="text-muted small mt-2 m-0">Recommended: 1600×900px (JPG or PNG)</p>
+                <p class="text-muted small m-0" *ngIf="thumbnailFile">Selected: {{ thumbnailFile.name }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview Video Upload -->
+          <div class="form-group mb-5">
+            <label>Preview Video</label>
+            <div class="d-flex align-items-start gap-4 p-4 bg-off-white rounded-md border border-dashed">
+              <div *ngIf="videoPreviewUrl" style="flex-shrink: 0;">
+                <video [src]="videoPreviewUrl" controls
+                  style="width: 200px; height: 120px; border-radius: 4px; background: #000;"></video>
+              </div>
+              <div class="flex-1">
+                <input id="previewVideo" type="file" accept="video/*" (change)="onVideoSelected($event)"
+                  style="display: none;" #videoInput>
+                <button type="button" class="btn-primary-sm" (click)="videoInput.click()" [disabled]="isSubmitting">
+                  {{ videoPreviewUrl ? 'Change Video' : 'Select Video' }}
+                </button>
+                <p class="text-muted small mt-2 m-0">Supported formats: MP4, WebM, MOV</p>
+                <p class="text-muted small m-0" *ngIf="videoFile">Selected: {{ videoFile.name }}</p>
               </div>
             </div>
           </div>
@@ -115,7 +130,6 @@
                   (change)="onCategoryChange(category.id, $event)">
                 {{ category.name }}
               </label>
-
             </div>
           </div>
 
@@ -131,7 +145,7 @@
               Values</button>
             <button type="submit" class="btn-primary" [disabled]="programForm.invalid || isSubmitting">
               <span *ngIf="!isSubmitting">Update Program</span>
-              <span *ngIf="isSubmitting">Updating...</span>
+              <span *ngIf="isSubmitting">Updating &amp; Uploading...</span>
             </button>
           </div>
         </form>

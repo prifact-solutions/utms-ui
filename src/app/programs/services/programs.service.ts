@@ -28,7 +28,7 @@ export class ProgramsService {
   setProgramId(id: string | null) {
     this._currentProgramId.next(id);
   }
-  
+
   public getAllCategories() {
     return this.http.get<Array<Category>>(`${AppSettings.apiUrl}/categories/`);
   }
@@ -208,6 +208,26 @@ export class ProgramsService {
         file_name: file_name,
         file_type: file_type,
       },
+    );
+  }
+
+  public getProgramThumbnailUploadUrl(
+    program_id: number,
+    file_name: string
+  ) {
+    return this.http.post<{ url: string; mime_type: string }>(
+      `${AppSettings.apiUrl}/programs/${program_id}/thumbnail/`,
+      { file_name },
+    );
+  }
+
+  public getProgramVideoUploadUrl(
+    program_id: number,
+    file_name: string
+  ) {
+    return this.http.post<{ url: string; mime_type: string }>(
+      `${AppSettings.apiUrl}/programs/${program_id}/preview-video/`,
+      { file_name },
     );
   }
 

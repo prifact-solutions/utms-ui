@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { Category, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
@@ -15,12 +17,19 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   isSubmitting = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+
   thumbnailPreview: string | null = null;
+  thumbnailFile: File | null = null;
+
+  videoPreviewUrl: string | null = null;
+  videoFile: File | null = null;
+
   programId: number;
   program: Program | null = null;
   isLoading = false;
 
   categories: Array<Category> = [];
+
   constructor(
     private fb: FormBuilder,
     private programsService: ProgramsService,
@@ -66,13 +75,15 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       is_active: [this.program.is_active, Validators.required],
       categories: [this.program.categories || []],
       difficulty: [this.program.difficulty || 'Beginner', Validators.required],
-      video_hours: [this.program.video_hours || 0],
-      preview_video_url: [this.program.preview_video_url || ''],
-      thumbnail: [null]
+      video_hours: [this.program.video_hours || 0]
     });
 
     if (this.program.thumbnail) {
       this.thumbnailPreview = this.program.thumbnail;
+    }
+
+    if (this.program.preview_video_url) {
+      this.videoPreviewUrl = this.program.preview_video_url;
     }
   }
 
@@ -99,15 +110,57 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   }
 
   onThumbnailSelected(event: any): void {
-    const file = event.target.files?.[0];
+    const file: File = event.target.files?.[0];
     if (file) {
+      this.thumbnailFile = file;
       const reader = new FileReader();
       reader.onload = (e) => {
         this.thumbnailPreview = e.target?.result as string;
       };
       reader.readAsDataURL(file);
-      this.programForm.patchValue({ thumbnail: file });
     }
+  }
+
+  onVideoSelected(event: any): void {
+    const file: File = event.target.files?.[0];
+    if (file) {
+      this.videoFile = file;
+      // Revoke previous object URL if it was a local blob
+      if (this.videoPreviewUrl && this.videoPreviewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(this.videoPreviewUrl);
+      }
+      this.videoPreviewUrl = URL.createObjectURL(file);
+    }
+  }
+
+  private uploadProgramMedia(): Observable<any> {
+    const uploads: Observable<any>[] = [];
+
+    if (this.thumbnailFile) {
+      const file = this.thumbnailFile;
+      const upload$ = this.programsService
+        .getProgramThumbnailUploadUrl(this.programId, file.name)
+        .pipe(
+          switchMap((res) =>
+            this.programsService.uploadFileToSignedUrl(res.url, res.mime_type, file)
+          )
+        );
+      uploads.push(upload$);
+    }
+
+    if (this.videoFile) {
+      const file = this.videoFile;
+      const upload$ = this.programsService
+        .getProgramVideoUploadUrl(this.programId, file.name)
+        .pipe(
+          switchMap((res) =>
+            this.programsService.uploadFileToSignedUrl(res.url, res.mime_type, file)
+          )
+        );
+      uploads.push(upload$);
+    }
+
+    return uploads.length > 0 ? forkJoin(uploads) : of(null);
   }
 
   onSubmit(): void {
@@ -121,23 +174,22 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     this.successMessage = null;
 
     const formValue = this.programForm.value;
-    const thumbnailFile: File | null = formValue.thumbnail;
-    // Hardcode category to 1 as requested temporarily
     const categories: number[] = formValue.categories || [];
 
-    const fd:any = {
+    const fd: any = {
       title: formValue.title,
       description: formValue.description,
       duration: parseFloat(formValue.duration),
       is_active: formValue.is_active,
       difficulty: formValue.difficulty,
       video_hours: formValue.video_hours,
-      preview_video_url: formValue.preview_video_url,
       categories: categories
     };
 
-    const subscription = this.programsService.updateProgram(this.programId, fd).subscribe({
-      next: (program) => {
+    const subscription = this.programsService.updateProgram(this.programId, fd).pipe(
+      switchMap(() => this.uploadProgramMedia())
+    ).subscribe({
+      next: () => {
         this.successMessage = 'Program updated successfully!';
         this.isSubmitting = false;
         setTimeout(() => {
@@ -162,6 +214,8 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
 
   resetForm(): void {
     this.initializeForm();
+    this.thumbnailFile = null;
+    this.videoFile = null;
     this.successMessage = null;
     this.errorMessage = null;
   }
