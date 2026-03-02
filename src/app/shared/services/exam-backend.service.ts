@@ -98,10 +98,12 @@ export class ExamBackendService extends FormBuilderBackendService {
     let qNames = questions.join(',');
     return this.programsService.programId$.pipe(
       switchMap((id) => {
-        return this.http.get<Answer[]>(
+        return this.http.get<ExamAnswer[]>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/answers?questions=${qNames}`,
         );
-      }),
+      }),map(examAnswers => {
+        return examAnswers.map(examAnswer => examAnswer.answer);
+      })
     );
   }
   getAttemptStatus(attemptKey: string): Observable<{ timeRemaining: number }> {
@@ -169,6 +171,14 @@ export class ExamAttempt {
   public score?: number;
   public result?: ExamResultStatus;
   public status!: ExamAttemptStatus;
+}
+
+export class ExamAnswer {
+  public id!: number;
+  public answer!: Answer;
+  public created_at!: string;
+  public exam_attempt!: number;
+  public question!: number;
 }
 
 export enum ExamAttemptStatus {
