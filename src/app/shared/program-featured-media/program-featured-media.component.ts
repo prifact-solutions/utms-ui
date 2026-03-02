@@ -14,6 +14,8 @@ export interface ProgramLike {
 })
 export class ProgramFeaturedMediaComponent {
 
+  private static cache: Map<string, string> = new Map();
+
   @Input() program: ProgramLike | null = null;
   @Input() media_type: string | null = null;
   url: string = "";
@@ -21,15 +23,21 @@ export class ProgramFeaturedMediaComponent {
   }
 
   ngOnInit(): void {
+    let key = `${this.program?.id}_${this.media_type}`;
+    if (ProgramFeaturedMediaComponent.cache.has(key)) {
+      this.url = ProgramFeaturedMediaComponent.cache.get(key)!;
+      return;
+    }
     if (this.program && this.media_type == "VIDEO" && this.program.preview_video) {
-
       this.programService.getProgramVideoViewUrl(this.program.id).subscribe((res) => {
         this.url = res.file_url;
+        ProgramFeaturedMediaComponent.cache.set(key, res.file_url);
       });
     }
     if (this.program && this.media_type == "IMAGE" && this.program.thumbnail) {
       this.programService.getProgramThumbnailViewUrl(this.program.id).subscribe((res) => {
         this.url = res.file_url;
+        ProgramFeaturedMediaComponent.cache.set(key, res.file_url);
       });
     }
   }
