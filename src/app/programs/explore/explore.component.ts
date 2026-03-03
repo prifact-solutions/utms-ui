@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { ProgramsService } from '../services/programs.service';
 import { Category, Program } from '../models/program.model';
 import { ComponentBase } from "../../common/componentbase";
@@ -27,6 +27,8 @@ export class ExploreComponent extends ComponentBase implements OnInit {
     private route: ActivatedRoute
   ) { super(); }
 
+  @ViewChild('filterList') filterList?: ElementRef;
+
   public programs: Array<Program> = [];
   public myPrograms: Array<Program> = [];
   public isStaff: boolean = false;
@@ -39,8 +41,13 @@ export class ExploreComponent extends ComponentBase implements OnInit {
 
   // Available categories derived from loaded programs
   public categories: Category[] = [];
-  public viewType: 'card' | 'table' = 'card';
 
+  get selectedCategoryNames(): string {
+    return Array.from(this.selectedCategories)
+      .map(id => this.getCategoryLabel(id))
+      .filter(name => !!name)
+      .join(', ');
+  }
 
   get filteredPrograms(): Array<Program> {
     let result = this.programs;
@@ -87,6 +94,13 @@ export class ExploreComponent extends ComponentBase implements OnInit {
         if (this.isAuthenticated) {
           this.loadEnrollmentStatus();
         }
+
+        // Check scroll buttons after DOM update
+        setTimeout(() => {
+          if (this.filterList) {
+            this.checkScroll(this.filterList.nativeElement);
+          }
+        }, 100);
       });
 
     // Parse query params (moved to top level to catch updates)
@@ -97,9 +111,6 @@ export class ExploreComponent extends ComponentBase implements OnInit {
       if (params['categories']) {
         const catIds = params['categories'].split(',').map((id: string) => parseInt(id.trim())).filter((id: any) => !isNaN(id));
         this.selectedCategories = new Set(catIds);
-      }
-      if (params['view']) {
-        this.viewType = params['view'] as 'card' | 'table';
       }
     });
 
@@ -177,5 +188,49 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   }
   getCategoryLabel(id: number) {
     return this.categories.find(c => c.id === id)?.name;
+  }
+
+  // Drag to scroll logic
+  private isMouseDown = false;
+  private startX = 0;
+  private scrollLeft = 0;
+
+  public canScrollLeft = false;
+  public canScrollRight = false;
+
+  checkScroll(el: HTMLElement) {
+    this.canScrollLeft = el.scrollLeft > 5; // Use a small threshold
+    this.canScrollRight = el.scrollLeft + el.clientWidth < el.scrollWidth - 5;
+  }
+
+  onScroll(el: HTMLElement) {
+    this.checkScroll(el);
+  }
+
+  scrollAmount(amount: number) {
+    if (this.filterList) {
+      this.filterList.nativeElement.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  }
+
+  startDragging(e: MouseEvent, el: HTMLElement) {
+    this.isMouseDown = true;
+    el.classList.add('dragging');
+    this.startX = e.pageX - el.offsetLeft;
+    this.scrollLeft = el.scrollLeft;
+  }
+
+  stopDragging(el: HTMLElement) {
+    this.isMouseDown = false;
+    el.classList.remove('dragging');
+  }
+
+  moveEvent(e: MouseEvent, el: HTMLElement) {
+    if (!this.isMouseDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - this.startX) * 2;
+    el.scrollLeft = this.scrollLeft - walk;
+    this.checkScroll(el);
   }
 }
