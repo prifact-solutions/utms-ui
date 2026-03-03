@@ -25,7 +25,7 @@ body {
 }
 
 body.home-showing {
-    background: #fff url('/assets/images/hero.png') no-repeat right bottom;
+    // background: #fff url('/assets/images/hero.png') no-repeat right bottom; don't remove this
     background-attachment: fixed;
     background-size: contain;
 
@@ -64,17 +64,6 @@ h6 {
 
 
 
-// Layout Components
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.main-content {
-    min-height: calc(100vh - 72px); // Adjust based on header height
-    padding-bottom: 4rem;
-}
 
 // Buttons
 .btn-primary,

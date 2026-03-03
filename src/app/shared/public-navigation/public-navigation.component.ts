@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-public-navigation',
@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./public-navigation.component.scss']
 })
 export class PublicNavigationComponent {
+  isScrolled = false;
 
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 20;
+  }
 }
