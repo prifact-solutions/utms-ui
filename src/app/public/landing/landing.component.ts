@@ -19,6 +19,7 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
   public showFilter: boolean = false;
   public searchTerm: string = '';
   public categories: Array<Category> = [];
+  public selectedCategories: Set<number> = new Set<number>();
   @ViewChild('searchContainer') searchContainer!: ElementRef;
 
   constructor(
@@ -48,9 +49,39 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
     });
     this.renderer.addClass(this.document.body, 'home-showing');
   }
+
+  get filteredPrograms(): Program[] {
+    let filtered = this.programs;
+
+    if (this.selectedCategories.size > 0) {
+      filtered = filtered.filter(p =>
+        p.categories && p.categories.some(catId => this.selectedCategories.has(catId))
+      );
+    }
+
+    return filtered;
+  }
+
+  toggleCategory(categoryId: number) {
+    if (this.selectedCategories.has(categoryId)) {
+      this.selectedCategories.delete(categoryId);
+    } else {
+      this.selectedCategories.add(categoryId);
+    }
+  }
+
+  clearCategories() {
+    this.selectedCategories.clear();
+  }
+
+  isCategorySelected(categoryId: number): boolean {
+    return this.selectedCategories.size === 0 || this.selectedCategories.has(categoryId);
+  }
+
   getCategoryLabel(id: number) {
     return this.categories.find(c => c.id === id)?.name;
   }
+
   override ngOnDestroy() {
     this.renderer.removeClass(this.document.body, 'home-showing');
     super.ngOnDestroy();
@@ -58,6 +89,19 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
 
   onSearchInput() {
     this.showFilter = true;
+  }
+
+  onSearch() {
+    if (this.searchTerm.trim() || this.selectedCategories.size > 0) {
+      const categories = Array.from(this.selectedCategories).join(',');
+      this.router.navigate(['/explore'], {
+        queryParams: {
+          q: this.searchTerm.trim() || null,
+          categories: categories || null,
+          view: 'table'
+        }
+      });
+    }
   }
 
   onFocus() {

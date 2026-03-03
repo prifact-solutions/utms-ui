@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import { ProgramsService } from '../services/programs.service';
 import { Category, Program } from '../models/program.model';
 import { ComponentBase } from "../../common/componentbase";
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { combineLatest, filter, switchMap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Utils } from "../../common/utils";
 
 export interface CategoryOption {
@@ -23,7 +23,8 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   constructor(
     private programsService: ProgramsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { super(); }
 
   public programs: Array<Program> = [];
@@ -38,6 +39,7 @@ export class ExploreComponent extends ComponentBase implements OnInit {
 
   // Available categories derived from loaded programs
   public categories: Category[] = [];
+  public viewType: 'card' | 'table' = 'card';
 
 
   get filteredPrograms(): Array<Program> {
@@ -86,7 +88,23 @@ export class ExploreComponent extends ComponentBase implements OnInit {
           this.loadEnrollmentStatus();
         }
       });
+
+    // Parse query params (moved to top level to catch updates)
+    let subParam = this.route.queryParams.subscribe(params => {
+      if (params['q']) {
+        this.searchTerm = params['q'];
+      }
+      if (params['categories']) {
+        const catIds = params['categories'].split(',').map((id: string) => parseInt(id.trim())).filter((id: any) => !isNaN(id));
+        this.selectedCategories = new Set(catIds);
+      }
+      if (params['view']) {
+        this.viewType = params['view'] as 'card' | 'table';
+      }
+    });
+
     this.registerSubscription(sub1);
+    this.registerSubscription(subParam);
 
     if (this.isAuthenticated) {
       try {
@@ -114,6 +132,10 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   clearAllFilters() {
     this.searchTerm = '';
     this.enrollmentFilter = 'all';
+    this.selectedCategories = new Set();
+  }
+
+  clearCategories() {
     this.selectedCategories = new Set();
   }
 
