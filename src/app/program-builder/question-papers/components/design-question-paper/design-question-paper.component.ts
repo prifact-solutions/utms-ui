@@ -1,5 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormElementType } from 'form-builder';
 import { ComponentBase } from 'src/app/common/componentbase';
 
 @Component({
@@ -19,6 +20,11 @@ export class DesignQuestionPaperComponent extends ComponentBase {
   loading: boolean = true;
   programId!: number;
   qpId!: number;
+  questionTypes: FormElementType[] = [
+    FormElementType.multiple_choice,
+    FormElementType.paragraph,
+    FormElementType.section,
+  ];
 
   ngOnInit() {
     this.renderer.addClass(document.body, 'menu-clicked');
@@ -34,7 +40,7 @@ export class DesignQuestionPaperComponent extends ComponentBase {
   }
 
   onSave(event: any) {
-     this.router.navigate([
+    this.router.navigate([
       `/programs-builder/${this.programId}/question-papers/`,
     ]);
     //this.alertService.newAlert('Question paper saved successfully');

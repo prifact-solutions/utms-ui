@@ -1,4 +1,7 @@
-<div class="admin-page-container container" *ngIf="program && module">
+<div
+  class="admin-page-container container"
+  *ngIf="!isLoading && program && module"
+>
   <div class="builder-layout">
     <!-- Sidebar: Program Info -->
     <aside class="builder-sidebar">
@@ -29,7 +32,10 @@
       <header class="page-header">
         <div class="header-text">
           <h1>Edit Exam</h1>
-          <p class="text-muted">Modify details for "<strong>{{ examContent?.content?.title }}</strong>"</p>
+          <p class="text-muted">
+            Modify details for "<strong>{{ examContent.content.title }}</strong
+            >"
+          </p>
         </div>
       </header>
 
@@ -45,7 +51,11 @@
         <div *ngIf="isLoading" class="py-5 text-center">
           <p class="text-muted">Loading content details...</p>
         </div>
-        <form *ngIf="!isLoading && examForm" [formGroup]="examForm" (ngSubmit)="onSubmit()">
+        <form
+          *ngIf="!isLoading && examForm"
+          [formGroup]="examForm"
+          (ngSubmit)="onSubmit()"
+        >
           <div class="form-group mb-4">
             <label for="title">Exam Title</label>
             <input id="title" type="text" formControlName="title" placeholder="e.g. Final Assessment: Web Fundamentals"
