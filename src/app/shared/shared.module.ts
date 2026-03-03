@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PublicNavigationComponent } from './public-navigation/public-navigation.component';
 import { ProgramFeaturedMediaComponent } from './program-featured-media/program-featured-media.component';
@@ -13,8 +14,9 @@ import { ProgramFeaturedMediaComponent } from './program-featured-media/program-
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
-  exports: [NavigationComponent, PublicNavigationComponent, ProgramFeaturedMediaComponent]
+  exports: [NavigationComponent, PublicNavigationComponent, ProgramFeaturedMediaComponent, FormsModule]
 })
 export class SharedModule { }

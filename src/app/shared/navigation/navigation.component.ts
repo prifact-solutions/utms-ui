@@ -1,14 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { Utils } from 'src/app/common/utils';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { Category } from 'src/app/programs/models/program.model';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NavigationComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
@@ -18,17 +20,27 @@ export class NavigationComponent implements OnInit, OnDestroy {
   userName = '';
   userEmail = '';
 
+  public showFilter: boolean = false;
+  public searchTerm: string = '';
+  public categories: Array<Category> = [];
+  public selectedCategories: Set<number> = new Set<number>();
+  @ViewChild('searchContainer') searchContainer!: ElementRef;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private programsService: ProgramsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.updateAuthStatus();
     this.authSubscription = this.authService.currentUser$.subscribe(() => {
       this.updateAuthStatus();
+    });
+
+    this.programsService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
     });
 
     this.router.events
@@ -80,5 +92,45 @@ export class NavigationComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onSearchInput() {
+    this.showFilter = true;
+  }
+
+  onSearch() {
+    if (this.searchTerm.trim() || this.selectedCategories.size > 0) {
+      const categories = Array.from(this.selectedCategories).join(',');
+      this.router.navigate(['/explore'], {
+        queryParams: {
+          q: this.searchTerm.trim() || null,
+          categories: categories || null
+        }
+      });
+      this.showFilter = false;
+    }
+  }
+
+  onFocus() {
+    this.showFilter = true;
+  }
+
+  toggleCategory(categoryId: number) {
+    if (this.selectedCategories.has(categoryId)) {
+      this.selectedCategories.delete(categoryId);
+    } else {
+      this.selectedCategories.add(categoryId);
+    }
+  }
+
+  clearCategories() {
+    this.selectedCategories.clear();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.showFilter && this.searchContainer && !this.searchContainer.nativeElement.contains(event.target)) {
+      this.showFilter = false;
+    }
   }
 }

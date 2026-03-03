@@ -16,7 +16,7 @@ export class DashboardComponent extends ComponentBase implements OnInit {
     public enrolledPrograms: Array<Program> = [];
     public recentPrograms: Array<RecentProgram> = [];
     public isLoadingEnrolled: boolean = true;
-    public username: string = 'there';
+    public username: string = 'John Doe';
     public categories: Array<Category> = [];
 
     getCategoryLabel(id: number) {
