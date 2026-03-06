@@ -1,4 +1,40 @@
-<div class="program-detail-page" *ngIf="catalog">
+<div class="program-detail-page skeleton-loading" *ngIf="isLoading">
+    <div class="inner">
+        <div class="program-header">
+            <div>
+                <div class="skeleton-breadcrumb skeleton"></div>
+                <div class="skeleton-h1 skeleton"></div>
+            </div>
+            <div class="skeleton-button skeleton"></div>
+        </div>
+        <div class="skeleton-media skeleton"></div>
+        <div class="program-info">
+            <div class="course-meta">
+                <div class="skeleton-meta skeleton"></div>
+                <div class="skeleton-meta skeleton"></div>
+                <div class="skeleton-meta skeleton"></div>
+            </div>
+            <div class="skeleton-text skeleton"></div>
+            <div class="skeleton-text skeleton"></div>
+            <div class="skeleton-text skeleton short"></div>
+        </div>
+    </div>
+    <section class="syllabus-container">
+        <div class="skeleton-h3 skeleton"></div>
+        <div class="skeleton-summary skeleton"></div>
+        <div class="skeleton-accordion">
+            <div class="accordion-item" *ngFor="let _ of [1,2,3,4,5]">
+                <div class="accordion-header">
+                    <div class="skeleton-chevron skeleton"></div>
+                    <div class="skeleton-module-title skeleton"></div>
+                    <div class="skeleton-module-meta skeleton"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="program-detail-page" *ngIf="!isLoading && catalog">
     <div class="inner">
         <router-outlet></router-outlet>
         <ng-container *ngIf="!isChildRouteActive()">
@@ -10,7 +46,7 @@
                     <h1>{{ catalog.title }}</h1>
                 </div>
                 <div *ngIf="!catalog.is_enrolled">
-                    <a class="button primary" [routerLink]="['/programs', catalog.id, 'enroll']">
+                    <a class="button primary black" [routerLink]="['/programs', catalog.id, 'enroll']">
                         Enroll Now
                     </a>
                 </div>

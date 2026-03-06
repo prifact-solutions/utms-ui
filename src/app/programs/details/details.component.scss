@@ -14,9 +14,9 @@
 
   .program-description {
     font-size: .875rem;
-    line-height: 1.6rem;
+    line-height: 1.26rem;
     color: #665;
-    margin-bottom: 24px;
+    margin: 24px 0;
   }
 
   .video-preview {
@@ -25,6 +25,7 @@
     overflow: hidden;
     border-radius: 16px;
     margin: 16px 0;
+    box-shadow: 0 0 40px 5px rgba(0, 0, 0, 0.2);
 
     img {
       width: 100%;
@@ -102,7 +103,7 @@
   }
 
   .course-meta {
-    padding: 6px 0 6px;
+
     display: flex;
     gap: 24px;
     align-items: center;
@@ -415,14 +416,93 @@
   }
 }
 
-.program-detail-page {
-  .attempt-header {
-    position: static;
-    padding: 0;
-    height: 50px;
+.program-detail-page.skeleton-loading {
+  .skeleton-breadcrumb {
+    height: 14px;
+    width: 200px;
+    margin-bottom: 8px;
   }
 
-  .attempt-body {
-    background: none;
+  .skeleton-h1 {
+    height: 48px;
+    width: 60%;
+
+  }
+
+  .skeleton-button {
+    height: 44px;
+    width: 140px;
+    border-radius: 22px;
+  }
+
+  .skeleton-media {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    margin: 16px 0;
+    max-height: 50vh;
+    min-height: 250px;
+  }
+
+  .course-meta {
+    gap: 16px !important;
+  }
+
+  .skeleton-meta {
+    height: 18px;
+    width: 156px;
+    border-radius: 4px;
+  }
+
+  .skeleton-text {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 12px;
+
+    &.short {
+      width: 60%;
+    }
+  }
+
+  .syllabus-container {
+    .skeleton-h3 {
+      height: 28px;
+      width: 180px;
+      margin-bottom: 12px;
+    }
+
+    .skeleton-summary {
+      height: 14px;
+      width: 120px;
+      margin-bottom: 32px;
+    }
+
+    .skeleton-accordion {
+      display: flex;
+      flex-direction: column;
+
+      .accordion-item {
+        .accordion-header {
+          cursor: default;
+        }
+      }
+    }
+
+    .skeleton-chevron {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+    }
+
+    .skeleton-module-title {
+      height: 18px;
+      width: 140px;
+    }
+
+    .skeleton-module-meta {
+      height: 14px;
+      width: 80px;
+      margin-left: auto;
+    }
   }
 }

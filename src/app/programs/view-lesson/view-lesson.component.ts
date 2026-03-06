@@ -20,6 +20,7 @@ export class ViewLessonComponent extends ComponentBase {
 
   program_id: number = 0;
   module_id: number = 0;
+  isLoading: boolean = true;
 
   constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
 
@@ -35,6 +36,8 @@ export class ViewLessonComponent extends ComponentBase {
       tap((params) => {
         this.program_id = params.program_id;
         this.module_id = params.module_id;
+        this.isLoading = true;
+        this.lesson = null;
       }),
       switchMap((params) => {
         return combineLatest([
@@ -45,6 +48,7 @@ export class ViewLessonComponent extends ComponentBase {
       .subscribe(([lesson, catalog]) => {
         this.lesson = lesson.content;
         this.files = lesson.files;
+        this.isLoading = false;
 
         if (catalog && catalog.modules) {
           const contents = catalog.modules.flatMap(m => m.module_contents || []);

@@ -20,6 +20,7 @@ export class DetailsComponent extends ComponentBase {
   public categories: Array<Category> = [];
   public showVideo: boolean = false;
   public isAuthenticated: boolean = false;
+  public isLoading: boolean = true;
 
   constructor(private programService: ProgramsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private recentProgramsService: RecentProgramsService) { super(); }
 
@@ -91,17 +92,21 @@ export class DetailsComponent extends ComponentBase {
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
+    this.isLoading = true;
     this.programService.getAllCategories().subscribe(categories => {
       this.categories = categories;
     });
 
     let sub1 = this.route.params.pipe(
       switchMap(params => {
+        this.isLoading = true;
+        this.catalog = null;
         return this.programService.getProgramCatalog(params["program_id"]);
       })
     )
       .subscribe((res) => {
         this.catalog = res;
+        this.isLoading = false;
         // Record access for the dashboard's recently accessed section
         if (res) {
           this.recentProgramsService.recordAccess(res.id, res.title, res.thumbnail, res.preview_video);

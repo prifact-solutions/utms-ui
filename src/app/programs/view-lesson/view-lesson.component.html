@@ -1,4 +1,30 @@
-<div class="learning-environment" *ngIf="lesson">
+<div class="learning-environment skeleton-loading" *ngIf="isLoading">
+  <div class="learning-header">
+    <div class="title-area">
+      <div class="skeleton-back-link skeleton"></div>
+      <div class="skeleton-title skeleton"></div>
+    </div>
+    <div class="nav-actions">
+      <div class="skeleton-nav-btn skeleton"></div>
+      <div class="skeleton-nav-btn skeleton"></div>
+    </div>
+  </div>
+
+  <div class="learning-main">
+    <main class="player-area">
+      <div class="content-viewport">
+        <div class="skeleton-media skeleton"></div>
+        <div class="skeleton-text-content">
+          <div class="skeleton-line skeleton"></div>
+          <div class="skeleton-line skeleton"></div>
+          <div class="skeleton-line skeleton short"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="learning-environment" *ngIf="!isLoading && lesson">
   <div class="learning-header">
     <div class="title-area">
       <a (click)="goToCatalog()" class="back-link"><svg fill="#000000" xmlns="http://www.w3.org/2000/svg" width="64px"
