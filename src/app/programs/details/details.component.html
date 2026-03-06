@@ -57,16 +57,16 @@
             </div>
             </div>
             <div class="video-preview" (click)="playPreview()">
-                <ng-container *ngIf="!showVideo">
-                    <app-program-featured-media [program]="catalog" media_type="IMAGE"></app-program-featured-media>
+                <!-- <ng-container *ngIf="!showVideo"> -->
+                    <app-program-featured-media [program]="catalog" media_type="VIDEO"></app-program-featured-media>
                     <div class="play-overlay">
                         <div class="play-button">
                             <span class="play-icon">▶</span>
                         </div>
                     </div>
-                </ng-container>
-                <app-program-featured-media [program]="catalog" media_type="VIDEO"
-                    *ngIf="showVideo"></app-program-featured-media>
+                <!-- </ng-container> -->
+                <!-- <app-program-featured-media [program]="catalog" media_type="VIDEO"
+                    *ngIf="showVideo"></app-program-featured-media> -->
             </div>
 
             <div class="program-info">
