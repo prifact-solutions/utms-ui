@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ExploreComponent } from './programs/explore/explore.component';
 import { EnrollComponent } from './programs/enroll/enroll.component';
-import { LoginComponent } from './utms-auth/login/login.component';
+import { LoginComponent } from './utms-auth/components/login/login.component';
 import { DetailsComponent } from './programs/details/details.component';
 import { ViewLessonComponent } from './programs/view-lesson/view-lesson.component';
 import { ProgramListComponent } from './program-builder/program-list/program-list.component';
@@ -28,6 +28,7 @@ import { LandingComponent } from './public/landing/landing.component';
 import { DashboardComponent } from './public/dashboard/dashboard.component';
 import { HowitworksComponent } from './public/howitworks/howitworks.component';
 import { EditExamComponent } from './program-builder/edit-exam/edit-exam.component';
+import { AuthCallbackComponent } from './utms-auth/components/auth-callback/auth-callback.component';
 
 const routes: Routes = [
   {
@@ -37,7 +38,7 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'explore',
@@ -54,82 +55,81 @@ const routes: Routes = [
   {
     path: 'programs/:id/enroll',
     component: EnrollComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'programs/:id/details',
     component: DetailsComponent,
-
   },
   {
     path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/lesson',
     component: ViewLessonComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/exam',
     component: TakeExamComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/exam-success/:exam_id',
     component: ExamSuccessComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'programs-builder',
     component: ProgramListComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/add',
     component: CreateProgramComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/edit',
     component: EditProgramComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules',
     component: ListModulesComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/organize-contents',
     component: OrganizeContentsComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/add',
     component: CreateModuleComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/edit',
     component: EditModuleComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons',
     component: ListModuleContentComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/add',
     component: CreateLessonComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/:lesson_id/edit',
     component: EditLessonComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/exams/add',
     component: CreateExamComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/exams/:content_id/edit',
@@ -139,27 +139,33 @@ const routes: Routes = [
   {
     path: 'programs-builder/:program_id/question-papers',
     component: QuestionPapersListComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/question-papers/add',
     component: CreateQuestionPaperComponent,
-    canActivate: [StaffAuthGuard]
+    canActivate: [StaffAuthGuard],
   },
   {
     path: 'programs-builder/:program_id/question-papers/:qp_id/design',
     component: DesignQuestionPaperComponent,
-    canActivate: [StaffAuthGuard]
-  }
+    canActivate: [StaffAuthGuard],
+  },
+  {
+    path: 'auth-callback',
+    component: AuthCallbackComponent,
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    enableTracing: false,
-    useHash: true,
-    onSameUrlNavigation: 'reload',
-    scrollPositionRestoration: 'enabled'
-  })],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      enableTracing: false,
+      useHash: false,
+      onSameUrlNavigation: 'reload',
+      scrollPositionRestoration: 'enabled',
+    }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
