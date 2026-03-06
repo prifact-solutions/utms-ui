@@ -45,16 +45,16 @@
                     </div>
                     <h1>{{ catalog.title }}</h1>
                 </div>
-                <div *ngIf="!catalog.is_enrolled">
+                <div *ngIf="!isEnrolled">
                     <a class="button primary black" [routerLink]="['/programs', catalog.id, 'enroll']">
                         Enroll Now
                     </a>
                 </div>
-                <!-- <div *ngIf="catalog.is_enrolled">
-                <button class="button primary" (click)="navigateToLesson(catalog.modules?.[0]?.module_contents?.[0])">
+                <div *ngIf="isEnrolled">
+                <button class="button primary" (click)="onContinueLearning()">
                     Continue Learning
                 </button>
-            </div> -->
+            </div>
             </div>
             <div class="video-preview" (click)="playPreview()">
                 <ng-container *ngIf="!showVideo">
