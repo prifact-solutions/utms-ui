@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, HostListener } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { Category, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
@@ -9,7 +9,8 @@ import { filter, switchMap } from 'rxjs';
 @Component({
   selector: 'app-program-list',
   templateUrl: './program-list.component.html',
-  styleUrls: ['./program-list.component.scss']
+  styleUrls: ['./program-list.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProgramListComponent extends ComponentBase implements OnInit {
   programs: Program[] = [];
@@ -22,8 +23,36 @@ export class ProgramListComponent extends ComponentBase implements OnInit {
   public searchTerm: string = '';
   public statusFilter: string = 'all'; // 'all' | 'ACTIVE' | 'DRAFT'
   public selectedCategories: Set<number> = new Set();
+  public isDropdownOpen = false;
+  public showAddModal = false;
 
-  constructor(private programsService: ProgramsService, private authService: AuthService) {
+  public statusOptions = [
+    { value: 'all', label: 'All Status' },
+    { value: 'ACTIVE', label: 'Published' },
+    { value: 'DRAFT', label: 'Draft' }
+  ];
+
+  public toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  public selectOption(value: string) {
+    this.statusFilter = value;
+    this.isDropdownOpen = false;
+  }
+
+  public get statusLabel(): string {
+    return this.statusOptions.find(o => o.value === this.statusFilter)?.label || 'All Status';
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.isDropdownOpen = false;
+    }
+  }
+
+  constructor(private programsService: ProgramsService, private authService: AuthService, private eRef: ElementRef) {
     super();
   }
 
@@ -118,6 +147,19 @@ export class ProgramListComponent extends ComponentBase implements OnInit {
 
   get hasActiveFilters(): boolean {
     return !!(this.searchTerm.trim() || this.statusFilter !== 'all' || this.selectedCategories.size > 0);
+  }
+
+  openAddModal() {
+    this.showAddModal = true;
+  }
+
+  closeAddModal() {
+    this.showAddModal = false;
+  }
+
+  onProgramSaved() {
+    this.showAddModal = false;
+    this.ngOnInit(); // Refresh the list
   }
 
   getCategoryLabel(id: number) {

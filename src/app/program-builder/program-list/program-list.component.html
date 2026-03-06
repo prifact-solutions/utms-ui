@@ -1,77 +1,96 @@
-<div class="admin-page-container container">
+<div class="admin-page-container ">
     <header class="page-header">
         <div class="header-text">
-            <h1>Instructor Dashboard</h1>
-            <p class="text-muted">Manage your programs and curriculum</p>
+            <h1>Course Builder</h1>
+            <p class="text-muted">Organize your course by adding modules, lessons, exams, and notes — all from one
+                place.
+            </p>
         </div>
-        <a routerLink="/programs-builder/add" class="btn-primary">Create New Program</a>
+        <div class="explore-search-filters">
+            <div class="course-access">
+                <div class="custom-dropdown" [class.open]="isDropdownOpen">
+                    <div class="dropdown-toggle" (click)="toggleDropdown()">
+                        <span>{{ statusLabel }}</span>
+                        <svg class="arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" *ngFor="let option of statusOptions"
+                            [class.active]="statusFilter === option.value" (click)="selectOption(option.value)">
+                            {{ option.label }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="search-box" [class.is-expanded]="searchTerm" (click)="searchInput.focus()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path
+                        d="M14.3598 24.4001C12.3741 24.4001 10.433 23.8113 8.78191 22.7081C7.13084 21.6049 5.84399 20.0368 5.08408 18.2022C4.32417 16.3677 4.12535 14.3489 4.51275 12.4014C4.90015 10.4538 5.85636 8.66484 7.26048 7.26072C8.6646 5.8566 10.4536 4.90039 12.4011 4.51299C14.3486 4.12559 16.3674 4.32442 18.202 5.08432C20.0365 5.84423 21.6046 7.13108 22.7078 8.78215C23.811 10.4332 24.3998 12.3744 24.3998 14.3601C24.3998 15.6785 24.1401 16.9841 23.6356 18.2022C23.131 19.4204 22.3914 20.5272 21.4592 21.4594C20.5269 22.3917 19.4201 23.1313 18.202 23.6358C16.9838 24.1404 15.6782 24.4001 14.3598 24.4001ZM14.3598 6.3334C12.7776 6.3334 11.2309 6.8026 9.91527 7.68166C8.59968 8.5607 7.57429 9.81014 6.9688 11.2719C6.36329 12.7338 6.20487 14.3422 6.51355 15.8941C6.82223 17.446 7.58416 18.8714 8.70297 19.9902C9.8218 21.109 11.2473 21.871 12.7991 22.1797C14.3509 22.4884 15.9594 22.33 17.4213 21.7245C18.883 21.1189 20.1325 20.0936 21.0116 18.778C21.8906 17.4624 22.3598 15.9157 22.3598 14.3334C22.3598 12.2117 21.517 10.1768 20.0166 8.67655C18.5164 7.17626 16.4816 6.3334 14.3598 6.3334Z"
+                        fill="black"></path>
+                    <path
+                        d="M26.6668 27.6666C26.5355 27.6671 26.4052 27.6415 26.2839 27.5911C26.1625 27.5408 26.0524 27.4667 25.9601 27.3732L20.4535 21.8666C20.2768 21.677 20.1807 21.4262 20.1852 21.1671C20.1897 20.908 20.2948 20.661 20.478 20.4776C20.6612 20.2944 20.9084 20.1895 21.1675 20.185C21.4265 20.1804 21.6772 20.2766 21.8668 20.4532L27.3735 25.9599C27.5607 26.1474 27.6659 26.4015 27.6659 26.6666C27.6659 26.9315 27.5607 27.1856 27.3735 27.3732C27.2812 27.4667 27.1711 27.5408 27.0497 27.5911C26.9284 27.6415 26.7981 27.6671 26.6668 27.6666Z"
+                        fill="black"></path>
+                </svg>
+                <input #searchInput type="text" placeholder="Search programs by name or description..."
+                    [(ngModel)]="searchTerm">
+                <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm = ''">✕</button>
+            </div>
+
+
+            <button (click)="openAddModal()" class="button primary">Create New Program</button>
+        </div>
+
     </header>
 
-    <div class="explore-search-filters">
-        <div class="search-box">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <path
-                    d="M14.3598 24.4001C12.3741 24.4001 10.433 23.8113 8.78191 22.7081C7.13084 21.6049 5.84399 20.0368 5.08408 18.2022C4.32417 16.3677 4.12535 14.3489 4.51275 12.4014C4.90015 10.4538 5.85636 8.66484 7.26048 7.26072C8.6646 5.8566 10.4536 4.90039 12.4011 4.51299C14.3486 4.12559 16.3674 4.32442 18.202 5.08432C20.0365 5.84423 21.6046 7.13108 22.7078 8.78215C23.811 10.4332 24.3998 12.3744 24.3998 14.3601C24.3998 15.6785 24.1401 16.9841 23.6356 18.2022C23.131 19.4204 22.3914 20.5272 21.4592 21.4594C20.5269 22.3917 19.4201 23.1313 18.202 23.6358C16.9838 24.1404 15.6782 24.4001 14.3598 24.4001ZM14.3598 6.3334C12.7776 6.3334 11.2309 6.8026 9.91527 7.68166C8.59968 8.5607 7.57429 9.81014 6.9688 11.2719C6.36329 12.7338 6.20487 14.3422 6.51355 15.8941C6.82223 17.446 7.58416 18.8714 8.70297 19.9902C9.8218 21.109 11.2473 21.871 12.7991 22.1797C14.3509 22.4884 15.9594 22.33 17.4213 21.7245C18.883 21.1189 20.1325 20.0936 21.0116 18.778C21.8906 17.4624 22.3598 15.9157 22.3598 14.3334C22.3598 12.2117 21.517 10.1768 20.0166 8.67655C18.5164 7.17626 16.4816 6.3334 14.3598 6.3334Z"
-                    fill="black"></path>
-                <path
-                    d="M26.6668 27.6666C26.5355 27.6671 26.4052 27.6415 26.2839 27.5911C26.1625 27.5408 26.0524 27.4667 25.9601 27.3732L20.4535 21.8666C20.2768 21.677 20.1807 21.4262 20.1852 21.1671C20.1897 20.908 20.2948 20.661 20.478 20.4776C20.6612 20.2944 20.9084 20.1895 21.1675 20.185C21.4265 20.1804 21.6772 20.2766 21.8668 20.4532L27.3735 25.9599C27.5607 26.1474 27.6659 26.4015 27.6659 26.6666C27.6659 26.9315 27.5607 27.1856 27.3735 27.3732C27.2812 27.4667 27.1711 27.5408 27.0497 27.5911C26.9284 27.6415 26.7981 27.6671 26.6668 27.6666Z"
-                    fill="black"></path>
-            </svg>
-            <input type="text" placeholder="Search programs by name or description..." [(ngModel)]="searchTerm">
-            <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm = ''">✕</button>
-        </div>
 
-        <div class="course-access">
-            <select [(ngModel)]="statusFilter">
-                <option value="all">All Status</option>
-                <option value="ACTIVE">Published</option>
-                <option value="DRAFT">Draft</option>
-            </select>
-        </div>
-    </div>
 
-    <!-- Category Bubble Filters -->
-    <div class="filter-options-container" *ngIf="isLoading; else filterContent">
-        <div class="filter-options-skeleton">
-            <div class="skeleton-filter-item" *ngFor="let _ of [1,2,3,4,5,6,7,8]"></div>
-        </div>
-    </div>
+    <div>
 
-    <ng-template #filterContent>
-        <ng-container *ngIf="categories.length > 0">
-            <div class="filter-options-container">
-                <button class="scroll-arrow left" *ngIf="canScrollLeft" (click)="scrollAmount(-200)">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </button>
-                <div class="filter-options" #filterList [class.can-scroll-left]="canScrollLeft"
-                    [class.can-scroll-right]="canScrollRight" (scroll)="onScroll(filterList)"
-                    (mousedown)="startDragging($event, filterList)" (mouseleave)="stopDragging(filterList)"
-                    (mouseup)="stopDragging(filterList)" (mousemove)="moveEvent($event, filterList)">
-                    <label [class.selected]="selectedCategories.size === 0">
-                        <input type="checkbox" [checked]="selectedCategories.size === 0" (change)="clearCategories()" />
-                        <span>All</span>
-                    </label>
-                    <label [class.selected]="isCategorySelected(cat.id)" *ngFor="let cat of categories">
-                        <input type="checkbox" [checked]="isCategorySelected(cat.id)"
-                            (change)="toggleCategory(cat.id)" />
-                        <span>{{ cat.name }}</span>
-                    </label>
-                </div>
-                <button class="scroll-arrow right" *ngIf="canScrollRight" (click)="scrollAmount(200)">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </button>
+        <!-- Category Bubble Filters -->
+        <div class="filter-options-container" *ngIf="isLoading; else filterContent">
+            <div class="filter-options-skeleton">
+                <div class="skeleton-filter-item" *ngFor="let _ of [1,2,3,4,5,6,7,8]"></div>
             </div>
-        </ng-container>
-    </ng-template>
+        </div>
 
-    <div class="search-count-container">
-        <div class="inner">
+        <ng-template #filterContent>
+            <ng-container *ngIf="categories.length > 0">
+                <div class="filter-options-container">
+                    <button class="scroll-arrow left" *ngIf="canScrollLeft" (click)="scrollAmount(-200)">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="filter-options" #filterList [class.can-scroll-left]="canScrollLeft"
+                        [class.can-scroll-right]="canScrollRight" (scroll)="onScroll(filterList)"
+                        (mousedown)="startDragging($event, filterList)" (mouseleave)="stopDragging(filterList)"
+                        (mouseup)="stopDragging(filterList)" (mousemove)="moveEvent($event, filterList)">
+                        <label [class.selected]="selectedCategories.size === 0">
+                            <input type="checkbox" [checked]="selectedCategories.size === 0"
+                                (change)="clearCategories()" />
+                            <span>All</span>
+                        </label>
+                        <label [class.selected]="isCategorySelected(cat.id)" *ngFor="let cat of categories">
+                            <input type="checkbox" [checked]="isCategorySelected(cat.id)"
+                                (change)="toggleCategory(cat.id)" />
+                            <span>{{ cat.name }}</span>
+                        </label>
+                    </div>
+                    <button class="scroll-arrow right" *ngIf="canScrollRight" (click)="scrollAmount(200)">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </ng-container>
+        </ng-template>
+
+        <div class="search-count-container">
+
             <!-- Results Count -->
             <p class="search-count" *ngIf="!isLoading">
                 <strong>
@@ -85,67 +104,81 @@
                     </a>
                 </ng-container>
             </p>
+
+        </div>
+        <div class="no-results" *ngIf="!isLoading && filteredPrograms.length === 0">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M9 17C9.85038 16.3697 10.8846 16 12 16C13.1154 16 14.1496 16.3697 15 17" stroke="#eee"
+                        stroke-width="1.5" stroke-linecap="round"></path>
+                    <ellipse cx="15" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                    <ellipse cx="9" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                    <path
+                        d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                        stroke="#eee" stroke-width="1.5"></path>
+                </g>
+            </svg>
+        </div>
+
+        <div *ngIf="!isLoading && !errorMessage && filteredPrograms.length > 0" class="course-listing">
+            <div *ngFor="let program of filteredPrograms" class="c-card-2 admin-card"
+                [routerLink]="['/programs-builder', program.id, 'edit']">
+                <app-program-featured-media [program]="program" media_type="IMAGE"
+                    *ngIf="program.thumbnail"></app-program-featured-media>
+                <div class="no-image" *ngIf="!program.thumbnail"
+                    [style.background-color]="getProgramColor(program.title)">
+                    {{ getProgramInitials(program.title) }}
+                </div>
+
+                <span class="c-top-bubble" [class.bg-success]="program.status == 'ACTIVE'"
+                    [class.bg-warning]="program.status != 'ACTIVE'">
+                    {{ program.status == 'ACTIVE' ? 'Published' : 'Draft' }}
+                </span>
+
+                <div class="card-content">
+                    <h3>{{ program.title }}</h3>
+                    <div class="card-meta-inline">
+                        <span>{{ program.duration }} days</span>
+                        <span class="dot">•</span>
+                        <span>{{ program.modules?.length || 0 }} modules</span>
+                    </div>
+                    <p>{{ program.description | slice:0:100 }}...</p>
+
+                    <div class="card-categories" *ngIf="program.categories && program.categories.length > 0">
+                        <span class="card-category-bubble" *ngFor="let catId of program.categories">
+                            {{ getCategoryLabel(catId) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="admin-card-footer">
+                    <div class="action-group d-flex gap-2">
+                        <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'edit']"
+                            title="Settings" (click)="$event.stopPropagation()">⚙️</button>
+                        <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'modules']"
+                            title="Curriculum" (click)="$event.stopPropagation()">📚</button>
+                        <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'organize-contents']"
+                            title="Reorder" (click)="$event.stopPropagation()">≡</button>
+                    </div>
+                    <button class="btn-outline-sm" [routerLink]="['/programs', program.id, 'details']"
+                        (click)="$event.stopPropagation()">Public View</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="no-results" *ngIf="!isLoading && filteredPrograms.length === 0">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-                <path d="M9 17C9.85038 16.3697 10.8846 16 12 16C13.1154 16 14.1496 16.3697 15 17" stroke="#eee"
-                    stroke-width="1.5" stroke-linecap="round"></path>
-                <ellipse cx="15" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
-                <ellipse cx="9" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
-                <path
-                    d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
-                    stroke="#eee" stroke-width="1.5"></path>
-            </g>
-        </svg>
-    </div>
-
-    <div *ngIf="!isLoading && !errorMessage && filteredPrograms.length > 0" class="course-listing">
-        <div *ngFor="let program of filteredPrograms" class="c-card-2 admin-card"
-            [routerLink]="['/programs-builder', program.id, 'edit']">
-            <app-program-featured-media [program]="program" media_type="IMAGE"
-                *ngIf="program.thumbnail"></app-program-featured-media>
-            <div class="no-image" *ngIf="!program.thumbnail" [style.background-color]="getProgramColor(program.title)">
-                {{ getProgramInitials(program.title) }}
+    <!-- Add Program Modal -->
+    <div class="modal-overlay" *ngIf="showAddModal">
+        <div class="modal-content-wrapper shadow-lg">
+            <div class="modal-header">
+                <h4>Add New Program</h4>
+                <button class="modal-close" (click)="closeAddModal()">✕</button>
             </div>
-
-            <span class="c-top-bubble" [class.bg-success]="program.status == 'ACTIVE'"
-                [class.bg-warning]="program.status != 'ACTIVE'">
-                {{ program.status == 'ACTIVE' ? 'Published' : 'Draft' }}
-            </span>
-
-            <div class="card-content">
-                <h3>{{ program.title }}</h3>
-                <div class="card-meta-inline">
-                    <span>{{ program.duration }} days</span>
-                    <span class="dot">•</span>
-                    <span>{{ program.modules?.length || 0 }} modules</span>
-                </div>
-                <p>{{ program.description | slice:0:100 }}...</p>
-
-                <div class="card-categories" *ngIf="program.categories && program.categories.length > 0">
-                    <span class="card-category-bubble" *ngFor="let catId of program.categories">
-                        {{ getCategoryLabel(catId) }}
-                    </span>
-                </div>
-            </div>
-
-            <div class="admin-card-footer">
-                <div class="action-group d-flex gap-2">
-                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'edit']" title="Settings"
-                        (click)="$event.stopPropagation()">⚙️</button>
-                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'modules']"
-                        title="Curriculum" (click)="$event.stopPropagation()">📚</button>
-                    <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'organize-contents']"
-                        title="Reorder" (click)="$event.stopPropagation()">≡</button>
-                </div>
-                <button class="btn-outline-sm" [routerLink]="['/programs', program.id, 'details']"
-                    (click)="$event.stopPropagation()">Public View</button>
+            <div class="modal-body">
+                <app-create-program [inModal]="true" (saved)="onProgramSaved()" (closed)="closeAddModal()">
+                </app-create-program>
             </div>
         </div>
     </div>
-</div>

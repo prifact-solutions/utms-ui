@@ -1,19 +1,33 @@
 @import 'variables';
 @import 'forms';
 
-.admin-page-container {
-    padding: 3rem 0;
-}
+.admin-page-container {}
 
 .page-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
+    align-items: flex-end;
+    gap: 24px;
+    padding-bottom: 16px;
+    position: fixed;
+    top: 64px;
+    left: 064px;
+    right: 0;
+    z-index: 100;
+    background: white;
+    padding: 0 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding-bottom: 16px;
+    height: 60px;
+
 
     h1 {
-        font-size: 2rem;
+        font-size: 1rem;
         margin-bottom: 0;
+    }
+
+    p {
+        font-size: .785rem;
     }
 }
 

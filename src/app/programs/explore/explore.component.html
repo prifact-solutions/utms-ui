@@ -22,11 +22,21 @@
 
 
         <div class="course-access" *ngIf="isAuthenticated">
-            <select [(ngModel)]="enrollmentFilter">
-                <option value="all">All Programs</option>
-                <option value="enrolled">Enrolled</option>
-                <option value="unenrolled">Not Enrolled</option>
-            </select>
+            <div class="custom-dropdown" [class.open]="isDropdownOpen">
+                <div class="dropdown-toggle" (click)="toggleDropdown()">
+                    <span>{{ enrollmentLabel }}</span>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" *ngFor="let option of enrollmentOptions"
+                        [class.active]="enrollmentFilter === option.value" (click)="selectOption(option.value)">
+                        {{ option.label }}
+                    </div>
+                </div>
+            </div>
         </div>
 
 
