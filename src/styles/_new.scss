@@ -491,6 +491,8 @@ p {
     font-size: 0.75rem;
     font-weight: 600;
     color: white;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .landing-footer {
@@ -676,6 +678,15 @@ p {
         background: #fff;
         color: #666;
 
+        &.bg-success {
+            background: #1e7232 !important;
+            color: #fff !important;
+        }
+
+        &.bg-warning {
+            background: #b32d0f !important;
+            color: #fff !important;
+        }
     }
 
     .app-program-featured-media,
@@ -738,5 +749,19 @@ p {
     svg {
         width: 24px;
         height: 24px;
+    }
+}
+
+html body {
+
+    .attempt-header {
+        position: static;
+    }
+
+    .qp-title-box {
+        width: 500px;
+        z-index: 100;
+        position: fixed;
+
     }
 }
