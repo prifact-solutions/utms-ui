@@ -14,6 +14,10 @@
   height: 0;
   overflow: hidden;
 
+  video {
+    width: 100% !important;
+  }
+
   app-video-player {
     position: absolute;
     top: 0;

@@ -261,6 +261,29 @@
             }
         }
     }
+
+    .card-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+
+        h3 {
+            flex: 1;
+        }
+
+        .enrolled-pill {
+            background: #111;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+    }
 }
 
 

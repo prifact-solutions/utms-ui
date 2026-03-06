@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { ComponentBase } from '../componentbase';
 import { ModuleContent, ModuleContentFile } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
@@ -6,7 +6,8 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
 @Component({
   selector: 'app-file-viewer',
   templateUrl: './file-viewer.component.html',
-  styleUrls: ['./file-viewer.component.scss']
+  styleUrls: ['./file-viewer.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class FileViewerComponent extends ComponentBase {
   @Input()

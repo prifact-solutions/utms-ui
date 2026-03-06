@@ -190,6 +190,14 @@ export class ExploreComponent extends ComponentBase implements OnInit {
     return this.categories.find(c => c.id === id)?.name;
   }
 
+  getProgramInitials(title: string) {
+    return Utils.getInitials(title);
+  }
+
+  getProgramColor(title: string) {
+    return Utils.stringToColor(title);
+  }
+
   // Drag to scroll logic
   private isMouseDown = false;
   private startX = 0;

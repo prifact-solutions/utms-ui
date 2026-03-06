@@ -1,108 +1,123 @@
 <div class="dashboard-page">
     <div class="inner">
-        <h1 class="greeting-title">Welcome back, {{ username }}! </h1>
-        <button (click)="goToExplore()">
-            <span>Browse All Programs</span>
+        <div class="dashboard-banner">
+            <div>
+                <div class="user-details">
+                    <h1>Hi, <strong>{{ username }}</strong>! </h1>
+                    <p>Let's build something valuable today. <a (click)="goToExplore()">Explore</a> and begin.</p>
 
-        </button>
-        <!-- Greeting Banner -->
-
-
-        <div class="container dashboard-content">
-
-            <!-- Recently Accessed Section -->
-            <ng-container *ngIf="recentPrograms.length > 0">
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">🕒 Recently Accessed</h2>
-                        <span class="section-meta">Jump back in</span>
+                </div>
+                <div class="announcements">
+                    <div class="announcement-item">
+                        <div class="announcement-content">
+                            <strong>New Module !!!</strong>
+                            <p>
+                                New training modules are now available. Review updated procedures and continue your
+                                progression.
+                            </p>
+                        </div>
+                        <button class="announcement-close" aria-label="Close">✕</button>
                     </div>
-                    <div class="recent-scroll-row">
-                        <div class="recent-card" *ngFor="let program of recentPrograms"
-                            (click)="goToProgram(program.id)">
-                            <div class="recent-thumbnail">
-                                <app-program-featured-media [program]="program"
-                                    media_type="IMAGE"></app-program-featured-media>
-                                <div class="recent-overlay">
-                                    <span class="play-icon">▶</span>
-                                </div>
-                            </div>
-                            <div class="recent-info">
-                                <p class="recent-title">{{ program.title }}</p>
-                                <span class="recent-time">{{ getTimeAgo(program.accessedAt) }}</span>
-                            </div>
+                </div>
+            </div>
+            <div class="recently-accessed-courses" *ngIf="recentPrograms.length > 0">
+                <h2>Recently Accessed Courses</h2>
+                <div class="recent-card" *ngFor="let program of recentPrograms" (click)="goToProgram(program.id)">
+                    <div class="recent-thumbnail">
+                        <app-program-featured-media [program]="program" media_type="IMAGE"
+                            *ngIf="program.thumbnail"></app-program-featured-media>
+                        <div class="thumbnail-placeholder" *ngIf="!program.thumbnail"
+                            [style.background-color]="getProgramColor(program.title)">
+                            {{ getProgramInitials(program.title) }}
                         </div>
                     </div>
-                </section>
-            </ng-container>
+                    <div class="recent-info">
+                        <strong class="recent-title">{{ program.title }}</strong>
+                        <div class="recent-time">{{ getTimeAgo(program.accessedAt) }}</div>
+                    </div>
+                    <div class="recent-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="container dashboard-content">
             <!-- Enrolled Programs Section -->
             <section class="section">
                 <div class="section-header">
-                    <h2 class="section-title">📚 My Enrolled Programs</h2>
+                    <h2 class="section-title">Enrolled Courses</h2>
                     <span class="section-meta" *ngIf="!isLoadingEnrolled">
                         {{ enrolledPrograms.length }} program{{ enrolledPrograms.length !== 1 ? 's' : '' }}
                     </span>
                 </div>
 
-                <!-- Skeleton Loading -->
-                <div class="grid-auto" *ngIf="isLoadingEnrolled">
-                    <div class="enrolled-card card skeleton-card" *ngFor="let _ of [1,2,3,4,5,6]">
-                        <div class="card-image skeleton"></div>
-                        <div class="card-content">
-                            <div class="skeleton skeleton-text" style="width: 80%; height: 1rem;"></div>
-                            <div class="skeleton skeleton-text"
-                                style="width: 55%; height: 0.85rem; margin-top: 0.5rem;">
+                <div class="course-listing">
+                    <!-- Skeleton Loading -->
+                    <ng-container *ngIf="isLoadingEnrolled">
+                        <div class="skeleton-card-2" *ngFor="let _ of [1,2,3,4]">
+                            <div class="skeleton-media skeleton"></div>
+                            <div class="skeleton-bubble skeleton"
+                                style="position: absolute; top: 10px; right: 10px; width: 60px;">
                             </div>
-                            <div class="skeleton" style="height: 36px; border-radius: 4px; margin-top: 1.25rem;"></div>
+                            <div class="skeleton-content">
+                                <div class="skeleton-title skeleton"></div>
+                                <div class="skeleton-text skeleton"></div>
+                                <div class="skeleton-text skeleton short"></div>
+                                <div class="card-categories" style="margin-top: 4px;">
+                                    <div class="skeleton-category skeleton"></div>
+                                    <div class="skeleton-category skeleton"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </ng-container>
+
+                    <!-- Actual Enrolled Cards -->
+                    <ng-container *ngIf="!isLoadingEnrolled">
+                        <div class="c-card-2" *ngFor="let program of enrolledPrograms"
+                            (click)="goToProgram(program.id)">
+                            <app-program-featured-media [program]="program" media_type="IMAGE"
+                                *ngIf="program.thumbnail"></app-program-featured-media>
+                            <div class="no-image" *ngIf="!program.thumbnail"
+                                [style.background-color]="getProgramColor(program.title)">
+                                {{ getProgramInitials(program.title) }}
+                            </div>
+
+                            <span class="c-top-bubble">{{program.duration}} days</span>
+
+                            <div class="card-content">
+                                <h3>{{program.title}}</h3>
+                                <p>{{program.short_description || program.description | slice:0:100}}...</p>
+
+                                <div class="card-categories"
+                                    *ngIf="program.categories && program.categories.length > 0">
+                                    <span class="card-category-bubble" *ngFor="let catId of program.categories">
+                                        {{ getCategoryLabel(catId) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
 
-                <!-- Empty State -->
-                <div class="empty-state" *ngIf="!isLoadingEnrolled && enrolledPrograms.length === 0">
-                    <div class="empty-icon">🎓</div>
-                    <h3>No enrollments yet</h3>
-                    <p>Find a program you're interested in and start learning today.</p>
-                    <button class="btn-primary" (click)="goToExplore()">Explore Programs</button>
-                </div>
-
-                <!-- Enrolled Program Cards -->
-                <div class="grid-auto" *ngIf="!isLoadingEnrolled && enrolledPrograms.length > 0">
-                    <div class="enrolled-card card" *ngFor="let program of enrolledPrograms"
-                        (click)="goToProgram(program.id)">
-                        <div class="card-image">
-                            <app-program-featured-media [program]="program"
-                                media_type="IMAGE"></app-program-featured-media>
-                            <div class="enrolled-badge-overlay">
-                                <span class="enrolled-chip">✓ Enrolled</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="program-title">{{ program.title }}</h3>
-                            <p class="program-description">
-                                {{ program.short_description || program.description | slice:0:90 }}...
-                            </p>
-                            <div class="card-categories" *ngIf="program.categories && program.categories.length > 0">
-                                <span class="card-category-bubble" *ngFor="let catId of program.categories">
-                                    {{ getCategoryLabel(catId) }}
-                                </span>
-                            </div>
-                            <div class="program-meta">
-                                <span class="duration">{{ program.duration }} days</span>
-                                <span class="difficulty badge" *ngIf="program.difficulty">{{ program.difficulty
-                                    }}</span>
-                            </div>
-                            <div class="card-actions" (click)="$event.stopPropagation()">
-                                <button class="btn-primary w-100" (click)="goToProgram(program.id)">
-                                    Continue Learning
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Empty state if no programs enrolled -->
+                <div class="no-results" *ngIf="!isLoadingEnrolled && enrolledPrograms.length === 0">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 17C9.85038 16.3697 10.8846 16 12 16C13.1154 16 14.1496 16.3697 15 17" stroke="#eee"
+                            stroke-width="1.5" stroke-linecap="round"></path>
+                        <ellipse cx="15" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                        <ellipse cx="9" cy="10.5" rx="1" ry="1.5" fill="#eee"></ellipse>
+                        <path
+                            d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                            stroke="#eee" stroke-width="1.5"></path>
+                    </svg>
+                    <p>You haven't enrolled in any programs yet.</p>
+                    <button class="button primary" (click)="goToExplore()">Explore Programs</button>
                 </div>
             </section>
-
         </div>
     </div>
 </div>
