@@ -162,7 +162,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     enableTracing: false,
-    useHash: true,
+    useHash: false,
     onSameUrlNavigation: 'reload',
     scrollPositionRestoration: 'enabled',
     paramsInheritanceStrategy: 'always'

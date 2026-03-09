@@ -82,13 +82,6 @@ export class AuthService {
   }
 
   public keycloakLogin() {
-    // this.tenantService
-    //   .getTenantInfo$()
-    //   .pipe(take(1))
-    //   .subscribe((tenantInfo) => {
-    //     const keycloakUrl = tenantInfo?.authServerUrl;
-    //     const name = tenantInfo?.name;
-    //     const realm = tenantInfo?.realm;
     const redirectUri = `${window.location.origin}/auth-callback`;
     const loginUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/auth` +
@@ -98,24 +91,17 @@ export class AuthService {
       `&scope=openid`;
 
     window.location.href = loginUrl;
-    //});
   }
 
   public keycloakLogout() {
-    // this.tenantService
-    //   .getTenantInfo$()
-    //   .pipe(take(1))
-    //   .subscribe((tenantInfo) => {
-    //     const keycloakUrl = tenantInfo?.authServerUrl;
-    //     const name = tenantInfo?.name;
-    //     const realm = tenantInfo?.realm;
+    this.clearToken();
 
+    const redirectUri = `${encodeURIComponent(window.location.origin)}`;
     const logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
       `?client_id=django-server` +
-      `&post_logout_redirect_uri=${window.location.origin + '/login'}`;
+      `&post_logout_redirect_uri=${redirectUri}`;
 
     window.location.href = logoutUrl;
-    //});
   }
 }
