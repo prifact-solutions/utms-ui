@@ -179,15 +179,14 @@ app-navigation {
       font-weight: 700;
       margin: 0 0 12px;
       color: $text-main;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+
     }
   }
 
   .filter-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 10px;
 
     label {
       cursor: pointer;
@@ -197,18 +196,18 @@ app-navigation {
       }
 
       span {
-        display: inline-block;
-        padding: 4px 12px;
-        background: $bg-off-white;
-        border: 1px solid $border-color;
+        display: flex;
+        padding: 0 12px;
+        background: #fafafa;
+        border: 1px solid #eee;
         border-radius: 20px;
         font-size: 0.75rem;
         color: $text-main;
         transition: all 0.2s ease;
 
         &:hover {
-          background: rgba($accent-color, 0.05);
-          border-color: $accent-color;
+          background: #eee;
+
         }
       }
 
@@ -497,26 +496,33 @@ app-navigation {
     }
 
     .nav-admin-group {
-      background: #ffdebd;
+
       width: 64px;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 12px 0;
       position: relative;
-      border-right: 1px solid rgba(0, 0, 0, .12);
+      margin-bottom: 138px;
 
-
-
-      a:hover {
-        background: #fac188;
-
-
+      &::after,
+      &::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 12px;
+        right: 12px;
+        height: 1px;
+        background: rgba(0, 0, 0, .2);
+        border-radius: 1px;
       }
 
-      a.active {
-        background: #fac188;
+      &::after {
+        bottom: -12px;
+        top: auto;
       }
+
+
 
     }
   }
@@ -548,6 +554,8 @@ app-navigation {
       font-size: .875rem;
       padding: 0 16px 0 8px;
       box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+      line-height: 1em;
+      flex-shrink: 0;
 
       &:hover {
 
@@ -562,12 +570,13 @@ app-navigation {
 
     .logo {
       img {
-        height: 26px;
+        height: 32px;
       }
     }
 
 
   }
+
 
 
 }

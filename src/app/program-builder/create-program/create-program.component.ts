@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -10,7 +10,8 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
 @Component({
   selector: 'app-create-program',
   templateUrl: './create-program.component.html',
-  styleUrls: ['./create-program.component.scss']
+  styleUrls: ['./create-program.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CreateProgramComponent extends ComponentBase implements OnInit {
   programForm: FormGroup;
@@ -25,6 +26,9 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   videoFile: File | null = null;
 
   categories: Array<Category> = [];
+  @Input() inModal = false;
+  @Output() saved = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -47,8 +51,6 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
       duration: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
-      is_active: [true, Validators.required],
-      difficulty: ['Beginner', Validators.required],
       video_hours: [0],
       categories: []
     });
@@ -146,8 +148,8 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       title: formValue.title,
       description: formValue.description,
       duration: parseFloat(formValue.duration),
-      is_active: formValue.is_active,
-      difficulty: formValue.difficulty,
+      is_active: false,
+      difficulty: 'Beginner',
       video_hours: formValue.video_hours ?? 0,
       categories: categories,
       thumbnail: null
@@ -159,9 +161,13 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       next: () => {
         this.successMessage = 'Program created successfully!';
         this.isSubmitting = false;
-        setTimeout(() => {
-          this.router.navigateByUrl('/programs-builder');
-        }, 1500);
+        if (this.inModal) {
+          this.saved.emit();
+        } else {
+          setTimeout(() => {
+            this.router.navigateByUrl('/programs-builder');
+          }, 1500);
+        }
       },
       error: (error) => {
         console.error('Error creating program:', error);
@@ -179,8 +185,16 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
     });
   }
 
+  cancel(): void {
+    if (this.inModal) {
+      this.closed.emit();
+    } else {
+      this.router.navigateByUrl('/programs-builder');
+    }
+  }
+
   resetForm(): void {
-    this.programForm.reset({ is_active: true, categories: [] });
+    this.programForm.reset({ categories: [] });
     this.thumbnailPreview = null;
     this.thumbnailFile = null;
     if (this.videoPreviewUrl) {

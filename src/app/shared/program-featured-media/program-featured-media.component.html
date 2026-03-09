@@ -1,6 +1,6 @@
 <ng-container *ngIf="url">
     <ng-container *ngIf="media_type=='VIDEO'">
-        <video controls>
+        <video controls autoplay muted>
             <source [src]="url" type="video/mp4">
         </video>
     </ng-container>

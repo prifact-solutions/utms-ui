@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { Category, Program } from 'src/app/programs/models/program.model';
@@ -9,7 +9,8 @@ import { RecentProgramsService, RecentProgram } from 'src/app/common/recent-prog
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends ComponentBase implements OnInit {
 
@@ -21,6 +22,14 @@ export class DashboardComponent extends ComponentBase implements OnInit {
 
     getCategoryLabel(id: number) {
         return this.categories.find(c => c.id === id)?.name;
+    }
+
+    getProgramInitials(title: string) {
+        return Utils.getInitials(title);
+    }
+
+    getProgramColor(title: string) {
+        return Utils.stringToColor(title);
     }
 
     constructor(
@@ -51,7 +60,7 @@ export class DashboardComponent extends ComponentBase implements OnInit {
         this.registerSubscription(sub);
 
         // Load recent programs from localStorage
-        this.recentPrograms = this.recentProgramsService.getRecentPrograms();
+        this.recentPrograms = this.recentProgramsService.getRecentPrograms().slice(0, 4);
 
         this.programsService.getAllCategories().subscribe(categories => {
             this.categories = categories;

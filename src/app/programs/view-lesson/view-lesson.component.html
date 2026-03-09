@@ -1,19 +1,75 @@
-<div class="learning-environment" *ngIf="lesson">
-  <!-- Top Navigation (Sub-header) -->
-  <nav class="learning-header">
-    <div class="header-left">
-      <a (click)="goToCatalog()" class="back-link">✕</a>
-      <span class="brand-text">Upskill</span>
-      <span class="vertical-divider">|</span>
-      <span class="lesson-title">{{ lesson.title }}</span>
+<div class="learning-environment skeleton-loading" *ngIf="isLoading">
+  <div class="learning-header">
+    <div class="title-area">
+      <div class="skeleton-back-link skeleton"></div>
+      <div class="skeleton-title skeleton"></div>
     </div>
-    <div class="header-right">
-      <button class="btn-share">Share</button>
-      <div class="progress-circle">
-        <span>75%</span>
+    <div class="nav-actions">
+      <div class="skeleton-nav-btn skeleton"></div>
+      <div class="skeleton-nav-btn skeleton"></div>
+    </div>
+  </div>
+
+  <div class="learning-main">
+    <main class="player-area">
+      <div class="content-viewport">
+        <div class="skeleton-media skeleton"></div>
+        <div class="skeleton-text-content">
+          <div class="skeleton-line skeleton"></div>
+          <div class="skeleton-line skeleton"></div>
+          <div class="skeleton-line skeleton short"></div>
+        </div>
       </div>
+    </main>
+  </div>
+</div>
+
+<div class="learning-environment" *ngIf="!isLoading && lesson">
+  <div class="learning-header">
+    <div class="title-area">
+      <a (click)="goToCatalog()" class="back-link"><svg fill="#000000" xmlns="http://www.w3.org/2000/svg" width="64px"
+          height="64px" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M48.6,23H15.4c-0.9,0-1.3-1.1-0.7-1.7l9.6-9.6c0.6-0.6,0.6-1.5,0-2.1l-2.2-2.2c-0.6-0.6-1.5-0.6-2.1,0 L2.5,25c-0.6,0.6-0.6,1.5,0,2.1L20,44.6c0.6,0.6,1.5,0.6,2.1,0l2.1-2.1c0.6-0.6,0.6-1.5,0-2.1l-9.6-9.6C14,30.1,14.4,29,15.3,29 h33.2c0.8,0,1.5-0.6,1.5-1.4v-3C50,23.8,49.4,23,48.6,23z">
+            </path>
+          </g>
+        </svg></a>
+      <h3>{{ lesson.title }}</h3>
     </div>
-  </nav>
+    <div class="nav-actions">
+      <button class="btn-nav" (click)="goToPreviousContent()" [disabled]="!previous_module_content"
+        aria-label="Previous">
+        <svg version="1.1" baseProfile="tiny" id="Layer_1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;"
+          xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" width="64px" height="64px" viewBox="0 0 42 42"
+          xml:space="preserve" transform="rotate(180)">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <polygon fill-rule="evenodd" points="13.933,1 34,21.068 14.431,40.637 9.498,35.704 24.136,21.068 9,5.933 ">
+            </polygon>
+          </g>
+        </svg>
+      </button>
+      <button class="btn-nav next" (click)="goToNextContent()" [disabled]="!next_module_content" aria-label="Next">
+        <svg version="1.1" baseProfile="tiny" id="Layer_1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;"
+          xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" width="64px" height="64px" viewBox="0 0 42 42"
+          xml:space="preserve">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <polygon fill-rule="evenodd" points="13.933,1 34,21.068 14.431,40.637 9.498,35.704 24.136,21.068 9,5.933 ">
+            </polygon>
+          </g>
+        </svg>
+      </button>
+    </div>
+  </div>
+
 
   <div class="learning-main">
     <!-- Main Content Area -->
@@ -38,7 +94,7 @@
       </div>
 
       <!-- Action Footer -->
-      <footer class="player-footer">
+      <!-- <footer class="player-footer">
         <div class="footer-left">
           <button class="btn-footer active">Overview</button>
           <button class="btn-footer">Q&A</button>
@@ -49,27 +105,10 @@
           <button class="btn-primary" *ngIf="next_module_content" (click)="goToNextContent()">Next Lecture ⮕</button>
           <button class="btn-primary" *ngIf="!next_module_content" (click)="markAsComplete()">Finish Section ⮕</button>
         </div>
-      </footer>
+      </footer> -->
     </main>
 
     <!-- Sidebar: Course Content -->
-    <aside class="learning-sidebar">
-      <div class="sidebar-header">
-        <h3>Course content</h3>
-        <button class="close-sidebar">✕</button>
-      </div>
-      <div class="sidebar-list">
-        <!-- This would normally be a full list of all modules in the course -->
-        <!-- For now, we just show simplicity -->
-        <div class="sidebar-section">
-          <div class="section-title">Current Section</div>
-          <div class="sidebar-item active">
-            <span class="item-index">1.</span>
-            <span class="item-title">{{ lesson.title }}</span>
-            <span class="item-meta">5min</span>
-          </div>
-        </div>
-      </div>
-    </aside>
+
   </div>
 </div>

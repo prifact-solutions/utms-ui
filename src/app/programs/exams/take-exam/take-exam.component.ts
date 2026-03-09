@@ -147,11 +147,11 @@ export class TakeExamComponent extends ComponentBase {
     if (this.next_module_content) {
       if (this.next_module_content?.content_type == 'LESSON') {
         this.router.navigateByUrl(
-          `/programs/${this.program_id}/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/lesson`,
+          `/programs/${this.program_id}/details/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/lesson`,
         );
       } else {
         this.router.navigateByUrl(
-          `/programs/${this.program_id}/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/exam`,
+          `/programs/${this.program_id}/details/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/exam`,
         );
       }
     } else {

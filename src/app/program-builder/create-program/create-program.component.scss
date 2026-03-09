@@ -15,3 +15,105 @@
 .flex-wrap {
   flex-wrap: wrap;
 }
+
+.modal-form-container {
+  .burtton-group {
+    display: flex;
+    gap: 16px;
+    padding-top: 16px;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .form-group input[type=text],
+  .form-group input[type=number],
+  .form-group input[type=email],
+  .form-group input[type=password],
+  .form-group textarea,
+  .form-group select {
+    border-radius: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+    border-color: #aaa;
+  }
+
+  .program-row-grid {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+
+    .form-group {
+      margin-bottom: 0;
+
+      &.flex-2 {
+        flex: 2.5;
+      }
+
+      &:not(.flex-2) {
+        flex: 1;
+        min-width: 100px;
+      }
+    }
+  }
+
+  .media-upload-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .upload-container {
+      display: flex;
+      align-items: center;
+
+      .upload-actions {
+        width: 100%;
+        padding: 8px 0;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: .875rem;
+
+      }
+    }
+
+    .btn-black-small {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.25rem;
+      font-weight: 300;
+      transition: all 0.2s;
+      flex-shrink: 0;
+
+      &:hover {
+        background: #333;
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .invalid-feedback {
+    font-size: .75rem;
+  }
+
+}

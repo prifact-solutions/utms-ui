@@ -58,18 +58,20 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'programs/:id/details',
+    path: 'programs/:program_id/details',
     component: DetailsComponent,
-  },
-  {
-    path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/lesson',
-    component: ViewLessonComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/exam',
-    component: TakeExamComponent,
-    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'modules/:module_id/contents/:module_content_id/lesson',
+        component: ViewLessonComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'modules/:module_id/contents/:module_content_id/exam',
+        component: TakeExamComponent,
+        canActivate: [AuthGuard]
+      }
+    ]
   },
   {
     path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/exam-success/:exam_id',
@@ -158,14 +160,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      enableTracing: false,
-      useHash: false,
-      onSameUrlNavigation: 'reload',
-      scrollPositionRestoration: 'enabled',
-    }),
-  ],
-  exports: [RouterModule],
+  imports: [RouterModule.forRoot(routes, {
+    enableTracing: false,
+    useHash: true,
+    onSameUrlNavigation: 'reload',
+    scrollPositionRestoration: 'enabled',
+    paramsInheritanceStrategy: 'always'
+  })],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ProgramsService } from '../services/programs.service';
 import { Category, Program } from '../models/program.model';
 import { ComponentBase } from "../../common/componentbase";
@@ -24,7 +24,8 @@ export class ExploreComponent extends ComponentBase implements OnInit {
     private programsService: ProgramsService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private eRef: ElementRef
   ) { super(); }
 
   @ViewChild('filterList') filterList?: ElementRef;
@@ -38,6 +39,33 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   public searchTerm: string = '';
   public enrollmentFilter: string = 'all'; // 'all' | 'enrolled' | 'unenrolled'
   public selectedCategories: Set<number> = new Set();
+  public isDropdownOpen = false;
+
+  public enrollmentOptions = [
+    { value: 'all', label: 'All Programs' },
+    { value: 'enrolled', label: 'Enrolled' },
+    { value: 'unenrolled', label: 'Not Enrolled' }
+  ];
+
+  public toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  public selectOption(value: string) {
+    this.enrollmentFilter = value;
+    this.isDropdownOpen = false;
+  }
+
+  public get enrollmentLabel(): string {
+    return this.enrollmentOptions.find(o => o.value === this.enrollmentFilter)?.label || 'All Programs';
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.isDropdownOpen = false;
+    }
+  }
 
   // Available categories derived from loaded programs
   public categories: Category[] = [];
@@ -188,6 +216,14 @@ export class ExploreComponent extends ComponentBase implements OnInit {
   }
   getCategoryLabel(id: number) {
     return this.categories.find(c => c.id === id)?.name;
+  }
+
+  getProgramInitials(title: string) {
+    return Utils.getInitials(title);
+  }
+
+  getProgramColor(title: string) {
+    return Utils.stringToColor(title);
   }
 
   // Drag to scroll logic

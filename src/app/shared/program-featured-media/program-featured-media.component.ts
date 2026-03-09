@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 
 export interface ProgramLike {
@@ -10,7 +10,8 @@ export interface ProgramLike {
 @Component({
   selector: 'app-program-featured-media',
   templateUrl: './program-featured-media.component.html',
-  styleUrls: ['./program-featured-media.component.scss']
+  styleUrls: ['./program-featured-media.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProgramFeaturedMediaComponent {
 

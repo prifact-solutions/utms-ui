@@ -1,112 +1,129 @@
-<div class="program-detail-page" *ngIf="catalog">
-    <!-- Dark Banner Area -->
-    <header class="detail-header">
-        <div class="container header-container">
-            <div class="header-main-content">
-                <nav class="breadcrumb">
-                    <a routerLink="/">Programs</a>
-                    <span class="separator">/</span>
-                    <span>{{ catalog.title }}</span>
-                </nav>
-
-                <h1 class="program-title">{{ catalog.title }}</h1>
-                <p class="program-subtitle">{{ catalog.description }}</p>
-
-                <div class="header-meta">
-                    <span class="meta-item"><span class="icon">★</span> 4.8 Rating</span>
-                    <span class="meta-item" *ngIf="catalog.difficulty">Level: <strong>{{ catalog.difficulty
-                            }}</strong></span>
-                    <span class="meta-item">Duration: <strong>{{ catalog.duration }} days</strong></span>
-                    <span class="meta-item">English</span>
+<div class="program-detail-page skeleton-loading" *ngIf="isLoading">
+    <div class="inner">
+        <div class="program-header">
+            <div>
+                <div class="skeleton-breadcrumb skeleton"></div>
+                <div class="skeleton-h1 skeleton"></div>
+            </div>
+            <div class="skeleton-button skeleton"></div>
+        </div>
+        <div class="skeleton-media skeleton"></div>
+        <div class="program-info">
+            <div class="course-meta">
+                <div class="skeleton-meta skeleton"></div>
+                <div class="skeleton-meta skeleton"></div>
+                <div class="skeleton-meta skeleton"></div>
+            </div>
+            <div class="skeleton-text skeleton"></div>
+            <div class="skeleton-text skeleton"></div>
+            <div class="skeleton-text skeleton short"></div>
+        </div>
+    </div>
+    <section class="syllabus-container">
+        <div class="skeleton-h3 skeleton"></div>
+        <div class="skeleton-summary skeleton"></div>
+        <div class="skeleton-accordion">
+            <div class="accordion-item" *ngFor="let _ of [1,2,3,4,5]">
+                <div class="accordion-header">
+                    <div class="skeleton-chevron skeleton"></div>
+                    <div class="skeleton-module-title skeleton"></div>
+                    <div class="skeleton-module-meta skeleton"></div>
                 </div>
             </div>
+        </div>
+    </section>
+</div>
 
-            <!-- Floating Side Card -->
-            <aside class="side-card-container">
-                <div class="side-card card">
-                    <div class="video-preview" (click)="playPreview()">
-                        <app-program-featured-media [program]="catalog" media_type="VIDEO"></app-program-featured-media>
-                        <div class="play-overlay">
-                            <div class="play-icon">▶</div>
-                            <span>Preview this course</span>
+<div class="program-detail-page" *ngIf="!isLoading && catalog">
+    <div class="inner">
+        <router-outlet></router-outlet>
+        <ng-container *ngIf="!isChildRouteActive()">
+            <div class="program-header">
+                <div>
+                    <div class="breadcrumb-simple">
+                        <a routerLink="/explore">Programs</a> / <span>{{ catalog.title }}</span>
+                    </div>
+                    <h1>{{ catalog.title }}</h1>
+                </div>
+                <div *ngIf="!isEnrolled">
+                    <a class="button primary black" [routerLink]="['/programs', catalog.id, 'enroll']">
+                        Enroll Now
+                    </a>
+                </div>
+                <div *ngIf="isEnrolled">
+                <button class="button primary" (click)="onContinueLearning()">
+                    Continue Learning
+                </button>
+            </div>
+            </div>
+            <div class="video-preview" (click)="playPreview()">
+                <ng-container *ngIf="!showVideo">
+                    <app-program-featured-media [program]="catalog" media_type="IMAGE"></app-program-featured-media>
+                    <div class="play-overlay">
+                        <div class="play-button">
+                            <span class="play-icon">▶</span>
                         </div>
                     </div>
+                </ng-container>
+                <app-program-featured-media [program]="catalog" media_type="VIDEO"
+                    *ngIf="showVideo"></app-program-featured-media>
+            </div>
 
-                    <div class="card-pricing">
-                        <span class="price">Free</span>
-                    </div>
+            <div class="program-info">
+                <div>
+                    <div class="course-meta">
+                        <span>
+                            <strong>{{ (catalog.modules?.length || 0) * 4 }} hours</strong> on-demand
+                        </span>
+                        <span>
+                            Duration: <strong>{{ catalog.duration }} days</strong>
+                        </span>
+                        <span *ngIf="catalog.difficulty">
+                            Level: <strong>{{ catalog.difficulty }}</strong>
+                        </span>
 
-                    <div class="card-actions">
-                        <button class="btn-primary"
-                            style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem;"
-                            [routerLink]="['/programs', catalog.id, 'enroll']">Enroll Now</button>
-                    </div>
 
-                    <div class="card-features">
-                        <h6>This course includes:</h6>
-                        <ul>
-                            <li><span>📹</span> {{ (catalog.modules?.length || 0) * 4 }} hours on-demand video</li>
-                            <li><span>📄</span> 12 articles</li>
-                            <li><span>♾️</span> Full lifetime access</li>
-                            <li><span>🏆</span> Certificate of completion</li>
-                        </ul>
                     </div>
+                    <p class="program-description">{{ catalog.description }}</p>
                 </div>
-            </aside>
+
+                <div class="card-categories" *ngIf="catalog.categories && catalog.categories.length > 0">
+                    <span class="card-category-bubble" *ngFor="let catId of catalog.categories">
+                        {{ getCategoryLabel(catId) }}
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <section class="syllabus-container">
+        <div class="syllabus-header">
+            <h3>Course Content</h3>
+            <div class="summary">
+                {{ catalog.modules?.length || 0 }} sections • {{ getTotalContents() }} lectures
+            </div>
         </div>
-    </header>
 
-    <main class="container detail-body">
-        <div class="main-column">
-            <!-- What you'll learn -->
-            <section class="learning-outcomes card mb-5">
-                <h3>What you'll learn</h3>
-                <div class="outcomes-grid">
-                    <div class="outcome-item"><span>✓</span> Master the core concepts and advanced techniques</div>
-                    <div class="outcome-item"><span>✓</span> Build real-world projects to add to your portfolio</div>
-                    <div class="outcome-item"><span>✓</span> Understand best practices and industry standards</div>
-                    <div class="outcome-item"><span>✓</span> Get lifetime access to all future updates</div>
-                </div>
-            </section>
+        <div class="accordion">
+            <div class="accordion-item" *ngFor="let module of catalog.modules; let i = index">
+                <button class="accordion-header" (click)="module.module_contents.length > 0 ? toggleAccordion(i) : null"
+                    [class.no-contents]="module.module_contents.length === 0">
+                    <span class="chevron" [class.open]="isOpen(i)" *ngIf="module.module_contents.length > 0"></span>
+                    <span class="chevron-placeholder" *ngIf="module.module_contents.length === 0"></span>
+                    <span class="module-title">{{ module.title }}</span>
+                    <span class="module-meta">{{ module.module_contents.length }} lectures</span>
+                </button>
 
-            <!-- Course Content -->
-            <section class="course-content mb-5">
-                <div class="section-header-flex">
-                    <h3>Course content</h3>
-                    <div class="content-summary">
-                        {{ catalog.modules?.length || 0 }} sections • {{ getTotalContents() }} lectures
+                <div class="accordion-panel" [class.open]="isOpen(i)">
+                    <div class="lesson-item" *ngFor="let content of module.module_contents; let j = index"
+                        (click)="navigateToLesson(content)"
+                        [class.status-completed]="getStatus(content) === 'COMPLETED'"
+                        [class.active]="isActiveLesson(content.id)">
+                        <span class="lesson-number">{{ j + 1 }}</span>
+                        <span class="content-title">{{ content.title }}</span>
+                        <span class="content-duration">05:24</span>
                     </div>
                 </div>
-
-                <div class="accordion">
-                    <div class="accordion-item" *ngFor="let module of catalog.modules; let i = index">
-                        <button class="accordion-header" (click)="toggleAccordion(i)">
-                            <span class="chevron" [class.open]="isOpen(i)"></span>
-                            <span class="module-title">{{ module.title }}</span>
-                            <span class="module-meta ms-auto">{{ module.module_contents.length }} lectures</span>
-                        </button>
-
-                        <div class="accordion-panel" [class.open]="isOpen(i)">
-                            <div class="lesson-item" *ngFor="let content of module.module_contents"
-                                (click)="navigateToLesson(content)"
-                                [class.status-completed]="getStatus(content) === 'COMPLETED'">
-                                <span class="content-icon">
-                                    <ng-container *ngIf="getStatus(content) === 'COMPLETED'">
-                                        <div class="completed-check text-success"
-                                            style="color: #1e7232; font-weight: 900; font-size: 1.1rem; width: 24px;">✓
-                                        </div>
-                                    </ng-container>
-                                    <ng-container *ngIf="getStatus(content) !== 'COMPLETED'">
-                                        {{ getContentIcon(content.content_type) }}
-                                    </ng-container>
-                                </span>
-                                <span class="content-title">{{ content.title }}</span>
-                                <span class="content-duration ms-auto">05:24</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
-    </main>
+    </section>
 </div>

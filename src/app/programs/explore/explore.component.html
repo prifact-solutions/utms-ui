@@ -22,11 +22,21 @@
 
 
         <div class="course-access" *ngIf="isAuthenticated">
-            <select [(ngModel)]="enrollmentFilter">
-                <option value="all">All Programs</option>
-                <option value="enrolled">Enrolled</option>
-                <option value="unenrolled">Not Enrolled</option>
-            </select>
+            <div class="custom-dropdown" [class.open]="isDropdownOpen">
+                <div class="dropdown-toggle" (click)="toggleDropdown()">
+                    <span>{{ enrollmentLabel }}</span>
+                    <svg class="arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" *ngFor="let option of enrollmentOptions"
+                        [class.active]="enrollmentFilter === option.value" (click)="selectOption(option.value)">
+                        {{ option.label }}
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -109,35 +119,40 @@
     <div class="course-listing">
         <!-- Skeleton Loading -->
         <ng-container *ngIf="isLoading">
-            <div class="skeleton-card" *ngFor="let _ of [1,2,3,4,5,6,7,8]">
-                <div class="skeleton-bubble" style="position: absolute; top: 10px; right: 10px; width: 60px;"></div>
-                <div class="skeleton-title"></div>
-                <div class="skeleton-text"></div>
-                <div style="margin-top: 10px;">
-                    <div class="skeleton-bubble"></div>
+            <div class="skeleton-card-2" *ngFor="let _ of [1,2,3,4,5,6,7,8]">
+                <div class="skeleton-media skeleton"></div>
+                <div class="skeleton-bubble skeleton" style="position: absolute; top: 10px; right: 10px; width: 60px;">
+                </div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title skeleton"></div>
+                    <div class="skeleton-text skeleton"></div>
+                    <div class="skeleton-text skeleton short"></div>
+                    <div class="card-categories" style="margin-top: 4px;">
+                        <div class="skeleton-category skeleton"></div>
+                        <div class="skeleton-category skeleton"></div>
+                    </div>
                 </div>
             </div>
         </ng-container>
 
         <!-- Actual Program Cards -->
         <ng-container *ngIf="!isLoading">
-            <div class="c-card" *ngFor="let program of filteredPrograms" (click)="clickProgram(program)">
+            <div class="c-card-2" *ngFor="let program of filteredPrograms" (click)="clickProgram(program)">
                 <app-program-featured-media [program]="program" media_type="IMAGE"
                     *ngIf="program.thumbnail"></app-program-featured-media>
+                <div class="no-image" *ngIf="!program.thumbnail"
+                    [style.background-color]="getProgramColor(program.title)">
+                    {{ getProgramInitials(program.title) }}
+                </div>
 
                 <span class="c-top-bubble">{{program.duration}} days</span>
 
-                <div class="card-image">
-                    <div class="image-overlay" *ngIf="isAuthenticated && program.is_enrolled">
-                        <span class="enrolled-badge">✓ Enrolled</span>
-                    </div>
-                </div>
-
                 <div class="card-content">
-                    <h3>{{program.title}}</h3>
-                    <p>{{program.short_description || program.description |
-                        slice:0:100}}...
-                    </p>
+                    <div class="card-title-row">
+                        <h3>{{program.title}}</h3>
+                        <span class="enrolled-pill" *ngIf="isAuthenticated && program.is_enrolled">✓ Enrolled</span>
+                    </div>
+                    <p>{{program.short_description || program.description | slice:0:100}}...</p>
 
                     <div class="card-categories" *ngIf="program.categories && program.categories.length > 0">
                         <span class="card-category-bubble" *ngFor="let catId of program.categories">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ProgramsService } from '../services/programs.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
@@ -8,16 +8,19 @@ import { ModuleContent, ModuleContentFile } from '../models/program.model';
 @Component({
   selector: 'app-view-lesson',
   templateUrl: './view-lesson.component.html',
-  styleUrls: ['./view-lesson.component.scss']
+  styleUrls: ['./view-lesson.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewLessonComponent extends ComponentBase {
   lesson: ModuleContent | null = null;
   files: Array<ModuleContentFile> = [];
 
   next_module_content: ModuleContent | null = null;
+  previous_module_content: ModuleContent | null = null;
 
   program_id: number = 0;
   module_id: number = 0;
+  isLoading: boolean = true;
 
   constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
 
@@ -33,17 +36,36 @@ export class ViewLessonComponent extends ComponentBase {
       tap((params) => {
         this.program_id = params.program_id;
         this.module_id = params.module_id;
+        this.isLoading = true;
+        this.lesson = null;
       }),
       switchMap((params) => {
-        return combineLatest(
-          [this.programService.getLesson(params.program_id, params.module_id, params.module_content_id),
-          this.programService.getNextContentIfEligible(params.program_id, params.module_id, params.module_content_id)]
-        );
+        return combineLatest([
+          this.programService.getLesson(params.program_id, params.module_id, params.module_content_id),
+          this.programService.getProgramCatalog(params.program_id)
+        ]);
       }))
-      .subscribe(([lesson, next_content]) => {
+      .subscribe(([lesson, catalog]) => {
         this.lesson = lesson.content;
         this.files = lesson.files;
-        this.next_module_content = next_content;
+        this.isLoading = false;
+
+        if (catalog && catalog.modules) {
+          const contents = catalog.modules.flatMap(m => m.module_contents || []);
+          const currentIndex = contents.findIndex(c => c.id == this.lesson?.id);
+
+          if (currentIndex > 0) {
+            this.previous_module_content = contents[currentIndex - 1];
+          } else {
+            this.previous_module_content = null;
+          }
+
+          if (currentIndex < contents.length - 1) {
+            this.next_module_content = contents[currentIndex + 1];
+          } else {
+            this.next_module_content = null;
+          }
+        }
       });
     this.registerSubscription(sub);
   }
@@ -62,17 +84,23 @@ export class ViewLessonComponent extends ComponentBase {
   goToCatalog() {
     this.router.navigateByUrl(`/programs/${this.program_id}/details`)
   }
+  goToPreviousContent() {
+    if (this.previous_module_content) {
+      this.goToContent(this.previous_module_content);
+    }
+  }
+
   goToNextContent() {
     if (this.next_module_content) {
-      if (this.next_module_content?.content_type == "LESSON") {
-        this.router.navigateByUrl(`/programs/${this.program_id}/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/lesson`)
-      }
-      else {
-        this.router.navigateByUrl(`/programs/${this.program_id}/modules/${this.next_module_content.module_id}/contents/${this.next_module_content.id}/exam`)
-      }
+      this.goToContent(this.next_module_content);
     }
     else {
-      this.router.navigateByUrl(`/programs/${this.program_id}/details`)
+      this.goToCatalog();
     }
+  }
+
+  private goToContent(content: ModuleContent) {
+    const path = content.content_type == "LESSON" ? "lesson" : "exam";
+    this.router.navigateByUrl(`/programs/${this.program_id}/details/modules/${content.module_id}/contents/${content.id}/${path}`);
   }
 }
