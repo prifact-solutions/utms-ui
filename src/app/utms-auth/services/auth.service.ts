@@ -72,7 +72,7 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${AppSettings.apiUrl}/auth/exchange/`, {
         code,
-        redirect_uri: `${AppSettings.keyCloakRedirectUrl}`,
+        redirect_uri: `${this.getKeyCloakLoginRedirectUrl()}`,
       })
       .pipe(
         tap((response) => {
@@ -85,7 +85,7 @@ export class AuthService {
     const loginUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/auth` +
       `?client_id=django-server` +
-      `&redirect_uri=${encodeURIComponent(AppSettings.keyCloakRedirectUrl)}` +
+      `&redirect_uri=${encodeURIComponent(this.getKeyCloakLoginRedirectUrl())}` +
       `&response_type=code` +
       `&scope=openid`;
 
@@ -93,13 +93,26 @@ export class AuthService {
   }
 
   public keycloakLogout() {
-    const redirectUri = `${encodeURIComponent(window.location.href.split('#')[0])}`;
+    const redirectUrl = window.location.href.split('#')[0];
     const logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
       `?client_id=django-server` +
-      `&post_logout_redirect_uri=${redirectUri}`;
+      `&post_logout_redirect_uri=${encodeURIComponent(redirectUrl)}`;
 
     window.location.href = logoutUrl;
     this.clearToken();
+  }
+
+  private getKeyCloakLoginRedirectUrl() {
+    const baseUrl = window.location.href.split('#')[0];
+    let redirectUrl;
+    if (baseUrl.includes('/index.html')) {
+      redirectUrl = baseUrl.replace('/index.html', '/assets/redirect.html');
+    } else {
+      const slicedbase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+      redirectUrl = slicedbase + '/assets/redirect.html';
+    }
+
+    return redirectUrl;
   }
 }
