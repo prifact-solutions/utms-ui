@@ -1,76 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Authenticating...</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #333;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f9fa;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        color: #333;
+      }
 
-        .container {
-            text-align: center;
-        }
+      .container {
+        text-align: center;
+      }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #e0e0e0;
-            border-bottom-color: #007bff; /* Primary color */
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #e0e0e0;
+        border-bottom-color: #007bff; /* Primary color */
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
 
-        .loading-text {
-            margin-top: 20px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
+      .loading-text {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
 
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
         }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
 
-        /* Error state styling */
-        .error { color: #dc3545; display: none; }
+      /* Error state styling */
+      .error {
+        color: #dc3545;
+        display: none;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="container" id="loader-container">
-        <div class="spinner"></div>
-        <div class="loading-text">Logging you in...</div>
+      <div class="spinner"></div>
+      <div class="loading-text">Logging you in...</div>
     </div>
 
     <div class="container error" id="error-container">
-        <h2>Authentication Issue</h2>
-        <p id="error-message">We couldn't find an authorization code. Please try logging in again.</p>
-        <button onclick="window.location.replace('/')" style="padding: 10px 20px; cursor: pointer;">Return to Home</button>
+      <h2>Authentication Issue</h2>
+      <p id="error-message">
+        We couldn't find an authorization code. Please try logging in again.
+      </p>
+      <button
+        onclick="window.location.replace('/')"
+        style="padding: 10px 20px; cursor: pointer"
+      >
+        Return to Home
+      </button>
     </div>
 
     <script type="text/javascript">
-        const queryParams = window.location.search;
-
-        if (queryParams && queryParams.includes('code=')) {
-            window.location.replace("/#/auth-callback" + queryParams);
-        } else {
-            document.getElementById('loader-container').style.display = 'none';
-            document.getElementById('error-container').style.display = 'block';
-        }
+      let currentUrl = window.location.href;
+      let newUrl = currentUrl.replace(
+        "/assets/redirect.html",
+        "/index.html#/auth-callback",
+      );
+      window.location.replace(newUrl);
     </script>
-</body>
+  </body>
 </html>
