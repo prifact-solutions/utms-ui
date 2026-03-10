@@ -72,7 +72,7 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${AppSettings.apiUrl}/auth/exchange/`, {
         code,
-        redirect_uri: `${window.location.origin}/assets/redirect.html`,
+        redirect_uri: `${AppSettings.keyCloakRedirectUrl}`,
       })
       .pipe(
         tap((response) => {
@@ -82,11 +82,10 @@ export class AuthService {
   }
 
   public keycloakLogin() {
-    const redirectUri = `${window.location.origin}/assets/redirect.html`;
     const loginUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/auth` +
       `?client_id=django-server` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&redirect_uri=${encodeURIComponent(AppSettings.keyCloakRedirectUrl)}` +
       `&response_type=code` +
       `&scope=openid`;
 
