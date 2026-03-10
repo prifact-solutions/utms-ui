@@ -93,7 +93,7 @@ export class AuthService {
   }
 
   public keycloakLogout() {
-    const redirectUri = `${encodeURIComponent(window.location.origin)}`;
+    const redirectUri = `${encodeURIComponent(window.location.href.split('#')[0])}`;
     const logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
       `?client_id=django-server` +
