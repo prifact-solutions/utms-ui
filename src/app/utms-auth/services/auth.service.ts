@@ -77,6 +77,7 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.setToken(response.access);
+          localStorage.setItem('id_token', response.id_token);
         }),
       );
   }
@@ -98,13 +99,16 @@ export class AuthService {
 
   public keycloakLogout() {
     const redirectUrl = window.location.href.split('#')[0];
+    const idToken = localStorage.getItem('id_token');
     const logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
       `?client_id=django-server` +
+      `&id_token_hint=${idToken}` +
       `&post_logout_redirect_uri=${encodeURIComponent(redirectUrl)}`;
 
     window.location.href = logoutUrl;
     this.clearToken();
+    localStorage.removeItem('id_token');
   }
 
   private getKeyCloakLoginRedirectUrl() {
