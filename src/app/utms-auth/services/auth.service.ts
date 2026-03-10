@@ -72,7 +72,7 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${AppSettings.apiUrl}/auth/exchange/`, {
         code,
-        redirect_uri: 'http://localhost:4200/auth-callback',
+        redirect_uri: `${window.location.origin}/assets/redirect.html`,
       })
       .pipe(
         tap((response) => {
@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   public keycloakLogin() {
-    const redirectUri = `${window.location.origin}/auth-callback`;
+    const redirectUri = `${window.location.origin}/assets/redirect.html`;
     const loginUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/auth` +
       `?client_id=django-server` +
@@ -94,8 +94,6 @@ export class AuthService {
   }
 
   public keycloakLogout() {
-    this.clearToken();
-
     const redirectUri = `${encodeURIComponent(window.location.origin)}`;
     const logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
@@ -103,5 +101,6 @@ export class AuthService {
       `&post_logout_redirect_uri=${redirectUri}`;
 
     window.location.href = logoutUrl;
+    this.clearToken();
   }
 }
