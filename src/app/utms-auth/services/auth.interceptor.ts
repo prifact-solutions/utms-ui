@@ -34,9 +34,8 @@ export class AuthInterceptor implements HttpInterceptor {
         // Handle 401 Unauthorized errors
         if (error.status === 401) {
           // Clear the token
-          this.authService.logout();
-          // Redirect to login page
-          this.router.navigate(['/login']);
+          //this.authService.logout();
+          this.authService.keycloakLogout();
         }
         // Re-throw the error
         return throwError(() => error);

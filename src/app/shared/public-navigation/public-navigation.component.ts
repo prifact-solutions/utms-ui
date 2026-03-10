@@ -1,15 +1,20 @@
 import { Component, HostListener } from '@angular/core';
+import { AuthService } from 'src/app/utms-auth/services/auth.service';
 
 @Component({
   selector: 'app-public-navigation',
   templateUrl: './public-navigation.component.html',
-  styleUrls: ['./public-navigation.component.scss']
+  styleUrls: ['./public-navigation.component.scss'],
 })
 export class PublicNavigationComponent {
   isScrolled = false;
-
+  constructor(private authService: AuthService) {}
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled = window.scrollY > 20;
+  }
+
+  public signIn($event: any) {
+    this.authService.keycloakLogin();
   }
 }

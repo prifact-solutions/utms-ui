@@ -90,8 +90,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    // this.authService.logout();
+    // this.router.navigate(['/']);
+    this.authService.keycloakLogout();
   }
 
   onSearchInput() {
