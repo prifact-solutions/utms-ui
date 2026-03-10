@@ -1,24 +1,38 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree,
+  Router,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { Utils } from '../common/utils';
+import { AuthService } from '../utms-auth/services/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StaffAuthGuard implements CanActivate {
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot,
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
     const isAuthenticated = this.isUserAuthenticated();
 
     if (isAuthenticated && Utils.decodeAuthToken().is_staff) {
       return true;
     } else {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+      this.authService.keycloakLogin(state.url);
       return false;
     }
   }

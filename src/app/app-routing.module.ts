@@ -48,10 +48,10 @@ const routes: Routes = [
     path: 'howitworks',
     component: HowitworksComponent,
   },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
+  // {
+  //   path: 'login',
+  //   component: LoginComponent,
+  // },
   {
     path: 'programs/:id/enroll',
     component: EnrollComponent,

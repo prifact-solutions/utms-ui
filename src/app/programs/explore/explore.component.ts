@@ -199,7 +199,7 @@ export class ExploreComponent extends ComponentBase implements OnInit {
 
   clickProgram(program: Program) {
     if (!this.isAuthenticated) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: `/programs/${program.id}/details` } });
+      this.authService.keycloakLogin(`/programs/${program.id}/details`);
     } else {
       this.router.navigate([`/programs/${program.id}/details`]);
     }

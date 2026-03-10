@@ -81,13 +81,17 @@ export class AuthService {
       );
   }
 
-  public keycloakLogin() {
-    const loginUrl =
+  public keycloakLogin(returnUrl?: string) {
+    let loginUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/auth` +
       `?client_id=django-server` +
       `&redirect_uri=${encodeURIComponent(this.getKeyCloakLoginRedirectUrl())}` +
       `&response_type=code` +
       `&scope=openid`;
+
+    if (returnUrl) {
+      loginUrl = loginUrl + `&state=` + btoa(returnUrl);
+    }
 
     window.location.href = loginUrl;
   }

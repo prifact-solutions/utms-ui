@@ -116,11 +116,11 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
   }
 
   enrollProgram(programId: number) {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: `/programs/${programId}/enroll` } });
+    this.authService.keycloakLogin(`/programs/${programId}/enroll`);
   }
 
   viewProgram(programId: number) {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: `/programs/${programId}/details` } });
+    this.authService.keycloakLogin(`/programs/${programId}/details`);
   }
 
 }

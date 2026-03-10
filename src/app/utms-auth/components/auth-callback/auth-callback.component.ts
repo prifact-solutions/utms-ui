@@ -20,14 +20,19 @@ export class AuthCallbackComponent extends ComponentBase {
 
   isLoading = false;
   errorMessage = '';
-  private returnUrl: string = '/';
+  private returnUrl: string = '/dashboard';
 
   ngOnInit() {
     var sub = this.route.queryParams
       .pipe(
         switchMap((params) => {
-          this.returnUrl =
-            this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+          if (params['state']) {
+            try {
+              this.returnUrl = atob(params['state']);
+            } catch (e) {
+              console.error('Failed to decode state', e);
+            }
+          }
           const code = params['code'];
           if (code) {
             this.isLoading = true;
