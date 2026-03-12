@@ -1,0 +1,139 @@
+@import 'src/styles/variables';
+
+.admin-page-container {
+  padding-top: 50px;
+}
+
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.kpi {
+  background: $bg-off-white;
+  border: 1px solid rgba($border-color, 0.7);
+  border-radius: $border-radius-md;
+  padding: 14px 16px;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: $text-main;
+  margin-top: 6px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid rgba($border-color, 0.8);
+  border-radius: $border-radius-md;
+}
+
+.report-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 860px;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    border-bottom: 1px solid rgba($border-color, 0.8);
+    font-size: 0.8rem;
+    text-align: left;
+    padding: 12px 14px;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 0.9rem;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  tbody tr:nth-child(even) td {
+    background: rgba($bg-off-white, 0.8);
+  }
+
+  tbody tr:hover td {
+    background: rgba($accent-color, 0.04);
+  }
+
+  th.num,
+  td.num {
+    text-align: right;
+  }
+}
+
+.report-table.clickable tbody tr {
+  cursor: pointer;
+}
+
+.student-name {
+  font-weight: 700;
+  color: $text-main;
+}
+
+.muted {
+  color: $text-muted;
+}
+
+.completion {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.bar {
+  width: 140px;
+  height: 10px;
+  background: rgba($border-color, 0.6);
+  border-radius: 999px;
+  overflow: hidden;
+
+  .fill {
+    height: 100%;
+    background: $accent-color;
+    border-radius: 999px;
+  }
+}
+
+.pct {
+  min-width: 46px;
+  text-align: right;
+  font-weight: 700;
+  color: $text-main;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .report-kpis {
+    grid-template-columns: 1fr;
+  }
+}
+
