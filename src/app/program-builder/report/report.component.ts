@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { Program } from 'src/app/programs/models/program.model';
+import { Program, ProgramSummary } from 'src/app/programs/models/program.model';
 
 type ProgramReportRow = {
   studentName: string;
@@ -26,9 +26,9 @@ type ProgramsSummaryRow = {
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent extends ComponentBase implements OnInit {
-  programs: Program[] = [];
   isProgramsLoading = false;
   errorMessage: string | null = null;
+  programsSummary: ProgramSummary[] = [];
 
   private detailsByProgramId = new Map<number, ProgramReportRow[]>();
 
@@ -40,27 +40,7 @@ export class ReportComponent extends ComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPrograms();
-  }
-
-  get programsSummary(): ProgramsSummaryRow[] {
-    return (this.programs || []).map(p => {
-      const rows = this.getMockDetailsForProgram(p.id);
-      const studentCount = rows.length;
-      const avgScore = studentCount
-        ? Math.round((rows.reduce((acc, r) => acc + r.avgScore, 0) / studentCount) * 10) / 10
-        : 0;
-      const avgCompletion = studentCount
-        ? Math.round((rows.reduce((acc, r) => acc + r.completionPct, 0) / studentCount) * 10) / 10
-        : 0;
-      return {
-        programId: p.id,
-        programName: p.title,
-        studentCount,
-        avgScore,
-        avgCompletion
-      };
-    });
+    this.initialize();
   }
 
   get totalPrograms(): number {
@@ -134,14 +114,14 @@ export class ReportComponent extends ComponentBase implements OnInit {
       }
     });
 
-    doc.save('programs-report.pdf');
+    doc.save('summary-report.pdf');
   }
 
-  private loadPrograms(): void {
+  private initialize(): void {
     this.isProgramsLoading = true;
-    const sub = this.programsService.getCreatedPrograms().subscribe({
-      next: (programs) => {
-        this.programs = programs || [];
+    const sub = this.programsService.getSummaryReport().subscribe({
+      next: (summaryDetails) => {
+        this.programsSummary = summaryDetails || [];
         this.isProgramsLoading = false;
       },
       error: (error) => {
@@ -153,32 +133,32 @@ export class ReportComponent extends ComponentBase implements OnInit {
     this.registerSubscription(sub);
   }
 
-  private getMockDetailsForProgram(programId: number): ProgramReportRow[] {
-    const existing = this.detailsByProgramId.get(programId);
-    if (existing) return existing;
+  // private getMockDetailsForProgram(programId: number): ProgramReportRow[] {
+  //   const existing = this.detailsByProgramId.get(programId);
+  //   if (existing) return existing;
 
-    const rng = this.makeRng(programId);
-    const count = 6 + Math.floor(rng() * 12); // 6..17 students
-    const names = [
-      'Asha Nair', 'Rahul Menon', 'Divya Krishnan', 'Nikhil George', 'Meera Pillai', 'Arjun Das',
-      'Lakshmi Kumar', 'Sanjay R', 'Fatima Ali', 'John Mathew', 'Neha Sharma', 'Kiran Rao',
-      'Priya Iyer', 'Vishal Singh', 'Anu Joseph', 'Rohit Jain', 'Sneha Gupta'
-    ];
+  //   const rng = this.makeRng(programId);
+  //   const count = 6 + Math.floor(rng() * 12); // 6..17 students
+  //   const names = [
+  //     'Asha Nair', 'Rahul Menon', 'Divya Krishnan', 'Nikhil George', 'Meera Pillai', 'Arjun Das',
+  //     'Lakshmi Kumar', 'Sanjay R', 'Fatima Ali', 'John Mathew', 'Neha Sharma', 'Kiran Rao',
+  //     'Priya Iyer', 'Vishal Singh', 'Anu Joseph', 'Rohit Jain', 'Sneha Gupta'
+  //   ];
 
-    const rows: ProgramReportRow[] = Array.from({ length: count }).map((_, i) => {
-      const studentName = names[(programId + i) % names.length];
-      const email = `${studentName.toLowerCase().replace(/[^a-z]+/g, '.')}${(programId + i) % 20}@example.com`;
-      const avgScore = Math.round(55 + rng() * 45); // 55..100
-      const completionPct = Math.round(rng() * 100);
-      const daysAgo = Math.floor(rng() * 30);
-      const lastActivity = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-      return { studentName, email, avgScore, completionPct, lastActivity };
-    });
+  //   const rows: ProgramReportRow[] = Array.from({ length: count }).map((_, i) => {
+  //     const studentName = names[(programId + i) % names.length];
+  //     const email = `${studentName.toLowerCase().replace(/[^a-z]+/g, '.')}${(programId + i) % 20}@example.com`;
+  //     const avgScore = Math.round(55 + rng() * 45); // 55..100
+  //     const completionPct = Math.round(rng() * 100);
+  //     const daysAgo = Math.floor(rng() * 30);
+  //     const lastActivity = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+  //     return { studentName, email, avgScore, completionPct, lastActivity };
+  //   });
 
-    rows.sort((a, b) => a.studentName.localeCompare(b.studentName));
-    this.detailsByProgramId.set(programId, rows);
-    return rows;
-  }
+  //   rows.sort((a, b) => a.studentName.localeCompare(b.studentName));
+  //   this.detailsByProgramId.set(programId, rows);
+  //   return rows;
+  // }
 
   private makeRng(seed: number): () => number {
     let s = (seed >>> 0) || 1;

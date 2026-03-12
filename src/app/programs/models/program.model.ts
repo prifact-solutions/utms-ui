@@ -76,3 +76,11 @@ export interface Category {
     id: number;
     name: string;
 }
+
+export interface ProgramSummary {
+  programId: number;
+  programName: string;
+  studentCount: number;
+  avgScore: number;
+  avgCompletion: number;
+};

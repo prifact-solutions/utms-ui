@@ -54,8 +54,15 @@
               <div class="student-name">{{ p.programName }}</div>
             </td>
             <td class="num">{{ p.studentCount }}</td>
-            <td class="num">{{ p.avgScore }}%</td>
-            <td class="num">{{ p.avgCompletion }}%</td>
+            <td class="num">{{ p.avgScore | number:'1.0-0' }}%</td>
+            <td class="num">
+              <div class="completion">
+                <div class="bar">
+                  <div class="fill" [style.width.%]="p.avgCompletion"></div>
+                </div>
+                <div class="pct">{{ p.avgCompletion | number:'1.0-0' }}%</div>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

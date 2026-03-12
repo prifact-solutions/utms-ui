@@ -10,6 +10,7 @@ import {
   ModuleContentWithExam,
   ModuleContentWithFiles,
   Program,
+  ProgramSummary,
 } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
@@ -19,7 +20,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class ProgramsService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private _currentProgramId = new BehaviorSubject<string | null>(null);
 
@@ -59,8 +60,14 @@ export class ProgramsService {
       `${AppSettings.apiUrl}/programs/${id}/progress/`,
     );
   }
-  public getLesson(program_id: number, module_id: number, module_content_id: number) {
-    return this.http.get<ModuleContentWithFiles>(`${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson/`);
+  public getLesson(
+    program_id: number,
+    module_id: number,
+    module_content_id: number,
+  ) {
+    return this.http.get<ModuleContentWithFiles>(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/lesson/`,
+    );
   }
   public getNextContentIfEligible(
     program_id: number,
@@ -211,39 +218,31 @@ export class ProgramsService {
     );
   }
 
-  public getProgramThumbnailUploadUrl(
-    program_id: number,
-    file_name: string
-  ) {
+  public getProgramThumbnailUploadUrl(program_id: number, file_name: string) {
     return this.http.post<{ url: string; mime_type: string }>(
       `${AppSettings.apiUrl}/programs/${program_id}/thumbnail/`,
       { file_name },
     );
   }
 
-  public getProgramVideoUploadUrl(
-    program_id: number,
-    file_name: string
-  ) {
+  public getProgramVideoUploadUrl(program_id: number, file_name: string) {
     return this.http.post<{ url: string; mime_type: string }>(
       `${AppSettings.apiUrl}/programs/${program_id}/preview-video/`,
       { file_name },
     );
   }
 
-  public getProgramThumbnailViewUrl(
-    program_id: number,
-  ) {
+  public getProgramThumbnailViewUrl(program_id: number) {
     return this.http.post<{ file_url: string }>(
-      `${AppSettings.apiUrl}/programs/${program_id}/get-thumbnail/`, {}
+      `${AppSettings.apiUrl}/programs/${program_id}/get-thumbnail/`,
+      {},
     );
   }
 
-  public getProgramVideoViewUrl(
-    program_id: number,
-  ) {
+  public getProgramVideoViewUrl(program_id: number) {
     return this.http.post<{ file_url: string }>(
-      `${AppSettings.apiUrl}/programs/${program_id}/get-preview-video/`, {}
+      `${AppSettings.apiUrl}/programs/${program_id}/get-preview-video/`,
+      {},
     );
   }
 
@@ -275,6 +274,12 @@ export class ProgramsService {
   ) {
     return this.http.get<ModuleContentWithExam>(
       `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/exam`,
+    );
+  }
+
+  public getSummaryReport() {
+    return this.http.get<ProgramSummary[]>(
+      `${AppSettings.apiUrl}/programs/reports`,
     );
   }
 }
