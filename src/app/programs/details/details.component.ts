@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from '../services/programs.service';
 import { Category, Program } from '../models/program.model';
@@ -23,6 +23,9 @@ export class DetailsComponent extends ComponentBase {
   public isLoading: boolean = true;
   public isEnrolled: boolean = false;
   public programId!: number;
+  public showEnrollModal: boolean = false;
+  public isSubmitting: boolean = false;
+  public showToast: boolean = false;
 
   constructor(
     private programService: ProgramsService,
@@ -30,6 +33,7 @@ export class DetailsComponent extends ComponentBase {
     private route: ActivatedRoute,
     private router: Router,
     private recentProgramsService: RecentProgramsService,
+    private cdRef: ChangeDetectorRef
   ) {
     super();
   }
@@ -125,7 +129,8 @@ export class DetailsComponent extends ComponentBase {
         switchMap((params) => {
           this.isLoading = true;
           this.catalog = null;
-          this.programId = params['program_id'];
+          this.isEnrolled = false; // Reset enrollment state
+          this.programId = +params['program_id']; // Ensure it's a number
           return this.programService.getProgramCatalog(params['program_id']);
         }),
         switchMap((res) => {
@@ -191,5 +196,65 @@ export class DetailsComponent extends ComponentBase {
     }
 
     this.navigateToLesson(this.catalog?.modules?.[0]?.module_contents?.[0]);
+  }
+  public openEnrollModal(): void {
+    if (!this.authService.isAuthenticated()) {
+      // Pass the current relative URL for return after login
+      this.authService.keycloakLogin(`programs/${this.programId}/details`);
+      return;
+    }
+    this.isSubmitting = false;
+    this.showEnrollModal = true;
+    this.cdRef.detectChanges();
+  }
+
+  public closeEnrollModal(): void {
+    this.showEnrollModal = false;
+  }
+
+  public confirmEnrollment(): void {
+    if (!this.catalog) return;
+    this.isSubmitting = true;
+    this.cdRef.detectChanges();
+    
+    this.programService.enroll(this.catalog.id).subscribe({
+      next: (res: any) => {
+        this.isEnrolled = true;
+        this.showEnrollModal = false;
+        this.isSubmitting = false;
+        
+        // Force refresh progress
+        this.programService.getProgramProgress(this.programId).subscribe(progresses => {
+          if (progresses) {
+            progresses.forEach((p) => {
+              this.progress[p.content_id] = p.status;
+            });
+          }
+          this.cdRef.detectChanges();
+        });
+        
+        this.triggerToast();
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error('Enrollment failed', err);
+        
+        // If already enrolled, treat as success
+        if (err.status === 400 || err.status === 409) {
+           this.isEnrolled = true;
+           this.showEnrollModal = false;
+           this.triggerToast();
+        }
+        this.cdRef.detectChanges();
+      }
+    });
+  }
+
+  private triggerToast(): void {
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 5000);
   }
 }

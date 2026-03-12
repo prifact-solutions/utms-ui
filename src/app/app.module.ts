@@ -13,13 +13,21 @@ import { SharedModule } from './shared/shared.module';
 import { LandingComponent } from './public/landing/landing.component';
 import { DashboardComponent } from './public/dashboard/dashboard.component';
 import { HowitworksComponent } from './public/howitworks/howitworks.component';
+import { NotesComponent } from './public/notes/notes.component';
+import { AchievementsComponent } from './public/achievements/achievements.component';
+import { ProfileComponent } from './public/profile/profile.component';
+import { SettingsComponent } from './public/settings/settings.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingComponent,
     DashboardComponent,
-    HowitworksComponent
+    HowitworksComponent,
+    NotesComponent,
+    AchievementsComponent,
+    ProfileComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

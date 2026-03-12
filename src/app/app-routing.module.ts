@@ -31,6 +31,11 @@ import { EditExamComponent } from './program-builder/edit-exam/edit-exam.compone
 import { AuthCallbackComponent } from './utms-auth/components/auth-callback/auth-callback.component';
 import { ProgramReportComponent } from './program-builder/program-report/program-report.component';
 import { ReportComponent } from './program-builder/report/report.component';
+import { NotesComponent } from './public/notes/notes.component';
+import { AchievementsComponent } from './public/achievements/achievements.component';
+import { ProfileComponent } from './public/profile/profile.component';
+import { SettingsComponent } from './public/settings/settings.component';
+import { ManageUsersComponent } from './program-builder/manage-users/manage-users.component';
 
 const routes: Routes = [
   {
@@ -49,6 +54,26 @@ const routes: Routes = [
   {
     path: 'howitworks',
     component: HowitworksComponent,
+  },
+  {
+    path: 'my-notes',
+    component: NotesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'achievements',
+    component: AchievementsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    canActivate: [AuthGuard],
   },
   // {
   //   path: 'login',
@@ -166,6 +191,11 @@ const routes: Routes = [
     canActivate: [StaffAuthGuard],
   },
   {
+    path: 'manage-users',
+    component: ManageUsersComponent,
+    canActivate: [StaffAuthGuard],
+  },
+  {
     path: 'auth-callback',
     component: AuthCallbackComponent,
   },
@@ -181,4 +211,4 @@ const routes: Routes = [
   })],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
