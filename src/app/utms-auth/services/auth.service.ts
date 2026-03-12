@@ -15,7 +15,7 @@ export class AuthService {
     this.getToken(),
   );
   public currentUser$ = this.currentUserSubject.asObservable();
-
+  private isLoggingOut = false;
   constructor(private http: HttpClient) {}
 
   /**
@@ -98,17 +98,25 @@ export class AuthService {
   }
 
   public keycloakLogout() {
+    if (this.isLoggingOut) {
+      return;
+    }
+
+    this.isLoggingOut = true;
     const redirectUrl = window.location.href.split('#')[0];
     const idToken = localStorage.getItem('id_token');
-    const logoutUrl =
+    let logoutUrl =
       `https://login.dev.upskillm.com/realms/UpSkillCRS-Dev/protocol/openid-connect/logout` +
       `?client_id=django-server` +
-      `&id_token_hint=${idToken}` +
       `&post_logout_redirect_uri=${encodeURIComponent(redirectUrl)}`;
 
-    window.location.href = logoutUrl;
+    if (idToken) {
+      logoutUrl = logoutUrl + `&id_token_hint=${idToken}`;
+    }
     this.clearToken();
     localStorage.removeItem('id_token');
+
+    window.location.href = logoutUrl;
   }
 
   private getKeyCloakLoginRedirectUrl() {
