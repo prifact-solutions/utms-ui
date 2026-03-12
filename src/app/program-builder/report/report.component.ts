@@ -12,21 +12,13 @@ type ProgramReportRow = {
   lastActivity: Date;
 };
 
-type ProgramsSummaryRow = {
-  programId: number;
-  programName: string;
-  studentCount: number;
-  avgScore: number;
-  avgCompletion: number;
-};
-
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent extends ComponentBase implements OnInit {
-  isProgramsLoading = false;
+  isLoading = false;
   errorMessage: string | null = null;
   programsSummary: ProgramSummary[] = [];
 
@@ -118,16 +110,16 @@ export class ReportComponent extends ComponentBase implements OnInit {
   }
 
   private initialize(): void {
-    this.isProgramsLoading = true;
+    this.isLoading = true;
     const sub = this.programsService.getSummaryReport().subscribe({
       next: (summaryDetails) => {
         this.programsSummary = summaryDetails || [];
-        this.isProgramsLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading programs:', error);
         this.errorMessage = 'Failed to load programs. Please try again.';
-        this.isProgramsLoading = false;
+        this.isLoading = false;
       }
     });
     this.registerSubscription(sub);
