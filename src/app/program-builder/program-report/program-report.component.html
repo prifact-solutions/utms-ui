@@ -22,72 +22,78 @@
   </div>
 
   <div class="card p-5">
-    <div class="report-kpis">
-      <div class="kpi">
-        <div class="kpi-label text-muted">Students</div>
-        <div class="kpi-value">{{ details.length }}</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label text-muted">Avg score</div>
-        <div class="kpi-value">{{ averageScoreOverall }}%</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label text-muted">Avg completion</div>
-        <div class="kpi-value">{{ averageCompletionOverall }}%</div>
-      </div>
+    <div *ngIf="isLoading; else reportContent" class="loader-wrap">
+      <div class="spinner"></div>
     </div>
 
-    <div class="table-wrap" *ngIf="details.length > 0; else emptyState">
-      <table class="report-table">
-        <colgroup>
-          <col style="width: 220px;">
-          <col style="width: 260px;">
-          <col style="width: 120px;">
-          <col style="width: 260px;">
-          <col style="width: 200px;">
-          <col style="width: 140px;">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Student</th>
-            <th>Email</th>
-            <th class="num">Avg score</th>
-            <th class="num">Completion</th>
-            <th>Last activity</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of details">
-            <td class="student">
-              <div class="student-name">{{ row.studentName }}</div>
-            </td>
-            <td class="muted">{{ row.email || '-' }}</td>
-            <td class="num">{{ row.avgScore | number:'1.0-0' }}%</td>
-            <td class="num">
-              <div class="completion">
-                <div class="bar">
-                  <div class="fill" [style.width.%]="row.completionPct"></div>
+    <ng-template #reportContent>
+      <div class="report-kpis">
+        <div class="kpi">
+          <div class="kpi-label text-muted">Students</div>
+          <div class="kpi-value">{{ details.length }}</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label text-muted">Avg score</div>
+          <div class="kpi-value">{{ averageScoreOverall }}%</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label text-muted">Avg completion</div>
+          <div class="kpi-value">{{ averageCompletionOverall }}%</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" *ngIf="details.length > 0; else emptyState">
+        <table class="report-table">
+          <colgroup>
+            <col style="width: 220px;">
+            <col style="width: 260px;">
+            <col style="width: 120px;">
+            <col style="width: 260px;">
+            <col style="width: 200px;">
+            <col style="width: 140px;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Email</th>
+              <th class="num">Avg score</th>
+              <th class="num">Completion</th>
+              <th>Last activity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of details">
+              <td class="student">
+                <div class="student-name">{{ row.studentName }}</div>
+              </td>
+              <td class="muted">{{ row.email || '-' }}</td>
+              <td class="num">{{ row.avgScore | number:'1.0-0' }}%</td>
+              <td class="num">
+                <div class="completion">
+                  <div class="bar">
+                    <div class="fill" [style.width.%]="row.completionPct"></div>
+                  </div>
+                  <div class="pct">{{ row.completionPct | number:'1.0-0' }}%</div>
                 </div>
-                <div class="pct">{{ row.completionPct | number:'1.0-0' }}%</div>
-              </div>
-            </td>
-            <td class="muted">{{ row.lastActivity | date:'dd-MMM-yyyy, HH:mm' }}</td>
-            <td>
-              <span class="badge" [class.bg-success]="getRowStatus(row) === 'Completed'">
-                {{ getRowStatus(row) }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <ng-template #emptyState>
-      <div class="empty-state">
-        <h2>No data yet</h2>
-        <p>This report will show enrolled students once the API is connected.</p>
+              </td>
+              <td class="muted">{{ row.lastActivity | date:'dd-MMM-yyyy, HH:mm' }}</td>
+              <td>
+                <span class="badge" [class.bg-success]="getRowStatus(row) === 'Completed'">
+                  {{ getRowStatus(row) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <h2>No data yet</h2>
+          <p>This report will show enrolled students once the API is connected.</p>
+        </div>
+      </ng-template>
     </ng-template>
   </div>
 </div>

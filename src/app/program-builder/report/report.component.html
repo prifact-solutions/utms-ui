@@ -17,7 +17,12 @@
   </div>
 
   <div class="card p-5">
-    <div class="report-kpis">
+    <div *ngIf="isLoading; else summaryContent" class="loader-wrap">
+      <div class="spinner"></div>
+    </div>
+
+    <ng-template #summaryContent>
+      <div class="report-kpis">
       <div class="kpi">
         <div class="kpi-label text-muted">Programs</div>
         <div class="kpi-value">{{ totalPrograms }}</div>
@@ -32,7 +37,7 @@
       </div>
     </div>
 
-    <div class="table-wrap" *ngIf="programsSummary.length > 0; else emptyPrograms">
+      <div class="table-wrap" *ngIf="programsSummary.length > 0; else emptyPrograms">
       <table class="report-table clickable">
         <colgroup>
           <col style="width: 520px;">
@@ -68,11 +73,12 @@
       </table>
     </div>
 
-    <ng-template #emptyPrograms>
-      <div class="empty-state">
-        <h2>No programs found</h2>
-        <p>Create a program to start generating reports.</p>
-      </div>
+      <ng-template #emptyPrograms>
+        <div class="empty-state">
+          <h2>No programs found</h2>
+          <p>Create a program to start generating reports.</p>
+        </div>
+      </ng-template>
     </ng-template>
   </div>
 </div>

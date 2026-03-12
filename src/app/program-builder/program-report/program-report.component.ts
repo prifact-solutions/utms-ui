@@ -21,6 +21,7 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
   programId!: number;
   program: Program | null = null;
   errorMessage: string | null = null;
+  isLoading = false;
 
   private detailsByProgramId = new Map<number, ProgramReportRow[]>();
   details: ProgramReportRow[] = [];
@@ -41,6 +42,7 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
     }
     this.programId = id;
     this.details = this.getMockDetailsForProgram(this.programId);
+    this.isLoading = true;
     this.loadProgram(this.programId);
   }
 
@@ -131,10 +133,12 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
     const sub = this.programsService.getProgramById(programId).subscribe({
       next: (program) => {
         this.program = program;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading program:', error);
         this.errorMessage = 'Failed to load program details. Please try again.';
+        this.isLoading = false;
       }
     });
     this.registerSubscription(sub);
