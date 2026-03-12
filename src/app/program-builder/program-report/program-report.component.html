@@ -2,16 +2,18 @@
   <header class="page-header">
     <div class="header-text">
       <h1>Program Report</h1>
-      <p class="text-muted">Students enrolled and progress snapshot.</p>
+      <p class="text-muted">
+        {{ program?.title || ('Program ' + programId) }}
+      </p>
     </div>
 
     <div class="report-actions">
-      <div class="course-access">
-        <select [ngModel]="selectedProgramId" (ngModelChange)="onProgramChange($event)" [disabled]="isProgramsLoading">
-          <option *ngFor="let p of programs" [ngValue]="p.id">{{ p.title }}</option>
-        </select>
-      </div>
-      <button class="btn-outline" type="button" (click)="exportPdf()">Export PDF</button>
+      <button class="btn-outline" type="button" (click)="backToAllPrograms()">
+        Back
+      </button>
+      <button class="btn-outline" type="button" (click)="exportProgramPdf()">
+        Export PDF
+      </button>
     </div>
   </header>
 

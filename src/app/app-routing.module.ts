@@ -30,6 +30,7 @@ import { HowitworksComponent } from './public/howitworks/howitworks.component';
 import { EditExamComponent } from './program-builder/edit-exam/edit-exam.component';
 import { AuthCallbackComponent } from './utms-auth/components/auth-callback/auth-callback.component';
 import { ProgramReportComponent } from './program-builder/program-report/program-report.component';
+import { ReportComponent } from './program-builder/report/report.component';
 
 const routes: Routes = [
   {
@@ -96,6 +97,11 @@ const routes: Routes = [
   },
   {
     path: 'reports',
+    component: ReportComponent,
+    canActivate: [StaffAuthGuard],
+  },
+  {
+    path: 'reports/:program_id',
     component: ProgramReportComponent,
     canActivate: [StaffAuthGuard],
   },

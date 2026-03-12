@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { Program } from 'src/app/programs/models/program.model';
@@ -12,92 +12,102 @@ type ProgramReportRow = {
   lastActivity: Date;
 };
 
+type ProgramsSummaryRow = {
+  programId: number;
+  programName: string;
+  studentCount: number;
+  avgScore: number;
+  avgCompletion: number;
+};
+
 @Component({
-  selector: 'app-program-report',
-  templateUrl: './program-report.component.html',
-  styleUrls: ['./program-report.component.scss']
+  selector: 'app-report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.scss']
 })
-export class ProgramReportComponent extends ComponentBase implements OnInit {
-  programId!: number;
-  program: Program | null = null;
+export class ReportComponent extends ComponentBase implements OnInit {
+  programs: Program[] = [];
+  isProgramsLoading = false;
   errorMessage: string | null = null;
 
   private detailsByProgramId = new Map<number, ProgramReportRow[]>();
-  details: ProgramReportRow[] = [];
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private programsService: ProgramsService
+    private programsService: ProgramsService,
+    private router: Router
   ) {
     super();
   }
 
   ngOnInit(): void {
-    const id = this.parseProgramId(this.route.snapshot.params['program_id']);
-    if (!id) {
-      this.router.navigate(['/reports']);
-      return;
-    }
-    this.programId = id;
-    this.details = this.getMockDetailsForProgram(this.programId);
-    this.loadProgram(this.programId);
+    this.loadPrograms();
   }
 
-  get averageScoreOverall(): number {
-    if (!this.details.length) return 0;
-    const sum = this.details.reduce((acc, r) => acc + r.avgScore, 0);
-    return Math.round((sum / this.details.length) * 10) / 10;
+  get programsSummary(): ProgramsSummaryRow[] {
+    return (this.programs || []).map(p => {
+      const rows = this.getMockDetailsForProgram(p.id);
+      const studentCount = rows.length;
+      const avgScore = studentCount
+        ? Math.round((rows.reduce((acc, r) => acc + r.avgScore, 0) / studentCount) * 10) / 10
+        : 0;
+      const avgCompletion = studentCount
+        ? Math.round((rows.reduce((acc, r) => acc + r.completionPct, 0) / studentCount) * 10) / 10
+        : 0;
+      return {
+        programId: p.id,
+        programName: p.title,
+        studentCount,
+        avgScore,
+        avgCompletion
+      };
+    });
   }
 
-  get averageCompletionOverall(): number {
-    if (!this.details.length) return 0;
-    const sum = this.details.reduce((acc, r) => acc + r.completionPct, 0);
-    return Math.round((sum / this.details.length) * 10) / 10;
+  get totalPrograms(): number {
+    return this.programsSummary.length;
   }
 
-  getRowStatus(row: ProgramReportRow): 'Completed' | 'In Progress' | 'Not Started' {
-    if (row.completionPct >= 100) return 'Completed';
-    if (row.completionPct <= 0) return 'Not Started';
-    return 'In Progress';
+  get totalStudentsOverall(): number {
+    return this.programsSummary.reduce((acc, r) => acc + r.studentCount, 0);
   }
 
-  backToAllPrograms(): void {
-    this.router.navigate(['/reports']);
+  get avgCompletionOverallAllPrograms(): number {
+    const total = this.totalStudentsOverall;
+    if (!total) return 0;
+    const weighted = this.programsSummary.reduce((acc, r) => acc + r.avgCompletion * r.studentCount, 0);
+    return Math.round((weighted / total) * 10) / 10;
   }
 
-  async exportProgramPdf(): Promise<void> {
+  openProgram(programId: number): void {
+    this.router.navigate(['/reports', programId]);
+  }
+
+  async exportSummaryPdf(): Promise<void> {
     const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
       import('jspdf'),
       import('jspdf-autotable')
     ]);
 
-    const programTitle = this.program?.title || `Program ${this.programId}`;
     const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
 
-    const title = `Program Report – ${programTitle}`;
     doc.setFontSize(14);
-    doc.text(title, 40, 40);
+    doc.text('Programs Report', 40, 40);
 
     doc.setFontSize(10);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 40, 58);
 
     const head = [[
-      'Student',
-      'Email',
+      'Program',
+      'Students',
       'Avg score',
-      'Completion',
-      'Last activity',
-      'Status'
+      'Avg completion'
     ]];
 
-    const body = this.details.map(r => ([
-      r.studentName,
-      r.email || '',
+    const body = this.programsSummary.map(r => ([
+      r.programName,
+      `${r.studentCount}`,
       `${Math.round(r.avgScore)}%`,
-      `${Math.round(r.completionPct)}%`,
-      r.lastActivity ? r.lastActivity.toLocaleString() : '',
-      this.getRowStatus(r)
+      `${Math.round(r.avgCompletion)}%`
     ]));
 
     autoTable(doc, {
@@ -118,31 +128,29 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
         fillColor: [247, 249, 250]
       },
       columnStyles: {
+        1: { halign: 'right' },
         2: { halign: 'right' },
         3: { halign: 'right' }
       }
     });
 
-    const safeName = programTitle.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase();
-    doc.save(`program-report-${safeName || this.programId}.pdf`);
+    doc.save('programs-report.pdf');
   }
 
-  private loadProgram(programId: number): void {
-    const sub = this.programsService.getProgramById(programId).subscribe({
-      next: (program) => {
-        this.program = program;
+  private loadPrograms(): void {
+    this.isProgramsLoading = true;
+    const sub = this.programsService.getCreatedPrograms().subscribe({
+      next: (programs) => {
+        this.programs = programs || [];
+        this.isProgramsLoading = false;
       },
       error: (error) => {
-        console.error('Error loading program:', error);
-        this.errorMessage = 'Failed to load program details. Please try again.';
+        console.error('Error loading programs:', error);
+        this.errorMessage = 'Failed to load programs. Please try again.';
+        this.isProgramsLoading = false;
       }
     });
     this.registerSubscription(sub);
-  }
-
-  private parseProgramId(value: unknown): number | null {
-    const n = typeof value === 'string' ? +value : typeof value === 'number' ? value : NaN;
-    return Number.isFinite(n) && n > 0 ? n : null;
   }
 
   private getMockDetailsForProgram(programId: number): ProgramReportRow[] {
@@ -150,7 +158,7 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
     if (existing) return existing;
 
     const rng = this.makeRng(programId);
-    const count = 12 + Math.floor(rng() * 8); // 12..19 students
+    const count = 6 + Math.floor(rng() * 12); // 6..17 students
     const names = [
       'Asha Nair', 'Rahul Menon', 'Divya Krishnan', 'Nikhil George', 'Meera Pillai', 'Arjun Das',
       'Lakshmi Kumar', 'Sanjay R', 'Fatima Ali', 'John Mathew', 'Neha Sharma', 'Kiran Rao',
@@ -160,7 +168,7 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
     const rows: ProgramReportRow[] = Array.from({ length: count }).map((_, i) => {
       const studentName = names[(programId + i) % names.length];
       const email = `${studentName.toLowerCase().replace(/[^a-z]+/g, '.')}${(programId + i) % 20}@example.com`;
-      const avgScore = Math.round(55 + rng() * 45);
+      const avgScore = Math.round(55 + rng() * 45); // 55..100
       const completionPct = Math.round(rng() * 100);
       const daysAgo = Math.floor(rng() * 30);
       const lastActivity = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);

@@ -1,0 +1,72 @@
+<div class="admin-page-container container">
+  <header class="page-header">
+    <div class="header-text">
+      <h1>Summary Report</h1>
+      <p class="text-muted">Summary across all programs.</p>
+    </div>
+
+    <div class="report-actions">
+      <button class="btn-outline" type="button" (click)="exportSummaryPdf()">
+        Export PDF
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <div class="card p-5">
+    <div class="report-kpis">
+      <div class="kpi">
+        <div class="kpi-label text-muted">Programs</div>
+        <div class="kpi-value">{{ totalPrograms }}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label text-muted">Students</div>
+        <div class="kpi-value">{{ totalStudentsOverall }}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label text-muted">Avg completion</div>
+        <div class="kpi-value">{{ avgCompletionOverallAllPrograms }}%</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" *ngIf="programsSummary.length > 0; else emptyPrograms">
+      <table class="report-table clickable">
+        <colgroup>
+          <col style="width: 520px;">
+          <col style="width: 140px;">
+          <col style="width: 160px;">
+          <col style="width: 180px;">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Program</th>
+            <th class="num">Students</th>
+            <th class="num">Avg score</th>
+            <th class="num">Avg completion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of programsSummary" (click)="openProgram(p.programId)">
+            <td>
+              <div class="student-name">{{ p.programName }}</div>
+            </td>
+            <td class="num">{{ p.studentCount }}</td>
+            <td class="num">{{ p.avgScore }}%</td>
+            <td class="num">{{ p.avgCompletion }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyPrograms>
+      <div class="empty-state">
+        <h2>No programs found</h2>
+        <p>Create a program to start generating reports.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+

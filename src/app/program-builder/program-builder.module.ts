@@ -17,6 +17,7 @@ import { QuestionPapersModule } from './question-papers/question-papers.module';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { SharedModule } from '../shared/shared.module';
 import { ProgramReportComponent } from './program-report/program-report.component';
+import { ReportComponent } from './report/report.component';
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -31,7 +32,8 @@ import { ProgramReportComponent } from './program-report/program-report.componen
     OrganizeContentsComponent,
     CreateExamComponent,
     EditExamComponent,
-    ProgramReportComponent
+    ProgramReportComponent,
+    ReportComponent
   ],
   imports: [
     CommonModule,
