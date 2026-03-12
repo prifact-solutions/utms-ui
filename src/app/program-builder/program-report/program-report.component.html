@@ -63,13 +63,13 @@
               <div class="student-name">{{ row.studentName }}</div>
             </td>
             <td class="muted">{{ row.email || '-' }}</td>
-            <td class="num">{{ row.avgScore }}%</td>
+            <td class="num">{{ row.avgScore | number:'1.0-0' }}%</td>
             <td class="num">
               <div class="completion">
                 <div class="bar">
                   <div class="fill" [style.width.%]="row.completionPct"></div>
                 </div>
-                <div class="pct">{{ row.completionPct }}%</div>
+                <div class="pct">{{ row.completionPct | number:'1.0-0' }}%</div>
               </div>
             </td>
             <td class="muted">{{ row.lastActivity | date:'dd-MMM-yyyy, HH:mm' }}</td>
