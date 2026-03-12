@@ -35,7 +35,7 @@
         <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
           <div class="program-row-grid">
             <div class="form-group flex-2">
-              <label for="title">Program Title</label>
+              <label for="title">Course Title</label>
               <input id="title" type="text" formControlName="title" placeholder="e.g. Master Class in Web Development"
                 [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
               <div class="invalid-feedback"
@@ -109,7 +109,7 @@
               <span>{{ category.name }}</span>
             </label>
           </div>
-          <div class="burtton-group">
+          <div class="button-group">
             <button type="button" class="button" (click)="cancel()" [disabled]="isSubmitting">Cancel</button>
             <button type="submit" class="button primary" [disabled]="programForm.invalid || isSubmitting">
               <span *ngIf="!isSubmitting">Create Course</span>

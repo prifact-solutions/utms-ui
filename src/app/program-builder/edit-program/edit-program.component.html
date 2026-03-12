@@ -40,7 +40,7 @@
 
         <form *ngIf="!isLoading && programForm" [formGroup]="programForm" (ngSubmit)="onSubmit()">
           <div class="form-group mb-4">
-            <label for="title">Program Title</label>
+            <label for="title">Course Title</label>
             <input id="title" type="text" formControlName="title" placeholder="e.g. Master Class in Web Development"
               [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
             <div class="invalid-feedback"

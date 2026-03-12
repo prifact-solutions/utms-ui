@@ -18,6 +18,7 @@ import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { SharedModule } from '../shared/shared.module';
 import { ProgramReportComponent } from './program-report/program-report.component';
 import { ReportComponent } from './report/report.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -33,7 +34,8 @@ import { ReportComponent } from './report/report.component';
     CreateExamComponent,
     EditExamComponent,
     ProgramReportComponent,
-    ReportComponent
+    ReportComponent,
+    ManageUsersComponent
   ],
   imports: [
     CommonModule,
