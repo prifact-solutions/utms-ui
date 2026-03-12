@@ -72,9 +72,9 @@
               <td class="num">
                 <div class="completion">
                   <div class="bar">
-                    <div class="fill" [style.width.%]="row.completionPct"></div>
+                    <div class="fill" [style.width.%]="row.completionPercentage"></div>
                   </div>
-                  <div class="pct">{{ row.completionPct | number:'1.0-0' }}%</div>
+                  <div class="pct">{{ row.completionPercentage | number:'1.0-0' }}%</div>
                 </div>
               </td>
               <td class="muted">{{ row.lastActivity | date:'dd-MMM-yyyy, HH:mm' }}</td>

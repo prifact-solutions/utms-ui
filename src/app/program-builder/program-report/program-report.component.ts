@@ -8,7 +8,7 @@ type ProgramReportRow = {
   studentName: string;
   email?: string;
   avgScore: number;
-  completionPct: number;
+  completionPercentage: number;
   lastActivity: Date;
 };
 
@@ -54,13 +54,13 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
 
   get averageCompletionOverall(): number {
     if (!this.details.length) return 0;
-    const sum = this.details.reduce((acc, r) => acc + r.completionPct, 0);
+    const sum = this.details.reduce((acc, r) => acc + r.completionPercentage, 0);
     return Math.round((sum / this.details.length) * 10) / 10;
   }
 
   getRowStatus(row: ProgramReportRow): 'Completed' | 'In Progress' | 'Not Started' {
-    if (row.completionPct >= 100) return 'Completed';
-    if (row.completionPct <= 0) return 'Not Started';
+    if (row.completionPercentage >= 100) return 'Completed';
+    if (row.completionPercentage <= 0) return 'Not Started';
     return 'In Progress';
   }
 
@@ -97,7 +97,7 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
       r.studentName,
       r.email || '',
       `${Math.round(r.avgScore)}%`,
-      `${Math.round(r.completionPct)}%`,
+      `${Math.round(r.completionPercentage)}%`,
       r.lastActivity ? r.lastActivity.toLocaleString() : '',
       this.getRowStatus(r)
     ]));
@@ -165,10 +165,10 @@ export class ProgramReportComponent extends ComponentBase implements OnInit {
       const studentName = names[(programId + i) % names.length];
       const email = `${studentName.toLowerCase().replace(/[^a-z]+/g, '.')}${(programId + i) % 20}@example.com`;
       const avgScore = Math.round(55 + rng() * 45);
-      const completionPct = Math.round(rng() * 100);
+      const completionPercentage = Math.round(rng() * 100);
       const daysAgo = Math.floor(rng() * 30);
       const lastActivity = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-      return { studentName, email, avgScore, completionPct, lastActivity };
+      return { studentName, email, avgScore, completionPercentage, lastActivity };
     });
 
     rows.sort((a, b) => a.studentName.localeCompare(b.studentName));
