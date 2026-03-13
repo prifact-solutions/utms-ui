@@ -1,62 +1,87 @@
-<div class="secondary-page-content-wrapper">
-  <div class="qp-page-heading">Question Papers</div>
-  <div *ngIf="loading" class="nodata">Loading ...</div>
+<div class="p-wrapper">
+  <div class="p-heading">
+    <h2>Question Papers</h2>
+    <button class="button primary" (click)="addQuestionPaper()">+ Add Question Paper</button>
+  </div>
+
+  <!-- Loading skeletons -->
+  <div *ngIf="loading" class="qp-list">
+    <div class="qp-card skeleton-card" *ngFor="let s of [1,2,3]">
+      <div class="skel skel-icon"></div>
+      <div class="qp-card-body">
+        <div class="skel skel-title"></div>
+        <div class="skel skel-text"></div>
+      </div>
+      <div class="skel skel-badge"></div>
+    </div>
+  </div>
+
   <div *ngIf="!loading && questionPapers">
+
+    <!-- Cards list -->
     <div *ngIf="questionPapers.length" class="qp-list">
-      <div class="qp-list-heading">
-        <span>Title</span>
-        <span>Total Marks</span>
-        <!-- <span>Created by</span> -->
-        <span>Status</span>
-        <span>Actions</span>
-      </div>
-      <div *ngFor="let qp of questionPapers">
-        <span *ngIf="!editQpId || editQpId != qp.id">
-          {{ qp.name }}
-        </span>
-        <span *ngIf="editQpId && editQpId == qp.id">
-          <input class="rename-input" #qpTitle type="text" [value]="qp.name" />
-          <div class="title-buttons">
-            <button
-              class="button primary title-btn"
-              (click)="updateTitle(qpTitle.value, qp)"
-            >
-              Save
-            </button>
-            <button class="button title-btn" (click)="editQpId = null">
-              Cancel
-            </button>
+      <div *ngFor="let qp of questionPapers" class="qp-card" [class.is-active]="qp.status_display === 'Active'">
+
+        <!-- Left: icon -->
+        <div class="qp-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <!-- Centre: title + meta -->
+        <div class="qp-card-body">
+
+          <!-- Normal view -->
+          <div *ngIf="!editQpId || editQpId !== qp.id">
+            <div class="qp-title">{{ qp.name }}</div>
+            <div class="qp-meta">
+              <span class="qp-score">{{ qp.total_score }} marks</span>
+            </div>
           </div>
-        </span>
-        <span>
-          {{ qp.total_score }}
-        </span>
-        <!-- <span>
-          {{ qp.created_by_full_name }}
-        </span> -->
-        <span>
-          {{ qp.status_display}}
-        </span>
-        <span class="qp-option-holder">
-          <app-dot-menu
-            *ngIf="qp.actions.length"
-            [menuItems]="qp.actions"
-            (selectedOption)="dotMenuOptionSelected($event, qp)"
-          ></app-dot-menu>
-          <span *ngIf="!qp.actions.length" class="no-action">No action</span>
-        </span>
+
+          <!-- Rename mode -->
+          <div *ngIf="editQpId && editQpId === qp.id" class="qp-rename">
+            <input class="rename-input" #qpTitle type="text" [value]="qp.name" />
+            <div class="rename-actions">
+              <button class="button primary small" (click)="updateTitle(qpTitle.value, qp)">Save</button>
+              <button class="button small" (click)="editQpId = null">Cancel</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: status badge + dot menu -->
+        <div class="qp-card-right">
+          <span class="qp-status-badge" [class.active]="qp.status_display === 'Active'"
+            [class.draft]="qp.status_display === 'Draft'">
+            {{ qp.status_display }}
+          </span>
+          <app-dot-menu *ngIf="qp.actions.length" [menuItems]="qp.actions"
+            (selectedOption)="dotMenuOptionSelected($event, qp)"></app-dot-menu>
+          <span *ngIf="!qp.actions.length" class="no-action-text">—</span>
+        </div>
+
       </div>
     </div>
-    <div class="nodata" *ngIf="!questionPapers.length">No Question papers</div>
-    <div>
-      <a class="float-button" (click)="addQuestionPaper()">Add</a>
+
+    <!-- Empty state -->
+    <div class="qp-empty" *ngIf="!questionPapers.length">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          stroke="#ccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <p>No question papers yet.</p>
+      <button class="button primary" (click)="addQuestionPaper()">+ Create your first</button>
     </div>
+
   </div>
 </div>
 
-<lib-confirm
-  [showConfirm]="showDelConfirm"
-  [confirmMessage]="'Are you sure you want to delete this question paper?'"
-  (onPrimaryAction)="delConfirmAction($event)"
-  (onSecondaryAction)="cancelDelAction($event)"
-></lib-confirm>
+<lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="'Are you sure you want to delete this question paper?'"
+  (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)">
+</lib-confirm>

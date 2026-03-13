@@ -572,8 +572,27 @@
                         .header-actions {
                             gap: 16px;
                             display: flex;
+                            align-items: center;
 
+                            .qp-link {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 6px;
+                                color: #555;
+                                border-color: #ddd;
+                                text-decoration: none;
+                                font-size: 0.8rem;
 
+                                svg {
+                                    flex-shrink: 0;
+                                }
+
+                                &:hover {
+                                    border-color: #111;
+                                    color: #111;
+                                    background: transparent;
+                                }
+                            }
                         }
                     }
 
