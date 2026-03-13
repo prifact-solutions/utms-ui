@@ -267,4 +267,10 @@ export class QuestionPapersListComponent extends ComponentBase {
       });
     this.registerSubscription(sub);
   }
+
+  goBack() {
+    this.router.navigate(['../manage'], {
+      relativeTo: this.route,
+    });
+  }
 }
