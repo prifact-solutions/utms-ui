@@ -11,6 +11,7 @@ import {
   ModuleContentWithFiles,
   Program,
   ProgramSummary,
+  StudentProgramReportDetails,
 } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
@@ -285,6 +286,12 @@ export class ProgramsService {
   public getSummaryReport() {
     return this.http.get<ProgramSummary[]>(
       `${AppSettings.apiUrl}/programs/reports`,
+    );
+  }
+
+  public getProgramReport(programId: number) {
+    return this.http.get<StudentProgramReportDetails[]>(
+      `${AppSettings.apiUrl}/programs/reports/${programId}`,
     );
   }
 }
