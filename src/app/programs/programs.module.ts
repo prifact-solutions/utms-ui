@@ -9,9 +9,10 @@ import { FileViewerModule } from '../common/file-viewer/file-viewer.module';
 import { RouterModule } from '@angular/router';
 import { AttemptModule, FormBuilderBackendService } from 'form-builder';
 import { ExamBackendService } from '../shared/services/exam-backend.service';
-import { ExamSuccessComponent } from './exams/exam-success/exam-success.component';
 import { TakeExamComponent } from './exams/take-exam/take-exam.component';
 import { SharedModule } from '../shared/shared.module';
+import { ExamComponent } from './exams/exam/exam.component';
+import { ExamResultComponent } from './exams/exam-result/exam-result.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SharedModule } from '../shared/shared.module';
     DetailsComponent,
     ViewLessonComponent,
     TakeExamComponent,
-    ExamSuccessComponent,
+    ExamComponent,
+    ExamResultComponent,
   ],
   imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, AttemptModule, SharedModule],
   providers: [

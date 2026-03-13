@@ -18,19 +18,26 @@
       </svg>
     </div>
     <div class="alert alert-success">
-      Congratulations! You have successfully completed the exam. SCORE: {{ score }}
+      Congratulations! You have successfully completed the exam. Score:
+      {{ score }}
+    </div>
+    <div class="success-summary">
+      <div>
+        <button class="button primary" (click)="next()">Next</button>
+      </div>
     </div>
   </div>
-    <div *ngIf="!isExamPassed">
+  <div *ngIf="!isExamPassed">
     <div class="alert alert-success">
-      You did not clear the exam. Please retake the exam. SCORE: {{ score }}
+      You did not clear the exam. Score: {{ score }} Passing score:
+      {{ passing_score }}
     </div>
-  </div>
-  <div class="success-summary">
-    <div>
-      <button class="button primary" (click)="redirectToDashboard()">
-        <i class="fa fa-home"></i> Home
-      </button>
+    <div class="success-summary">
+      <div>
+        <button class="button primary" (click)="retakeExam()">
+          Retake exam
+        </button>
+      </div>
     </div>
   </div>
 </div>

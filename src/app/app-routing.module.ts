@@ -22,7 +22,6 @@ import { CreateExamComponent } from './program-builder/create-exam/create-exam.c
 import { QuestionPapersListComponent } from './program-builder/question-papers/components/question-papers-list/question-papers-list.component';
 import { CreateQuestionPaperComponent } from './program-builder/question-papers/components/create-question-paper/create-question-paper.component';
 import { DesignQuestionPaperComponent } from './program-builder/question-papers/components/design-question-paper/design-question-paper.component';
-import { ExamSuccessComponent } from './programs/exams/exam-success/exam-success.component';
 import { TakeExamComponent } from './programs/exams/take-exam/take-exam.component';
 import { LandingComponent } from './public/landing/landing.component';
 import { DashboardComponent } from './public/dashboard/dashboard.component';
@@ -37,6 +36,8 @@ import { ProfileComponent } from './public/profile/profile.component';
 import { SettingsComponent } from './public/settings/settings.component';
 import { ManageUsersComponent } from './program-builder/manage-users/manage-users.component';
 import { ManageCourseComponent } from './program-builder/manage-course/manage-course.component';
+import { ExamComponent } from './programs/exams/exam/exam.component';
+import { ExamResultComponent } from './programs/exams/exam-result/exam-result.component';
 
 const routes: Routes = [
   {
@@ -92,19 +93,26 @@ const routes: Routes = [
       {
         path: 'modules/:module_id/contents/:module_content_id/lesson',
         component: ViewLessonComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
       },
       {
         path: 'modules/:module_id/contents/:module_content_id/exam',
-        component: TakeExamComponent,
-        canActivate: [AuthGuard]
-      }
-    ]
-  },
-  {
-    path: 'programs/:program_id/modules/:module_id/contents/:module_content_id/exam-success/:exam_id',
-    component: ExamSuccessComponent,
-    canActivate: [AuthGuard],
+        component: ExamComponent,
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: 'exam-result/:exam_id',
+            component: ExamResultComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: 'take-exam/:exam_id',
+            component: TakeExamComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
+      },
+    ],
   },
   {
     path: 'programs-builder',
@@ -208,13 +216,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    enableTracing: false,
-    useHash: true,
-    onSameUrlNavigation: 'reload',
-    scrollPositionRestoration: 'enabled',
-    paramsInheritanceStrategy: 'always'
-  })],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      enableTracing: false,
+      useHash: true,
+      onSameUrlNavigation: 'reload',
+      scrollPositionRestoration: 'enabled',
+      paramsInheritanceStrategy: 'always',
+    }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
