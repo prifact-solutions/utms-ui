@@ -161,7 +161,7 @@
                         [class.active]="isActiveLesson(content.id)">
                         <span class="lesson-number">{{ j + 1 }}</span>
                         <span class="content-title">{{ content.title }}</span>
-                        <span class="content-duration">05:24</span>
+                        <span class="content-duration">{{getDisplayDuration(content)}}</span>
                     </div>
                 </div>
             </div>

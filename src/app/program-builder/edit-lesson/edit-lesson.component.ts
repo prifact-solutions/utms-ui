@@ -99,6 +99,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     this.lessonForm = this.fb.group({
       title: [this.lesson.content.title, [Validators.required, Validators.minLength(3)]],
       context_text: [this.lesson.content.context_text || ''],
+      duration: [this.lesson.content.duration, Validators.required],
       order: [this.lesson.content.order, Validators.required]
     });
   }
@@ -137,6 +138,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     const lessonPayload: Partial<ModuleContent> = {
       title: this.lessonForm.get('title')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
+      duration: this.lessonForm.get('duration')?.value,
       order: this.lessonForm.get('order')?.value
     };
 

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from '../services/programs.service';
-import { Category, Program } from '../models/program.model';
+import { Category, ModuleContent, Program } from '../models/program.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
@@ -33,7 +33,7 @@ export class DetailsComponent extends ComponentBase {
     private route: ActivatedRoute,
     private router: Router,
     private recentProgramsService: RecentProgramsService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
   ) {
     super();
   }
@@ -216,38 +216,40 @@ export class DetailsComponent extends ComponentBase {
     if (!this.catalog) return;
     this.isSubmitting = true;
     this.cdRef.detectChanges();
-    
+
     this.programService.enroll(this.catalog.id).subscribe({
       next: (res: any) => {
         this.isEnrolled = true;
         this.showEnrollModal = false;
         this.isSubmitting = false;
-        
+
         // Force refresh progress
-        this.programService.getProgramProgress(this.programId).subscribe(progresses => {
-          if (progresses) {
-            progresses.forEach((p) => {
-              this.progress[p.content_id] = p.status;
-            });
-          }
-          this.cdRef.detectChanges();
-        });
-        
+        this.programService
+          .getProgramProgress(this.programId)
+          .subscribe((progresses) => {
+            if (progresses) {
+              progresses.forEach((p) => {
+                this.progress[p.content_id] = p.status;
+              });
+            }
+            this.cdRef.detectChanges();
+          });
+
         this.triggerToast();
         this.cdRef.detectChanges();
       },
       error: (err) => {
         this.isSubmitting = false;
         console.error('Enrollment failed', err);
-        
+
         // If already enrolled, treat as success
         if (err.status === 400 || err.status === 409) {
-           this.isEnrolled = true;
-           this.showEnrollModal = false;
-           this.triggerToast();
+          this.isEnrolled = true;
+          this.showEnrollModal = false;
+          this.triggerToast();
         }
         this.cdRef.detectChanges();
-      }
+      },
     });
   }
 
@@ -256,5 +258,14 @@ export class DetailsComponent extends ComponentBase {
     setTimeout(() => {
       this.showToast = false;
     }, 5000);
+  }
+
+  getDisplayDuration(content: ModuleContent) {
+    if (content.content_type == 'LESSON') {
+      return content.duration + ' min';
+    } else {
+      const duration = content.duration;
+      return duration > 59 ? duration/60 + ' hrs' : duration + ' min';
+    }
   }
 }

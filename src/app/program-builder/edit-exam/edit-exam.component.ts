@@ -168,6 +168,7 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
       title: this.examForm.get('title')?.value,
       content_type: this.examForm.get('content_type')?.value,
       context_text: this.examForm.get('context_text')?.value,
+      duration: this.examForm.get('duration')?.value * 60,
       order: this.examForm.get('order')?.value,
     };
 

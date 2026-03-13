@@ -119,6 +119,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       title: this.lessonForm.get('title')?.value,
       content_type: this.lessonForm.get('content_type')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
+      duration: this.lessonForm.get('duration')?.value,
       order: this.lessonForm.get('order')?.value
     };
 
