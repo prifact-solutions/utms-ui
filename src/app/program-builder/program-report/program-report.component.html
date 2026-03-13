@@ -1,17 +1,14 @@
 <div class="admin-page-container container">
   <header class="page-header">
     <div class="header-text">
-      <h1>Program Report</h1>
-      <p class="text-muted">
-        {{ program?.title || ('Program ' + programId) }}
-      </p>
+      <h1 class="link-heading"> <a type="button" (click)="backToAllPrograms()">
+          Reports</a> / {{ program?.title || ('Program ' + programId) }}</h1>
+
     </div>
 
     <div class="report-actions">
-      <button class="btn-outline" type="button" (click)="backToAllPrograms()">
-        Back
-      </button>
-      <button class="btn-outline" type="button" (click)="exportProgramPdf()">
+
+      <button class="button primary" type="button" (click)="exportProgramPdf()">
         Export PDF
       </button>
     </div>

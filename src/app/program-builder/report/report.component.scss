@@ -106,9 +106,7 @@
   }
 
   th.num,
-  td.num {
-    text-align: right;
-  }
+  td.num {}
 }
 
 .report-table.clickable tbody tr {
@@ -127,7 +125,7 @@
 .completion {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+
   gap: 10px;
 }
 
@@ -158,4 +156,3 @@
     grid-template-columns: 1fr;
   }
 }
-

@@ -1286,3 +1286,65 @@ html body {
     font-weight: 600;
     color: #999;
 }
+
+html body .attempt-body {
+    padding: 0;
+    background: none;
+}
+
+.p-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.p-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #000;
+    }
+}
+
+.p-wrapper .button-group {
+    button {
+        flex-shrink: 1;
+    }
+}
+
+html body .qp-title-box {
+    width: calc(100% - 64px);
+    left: 64px;
+    top: 64px;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 24px;
+    background: #fff;
+    border-radius: 0;
+    z-index: 1;
+
+    h2 {
+        margin-right: auto;
+    }
+}
+
+.secondary-page-content-wrapper {
+    padding-left: 24px;
+
+    .main {
+        left: 64px;
+        top: 128px;
+        background: #eee;
+    }
+
+    .right-pane {
+        top: 128px;
+        height: calc(100vh - 128px);
+    }
+}

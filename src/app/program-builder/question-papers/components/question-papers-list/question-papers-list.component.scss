@@ -1,117 +1,205 @@
-$bodyBg:#fff;
-$bodyfontcolor:#333;
-$lightFontColor:rgb(66, 82, 110);
-$borderColor:rgba(229, 230, 235,.6);
-$headerBg:#fff;
-$lightBg:#fff;
-$greyBg:#f9f9f9;
-$fontSize:14px;
-$primaryButton:#693bb3;
-$darkColor:#222;
-$primaryColor:#693bb3;
-$headerHeight:50px;
-$statusbarBg:#334296;
+@import 'src/styles/variables';
 
-/*left-menu*/
-$hamburgerMenuColor:#777;
-$menuBg:#fff;
-$menuFontColor:#333;
-$menuIconColor:#909090;
-$menuHoverBg:#fafafa;
-$menuActiveBg:#fafafa;
-$leftmenuWidth:250px;
-$leftsubmenuWidth:300px;
-$leftsubmenuHeight:100px;
-$leftmenuWidthCollapsed:100px;
-$leftsubmenuBg:#fff;
-$leftsubmenuActive:#e0e0e0;
-
-
-
-
-/*sub nav*/
-$eventColor:#b56dd8;
-$examColor:#ca487c;
-$holidayCOlor:#3bb273;
-$homeworkColor:#00bcca;
-$timetableColor:#3bb273;
-$subjectColor:#3bb273;
-/*inner-page*/
-$innerpagePadding:20px 50px;
-$innerpagesubPadding:10px 50px;
-
-/*dashboard*/
-$dashboardStatusbarBg:#334296;
-$dashboardHeaderBg:#3f4fa5;
-$divisionTitleColor:#3f4fa5;
-$timetableSubjectBg:#f4f5f7;
-
-$messageBoxBg:#fff;
-$messageColor:#000;
-$dimmerColor:rgba(0,0,0,.2);
-
-.qp-page-heading {
-    padding:20px 50px;
-    border-bottom:1px solid $borderColor;
-    font-weight: 500;
-    color: $darkColor;
-    font-size: 1.3em;
-}
+// ─── Card List (vertical stack of horizontal cards) ───────────────────────────
 .qp-list {
-	display: table;
-	width: 100%;
-	padding-bottom: 80px;
-}
-.qp-list > div {
-	display: table-row;
-}
-.qp-list > div > span {
-	display: table-cell;
-	padding: 10px 0 10px 50px;
-	border-bottom: 1px solid $borderColor;
-	vertical-align: middle;
-}
-.qp-list > div > span:last-child {
-	padding-right: 20px;
-}
-.qp-list-heading{
-	background-color: #eee;
-	font-size: 1.1em;
-	font-weight: 600;
-}
-.nodata {
-    font-size: 0.85em;
-    padding: 20px 100px;
-    opacity: 0.5;
-    text-align: center;
-}
-.qp-option-holder {
-    position: relative;
-}
-.qp-option-holder .setting-icon {
-    right: 40px;
-    top: 4px;
-    padding: 0;
-}
-.qp-option-holder .setting-icon .threedots {
-	padding-right: 20px;
+	display: flex;
+	flex-direction: column;
+
 }
 
-.no-action{
-	font-style: italic;
+// ─── Single Horizontal Card ───────────────────────────────────────────────────
+.qp-card {
+	background: #fff;
+	position: relative;
+
+	padding: 8px 50px 8px 0;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	border-top: 1px solid rgba(0, 0, 0, .08);
+
+
+	// Left icon
+	.qp-icon {
+		width: 32px;
+		height: 32px;
+		min-width: 40px;
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #ccc;
+
+		svg {
+			width: 32px;
+			height: 32px;
+		}
+	}
+
+	// Green icon when Active
+	&.is-active .qp-icon {
+		color: #1e8e3e;
+	}
+
+	// Centre body
+	.qp-card-body {
+		flex: 1;
+		min-width: 0; // prevent text overflow issues
+
+		.qp-title {
+			font-size: 1em;
+			font-weight: 600;
+			color: #111;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+		}
+
+		.qp-meta {
+			.qp-score {
+				font-size: 0.875rem;
+				color: #666;
+				font-weight: 600;
+			}
+		}
+
+		// Rename mode
+		.qp-rename {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+
+			.rename-input {
+				flex: 1;
+				min-width: 160px;
+				padding: 6px 10px;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				font-size: 0.875rem;
+				outline: none;
+				transition: border-color 0.2s, box-shadow 0.2s;
+
+				&:focus {
+					border-color: $accent-color;
+					box-shadow: 0 0 0 3px rgba($accent-color, 0.1);
+				}
+			}
+
+			.rename-actions {
+				display: flex;
+				gap: 8px;
+			}
+		}
+	}
+
+	// Right side: badge + menu
+	.qp-card-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-shrink: 0;
+
+		.qp-status-badge {
+			font-size: 0.7rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			padding: 4px 12px;
+			border-radius: 20px;
+			white-space: nowrap;
+
+			&.active {
+				background: rgba(#1e8e3e, 0.1);
+				color: #1e8e3e;
+			}
+
+			&.draft {
+				background: rgba(#666, 0.08);
+				color: #888;
+			}
+		}
+
+		.no-action-text {
+			font-size: 0.8rem;
+			color: #ccc;
+		}
+	}
 }
-.title-buttons {
-	padding-top: 5px;
+
+// ─── Skeleton Loading ─────────────────────────────────────────────────────────
+.skeleton-card {
+	pointer-events: none;
+
+	.skel {
+		border-radius: 6px;
+		background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: shimmer 1.4s infinite;
+	}
+
+	.skel-icon {
+		width: 40px;
+		height: 40px;
+		min-width: 40px;
+		border-radius: 10px;
+	}
+
+	.skel-title {
+		height: 14px;
+		width: 55%;
+		margin-bottom: 8px;
+	}
+
+	.skel-text {
+		height: 11px;
+		width: 30%;
+	}
+
+	.skel-badge {
+		height: 22px;
+		width: 56px;
+		border-radius: 20px;
+		flex-shrink: 0;
+	}
 }
-.title-btn {
-	height: 25px !important;
-	line-height: 25px !important;
-	padding: 0 15px !important;
+
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+
+	100% {
+		background-position: 200% 0;
+	}
 }
-.rename-input {
-	height: 25px;
-	width: -webkit-fill-available;
-	padding: 5px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+.qp-empty {
+	text-align: center;
+	padding: 64px 24px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+
+	svg {
+		width: 56px;
+		height: 56px;
+		opacity: 0.35;
+	}
+
+	p {
+		font-size: 0.95rem;
+		color: #999;
+		margin: 0;
+	}
+}
+
+.nodata {
+	font-size: 0.875rem;
+	text-align: center;
+	color: #bbb;
+	padding: 32px;
 }

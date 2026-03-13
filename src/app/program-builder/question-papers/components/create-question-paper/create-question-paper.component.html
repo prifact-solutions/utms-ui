@@ -1,21 +1,21 @@
-<div class="secondary-page-content-wrapper">
-	<div class="qp-page-heading">
-		Create Question Paper
+<div class="p-wrapper" style="max-width: 600px;">
+	<div class="p-heading">
+		<h2>Create Question Paper</h2>
 	</div>
 	<div class="empty-text" *ngIf="loading">
 		Loading ...
 	</div>
-	<div class="create-qp-div" *ngIf="!loading">
-		<div>
+	<div class="form-wrapper" *ngIf="!loading">
+		<div class="form-group">
 			<label class="title-label" for="title">Title<span class="required"> *</span></label>
-			<input class="title-input" type="text" placeholder="Question paper title" name="title" [(ngModel)]="title" required>
+			<input class="title-input" type="text" placeholder="Question paper title" name="title" [(ngModel)]="title"
+				required>
 		</div>
 
-		<div class="btn-holder">
-			<button class="primary" (click)="saveQP()">Save</button>
-			<button (click)="onCancel()">Cancel</button>
+		<div class="button-group">
+
+			<button class="button" (click)="onCancel()">Cancel</button>
+			<button class="button primary" (click)="saveQP()">Save</button>
 		</div>
 	</div>
 </div>
-
-
