@@ -124,7 +124,7 @@
 
         <div *ngIf="!isLoading && !errorMessage && filteredPrograms.length > 0" class="course-listing">
             <div *ngFor="let program of filteredPrograms" class="c-card-2 admin-card"
-                [routerLink]="['/programs-builder', program.id, 'edit']">
+                [routerLink]="['/programs-builder', program.id, 'manage']">
                 <app-program-featured-media [program]="program" media_type="IMAGE"
                     *ngIf="program.thumbnail"></app-program-featured-media>
                 <div class="no-image" *ngIf="!program.thumbnail"
@@ -155,8 +155,8 @@
 
                 <div class="admin-card-footer">
                     <div class="action-group d-flex gap-2">
-                        <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'edit']"
-                            title="Settings" (click)="$event.stopPropagation()">⚙️</button>
+                        <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'manage']"
+                            title="Manage" (click)="$event.stopPropagation()">⚙️</button>
                         <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'modules']"
                             title="Curriculum" (click)="$event.stopPropagation()">📚</button>
                         <button class="btn-icon" [routerLink]="['/programs-builder', program.id, 'organize-contents']"

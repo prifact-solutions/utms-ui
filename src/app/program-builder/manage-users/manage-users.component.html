@@ -1,0 +1,78 @@
+<div class="dashboard-page manage-users-page">
+    <div class="inner">
+        <div class="dashboard-banner">
+            <div class="user-details">
+                <h1>Manage <strong>Users</strong></h1>
+                <p>Administrative panel to manage faculty and student access roles.</p>
+            </div>
+            <div class="action-bar">
+                <button class="button primary black">Add User Account</button>
+            </div>
+        </div>
+
+        <div class="container manage-users-content">
+            <section class="section">
+                <div class="admin-controls">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search by name, email or role...">
+                    </div>
+                    <div class="filter-controls">
+                        <select>
+                            <option>All Roles</option>
+                            <option>Students</option>
+                            <option>Faculty/Staff</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="users-table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="avatar">JD</div>
+                                        <span>John Doe</span>
+                                    </div>
+                                </td>
+                                <td>john.doe@example.com</td>
+                                <td><span class="role-badge staff">Faculty</span></td>
+                                <td><span class="status-indicator active">Active</span></td>
+                                <td>
+                                    <button class="icon-btn" title="Edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="avatar">SM</div>
+                                        <span>Sarah Miller</span>
+                                    </div>
+                                </td>
+                                <td>sarah.m@example.com</td>
+                                <td><span class="role-badge student">Student</span></td>
+                                <td><span class="status-indicator active">Active</span></td>
+                                <td>
+                                    <button class="icon-btn" title="Edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="under-construction-footer">
+                    <p>Advanced bulk import and role-based permissions management is under construction.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

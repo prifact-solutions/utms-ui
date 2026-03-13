@@ -1,0 +1,78 @@
+@import 'src/styles/variables';
+
+.profile-page {
+    .profile-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 40px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #f0f0f0;
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .profile-info {
+            h2 {
+                margin: 0;
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+
+            .role {
+                margin: 0;
+                color: #666;
+                font-size: 0.875rem;
+            }
+        }
+    }
+
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-bottom: 40px;
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            label {
+                font-size: 0.75rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            span {
+                font-size: 1rem;
+                color: #111;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

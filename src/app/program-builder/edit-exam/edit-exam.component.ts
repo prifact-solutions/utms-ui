@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentBase } from 'src/app/common/componentbase';
 import {
@@ -22,7 +22,14 @@ import { QuestionPapersService } from '../question-papers/services/question-pape
   templateUrl: './edit-exam.component.html',
   styleUrls: ['./edit-exam.component.scss'],
 })
-export class EditExamComponent extends ComponentBase {
+export class EditExamComponent extends ComponentBase implements OnInit, OnDestroy {
+  @Input() inModal = false;
+  @Input() set programIdInput(id: number) { if (id) this.programId = id; }
+  @Input() set moduleIdInput(id: number) { if (id) this.moduleId = id; }
+  @Input() set contentIdInput(id: number) { if (id) this.moduleContentId = id; }
+  @Output() saved = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+
   program: Program | null = null;
   module: Module | null = null;
   examForm!: FormGroup;
@@ -53,12 +60,14 @@ export class EditExamComponent extends ComponentBase {
   }
 
   ngOnInit(): void {
-    this.programId = +this.route.snapshot.params['program_id'];
-    this.moduleId = +this.route.snapshot.params['module_id'];
-    this.moduleContentId = +this.route.snapshot.params['content_id'];
-    this.previous_order =
-      +this.route.snapshot.queryParams['previous_order'] || 1;
-    this.exam_id = +this.route.snapshot.params['exam_id'];
+    if (!this.inModal) {
+      this.programId = +this.route.snapshot.params['program_id'];
+      this.moduleId = +this.route.snapshot.params['module_id'];
+      this.moduleContentId = +this.route.snapshot.params['content_id'];
+      this.previous_order =
+        +this.route.snapshot.queryParams['previous_order'] || 1;
+      this.exam_id = +this.route.snapshot.params['exam_id'];
+    }
     this.fetchData();
     this.loadExam();
   }
@@ -181,11 +190,15 @@ export class EditExamComponent extends ComponentBase {
           this.moduleContentId = exam.id;
           this.successMessage = 'Exam updated successfully!';
           this.isSubmitting = false;
-          setTimeout(() => {
-            this.router.navigateByUrl(
-              `/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`,
-            );
-          }, 2000);
+          if (this.inModal) {
+            this.saved.emit();
+          } else {
+            setTimeout(() => {
+              this.router.navigateByUrl(
+                `/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`,
+              );
+            }, 2000);
+          }
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Failed to create exam';

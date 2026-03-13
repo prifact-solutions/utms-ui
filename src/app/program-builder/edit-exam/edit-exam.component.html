@@ -1,10 +1,7 @@
-<div
-  class="admin-page-container container"
-  *ngIf="!isLoading && program && module"
->
-  <div class="builder-layout">
+<div [class.admin-page-container]="!inModal" [class.container]="!inModal" *ngIf="!isLoading && program && module">
+  <div [class.builder-layout]="!inModal">
     <!-- Sidebar: Program Info -->
-    <aside class="builder-sidebar">
+    <aside class="builder-sidebar" *ngIf="!inModal">
       <div class="program-mini-card card">
         <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
         <div class="p-4">
@@ -28,13 +25,12 @@
     </aside>
 
     <!-- Main Content: Create Exam Form -->
-    <main class="builder-main">
-      <header class="page-header">
+    <main [class.builder-main]="!inModal">
+      <header class="page-header" *ngIf="!inModal">
         <div class="header-text">
           <h1>Edit Exam</h1>
           <p class="text-muted">
-            Modify details for "<strong>{{ examContent.content.title }}</strong
-            >"
+            Modify details for "<strong>{{ examContent.content.title }}</strong>"
           </p>
         </div>
       </header>
@@ -110,9 +106,10 @@
           </div>
 
           <div class="form-group">
-            <label for="question_paper" class="form-label">
-              Select Question Paper
-              <span class="required">*</span>
+            <label for="question_paper" class="form-label d-flex justify-content-between align-items-center">
+              <span>Select Question Paper <span class="required">*</span></span>
+              <a [routerLink]="['/programs-builder', programId, 'question-papers']" target="_blank" class="small"
+                style="font-weight: 500; font-size: 0.75rem;">Manage Question Papers ↗</a>
             </label>
             <select id="question_paper" class="form-control" formControlName="question_paper" [class.is-invalid]="
                 examForm.get('question_paper')?.invalid &&
@@ -141,6 +138,7 @@
 
           <div class="form-actions mt-5">
             <button type="button" class="btn-outline" (click)="
+                inModal ? closed.emit() :
                 router.navigate([
                   '/',
                   'programs-builder',

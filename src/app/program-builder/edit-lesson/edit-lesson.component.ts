@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -20,6 +20,13 @@ interface UploadFile {
   styleUrls: ['./edit-lesson.component.scss']
 })
 export class EditLessonComponent extends ComponentBase implements OnInit, OnDestroy {
+  @Input() inModal = false;
+  @Input() set programIdInput(id: number) { if (id) this.programId = id; }
+  @Input() set moduleIdInput(id: number) { if (id) this.moduleId = id; }
+  @Input() set lessonIdInput(id: number) { if (id) this.lessonId = id; }
+  @Output() saved = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+
   program: Program | null = null;
   module: Module | null = null;
   lessonForm!: FormGroup;
@@ -48,9 +55,11 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
   }
 
   ngOnInit(): void {
-    this.programId = +this.route.snapshot.params['program_id'];
-    this.moduleId = +this.route.snapshot.params['module_id'];
-    this.lessonId = +this.route.snapshot.params['lesson_id'];
+    if (!this.inModal) {
+      this.programId = +this.route.snapshot.params['program_id'];
+      this.moduleId = +this.route.snapshot.params['module_id'];
+      this.lessonId = +this.route.snapshot.params['lesson_id'];
+    }
     this.fetchData();
     this.loadLesson();
   }
@@ -148,9 +157,13 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     if (this.filesToUpload.length === 0) {
       this.successMessage = 'Lesson updated successfully!';
       this.isSubmitting = false;
-      setTimeout(() => {
-        this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
-      }, 2000);
+      if (this.inModal) {
+        this.saved.emit();
+      } else {
+        setTimeout(() => {
+          this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
+        }, 2000);
+      }
       return;
     }
 
@@ -171,9 +184,13 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
               if (uploadedCount === this.filesToUpload.length) {
                 this.successMessage = 'Lesson and files updated successfully!';
                 this.isSubmitting = false;
-                setTimeout(() => {
-                  this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
-                }, 2000);
+                if (this.inModal) {
+                  this.saved.emit();
+                } else {
+                  setTimeout(() => {
+                    this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
+                  }, 2000);
+                }
               }
             });
           },

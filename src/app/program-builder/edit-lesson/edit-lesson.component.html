@@ -1,9 +1,9 @@
-<div class="admin-page-container container" *ngIf="program && module">
-  <div class="builder-layout">
+<div [class.admin-page-container]="!inModal" [class.container]="!inModal" [class.modal-form-container]="inModal" *ngIf="program && module">
+  <div [class.builder-layout]="!inModal">
     <!-- Sidebar: Program Info -->
-    <aside class="builder-sidebar">
+    <aside class="builder-sidebar" *ngIf="!inModal">
       <div class="program-mini-card card">
-    <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
+        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
         <div class="p-4">
           <h4>{{ program.title }}</h4>
           <p class="text-muted small">Module: <strong>{{ module.title }}</strong></p>
@@ -16,8 +16,8 @@
     </aside>
 
     <!-- Main Content: Edit Lesson Form -->
-    <main class="builder-main">
-      <header class="page-header">
+    <main [class.builder-main]="!inModal" [class.modal-main]="inModal">
+      <header class="page-header" *ngIf="!inModal">
         <div class="header-text">
           <h1>Edit Content</h1>
           <p class="text-muted">Modify details for "<strong>{{ lesson?.content?.title }}</strong>"</p>
@@ -32,7 +32,7 @@
         {{ errorMessage }}
       </div>
 
-      <div class="card p-5">
+      <div>
         <div *ngIf="isLoading" class="py-5 text-center">
           <p class="text-muted">Loading content details...</p>
         </div>
@@ -62,27 +62,35 @@
           <!-- Existing Files Section -->
           <div *ngIf="lesson && lesson.files && lesson.files.length > 0" class="mt-5">
             <h3 class="mb-3" style="font-size: 1.1rem;">Existing Attachments</h3>
-            <div class="curriculum-list">
-              <div *ngFor="let file of lesson.files"
-                class="card p-3 d-flex flex-row align-items-center gap-3 bg-off-white">
-                <span class="type-icon" style="font-size: 1.5rem;">📁</span>
-                <div class="flex-1">
-                  <strong class="small d-block mb-1">{{ file.file_name }}</strong>
-                  <span class="text-muted small">{{ file.mime_type }}</span>
-                </div>
-                <span class="section-badge" style="font-size: 0.7rem;">Stored</span>
+
+            <div *ngFor="let file of lesson.files" class="file-item">
+              <span>{{ file.file_name }}</span>
+              <div>
+
+                <span class="text-muted small">{{ file.mime_type }}</span> <span class="section-badge"
+                  style="font-size: 0.7rem;">Stored</span>
               </div>
+
             </div>
           </div>
 
+
           <!-- File Upload Section -->
-          <div class="mt-5 p-4 bg-off-white rounded-md border border-dashed">
+          <div class="add-files">
             <h3 class="mb-3" style="font-size: 1.1rem;">Add New Files</h3>
 
-            <div class="d-flex align-items-center gap-3 mb-4">
-              <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none;">
-              <button type="button" class="btn-primary-sm" (click)="fileInput.click()">Choose Files</button>
-              <span class="text-muted small">PDF, Images, Video, Documents</span>
+            <div class="media-upload-row">
+              <div class="form-group flex-1">
+                <div class="upload-container">
+                  <div class="upload-actions">
+                    <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none;">
+                    <button type="button" class="btn-black-small" (click)="fileInput.click()" [disabled]="isSubmitting">
+                      +
+                    </button>
+                    <p class="text-muted small m-0">Add Files (PDF, Images, Video, Documents)</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div *ngIf="filesToUpload.length > 0" class="curriculum-list mt-3">
@@ -110,10 +118,10 @@
           </div>
 
           <div class="form-actions mt-5">
-            <button type="button" class="btn-outline"
-              (click)="router.navigate(['/','programs-builder',programId,'modules',moduleId,'lessons'])"
+            <button type="button" class="button"
+              (click)="inModal ? closed.emit() : router.navigate(['/','programs-builder',programId,'modules',moduleId,'lessons'])"
               [disabled]="isSubmitting">Cancel</button>
-            <button type="submit" class="btn-primary" [disabled]="lessonForm.invalid || isSubmitting">
+            <button type="submit" class="button primary" [disabled]="lessonForm.invalid || isSubmitting">
               <span *ngIf="!isSubmitting">Save Changes</span>
               <span *ngIf="isSubmitting">Saving...</span>
             </button>

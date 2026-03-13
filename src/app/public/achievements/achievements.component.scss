@@ -1,0 +1,118 @@
+@import 'src/styles/variables';
+
+.achievements-page {
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 48px;
+
+        .stat-item {
+            background: #fff;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+            .stat-value {
+                display: block;
+                font-size: 2.5rem;
+                font-weight: 800;
+                color: #111;
+                margin-bottom: 8px;
+            }
+
+            .stat-label {
+                font-size: 0.875rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+        }
+    }
+
+    .achievements-section {
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+    }
+
+    .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 48px;
+    }
+
+    .badge-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f0f0f0;
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+        }
+
+        &.locked {
+            opacity: 0.7;
+            filter: grayscale(0.8);
+            border-style: dashed;
+        }
+
+        .badge-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            
+            &.gold { background: #fff9e6; color: #ffbf00; }
+            &.silver { background: #f5f5f5; color: #a8a8a8; }
+            &.grey { background: #f0f0f0; color: #ccc; }
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .progress-info {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #111;
+        }
+    }
+
+    .under-construction-banner {
+        background: #fdfdfd;
+        border: 1px dashed #eee;
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+        color: #999;
+        font-style: italic;
+    }
+}
+
+@media (max-width: 768px) {
+    .achievements-page .stats-overview {
+        grid-template-columns: 1fr;
+    }
+}

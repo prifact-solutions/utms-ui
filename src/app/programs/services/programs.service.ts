@@ -140,6 +140,11 @@ export class ProgramsService {
       module_payload,
     );
   }
+  public deleteModule(program_id: number, module_id: number) {
+    return this.http.delete(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}`,
+    );
+  }
   public getModulesForProgram(program_id: number) {
     return this.http.get<Array<Module>>(
       `${AppSettings.apiUrl}/programs/${program_id}/modules`,

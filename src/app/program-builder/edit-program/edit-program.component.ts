@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -24,11 +24,23 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   videoPreviewUrl: string | null = null;
   videoFile: File | null = null;
 
-  programId: number;
   program: Program | null = null;
   isLoading = false;
 
   categories: Array<Category> = [];
+  
+  @Input() inModal: boolean = false;
+  @Input() set programId(id: number) {
+    if (id) {
+       this._programId = id;
+    }
+  }
+  get programId(): number {
+    return this._programId;
+  }
+  private _programId: number = 0;
+  @Output() saved = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -37,11 +49,13 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     private route: ActivatedRoute
   ) {
     super();
-    this.programId = +this.route.snapshot.params['program_id'];
     this.programForm = this.fb.group({});
   }
 
   ngOnInit(): void {
+    if (!this.programId && this.route.snapshot.params['program_id']) {
+      this.programId = +this.route.snapshot.params['program_id'];
+    }
     this.loadProgram();
     this.programsService.getAllCategories().subscribe((categories) => {
       this.categories = categories;
@@ -192,9 +206,13 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       next: () => {
         this.successMessage = 'Program updated successfully!';
         this.isSubmitting = false;
-        setTimeout(() => {
-          this.router.navigateByUrl('/programs-builder');
-        }, 1500);
+        if (this.inModal) {
+            this.saved.emit();
+        } else {
+            setTimeout(() => {
+                this.router.navigateByUrl('/programs-builder');
+              }, 1500);
+        }
       },
       error: (error) => {
         console.error('Error updating program:', error);
@@ -203,6 +221,14 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       }
     });
     this.registerSubscription(subscription);
+  }
+
+  cancel(): void {
+    if (this.inModal) {
+        this.closed.emit();
+    } else {
+        this.router.navigateByUrl('/programs-builder');
+    }
   }
 
   markFormGroupTouched(formGroup: FormGroup): void {

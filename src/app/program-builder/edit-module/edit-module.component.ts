@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -11,7 +11,23 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
   templateUrl: './edit-module.component.html',
   styleUrls: ['./edit-module.component.scss']
 })
-export class EditModuleComponent extends ComponentBase {
+export class EditModuleComponent extends ComponentBase implements OnInit {
+  @Input() inModal = false;
+  @Input() set programIdInput(id: number) { 
+    if (id !== undefined && id !== null) {
+      this.programId = id;
+      if (this.moduleId) this.loadData();
+    }
+  }
+  @Input() set moduleIdInput(id: number) { 
+    if (id !== undefined && id !== null) {
+      this.moduleId = id;
+      if (this.programId) this.loadData();
+    }
+  }
+  @Output() saved = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
+
   moduleForm = this.fb.group({
     title: ['', Validators.required],
     order: [1, [Validators.required, Validators.min(1)]]
@@ -20,7 +36,7 @@ export class EditModuleComponent extends ComponentBase {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
+    public router: Router,
     private programService: ProgramsService
   ) { super(); }
 
@@ -34,38 +50,50 @@ export class EditModuleComponent extends ComponentBase {
   successMessage: string | null = null;
 
   ngOnInit() {
-    this.programId = +this.route.snapshot.params['program_id'];
-    this.moduleId = +this.route.snapshot.params['module_id'];
+    if (!this.inModal) {
+      this.programId = +this.route.snapshot.params['program_id'];
+      this.moduleId = +this.route.snapshot.params['module_id'];
+      this.loadData();
+    }
+  }
 
+  loadData() {
+    if (!this.programId || !this.moduleId) return;
     this.isLoading = true;
-    this.route.params.pipe(
-      switchMap(params => {
-        return this.programService.getProgramById(params["program_id"]);
-      }))
-      .subscribe({
-        next: (program) => {
-          this.program = program;
+    this.programService.getProgramById(this.programId).pipe(
+      switchMap(program => {
+        this.program = program;
+        return this.programService.getModulesForProgram(this.programId);
+      })
+    ).subscribe({
+      next: (modules) => {
+        if (this.program) {
+          this.program.modules = modules || [];
           // Find the module
-          this.module = program.modules?.find(m => m.id === this.moduleId) || null;
+          this.module = this.program.modules.find(m => m.id === this.moduleId) || null;
           if (this.module) {
             this.moduleForm.patchValue({
               title: this.module.title,
               order: this.module.order
             });
           }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading program:', error);
-          this.errorMessage = 'Failed to load module. Please try again.';
-          this.isLoading = false;
         }
-      });
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading module data:', error);
+        this.errorMessage = 'Failed to load module. Please try again.';
+        this.isLoading = false;
+      }
+    });
   }
 
   onSubmit() {
     if (this.moduleForm.invalid) return;
-    if (!this.program || !this.module) return;
+    if (!this.program || !this.module) {
+      this.errorMessage = 'Missing module data. Please try again.';
+      return;
+    }
 
     this.isSubmitting = true;
     this.errorMessage = null;
@@ -81,9 +109,13 @@ export class EditModuleComponent extends ComponentBase {
         next: () => {
           this.successMessage = 'Module updated successfully';
           this.isSubmitting = false;
-          setTimeout(() => {
-            this.router.navigate(['/programs-builder', this.programId, 'modules']);
-          }, 1500);
+          if (this.inModal) {
+            this.saved.emit();
+          } else {
+            setTimeout(() => {
+              this.router.navigate(['/programs-builder', this.programId, 'modules']);
+            }, 1500);
+          }
         },
         error: err => {
           console.error(err);

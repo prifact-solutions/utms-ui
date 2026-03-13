@@ -102,7 +102,7 @@
             <label style="margin-bottom: 12px; display: block;">Categories</label>
 
           </div>
-          <div class="filter-options popup-categories" style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <div class="filter-options">
             <label [class.selected]="isCategoryChecked(category.id)" *ngFor="let category of categories">
               <input type="checkbox" [checked]="isCategoryChecked(category.id)"
                 (change)="onCategoryChange(category.id, $event)" style="display: none;">

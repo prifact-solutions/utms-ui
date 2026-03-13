@@ -36,6 +36,7 @@ import { AchievementsComponent } from './public/achievements/achievements.compon
 import { ProfileComponent } from './public/profile/profile.component';
 import { SettingsComponent } from './public/settings/settings.component';
 import { ManageUsersComponent } from './program-builder/manage-users/manage-users.component';
+import { ManageCourseComponent } from './program-builder/manage-course/manage-course.component';
 
 const routes: Routes = [
   {
@@ -108,6 +109,11 @@ const routes: Routes = [
   {
     path: 'programs-builder',
     component: ProgramListComponent,
+    canActivate: [StaffAuthGuard],
+  },
+  {
+    path: 'programs-builder/:program_id/manage',
+    component: ManageCourseComponent,
     canActivate: [StaffAuthGuard],
   },
   {

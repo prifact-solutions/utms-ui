@@ -60,6 +60,7 @@
 .invalid-feedback {
     color: $error-color;
     margin-top: 0.25rem;
+    font-size: .875rem;
 
 }
 
@@ -94,4 +95,9 @@ input.ng-invalid.ng-touched {
         font-size: 1rem;
         color: $error-color;
     }
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: .6;
 }

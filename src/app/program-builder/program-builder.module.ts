@@ -19,6 +19,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ProgramReportComponent } from './program-report/program-report.component';
 import { ReportComponent } from './report/report.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { ManageCourseComponent } from './manage-course/manage-course.component';
+
 @NgModule({
   declarations: [
     ProgramListComponent,
@@ -35,7 +37,8 @@ import { ManageUsersComponent } from './manage-users/manage-users.component';
     EditExamComponent,
     ProgramReportComponent,
     ReportComponent,
-    ManageUsersComponent
+    ManageUsersComponent,
+    ManageCourseComponent
   ],
   imports: [
     CommonModule,

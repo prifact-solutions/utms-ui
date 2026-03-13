@@ -410,17 +410,17 @@ app-navigation {
         position: relative;
 
         svg {
-          opacity: .7;
+          opacity: .5;
         }
 
 
         &:hover {
           background: #eee;
-
+          opacity: 1;
         }
 
         &.active {
-          background: #eee;
+          background: #dedede;
 
           svg {
             opacity: 1;
