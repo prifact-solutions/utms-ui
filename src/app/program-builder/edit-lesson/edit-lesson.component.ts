@@ -1,10 +1,23 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
-import { Module, ModuleContent, ModuleContentWithFiles, Program } from 'src/app/programs/models/program.model';
+import {
+  Module,
+  ModuleContent,
+  ModuleContentFile,
+  ModuleContentWithFiles,
+  Program,
+} from 'src/app/programs/models/program.model';
 import { ComponentBase } from 'src/app/common/componentbase';
 
 interface UploadFile {
@@ -17,13 +30,22 @@ interface UploadFile {
 @Component({
   selector: 'app-edit-lesson',
   templateUrl: './edit-lesson.component.html',
-  styleUrls: ['./edit-lesson.component.scss']
+  styleUrls: ['./edit-lesson.component.scss'],
 })
-export class EditLessonComponent extends ComponentBase implements OnInit, OnDestroy {
+export class EditLessonComponent
+  extends ComponentBase
+  implements OnInit, OnDestroy
+{
   @Input() inModal = false;
-  @Input() set programIdInput(id: number) { if (id) this.programId = id; }
-  @Input() set moduleIdInput(id: number) { if (id) this.moduleId = id; }
-  @Input() set lessonIdInput(id: number) { if (id) this.lessonId = id; }
+  @Input() set programIdInput(id: number) {
+    if (id) this.programId = id;
+  }
+  @Input() set moduleIdInput(id: number) {
+    if (id) this.moduleId = id;
+  }
+  @Input() set lessonIdInput(id: number) {
+    if (id) this.lessonId = id;
+  }
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -36,6 +58,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
   lesson: ModuleContentWithFiles | null = null;
 
   filesToUpload: UploadFile[] = [];
+  filesToDelete: number[] = [];
   isSubmitting = false;
   isLoading = false;
   successMessage = '';
@@ -49,7 +72,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     private fb: FormBuilder,
     private programsService: ProgramsService,
     private route: ActivatedRoute,
-    public router: Router
+    public router: Router,
   ) {
     super();
   }
@@ -65,20 +88,23 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
   }
 
   private fetchData(): void {
-    this.programsService.getProgramById(this.programId)
+    this.programsService
+      .getProgramById(this.programId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(program => this.program = program);
+      .subscribe((program) => (this.program = program));
 
-    this.programsService.getModulesForProgram(this.programId)
+    this.programsService
+      .getModulesForProgram(this.programId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(modules => {
-        this.module = modules.find(m => m.id === this.moduleId) || null;
+      .subscribe((modules) => {
+        this.module = modules.find((m) => m.id === this.moduleId) || null;
       });
   }
 
   private loadLesson(): void {
     this.isLoading = true;
-    this.programsService.getLesson(this.programId, this.moduleId, this.lessonId)
+    this.programsService
+      .getLesson(this.programId, this.moduleId, this.lessonId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (lesson: ModuleContentWithFiles) => {
@@ -89,7 +115,7 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Failed to load lesson';
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -97,22 +123,25 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
     if (!this.lesson) return;
 
     this.lessonForm = this.fb.group({
-      title: [this.lesson.content.title, [Validators.required, Validators.minLength(3)]],
+      title: [
+        this.lesson.content.title,
+        [Validators.required, Validators.minLength(3)],
+      ],
       context_text: [this.lesson.content.context_text || ''],
       duration: [this.lesson.content.duration, Validators.required],
-      order: [this.lesson.content.order, Validators.required]
+      order: [this.lesson.content.order, Validators.required],
     });
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      Array.from(input.files).forEach(file => {
+      Array.from(input.files).forEach((file) => {
         const uploadFile: UploadFile = {
           file,
           progress: 0,
           uploaded: false,
-          error: null
+          error: null,
         };
         this.filesToUpload.push(uploadFile);
       });
@@ -139,19 +168,34 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
       title: this.lessonForm.get('title')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
       duration: this.lessonForm.get('duration')?.value,
-      order: this.lessonForm.get('order')?.value
+      order: this.lessonForm.get('order')?.value,
     };
 
-    this.programsService.updateLesson(this.programId, this.moduleId, this.lessonId, lessonPayload)
-      .pipe(takeUntil(this.destroy$))
+    this.programsService
+      .updateLesson(this.programId, this.moduleId, this.lessonId, lessonPayload)
+      .pipe(
+        switchMap((_: ModuleContent) => {
+          if (this.filesToDelete.length > 0) {
+            return this.programsService.deleteFiles(
+              this.programId,
+              this.moduleId,
+              this.lessonId,
+              this.filesToDelete,
+            );
+          }
+          return of(null);
+        }),
+        takeUntil(this.destroy$),
+      )
       .subscribe({
-        next: (lesson: ModuleContent) => {
+        next: () => {
           this.uploadFiles();
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Failed to update lesson';
+          this.errorMessage =
+            error?.error?.message || 'Failed to update lesson';
           this.isSubmitting = false;
-        }
+        },
       });
   }
 
@@ -163,7 +207,9 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
         this.saved.emit();
       } else {
         setTimeout(() => {
-          this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
+          this.router.navigateByUrl(
+            `/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`,
+          );
         }, 2000);
       }
       return;
@@ -171,45 +217,63 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
 
     let uploadedCount = 0;
     this.filesToUpload.forEach((uploadFile, index) => {
-      this.programsService.getSignedUrlForUpload(
-        this.programId,
-        this.moduleId,
-        this.lessonId,
-        uploadFile.file.name,
-        uploadFile.file.type
-      )
+      this.programsService
+        .getSignedUrlForUpload(
+          this.programId,
+          this.moduleId,
+          this.lessonId,
+          uploadFile.file.name,
+          uploadFile.file.type,
+        )
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (response: { url: string; mime_type: string; }) => {
-            this.uploadFileToSignedUrl(uploadFile, response.url, response.mime_type, index, () => {
-              uploadedCount++;
-              if (uploadedCount === this.filesToUpload.length) {
-                this.successMessage = 'Lesson and files updated successfully!';
-                this.isSubmitting = false;
-                if (this.inModal) {
-                  this.saved.emit();
-                } else {
-                  setTimeout(() => {
-                    this.router.navigateByUrl(`/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`);
-                  }, 2000);
+          next: (response: { url: string; mime_type: string }) => {
+            this.uploadFileToSignedUrl(
+              uploadFile,
+              response.url,
+              response.mime_type,
+              index,
+              () => {
+                uploadedCount++;
+                if (uploadedCount === this.filesToUpload.length) {
+                  this.successMessage =
+                    'Lesson and files updated successfully!';
+                  this.isSubmitting = false;
+                  if (this.inModal) {
+                    this.saved.emit();
+                  } else {
+                    setTimeout(() => {
+                      this.router.navigateByUrl(
+                        `/programs-builder/${this.programId}/modules/${this.moduleId}/lessons`,
+                      );
+                    }, 2000);
+                  }
                 }
-              }
-            });
+              },
+            );
           },
           error: (error) => {
-            uploadFile.error = error?.error?.message || 'Failed to get signed URL';
+            uploadFile.error =
+              error?.error?.message || 'Failed to get signed URL';
             uploadedCount++;
             if (uploadedCount === this.filesToUpload.length) {
               this.errorMessage = 'Some files failed to upload';
               this.isSubmitting = false;
             }
-          }
+          },
         });
     });
   }
 
-  private uploadFileToSignedUrl(uploadFile: UploadFile, signedUrl: string, mimeType: string, index: number, onComplete: () => void): void {
-    this.programsService.uploadFileToSignedUrl(signedUrl, mimeType, uploadFile.file)
+  private uploadFileToSignedUrl(
+    uploadFile: UploadFile,
+    signedUrl: string,
+    mimeType: string,
+    index: number,
+    onComplete: () => void,
+  ): void {
+    this.programsService
+      .uploadFileToSignedUrl(signedUrl, mimeType, uploadFile.file)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -220,8 +284,15 @@ export class EditLessonComponent extends ComponentBase implements OnInit, OnDest
         error: (error) => {
           uploadFile.error = error?.message || 'Upload failed';
           onComplete();
-        }
+        },
       });
+  }
+
+  deleteFile(file: ModuleContentFile) {
+    this.filesToDelete.push(file.id);
+    if (this.lesson?.files) {
+      this.lesson.files = this.lesson.files.filter((f) => f.id != file.id);
+    }
   }
 
   override ngOnDestroy(): void {

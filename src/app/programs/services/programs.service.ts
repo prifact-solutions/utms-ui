@@ -224,6 +224,20 @@ export class ProgramsService {
     );
   }
 
+  public deleteFiles(
+    program_id: number,
+    module_id: number,
+    module_content_id: number,
+    file_ids: number[],
+  ) {
+    return this.http.post(
+      `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/files/delete`,
+      {
+        file_ids: file_ids
+      },
+    );
+  }
+
   public getProgramThumbnailUploadUrl(program_id: number, file_name: string) {
     return this.http.post<{ url: string; mime_type: string }>(
       `${AppSettings.apiUrl}/programs/${program_id}/thumbnail/`,
