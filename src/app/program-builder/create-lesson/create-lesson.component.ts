@@ -80,6 +80,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       title: ['', [Validators.required, Validators.minLength(3)]],
       content_type: ['LESSON', Validators.required],
       context_text: [''],
+      duration: ['', Validators.required],
       order: [this.previous_order + 1, Validators.required]
     });
   }
