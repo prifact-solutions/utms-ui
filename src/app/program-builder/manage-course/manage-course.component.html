@@ -38,7 +38,7 @@
                     <span class="tag" *ngFor="let catId of program.categories">
                         {{ getCategoryLabel(catId) }}
                     </span>
-                    <span class="no-data" *ngIf="!program.categories.length">No categories assigned</span>
+                    <span class="no-data" *ngIf="!program.categories?.length">No categories assigned</span>
                 </div>
                 <div class="c-info">
                     {{ program.duration }} Days ● {{ program.video_hours || 0 }} Hours
@@ -177,7 +177,7 @@
 
                         </div>
                     </div>
-                    <div class="no-content" *ngIf="!selectedModule.module_contents.length">
+                    <div class="no-content" *ngIf="!selectedModule.module_contents?.length">
                         <p>No content added to this module yet.</p>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
 
 <div class="loader-container" id="loader-container" *ngIf="isLoading">
     <div class="loader"></div>
-    <div class="loading-text">Loading Cource builder</div>
+    <div class="loading-text">Loading Course Builder</div>
 </div>
 <!-- Edit Modal -->
 <div class="modal-overlay" *ngIf="showEditModal && program">

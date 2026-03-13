@@ -81,7 +81,7 @@ export class ExamBackendService extends FormBuilderBackendService {
         return this.http.get<QuestionPaperAttemptContext>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/details`,
         );
-      })
+      }),
     );
   }
   saveAnswers(attemptKey: string, answers: Answer[]) {
@@ -101,9 +101,10 @@ export class ExamBackendService extends FormBuilderBackendService {
         return this.http.get<ExamAnswer[]>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/answers?questions=${qNames}`,
         );
-      }),map(examAnswers => {
-        return examAnswers.map(examAnswer => examAnswer.answer);
-      })
+      }),
+      map((examAnswers) => {
+        return examAnswers.map((examAnswer) => examAnswer.answer);
+      }),
     );
   }
   getAttemptStatus(attemptKey: string): Observable<{ timeRemaining: number }> {
@@ -131,7 +132,7 @@ export class ExamBackendService extends FormBuilderBackendService {
     contentId: number,
     examId: number,
   ) {
-    return this.http.post<any>(
+    return this.http.post<ExamAttempt>(
       `${AppSettings.apiUrl}/programs/${programId}/modules/${moduleId}/contents/${contentId}/examattempt`,
       { exam: examId },
     );
@@ -155,6 +156,15 @@ export class ExamBackendService extends FormBuilderBackendService {
       );
   }
 
+  archiveAttempt(programId: number, attemptId: number) {
+    return this.http.patch(
+      `${AppSettings.apiUrl}/programs/${programId}/examattempt/${attemptId}`,
+      {
+        status: ExamAttemptStatus.ARCHIVED,
+      },
+    );
+  }
+
   completeAttempt(programId: number, attemptId: number) {
     return this.http.patch(
       `${AppSettings.apiUrl}/programs/${programId}/examattempt/${attemptId}`,
@@ -169,6 +179,7 @@ export class ExamAttempt {
   public id!: number;
   public exam_id!: number;
   public score?: number;
+  public passing_score!: number;
   public result?: ExamResultStatus;
   public status!: ExamAttemptStatus;
 }
@@ -184,6 +195,7 @@ export class ExamAnswer {
 export enum ExamAttemptStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
+  ARCHIVED = 'ARCHIVED',
 }
 
 export enum ExamResultStatus {

@@ -1,0 +1,28 @@
+<!-- <div class="lesson-container">
+  <div class="lesson-header">
+    <h1>{{ lesson?.title }}</h1>
+    <span class="content-type-badge">{{ lesson?.content_type }}</span>
+  </div>
+
+  <div class="lesson-footer">
+    <button class="btn-secondary" (click)="goToCatalog()">Go Back</button>
+    <div class="no-lesson-files" *ngIf="files.length === 0 && !next_module_content">
+      <button class="btn-primary" (click)="markAsComplete()">Next</button>
+    </div>
+    <button *ngIf="next_module_content" class="btn-primary" (click)="goToNextContent()">Next</button>
+  </div>
+</div> -->
+
+<!-- <div class="nodata" *ngIf="loading">Loading ...</div>
+<div *ngIf="!loading && attemptId && exam">
+  <app-form-attempt
+    [attemptId]="attemptId"
+    [subjectTitle]="exam.name"
+    [timeDiff]="timeDiff"
+    (save)="onSave($event)"
+  >
+  </app-form-attempt>
+</div> -->
+
+<!-- <app-errors [errors]="errors"></app-errors> -->
+        <router-outlet></router-outlet>

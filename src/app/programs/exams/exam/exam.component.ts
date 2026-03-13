@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ComponentBase } from 'src/app/common/componentbase';
-import { forkJoin, map, of, Subject, switchMap, tap } from 'rxjs';
-import { QuestionPaperAttemptContext } from 'form-builder';
-import { ExamBackendService } from 'src/app/shared/services/exam-backend.service';
+import { Component } from '@angular/core';
 import {
   Exam,
   ModuleContent,
   ModuleContentFile,
 } from '../../models/program.model';
+import { QuestionPaperAttemptContext } from 'form-builder';
+import { forkJoin, map, of, Subject, switchMap, tap } from 'rxjs';
 import { ProgramsService } from '../../services/programs.service';
+import {
+  ExamAttemptStatus,
+  ExamBackendService,
+} from 'src/app/shared/services/exam-backend.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ComponentBase } from 'src/app/common/componentbase';
 
 @Component({
-  selector: 'app-take-exam',
-  templateUrl: './take-exam.component.html',
-  styleUrls: ['./take-exam.component.scss'],
+  selector: 'app-exam',
+  templateUrl: './exam.component.html',
+  styleUrls: ['./exam.component.scss'],
 })
-export class TakeExamComponent extends ComponentBase {
+export class ExamComponent extends ComponentBase {
   lesson: ModuleContent | null = null;
   files: Array<ModuleContentFile> = [];
 
@@ -30,7 +33,6 @@ export class TakeExamComponent extends ComponentBase {
   attemptId!: number;
   timeDiff!: number;
   exam!: Exam;
-  examId!: number;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   private dateSubject = new Subject<string>();
@@ -52,14 +54,12 @@ export class TakeExamComponent extends ComponentBase {
             program_id: params['program_id'],
             module_id: params['module_id'],
             module_content_id: params['module_content_id'],
-            exam_id: params['exam_id'],
           };
         }),
         tap((params) => {
           this.program_id = params.program_id;
           this.module_id = params.module_id;
           this.module_content_id = params.module_content_id;
-          this.examId = params.exam_id;
         }),
         switchMap((params) => {
           return forkJoin([
@@ -98,6 +98,16 @@ export class TakeExamComponent extends ComponentBase {
       )
       .subscribe(([attempt]) => {
         this.attemptId = attempt.id;
+
+        if (attempt.status == ExamAttemptStatus.COMPLETED) {
+          this.router.navigate(['exam-result', this.exam.id], {
+            relativeTo: this.route,
+          });
+        }else{
+          this.router.navigate(['take-exam', this.exam.id], {
+            relativeTo: this.route,
+          });
+        }
         this.loading = false;
       });
     this.registerSubscription(sub);
@@ -106,19 +116,19 @@ export class TakeExamComponent extends ComponentBase {
   onSave(event: any) {
     let sub = this.examService
       .completeAttempt(this.program_id, this.attemptId)
-      .subscribe(
-        (_) => {
+      .subscribe({
+        next: (_) => {
           // this.router.navigateByUrl(
           //   `/programs/${this.program_id}/modules/${this.module_id}/contents/${this.module_content_id}/exam-success/${this.exam.id}`,
           // );
-          this.router.navigate(['../../exam-result', this.examId], {
+          this.router.navigate(['exam-result', this.exam.id], {
             relativeTo: this.route,
           });
         },
-        (err) => {
-          this.errors.push({ name: err.code, message: err.message });
+        error: (error) => {
+          this.errors.push({ name: error.code, message: error.message });
         },
-      );
+      });
     this.registerSubscription(sub);
   }
 
