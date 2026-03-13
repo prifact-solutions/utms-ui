@@ -324,43 +324,44 @@ export class ManageCourseComponent
 
   togglePublish(): void {
     if (!this.program) return;
+    this.router.navigateByUrl(`/programs-builder/${this.programId}/organize-contents`);
 
-    this.isPublishing = true;
-    const newStatus = this.program.status === 'ACTIVE' ? 'DRAFT' : 'ACTIVE';
-    const newIsActive = newStatus === 'ACTIVE';
+    // this.isPublishing = true;
+    // const newStatus = this.program.status === 'ACTIVE' ? 'DRAFT' : 'ACTIVE';
+    // const newIsActive = newStatus === 'ACTIVE';
 
-    const payload: any = {
-      title: this.program.title,
-      description: this.program.description,
-      duration: this.program.duration,
-      is_active: newIsActive,
-      status: newStatus,
-      difficulty: this.program.difficulty || 'Beginner',
-      video_hours: this.program.video_hours || 0,
-      categories: this.program.categories || [],
-    };
+    // const payload: any = {
+    //   title: this.program.title,
+    //   description: this.program.description,
+    //   duration: this.program.duration,
+    //   is_active: newIsActive,
+    //   status: newStatus,
+    //   difficulty: this.program.difficulty || 'Beginner',
+    //   video_hours: this.program.video_hours || 0,
+    //   categories: this.program.categories || [],
+    // };
 
-    const sub = this.programService
-      .updateProgram(this.programId, payload)
-      .subscribe({
-        next: (updatedProgram) => {
-          if (this.program) {
-            this.program.status = updatedProgram?.status || newStatus;
-            this.program.is_active =
-              updatedProgram?.is_active !== undefined
-                ? updatedProgram.is_active
-                : newIsActive;
-          }
-          this.isPublishing = false;
-        },
-        error: (err) => {
-          console.error('Error updating program status', err);
-          this.isPublishing = false;
-          alert(
-            'Failed to update course status. Please ensure all required course details are filled.',
-          );
-        },
-      });
-    this.registerSubscription(sub);
+    // const sub = this.programService
+    //   .updateProgram(this.programId, payload)
+    //   .subscribe({
+    //     next: (updatedProgram) => {
+    //       if (this.program) {
+    //         this.program.status = updatedProgram?.status || newStatus;
+    //         this.program.is_active =
+    //           updatedProgram?.is_active !== undefined
+    //             ? updatedProgram.is_active
+    //             : newIsActive;
+    //       }
+    //       this.isPublishing = false;
+    //     },
+    //     error: (err) => {
+    //       console.error('Error updating program status', err);
+    //       this.isPublishing = false;
+    //       alert(
+    //         'Failed to update course status. Please ensure all required course details are filled.',
+    //       );
+    //     },
+    //   });
+    // this.registerSubscription(sub);
   }
 }
