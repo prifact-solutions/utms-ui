@@ -34,9 +34,18 @@ export class AuthCallbackComponent extends ComponentBase {
             }
           }
           const code = params['code'];
+          const error = params['error'];
+
           if (code) {
             this.isLoading = true;
             return this.authService.exchangeCodeForToken(code);
+          } else if (!error) {
+            return of(this.authService.keycloakLogin(undefined));
+          } else if (
+            error == 'login_required' ||
+            error == 'interaction_required'
+          ) {
+            return of(this.authService.keycloakLogin());
           } else {
             return of(null);
           }
