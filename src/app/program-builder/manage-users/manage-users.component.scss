@@ -1,10 +1,53 @@
 @import 'src/styles/variables';
 
 .manage-users-page {
+    .manage-users-content {
+        margin-top: 24px;
+    }
+
+    .dashboard-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+
+        .action-bar {
+            margin-left: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    .modal-content-wrapper {
+        position: relative;
+    }
+
+    .modal-loading-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(2px);
+        z-index: 2;
+        border-radius: 12px;
+    }
+
+    .modal-loading-overlay .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid $bg-off-white;
+        border-top-color: $accent-color;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
     .admin-controls {
         display: flex;
         gap: 16px;
-        margin-bottom: 24px;
+        margin-bottom: 40px;
         background: #fff;
         padding: 16px;
         border-radius: 12px;
@@ -108,6 +151,14 @@
                 background: #16a34a;
                 border-radius: 50%;
             }
+
+            &.inactive::before {
+                content: "";
+                width: 8px;
+                height: 8px;
+                background: red;
+                border-radius: 50%;
+            }
         }
 
         .icon-btn {
@@ -127,5 +178,121 @@
         color: #bbb;
         font-size: 0.875rem;
         font-style: italic;
+    }
+
+    .invite-form {
+        max-width: 420px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .invite-form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .invite-form-field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .invite-form-row .invite-form-field {
+            min-width: 0;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $text-main;
+        }
+
+        .required-indicator {
+            color: $error-color;
+            margin-left: 2px;
+        }
+
+        input[type="email"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+
+            &:focus {
+                border-color: #111;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            background: #fff;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+
+            &:focus {
+                border-color: #111;
+            }
+        }
+
+        .invite-status {
+            min-height: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+
+            span {
+                display: inline-block;
+                width: 100%;
+            }
+
+            .success {
+                color: $success-color;
+                // background: rgba($success-color, 0.06);
+                border-color: rgba($success-color, 0.4);
+            }
+
+            .error {
+                color: $error-color;
+                // background: rgba($error-color, 0.06);
+                border-color: rgba($error-color, 0.4);
+            }
+        }
+
+        .field-error {
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: $error-color;
+        }
+
+        .invite-actions {
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .invite-form-row.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }

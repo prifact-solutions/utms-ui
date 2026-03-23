@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -14,18 +14,30 @@ import { AppSettings } from 'src/app/common/appsettings';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  anonymousUrls: Array<string> = [`${AppSettings.apiUrl}/auth/keycloak-config`];
+
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<unknown>> {
     // Get the token from the auth service
     const token = this.authService.getToken();
 
     // Clone the request and add the Authorization header if token exists
-    if (token && !request.url.includes("s3.amazonaws.com")) {
+    if (
+      token &&
+      !this.anonymousUrls.includes(request.url) &&
+      !request.url.includes('s3.amazonaws.com')
+    ) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
     }
 
@@ -39,7 +51,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
         // Re-throw the error
         return throwError(() => error);
-      })
+      }),
     );
   }
 }
