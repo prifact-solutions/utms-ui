@@ -30,7 +30,6 @@ import { EditExamComponent } from './program-builder/edit-exam/edit-exam.compone
 import { AuthCallbackComponent } from './utms-auth/components/auth-callback/auth-callback.component';
 import { ProgramReportComponent } from './program-builder/program-report/program-report.component';
 import { ReportComponent } from './program-builder/report/report.component';
-import { NotesComponent } from './public/notes/notes.component';
 import { AchievementsComponent } from './public/achievements/achievements.component';
 import { ProfileComponent } from './public/profile/profile.component';
 import { SettingsComponent } from './public/settings/settings.component';
@@ -38,6 +37,7 @@ import { ManageUsersComponent } from './program-builder/manage-users/manage-user
 import { ManageCourseComponent } from './program-builder/manage-course/manage-course.component';
 import { ExamComponent } from './programs/exams/exam/exam.component';
 import { ExamResultComponent } from './programs/exams/exam-result/exam-result.component';
+import { NotesComponent } from './public/notes/components/notes/notes.component';
 
 const routes: Routes = [
   {

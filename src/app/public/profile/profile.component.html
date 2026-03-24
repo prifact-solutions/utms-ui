@@ -1,39 +1,43 @@
 <div class="dashboard-page profile-page">
-    <div class="inner">
-        <div class="dashboard-banner">
-            <div class="user-details">
-                <h1>User <strong>Profile</strong></h1>
-                <p>Manage your account information and preferences.</p>
-            </div>
-        </div>
-
-        <div class="container profile-content">
-            <section class="section">
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <div class="profile-avatar" [style.background-color]="profileColor">
-                            {{ initials }}
-                        </div>
-                        <div class="profile-info">
-                            <h2>{{ username }}</h2>
-                            <p class="role">{{ role }}</p>
-                        </div>
-                    </div>
-                    <div class="profile-details">
-                        <div class="detail-item">
-                            <label>Username</label>
-                            <span>{{ username }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <label>Email</label>
-                            <span>{{ email }}</span>
-                        </div>
-                    </div>
-                    <div class="profile-actions">
-                        <button class="button primary black">Edit Profile</button>
-                    </div>
-                </div>
-            </section>
-        </div>
+  <div class="inner">
+    <div class="dashboard-banner">
+      <div class="user-details">
+        <h1>User <strong>Profile</strong></h1>
+        <p>View your account information.</p>
+      </div>
     </div>
+
+    <div class="container profile-content">
+      <section class="section">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" [style.background-color]="profileColor">
+              {{ initials }}
+            </div>
+            <div class="profile-info">
+              <h2>{{ username }}</h2>
+              <p class="role">{{ role }}</p>
+            </div>
+          </div>
+          <div class="profile-details">
+            <!-- <div class="detail-item">
+                            <label>Name</label>
+                            <span>{{ username }}</span>
+                        </div> -->
+            <div class="detail-item">
+              <label>Email</label>
+              <span>{{ email }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Joined</label>
+              <span>{{ dateJoined }}</span>
+            </div>
+          </div>
+          <!-- <div class="profile-actions">
+                        <button class="button primary black">Edit Profile</button>
+                    </div> -->
+        </div>
+      </section>
+    </div>
+  </div>
 </div>

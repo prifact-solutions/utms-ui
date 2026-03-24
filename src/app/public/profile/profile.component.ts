@@ -11,6 +11,7 @@ export class ProfileComponent extends ComponentBase implements OnInit {
   public username: string = 'User';
   public email: string = '';
   public role: string = '';
+  public dateJoined: string = '';
   public initials: string = 'U';
   public profileColor: string = '#ccc';
   public isStaff: boolean = false;
@@ -29,8 +30,9 @@ export class ProfileComponent extends ComponentBase implements OnInit {
       }
 
       this.email = decoded.email || 'N/A';
+      this.dateJoined = decoded.date_joined;
       this.isStaff = !!decoded.is_staff;
-      this.role = this.isStaff ? 'Faculty/Staff' : 'Student';
+      this.role = this.isStaff ? 'Instructor/Staff' : 'Student';
       this.initials = Utils.getInitials(this.username);
       this.profileColor = Utils.stringToColor(this.username);
     } catch (e) {

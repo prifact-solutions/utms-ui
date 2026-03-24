@@ -1,0 +1,200 @@
+<div class="dashboard-page notes-page">
+  <div class="inner">
+    <div class="dashboard-banner">
+      <div class="user-details">
+        <h1>My <strong>Notes</strong></h1>
+        <p>Track your learning progress and keep your thoughts organized.</p>
+      </div>
+      <div class="action-bar">
+        <button class="button primary black" (click)="openNotePopup()">
+          Add New Note
+        </button>
+      </div>
+    </div>
+
+    <div class="container notes-content">
+      <section class="section">
+        <div class="notes-grid">
+          <!-- Placeholder for dynamic notes -->
+          <div
+            *ngFor="let note of notes; let i = index"
+            class="note-card under-construction"
+            (click)="viewNote(note)"
+          >
+            <div class="note-header">
+              <span class="note-date">{{ note.updated_at }}</span>
+              <div class="note-actions">
+                <button
+                  class="note-action-btn"
+                  type="button"
+                  title="Edit note"
+                  (click)="editNote(note); $event.stopPropagation()"
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button
+                  class="note-action-btn delete"
+                  type="button"
+                  title="Delete note"
+                  (click)="openDeleteConfirm(note, $event)"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+            <h3>{{ note.title }}</h3>
+            <p>
+              {{ note.content }}
+            </p>
+            <!-- <div class="note-footer">
+                            <span class="course-name">Course: Project Management 101</span>
+                        </div> -->
+          </div>
+
+          <div *ngIf="notes.length == 0" class="note-card empty-state">
+            <div class="placeholder-icon">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <line x1="10" y1="9" x2="8" y2="9"></line>
+              </svg>
+            </div>
+            <p>No notes found.</p>
+            <!-- <button class="button text-only">View All Notes</button> -->
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isNotePopupOpen" (click)="closeNotePopup()">
+    <div
+      class="modal-content-wrapper shadow-lg note-edit-modal"
+      style="max-width: 700px"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h4>{{ isEditingNote ? "Edit Note" : "Add New Note" }}</h4>
+        <button class="modal-close" type="button" (click)="closeNotePopup()">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body note-edit-body">
+        <div class="form-group">
+          <label for="note-title">Note Title</label>
+          <input
+            id="note-title"
+            type="text"
+            [(ngModel)]="noteTitle"
+            placeholder="Enter note title"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="note-content">Note Content</label>
+          <textarea
+            id="note-content"
+            class="note-content-textarea"
+            [(ngModel)]="noteContent"
+            placeholder="Enter your note"
+            rows="6"
+          ></textarea>
+        </div>
+
+        <div class="button-group note-popup-actions">
+          <button class="button" type="button" (click)="closeNotePopup()">
+            Cancel
+          </button>
+          <button
+            class="button primary"
+            type="button"
+            [disabled]="!noteTitle.trim() || !noteContent.trim()"
+            (click)="saveNote()"
+          >
+            {{ isEditingNote ? "Update" : "Save" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isViewNotePopupOpen && selectedNote" (click)="closeViewNotePopup()">
+    <div
+      class="modal-content-wrapper shadow-lg note-view-modal"
+      style="max-width: 700px"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h4>View Note</h4>
+        <div class="note-view-header-actions">
+          <button
+            class="note-view-edit-btn"
+            type="button"
+            title="Edit note"
+            (click)="editNote(selectedNote)"
+          >
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="modal-close" type="button" (click)="closeViewNotePopup()">
+            ✕
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="note-view-content">
+          <p class="note-view-date">{{ selectedNote.updated_at }}</p>
+          <h3>{{ selectedNote.title }}</h3>
+          <p>{{ selectedNote.content }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isDeleteConfirmOpen && notePendingDelete" (click)="closeDeleteConfirm()">
+    <div
+      class="modal-content-wrapper shadow-lg note-delete-modal"
+      style="max-width: 400px"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h4>Delete Note</h4>
+        <button class="modal-close" type="button" (click)="closeDeleteConfirm()">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="note-delete-content">
+          <div class="delete-icon-wrap">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+          <p class="delete-message">
+            Are you sure you want to delete
+            <strong>"{{ notePendingDelete.title }}"</strong>?
+          </p>
+          <p class="delete-subtext">This action cannot be undone.</p>
+        </div>
+        <div class="button-group note-popup-actions note-delete-actions">
+          <button class="button" type="button" (click)="closeDeleteConfirm()">
+            Cancel
+          </button>
+          <button class="button note-delete-btn" type="button" (click)="confirmDeleteNote()">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

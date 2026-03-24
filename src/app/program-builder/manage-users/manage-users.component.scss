@@ -23,6 +23,60 @@
         position: relative;
     }
 
+    .invite-success-overlay {
+        z-index: 2100;
+    }
+
+    .invite-success-popup {
+        max-width: 420px;
+        width: 100%;
+        border: 1px solid $border-color;
+        box-shadow: $shadow-lg;
+        overflow: hidden;
+
+        .modal-header {
+            justify-content: flex-start;
+            padding: 18px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fff;
+
+            h4 {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: $text-main;
+            }
+        }
+
+        .modal-body {
+            padding: 22px 24px 24px;
+            background: #fff;
+        }
+
+        .invite-success-text {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: $text-main;
+            word-break: break-word;
+        }
+
+        .invite-actions {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: center;
+
+            .btn-primary {
+                width: auto;
+                min-width: 96px;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+    }
+
     .modal-loading-overlay {
         position: absolute;
         inset: 0;
@@ -280,7 +334,7 @@
         .invite-actions {
             margin-top: 8px;
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
             gap: 8px;
         }
 

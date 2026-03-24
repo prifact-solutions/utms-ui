@@ -117,7 +117,15 @@
                   type="text"
                   [(ngModel)]="inviteFirstName"
                   placeholder="First name"
+                  (focus)="onInviteFirstNameFocus()"
+                  (blur)="onInviteFirstNameBlur()"
                 />
+                <p
+                  class="field-error"
+                  *ngIf="inviteFirstNameBlurred && !inviteFirstName.trim()"
+                >
+                  First name is required.
+                </p>
               </div>
               <div class="invite-form-field">
                 <label for="inviteLastName">Last name</label>
@@ -138,9 +146,27 @@
                 type="email"
                 [(ngModel)]="inviteEmail"
                 placeholder="name@example.com"
+                (focus)="onInviteEmailFocus()"
+                (blur)="onInviteEmailBlur()"
               />
-              <p class="field-error" *ngIf="inviteEmail && !isInviteEmailValid">
+              <p
+                class="field-error"
+                *ngIf="inviteEmailBlurred && !inviteEmail.trim()"
+              >
+                Email is required.
+              </p>
+              <p
+                class="field-error"
+                *ngIf="
+                  inviteEmailBlurred &&
+                  inviteEmail.trim() &&
+                  !isInviteEmailValid
+                "
+              >
                 Please enter a valid email address.
+              </p>
+              <p class="text-muted small">
+                An invitation link will be sent to this email.
               </p>
             </div>
             <div class="invite-form-field">
@@ -151,28 +177,48 @@
                 </option>
               </select>
             </div>
-            <p class="text-muted small">
-              An invitation link will be sent to this email.
-            </p>
             <div class="invite-actions">
-              <button
-                type="button"
-                class="btn-outline"
-                (click)="closeInviteModal()"
-              >
-                Cancel
-              </button>
               <button
                 type="button"
                 class="btn-primary"
                 [disabled]="
-                  isInviting || !inviteFirstName || !isInviteEmailValid
+                  isInviting ||
+                  !inviteFirstName.trim() ||
+                  !inviteEmail.trim() ||
+                  !isInviteEmailValid
                 "
                 (click)="onInvite()"
               >
                 Send Invite
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay invite-success-overlay"
+      *ngIf="showInviteSuccessPopup"
+      (click)="closeInviteSuccessPopup()"
+    >
+      <div
+        class="modal-content-wrapper invite-success-popup"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <h4>Invitation sent</h4>
+        </div>
+        <div class="modal-body">
+          <p class="invite-success-text">{{ inviteSuccessMessage }}</p>
+          <div class="invite-actions">
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="closeInviteSuccessPopup()"
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>

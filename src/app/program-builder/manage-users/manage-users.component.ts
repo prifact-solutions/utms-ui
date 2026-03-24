@@ -11,6 +11,8 @@ import { AuthService } from 'src/app/utms-auth/services/auth.service';
   styleUrls: ['./manage-users.component.scss'],
 })
 export class ManageUsersComponent extends ComponentBase {
+  inviteSuccessMessage = '';
+
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
@@ -25,6 +27,10 @@ export class ManageUsersComponent extends ComponentBase {
   inviteStatusMessage = '';
   inviteStatusType: 'success' | 'error' | '' = '';
   isInviting = false;
+  showInviteSuccessPopup = false;
+  /** After focus out (blur), show inline validation when invalid */
+  inviteFirstNameBlurred = false;
+  inviteEmailBlurred = false;
 
   readonly roleOptions = [
     { value: 'student', label: 'Student' },
@@ -43,6 +49,8 @@ export class ManageUsersComponent extends ComponentBase {
     this.showInviteModal = true;
     this.inviteStatusMessage = '';
     this.inviteStatusType = '';
+    this.inviteFirstNameBlurred = false;
+    this.inviteEmailBlurred = false;
   }
 
   closeInviteModal(): void {
@@ -53,6 +61,29 @@ export class ManageUsersComponent extends ComponentBase {
     this.inviteRole = 'student';
     this.inviteStatusMessage = '';
     this.inviteStatusType = '';
+    this.inviteFirstNameBlurred = false;
+    this.inviteEmailBlurred = false;
+  }
+
+  onInviteFirstNameFocus(): void {
+    this.inviteFirstNameBlurred = false;
+  }
+
+  onInviteFirstNameBlur(): void {
+    this.inviteFirstNameBlurred = true;
+  }
+
+  onInviteEmailFocus(): void {
+    this.inviteEmailBlurred = false;
+  }
+
+  onInviteEmailBlur(): void {
+    this.inviteEmailBlurred = true;
+  }
+
+  closeInviteSuccessPopup(): void {
+    this.showInviteSuccessPopup = false;
+    this.inviteSuccessMessage = '';
   }
 
   get isInviteEmailValid(): boolean {
@@ -60,20 +91,32 @@ export class ManageUsersComponent extends ComponentBase {
       return false;
     }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(this.inviteEmail);
+    return emailPattern.test(this.inviteEmail.trim());
   }
 
   onInvite(): void {
     this.inviteStatusMessage = '';
     this.inviteStatusType = '';
+    if (
+      !this.inviteFirstName.trim() ||
+      !this.inviteEmail.trim() ||
+      !this.isInviteEmailValid
+    ) {
+      return;
+    }
     this.isInviting = true;
     const isStaffAccount = this.inviteRole === 'staff';
+    const invitePayload = {
+      firstName: this.inviteFirstName.trim(),
+      lastName: this.inviteLastName.trim(),
+      email: this.inviteEmail.trim(),
+    };
     this.authService
       .sendInvite(
-        this.inviteEmail,
+        invitePayload.email,
         isStaffAccount,
-        this.inviteFirstName,
-        this.inviteLastName,
+        invitePayload.firstName,
+        invitePayload.lastName,
       )
       .pipe(
         switchMap((_) => {
@@ -83,8 +126,16 @@ export class ManageUsersComponent extends ComponentBase {
       .subscribe({
         next: (users) => {
           this.users = users;
+          const displayName = [invitePayload.firstName, invitePayload.lastName]
+            .filter((p) => p.length > 0)
+            .join(' ');
+          this.inviteSuccessMessage = `An invite mail has been sent to ${displayName} at ${invitePayload.email}`;
+          this.showInviteSuccessPopup = true;
           this.inviteStatusType = 'success';
           this.inviteStatusMessage = 'Invitation sent successfully.';
+          this.showInviteModal = false;
+          this.inviteFirstNameBlurred = false;
+          this.inviteEmailBlurred = false;
           this.inviteEmail = '';
           this.inviteFirstName = '';
           this.inviteLastName = '';
