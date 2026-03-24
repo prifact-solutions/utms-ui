@@ -19,22 +19,24 @@ export class NotesComponent extends ComponentBase {
   selectedNote: Note | null = null;
   notePendingDelete: Note | null = null;
   notes: Note[] = [];
+  notesLoading = true;
+
   constructor(private notesService: NotesService) {
     super();
   }
+
   ngOnInit() {
-    this.notesService.getNotesForUser().subscribe((notes) => {
-      this.notes = notes;
-      // var note: Note = {
-      //   id: 1,
-      //   title: 'Initial Thoughts on Project Management',
-      //   content:
-      //     'This page is currently under development. Soon youll be able to save highlights and personal notes from your courses here.',
-      //   updated_at: 'March 12, 2026',
-      // };
-      // this.notes.push(note);
-      // this.notes.push(note);
+    this.notesLoading = true;
+    const sub = this.notesService.getNotesForUser().subscribe({
+      next: (notes) => {
+        this.notes = notes;
+        this.notesLoading = false;
+      },
+      error: () => {
+        this.notesLoading = false;
+      },
     });
+    this.registerSubscription(sub);
   }
 
   openNotePopup(): void {
@@ -81,17 +83,25 @@ export class NotesComponent extends ComponentBase {
       this.closeViewNotePopup();
     }
 
-    this.notesService
+    this.notesLoading = true;
+    const sub = this.notesService
       .deleteNote(this.notePendingDelete.id)
       .pipe(
         switchMap((_) => {
           return this.notesService.getNotesForUser();
         }),
       )
-      .subscribe((notes) => {
-        this.notes = notes;
-        this.closeDeleteConfirm();
+      .subscribe({
+        next: (notes) => {
+          this.notes = notes;
+          this.notesLoading = false;
+          this.closeDeleteConfirm();
+        },
+        error: () => {
+          this.notesLoading = false;
+        },
       });
+    this.registerSubscription(sub);
   }
 
   closeNotePopup(): void {
@@ -114,42 +124,47 @@ export class NotesComponent extends ComponentBase {
       return;
     }
 
+    this.notesLoading = true;
+
     if (this.editingNoteId !== null) {
-      // this.notes[this.editingNoteIndex] = {
-      //   ...this.notes[this.editingNoteIndex],
-      //   title: trimmedTitle,
-      //   content: trimmedContent,
-      //   updated_at: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-      // };
-      this.notesService
+      const sub = this.notesService
         .updateNote(this.editingNoteId, trimmedTitle, trimmedContent)
         .pipe(
           switchMap((_) => {
             return this.notesService.getNotesForUser();
           }),
         )
-        .subscribe((notes) => {
-          this.notes = notes;
+        .subscribe({
+          next: (notes) => {
+            this.notes = notes;
+            this.notesLoading = false;
+            this.closeNotePopup();
+          },
+          error: () => {
+            this.notesLoading = false;
+          },
         });
+      this.registerSubscription(sub);
     } else {
-      // this.notes.unshift({
-      //   title: trimmedTitle,
-      //   content: trimmedContent,
-      //   updated_at: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-      // });
-      this.notesService
+      const sub = this.notesService
         .createNote(trimmedTitle, trimmedContent)
         .pipe(
           switchMap((_) => {
             return this.notesService.getNotesForUser();
           }),
         )
-        .subscribe((notes) => {
-          this.notes = notes;
+        .subscribe({
+          next: (notes) => {
+            this.notes = notes;
+            this.notesLoading = false;
+            this.closeNotePopup();
+          },
+          error: () => {
+            this.notesLoading = false;
+          },
         });
+      this.registerSubscription(sub);
     }
-
-    this.closeNotePopup();
   }
 
   get isEditingNote(): boolean {

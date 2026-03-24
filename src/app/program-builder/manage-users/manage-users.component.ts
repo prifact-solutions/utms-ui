@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { switchMap } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { UserModel } from 'src/app/users/models/user.model';
 import { UsersService } from 'src/app/users/services/users.service';
@@ -38,11 +38,15 @@ export class ManageUsersComponent extends ComponentBase {
   ] as const;
 
   users: UserModel[] = [];
+  usersLoading = true;
 
   ngOnInit() {
-    var sub = this.usersService.getAllUsers().subscribe((users) => {
-      this.users = users;
-    });
+    const sub = this.usersService
+      .getAllUsers()
+      .pipe(finalize(() => (this.usersLoading = false)))
+      .subscribe((users) => {
+        this.users = users;
+      });
     this.registerSubscription(sub);
   }
   openInviteModal(): void {

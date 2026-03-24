@@ -14,7 +14,8 @@
 
     <div class="container notes-content">
       <section class="section">
-        <div class="notes-grid">
+        <div class="notes-grid-container">
+          <div class="notes-grid" *ngIf="!notesLoading">
           <!-- Placeholder for dynamic notes -->
           <div
             *ngFor="let note of notes; let i = index"
@@ -74,6 +75,7 @@
             </div>
             <p>No notes found.</p>
             <!-- <button class="button text-only">View All Notes</button> -->
+          </div>
           </div>
         </div>
       </section>
@@ -196,5 +198,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div
+    class="notes-page-loading-overlay"
+    *ngIf="notesLoading"
+    aria-busy="true"
+    aria-live="polite"
+  >
+    <div class="spinner" aria-label="Loading notes"></div>
   </div>
 </div>

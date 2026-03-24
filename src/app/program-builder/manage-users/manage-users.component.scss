@@ -133,11 +133,37 @@
     }
 
     .users-table-container {
+        position: relative;
         background: #fff;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         border: 1px solid #f0f0f0;
+
+        &.is-loading {
+            min-height: 280px;
+        }
+    }
+
+    .users-loading-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(2px);
+        border-radius: 12px;
+    }
+
+    .users-loading-overlay .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid $bg-off-white;
+        border-top-color: $accent-color;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
     }
 
     .users-table {

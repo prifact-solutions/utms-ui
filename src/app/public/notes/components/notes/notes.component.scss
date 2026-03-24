@@ -9,11 +9,36 @@
         align-items: center;
     }
 
+    .notes-grid-container {
+        padding: 24px 0;
+    }
+
+    /* Fixed above app modals (2000) and toasts (3000 in global styles) */
+    .notes-page-loading-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 3500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(4px);
+        pointer-events: all;
+    }
+
+    .notes-page-loading-overlay .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid $bg-off-white;
+        border-top-color: $accent-color;
+        border-radius: 50%;
+        animation: notes-spin 1s linear infinite;
+    }
+
     .notes-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 24px;
-        padding: 24px 0;
     }
 
     .note-card {
@@ -287,5 +312,11 @@
             background: #b42318;
             border-color: #b42318;
         }
+    }
+}
+
+@keyframes notes-spin {
+    to {
+        transform: rotate(360deg);
     }
 }

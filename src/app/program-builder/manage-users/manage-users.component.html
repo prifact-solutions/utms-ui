@@ -27,8 +27,19 @@
           </div>
         </div> -->
 
-        <div class="users-table-container">
-          <table class="users-table">
+        <div
+          class="users-table-container"
+          [class.is-loading]="usersLoading"
+        >
+          <div
+            class="users-loading-overlay"
+            *ngIf="usersLoading"
+            aria-busy="true"
+            aria-live="polite"
+          >
+            <div class="spinner" aria-label="Loading users"></div>
+          </div>
+          <table class="users-table" *ngIf="!usersLoading">
             <thead>
               <tr>
                 <th>Name</th>
