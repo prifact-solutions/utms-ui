@@ -40,6 +40,21 @@ export class ManageUsersComponent extends ComponentBase {
   users: UserModel[] = [];
   usersLoading = true;
 
+  showEditUserModal = false;
+  editingUser: UserModel | null = null;
+  editFirstName = '';
+  editLastName = '';
+  editRole: 'student' | 'staff' = 'student';
+  editStatusMessage = '';
+  editStatusType: 'success' | 'error' | '' = '';
+  isSavingUser = false;
+  editFirstNameBlurred = false;
+
+  showDeleteConfirm = false;
+  userPendingDelete: UserModel | null = null;
+  isDeletingUser = false;
+  deleteErrorMessage = '';
+
   ngOnInit() {
     const sub = this.usersService
       .getAllUsers()
@@ -151,8 +166,7 @@ export class ManageUsersComponent extends ComponentBase {
           if (err.status === 409) {
             this.inviteStatusMessage = 'A user with this email already exists.';
           } else {
-            this.inviteStatusMessage =
-              'An unexpected error occurred.';
+            this.inviteStatusMessage = 'An unexpected error occurred.';
           }
           this.isInviting = false;
         },
@@ -174,7 +188,7 @@ export class ManageUsersComponent extends ComponentBase {
     if (user.is_staff) {
       return 'Instructor';
     } else {
-      return 'Learner';
+      return 'Student';
     }
   }
 
@@ -193,5 +207,105 @@ export class ManageUsersComponent extends ComponentBase {
     }
 
     return name;
+  }
+
+  onEditUser(user: UserModel): void {
+    this.editingUser = user;
+    this.editFirstName = user.first_name?.trim() ?? '';
+    this.editLastName = user.last_name?.trim() ?? '';
+    this.editRole = user.is_staff ? 'staff' : 'student';
+    this.editStatusMessage = '';
+    this.editStatusType = '';
+    this.editFirstNameBlurred = false;
+    this.showEditUserModal = true;
+  }
+
+  closeEditUserModal(): void {
+    this.showEditUserModal = false;
+    this.editingUser = null;
+    this.editFirstName = '';
+    this.editLastName = '';
+    this.editRole = 'student';
+    this.editStatusMessage = '';
+    this.editStatusType = '';
+    this.editFirstNameBlurred = false;
+  }
+
+  onEditFirstNameFocus(): void {
+    this.editFirstNameBlurred = false;
+  }
+
+  onEditFirstNameBlur(): void {
+    this.editFirstNameBlurred = true;
+  }
+
+  onSaveUser(): void {
+    this.editStatusMessage = '';
+    this.editStatusType = '';
+    if (!this.editingUser) {
+      return;
+    }
+    if (!this.editFirstName.trim()) {
+      this.editFirstNameBlurred = true;
+      return;
+    }
+    this.isSavingUser = true;
+    const payload = {
+      first_name: this.editFirstName.trim(),
+      last_name: this.editLastName.trim(),
+      is_staff: this.editRole === 'staff',
+    };
+    this.usersService
+      .updateUser(this.editingUser.id, payload)
+      .pipe(
+        switchMap(() => this.usersService.getAllUsers()),
+        finalize(() => (this.isSavingUser = false)),
+      )
+      .subscribe({
+        next: (users) => {
+          this.users = users;
+          this.closeEditUserModal();
+        },
+        error: () => {
+          this.editStatusType = 'error';
+          this.editStatusMessage = 'Could not save changes. Please try again.';
+        },
+      });
+  }
+
+  onDeleteUser(user: UserModel): void {
+    this.userPendingDelete = user;
+    this.deleteErrorMessage = '';
+    this.showDeleteConfirm = true;
+  }
+
+  closeDeleteConfirm(): void {
+    this.showDeleteConfirm = false;
+    this.userPendingDelete = null;
+    this.deleteErrorMessage = '';
+  }
+
+  confirmDeleteUser(): void {
+    if (!this.userPendingDelete) {
+      return;
+    }
+    this.isDeletingUser = true;
+    this.deleteErrorMessage = '';
+    this.usersService
+      .deleteUser(this.userPendingDelete.id)
+      .pipe(
+        switchMap(() => this.usersService.getAllUsers()),
+        finalize(() => (this.isDeletingUser = false)),
+      )
+      .subscribe({
+        next: (users) => {
+          this.users = users;
+          this.closeDeleteConfirm();
+        },
+        error: () => {
+          this.deleteErrorMessage =
+            'Could not delete this user. Please try again.';
+        },
+      });
   }
 }

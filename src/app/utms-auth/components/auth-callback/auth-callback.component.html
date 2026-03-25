@@ -1,4 +1,15 @@
-<div class="loader-container" id="loader-container">
+<div class="auth-callback">
+  <div
+    class="loader-container"
+    id="loader-container"
+    *ngIf="isLoading && !errorMessage"
+  >
     <div class="loader"></div>
     <div class="loading-text">Logging you in...</div>
+  </div>
+
+  <div class="error-container" *ngIf="!isLoading && errorMessage">
+    <h2>Login failed</h2>
+    <p class="error-message">{{ errorMessage }}</p>
+  </div>
 </div>

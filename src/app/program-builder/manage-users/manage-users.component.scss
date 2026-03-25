@@ -241,6 +241,12 @@
             }
         }
 
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .icon-btn {
             background: none;
             border: none;
@@ -248,7 +254,19 @@
             cursor: pointer;
             color: #999;
             transition: color 0.2s;
-            &:hover { color: #111; }
+            border-radius: 6px;
+
+            i {
+                font-size: 0.875rem;
+            }
+
+            &:hover {
+                color: #111;
+            }
+
+            &.danger:hover {
+                color: #dc2626;
+            }
         }
     }
 
@@ -362,12 +380,112 @@
             display: flex;
             justify-content: center;
             gap: 8px;
+
+            &.invite-actions-split {
+                justify-content: center;
+            }
         }
 
         .invite-form-row.disabled {
             opacity: 0.6;
             pointer-events: none;
         }
+
+        input.input-readonly,
+        input:disabled {
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+    }
+
+    .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem 2rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: $transition-base;
+        border-radius: $border-radius-sm;
+        gap: 0.5rem;
+        background-color: #d93025;
+        color: #fff;
+        border: none;
+
+        &:hover:not(:disabled) {
+            background-color: #b42318;
+            box-shadow: 0 4px 12px rgba(217, 48, 37, 0.25);
+        }
+
+        &:disabled {
+            background-color: #f1f3f5;
+            color: #adb5bd;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+        }
+    }
+
+    .user-delete-overlay {
+        z-index: 2100;
+    }
+
+    .user-delete-modal {
+        max-width: 400px;
+        width: 100%;
+        border: 1px solid $border-color;
+        box-shadow: $shadow-lg;
+        overflow: hidden;
+    }
+
+    .user-delete-content {
+        text-align: center;
+        margin-bottom: 8px;
+
+        .delete-icon-wrap {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: rgba(217, 48, 37, 0.1);
+            color: #d93025;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .delete-message {
+            margin: 0;
+            color: $text-main;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .delete-subtext {
+            margin-top: 6px;
+            color: #8a8a8a;
+            font-size: 0.78rem;
+        }
+
+        .delete-error {
+            margin-top: 12px;
+            text-align: center;
+        }
+    }
+
+    .user-delete-actions {
+        margin-top: 4px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .modal-body > .invite-actions {
+        margin-top: 8px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
     }
 }
 

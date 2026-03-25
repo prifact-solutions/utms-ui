@@ -61,7 +61,9 @@ export class AuthCallbackComponent extends ComponentBase {
           // Handle different error scenarios
           if (error.status === 401) {
             this.errorMessage = 'Invalid username or password';
-          } else if (error.status === 0) {
+          } else if (error.status === 404) {
+            this.errorMessage = 'User not found. Please contact the administrator.';
+          }else if (error.status === 0) {
             this.errorMessage = 'Unable to connect to the server';
           } else {
             this.errorMessage =
