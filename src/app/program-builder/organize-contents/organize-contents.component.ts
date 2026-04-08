@@ -186,9 +186,10 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
           this.router.navigate(['/programs-builder', this.programId, 'modules']);
         }, 1500);
       },
-      error: (error) => {
-        console.error('Error saving changes:', error);
-        this.errorMessage = 'Failed to save changes. Please try again.';
+      error: (err) => {
+        console.error('Error saving changes:', err);
+        // this.errorMessage = 'Failed to save changes. Please try again.';
+        this.errorMessage = 'Failed to save changes. ' + err.error.error + '.';
         this.isSaving = false;
       }
     });
