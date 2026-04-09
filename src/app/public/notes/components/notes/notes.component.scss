@@ -1,325 +1,337 @@
-@import 'src/styles/variables';
+@import "src/styles/variables";
 
 .notes-page {
-    position: relative;
+  position: relative;
 
-    .dashboard-banner {
+  .dashboard-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .notes-grid-container {
+    padding: 24px 0;
+  }
+
+  /* Fixed above app modals (2000) and toasts (3000 in global styles) */
+  .notes-page-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    pointer-events: all;
+  }
+
+  .notes-page-loading-overlay .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid $bg-off-white;
+    border-top-color: $accent-color;
+    border-radius: 50%;
+    animation: notes-spin 1s linear infinite;
+  }
+
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .note-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    height: 280px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+    cursor: pointer;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #111;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .note-date {
+        font-size: 0.75rem;
+        color: #999;
+      }
+
+      .badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: #f0f0f0;
+        color: #666;
+      }
+
+      .note-actions {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        gap: 6px;
+      }
 
-    .notes-grid-container {
-        padding: 24px 0;
-    }
-
-    /* Fixed above app modals (2000) and toasts (3000 in global styles) */
-    .notes-page-loading-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 3500;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(4px);
-        pointer-events: all;
-    }
-
-    .notes-page-loading-overlay .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid $bg-off-white;
-        border-top-color: $accent-color;
+      .note-action-btn {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #e2e2e2;
         border-radius: 50%;
-        animation: notes-spin 1s linear infinite;
-    }
-
-    .notes-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
-    }
-
-    .note-card {
         background: #fff;
-        border-radius: 12px;
-        padding: 24px;
-        height: 280px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-        border: 1px solid #f0f0f0;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        cursor: pointer;
-        max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-
-        &:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .note-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-
-            .note-date {
-                font-size: 0.75rem;
-                color: #999;
-            }
-
-            .badge {
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 0.7rem;
-                font-weight: 600;
-                background: #f0f0f0;
-                color: #666;
-            }
-
-            .note-actions {
-                display: flex;
-                gap: 6px;
-            }
-
-            .note-action-btn {
-                width: 28px;
-                height: 28px;
-                border: 1px solid #e2e2e2;
-                border-radius: 50%;
-                background: #fff;
-                color: #666;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.2s ease;
-
-                &:hover {
-                    color: #111;
-                    border-color: #111;
-                }
-
-                &.delete:hover {
-                    color: #d93025;
-                    border-color: #d93025;
-                }
-            }
-        }
-
-        h3 {
-            margin: 0 0 12px 0;
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #111;
-        }
-
-        p {
-            font-size: 0.875rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-        }
-
-        .note-footer {
-            padding-top: 16px;
-            border-top: 1px solid #fafafa;
-
-            .course-name {
-                font-size: 0.75rem;
-                color: #999;
-                font-style: italic;
-            }
-        }
-
-        &.empty-state {
-            cursor: default;
-            justify-content: center;
-            align-items: center;
-            background: #fafafa;
-            border: 1px dashed #ddd;
-            text-align: center;
-            min-height: 250px;
-
-            .placeholder-icon {
-                margin-bottom: 16px;
-                opacity: 0.3;
-            }
-
-            p {
-                margin-bottom: 16px;
-                flex-grow: 0;
-            }
-        }
-    }
-
-    .note-popup-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: auto;
-        padding-top: 16px;
-
-        > * {
-            width: auto;
-            padding-bottom: 0;
-        }
-    }
-
-    .note-view-content {
-        max-height: 52vh;
-        overflow-y: auto;
-        padding-right: 4px;
-
-        .note-view-date {
-            font-size: 0.75rem;
-            color: #999;
-            margin-bottom: 12px;
-        }
-
-        h3 {
-            margin: 0 0 12px 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #111;
-        }
-
-        p {
-            margin: 0;
-            color: #666;
-            line-height: 1.7;
-            white-space: pre-wrap;
-        }
-    }
-
-    .note-view-modal,
-    .note-edit-modal {
-        max-height: 90vh;
-        min-height: 520px;
-    }
-
-    .note-edit-modal {
-        .note-edit-body {
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            gap: 12px;
-            height: 60vh;
-            overflow: hidden;
-        }
-
-        .form-group {
-            margin-bottom: 0;
-        }
-
-        .form-group:last-of-type {
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .note-content-textarea {
-            flex: 1;
-            width: 100%;
-            min-height: 300px !important;
-            height: clamp(300px, 42vh, 460px) !important;
-            max-height: 100% !important;
-        }
-    }
-
-    .note-view-header-actions {
-        display: flex;
+        color: #666;
+        display: inline-flex;
         align-items: center;
-        gap: 10px;
-
-        .note-view-edit-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: #f5f5f5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-            color: #666;
-
-            &:hover {
-                background: #111;
-                color: #fff;
-                transform: rotate(0deg);
-            }
-        }
-    }
-
-    .note-delete-modal {
-        .modal-body {
-            padding: 20px 24px 22px;
-        }
-    }
-
-    .note-delete-content {
-        text-align: center;
-        margin-bottom: 12px;
-
-        .delete-icon-wrap {
-            width: 46px;
-            height: 46px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            background: rgba(217, 48, 37, 0.1);
-            color: #d93025;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-        }
-
-        .delete-message {
-            margin: 0;
-            color: #222;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .delete-subtext {
-            margin-top: 6px;
-            color: #8a8a8a;
-            font-size: 0.78rem;
-        }
-    }
-
-    .note-delete-actions {
-        margin-top: 0;
-        padding-top: 6px;
         justify-content: center;
-    }
-
-    .note-delete-btn {
-        background: #d93025;
-        border-color: #d93025;
-        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
 
         &:hover {
-            background: #b42318;
-            border-color: #b42318;
+          color: #111;
+          border-color: #111;
         }
+
+        &.delete:hover {
+          color: #d93025;
+          border-color: #d93025;
+        }
+      }
     }
+
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+    }
+
+    .note-footer {
+      padding-top: 16px;
+      border-top: 1px solid #fafafa;
+
+      .course-name {
+        font-size: 0.75rem;
+        color: #999;
+        font-style: italic;
+      }
+    }
+
+    &.empty-state {
+      cursor: default;
+      justify-content: center;
+      align-items: center;
+      background: #fafafa;
+      border: 1px dashed #ddd;
+      text-align: center;
+      min-height: 250px;
+
+      .placeholder-icon {
+        margin-bottom: 16px;
+        opacity: 0.3;
+      }
+
+      p {
+        margin-bottom: 16px;
+        flex-grow: 0;
+      }
+    }
+  }
+
+  .note-popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 16px;
+
+    > * {
+      width: auto;
+      padding-bottom: 0;
+    }
+  }
+
+  .note-view-content {
+    max-height: 52vh;
+    overflow-y: auto;
+    padding-right: 4px;
+
+    .note-view-date {
+      font-size: 0.75rem;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+  }
+
+  .note-view-modal,
+  .note-edit-modal {
+    max-height: 90vh;
+    min-height: 520px;
+  }
+
+  .note-edit-modal {
+    .note-edit-body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      height: 60vh;
+      overflow: hidden;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .form-group:last-of-type {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .note-content-textarea {
+      flex: 1;
+      width: 100%;
+      min-height: 300px !important;
+      height: clamp(300px, 42vh, 460px) !important;
+      max-height: 100% !important;
+    }
+  }
+
+  .note-view-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .note-view-edit-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f5f5f5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      color: #666;
+
+      &:hover {
+        background: #111;
+        color: #fff;
+        transform: rotate(0deg);
+      }
+    }
+  }
+
+  .note-delete-modal {
+    .modal-body {
+      padding: 20px 24px 22px;
+    }
+  }
+
+  .note-delete-content {
+    text-align: center;
+    margin-bottom: 12px;
+
+    .delete-icon-wrap {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: rgba(217, 48, 37, 0.1);
+      color: #d93025;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+
+    .delete-message {
+      margin: 0;
+      color: #222;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .delete-subtext {
+      margin-top: 6px;
+      color: #8a8a8a;
+      font-size: 0.78rem;
+    }
+  }
+
+  .note-delete-actions {
+    margin-top: 0;
+    padding-top: 6px;
+    justify-content: center;
+  }
+
+  .note-delete-btn {
+    background: #d93025;
+    border-color: #d93025;
+    color: #fff;
+
+    &:hover {
+      background: #b42318;
+      border-color: #b42318;
+    }
+  }
 }
 
 @keyframes notes-spin {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
