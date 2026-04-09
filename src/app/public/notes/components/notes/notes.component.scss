@@ -52,6 +52,9 @@
         flex-direction: column;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         cursor: pointer;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
 
         &:hover {
             transform: translateY(-4px);

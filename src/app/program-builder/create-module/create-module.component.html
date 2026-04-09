@@ -27,7 +27,7 @@
 
             <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
-                    <label for="moduleTitle">Module Title</label>
+                    <label for="moduleTitle">Module Title<span class="required-indicator">*</span></label>
                     <input type="text" id="moduleTitle" formControlName="title"
                         placeholder="e.g. Introduction to Advanced Concepts"
                         [class.is-invalid]="f.title.touched && f.title.invalid">
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="moduleOrder">Display Order</label>
+                    <label for="moduleOrder">Display Order<span class="required-indicator">*</span></label>
                     <input type="number" id="moduleOrder" formControlName="order" placeholder="Enter position (e.g. 1)"
                         [class.is-invalid]="f.order.touched && f.order.invalid">
                     <div class="invalid-feedback" *ngIf="f.order.touched && f.order.invalid">

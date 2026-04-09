@@ -58,42 +58,33 @@
       </div>
 
       <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()">
-        <div class="grid-auto mb-4">
-          <div class="form-group">
-            <label for="title">Content Title</label>
-            <input
-              id="title"
-              type="text"
-              formControlName="title"
-              placeholder="e.g. Getting Started with Angular"
-              [class.is-invalid]="
-                lessonForm.get('title')?.invalid &&
-                lessonForm.get('title')?.touched
-              "
-            />
-            <div
-              class="invalid-feedback"
-              *ngIf="
-                lessonForm.get('title')?.invalid &&
-                lessonForm.get('title')?.touched
-              "
+        <div class="form-group mb-4">
+          <label for="title"
+            >Content Title<span class="required-indicator">*</span></label
+          >
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g. Getting Started with Angular"
+            [class.is-invalid]="
+              lessonForm.get('title')?.invalid &&
+              lessonForm.get('title')?.touched
+            "
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              lessonForm.get('title')?.invalid &&
+              lessonForm.get('title')?.touched
+            "
+          >
+            <span *ngIf="lessonForm.get('title')?.getError('required')"
+              >Title is required</span
             >
-              <span *ngIf="lessonForm.get('title')?.getError('required')"
-                >Title is required</span
-              >
-              <span *ngIf="lessonForm.get('title')?.getError('minlength')"
-                >Title must be at least 3 characters</span
-              >
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="content_type">Type</label>
-            <select id="content_type" formControlName="content_type">
-              <option *ngFor="let type of contentTypes" [value]="type">
-                {{ type | titlecase }}
-              </option>
-            </select>
+            <span *ngIf="lessonForm.get('title')?.getError('minlength')"
+              >Title must be at least 3 characters</span
+            >
           </div>
         </div>
 
@@ -108,12 +99,21 @@
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="duration">Duration (minutes)</label>
-          <input id="duration" type="number" formControlName="duration" min="1" />
+          <label for="duration"
+            >Duration (minutes)<span class="required-indicator">*</span></label
+          >
+          <input
+            id="duration"
+            type="number"
+            formControlName="duration"
+            min="1"
+          />
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="order">Display Order</label>
+          <label for="order"
+            >Display Order<span class="required-indicator">*</span></label
+          >
           <input id="order" type="number" formControlName="order" min="1" />
         </div>
 

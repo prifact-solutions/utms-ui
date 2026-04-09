@@ -1,0 +1,6 @@
+@import "src/styles/variables";
+
+.required-indicator {
+  color: $error-color;
+  margin-left: 2px;
+}

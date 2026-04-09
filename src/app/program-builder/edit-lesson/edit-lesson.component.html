@@ -66,7 +66,7 @@
           (ngSubmit)="onSubmit()"
         >
           <div class="form-group mb-4">
-            <label for="title">Content Title</label>
+            <label for="title">Content Title<span class="required-indicator">*</span></label>
             <input
               id="title"
               type="text"
@@ -104,7 +104,7 @@
           </div>
 
           <div class="form-group" style="max-width: 15rem">
-            <label for="duration">Duration (minutes)</label>
+            <label for="duration">Duration (minutes)<span class="required-indicator">*</span></label>
             <input
               id="duration"
               type="number"
@@ -114,7 +114,7 @@
           </div>
 
           <div class="form-group" style="max-width: 15rem">
-            <label for="order">Display Order</label>
+            <label for="order">Display Order<span class="required-indicator">*</span></label>
             <input id="order" type="number" formControlName="order" min="1" />
           </div>
 

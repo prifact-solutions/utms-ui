@@ -42,7 +42,7 @@
                 <form *ngIf="!isLoading && programForm" [formGroup]="programForm" (ngSubmit)="onSubmit()">
                     <div class="program-row-grid">
                         <div class="form-group flex-2">
-                            <label for="title">Course Title</label>
+                            <label for="title">Course Title<span class="required-indicator">*</span></label>
                             <input id="title" type="text" formControlName="title"
                                 placeholder="e.g. Master Class in Web Development"
                                 [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="duration">Duration (days)</label>
+                            <label for="duration">Duration (days)<span class="required-indicator">*</span></label>
                             <input id="duration" type="number" formControlName="duration" min="0">
                         </div>
                         <div class="form-group">
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description">Description<span class="required-indicator">*</span></label>
                         <textarea id="description" formControlName="description"
                             placeholder="What will students learn in this program?" rows="3"></textarea>
                         <div class="invalid-feedback"
@@ -138,7 +138,7 @@
 
                     <!-- Categories -->
                     <div class="form-group mb-5">
-                        <label style="margin-bottom: 12px; display: block;">Categories</label>
+                        <label style="margin-bottom: 12px; display: block;">Categories<span class="required-indicator">*</span></label>
                         <div class="filter-options">
                             <label [class.selected]="isCategoryChecked(category.id)"
                                 *ngFor="let category of categories">

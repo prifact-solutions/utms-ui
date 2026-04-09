@@ -48,7 +48,7 @@
 
       <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
         <div class="form-group mb-4">
-          <label for="title">Exam Title</label>
+          <label for="title">Exam Title<span class="required-indicator">*</span></label>
           <input id="title" type="text" formControlName="title" placeholder="e.g. Final Assessment: Web Fundamentals"
             [class.is-invalid]="
                 examForm.get('title')?.invalid && examForm.get('title')?.touched
@@ -68,7 +68,7 @@
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="total_score">Total score</label>
+          <label for="total_score">Total score<span class="required-indicator">*</span></label>
           <input id="total_score" type="number" formControlName="total_score" min="1" />
           <div class="invalid-feedback" *ngIf="
                 examForm.get('total_score')?.invalid &&
@@ -79,7 +79,7 @@
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="min_score">Qualifying score</label>
+          <label for="min_score">Qualifying score<span class="required-indicator">*</span></label>
           <input id="min_score" type="number" formControlName="min_score" min="1" />
           <div class="invalid-feedback" *ngIf="
                 examForm.get('min_score')?.invalid &&
@@ -90,7 +90,7 @@
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="duration">Exam duration (in hours)</label>
+          <label for="duration">Exam duration (in hours)<span class="required-indicator">*</span></label>
           <input id="duration" type="number" formControlName="duration" min="1" />
           <div class="invalid-feedback" *ngIf="
                 examForm.get('duration')?.invalid &&
@@ -102,7 +102,7 @@
 
         <div class="form-group">
           <label for="question_paper" class="form-label d-flex justify-content-between align-items-center">
-            <span>Select Question Paper <span class="required">*</span></span>
+            <span>Select Question Paper <span class="required-indicator">*</span></span>
             <a [routerLink]="['/programs-builder', programId, 'question-papers']" target="_blank" class="small"
               style="font-weight: 500; font-size: 0.75rem;">Manage Question Papers ↗</a>
           </label>
@@ -127,7 +127,7 @@
         </div>
 
         <div class="form-group" style="max-width: 15rem">
-          <label for="order">Display Order</label>
+          <label for="order">Display Order<span class="required-indicator">*</span></label>
           <input id="order" type="number" formControlName="order" min="1" />
         </div>
 

@@ -176,8 +176,8 @@ export class CreateExamComponent
             }, 2000);
           }
         },
-        error: (error) => {
-          this.errorMessage = error?.error?.message || 'Failed to create exam';
+        error: (err) => {
+          this.errorMessage = err?.error?.error || 'Failed to create exam';
           this.isSubmitting = false;
         },
       });

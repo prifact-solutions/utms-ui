@@ -1,4 +1,4 @@
-@import 'src/styles/variables';
+@import "src/styles/variables";
 
 .bg-off-white {
   background-color: $bg-off-white;
@@ -13,12 +13,17 @@
   margin-top: 2rem;
 }
 
+.required-indicator {
+  color: $error-color;
+  margin-left: 2px;
+}
+
 .file-item {
   display: flex;
   align-items: center;
   gap: 1rem;
   justify-content: space-between;
-  font-size: .875rem;
+  font-size: 0.875rem;
   padding: 8px 0;
 }
 
@@ -41,7 +46,7 @@
       display: flex;
       gap: 12px;
       align-items: center;
-      font-size: .875rem;
+      font-size: 0.875rem;
     }
   }
 

@@ -108,6 +108,10 @@ p {
         justify-content: end;
     }
 
+    > div:last-child {
+        justify-self: end;
+    }
+
 }
 
 .button-group {
@@ -379,7 +383,7 @@ p {
     background: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    margin-top: -200px;
+    margin-top: -25vh;
     padding-left: calc(2vw + 48px);
 
     h2 {

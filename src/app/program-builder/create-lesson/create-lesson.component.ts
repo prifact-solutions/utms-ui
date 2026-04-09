@@ -131,8 +131,8 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
           this.moduleContentId = lesson.id;
           this.uploadFiles();
         },
-        error: (error) => {
-          this.errorMessage = error?.error?.message || 'Failed to create lesson';
+        error: (err) => {
+          this.errorMessage = err?.error?.error || 'Failed to create lesson';
           this.isSubmitting = false;
         }
       });
