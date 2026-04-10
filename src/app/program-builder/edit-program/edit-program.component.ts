@@ -86,7 +86,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       title: [this.program.title, [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       description: [this.program.description, [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
       duration: [this.program.duration.toString(), [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
-      is_active: [this.program.is_active, Validators.required],
+      // is_active: [this.program.is_active, Validators.required],
       categories: [this.program.categories || []],
       difficulty: [this.program.difficulty || 'Beginner', Validators.required],
       video_hours: [this.program.video_hours || 0]
@@ -194,7 +194,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       title: formValue.title,
       description: formValue.description,
       duration: parseFloat(formValue.duration),
-      is_active: formValue.is_active,
+      // is_active: formValue.is_active,
       difficulty: formValue.difficulty,
       video_hours: formValue.video_hours,
       categories: categories
