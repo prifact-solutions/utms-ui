@@ -18,7 +18,7 @@ export class DetailsComponent extends ComponentBase {
   public progress: { [id: string]: string } = {};
   public openSections: Set<number> = new Set([0]); // Default first section open
   public categories: Array<Category> = [];
-  public showVideo: boolean = false;
+  public showVideo: boolean = true;
   public isAuthenticated: boolean = false;
   public isLoading: boolean = true;
   public isEnrolled: boolean = false;

@@ -1,5 +1,5 @@
 <div class="video-container" *ngIf="videoUrl">
-    <video #videoEl autoplay playsinline (loadedmetadata)="onLoaded($event, videoEl)" (seeked)="onSeek($event)" (ended)="onVideoEnded($event)">
+    <video #videoEl autoplay playsinline (loadedmetadata)="onLoaded($event, videoEl)" (seeked)="onSeek($event)" (ended)="onVideoEnded($event)" controls>
         <source [src]="videoUrl" type="video/mp4">
     </video>
 
