@@ -9,7 +9,7 @@
           <hr>
           <div class="meta-row">
             <span>Duration: <strong>{{ program.duration }}d</strong></span>
-            <span class="badge" [class.bg-success]="program.is_active">{{ program.is_active ? 'Active' : 'Draft'
+            <span class="badge" [class.bg-success]="program.is_active">{{ program.status == 'ACTIVE' ? 'Active' : 'Draft'
               }}</span>
           </div>
         </div>

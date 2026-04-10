@@ -1,134 +1,268 @@
-<div [class.admin-page-container]="!inModal" [class.container]="!inModal" [class.modal-form-container]="inModal"
-    *ngIf="program">
-    <div [class.builder-layout]="!inModal">
-        <!-- Sidebar: Info (Hidden in Modal) -->
-        <aside class="builder-sidebar" *ngIf="!inModal">
-            <div class="program-mini-card card">
-                <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
-                <div class="p-4">
-                    <h4 class="m-0">{{ program.title }}</h4>
-                    <p class="text-muted small">Program Management</p>
-                </div>
+<div
+  [class.admin-page-container]="!inModal"
+  [class.container]="!inModal"
+  [class.modal-form-container]="inModal"
+  *ngIf="program"
+>
+  <div [class.builder-layout]="!inModal">
+    <!-- Sidebar: Info (Hidden in Modal) -->
+    <aside class="builder-sidebar" *ngIf="!inModal">
+      <div class="program-mini-card card">
+        <app-program-featured-media
+          [program]="program"
+          media_type="IMAGE"
+        ></app-program-featured-media>
+        <div class="p-4">
+          <h4 class="m-0">{{ program.title }}</h4>
+          <p class="text-muted small">
+            {{ program.description | slice: 0 : 100 }}...
+          </p>
+          <hr />
+          <div class="meta-row">
+            <span
+              >Duration: <strong>{{ program.duration }}d</strong></span
+            >
+            <span class="badge" [class.bg-success]="program.is_active">{{
+              program.status == "ACTIVE" ? "Active" : "Draft"
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav mt-4">
+        <a class="active">Settings</a>
+        <a [routerLink]="['/programs-builder', program.id, 'modules']"
+          >Curriculum</a
+        >
+        <a [routerLink]="['/programs-builder', program.id, 'organize-contents']"
+          >Publish Course</a
+        >
+      </nav>
+    </aside>
+
+    <!-- Main Content: Edit Program Form -->
+    <main [class.builder-main]="!inModal" [class.modal-main]="inModal">
+      <header class="page-header" *ngIf="!inModal">
+        <div class="header-text">
+          <h1>Course Settings</h1>
+          <p class="text-muted">
+            General configuration and landing page details.
+          </p>
+        </div>
+      </header>
+
+      <!-- Alerts -->
+      <div *ngIf="successMessage" class="alert-success-compact">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert-error-compact">
+        {{ errorMessage }}
+      </div>
+
+      <div class="p-5">
+        <div *ngIf="isLoading" class="py-5 text-center">
+          <p class="text-muted">Loading program details...</p>
+        </div>
+
+        <form
+          *ngIf="!isLoading && programForm"
+          [formGroup]="programForm"
+          (ngSubmit)="onSubmit()"
+        >
+          <div class="program-row-grid">
+            <div class="form-group flex-2">
+              <label for="title"
+                >Course Title<span class="required-indicator">*</span></label
+              >
+              <input
+                id="title"
+                type="text"
+                formControlName="title"
+                placeholder="e.g. Master Class in Web Development"
+                [class.is-invalid]="
+                  programForm.get('title')?.invalid &&
+                  programForm.get('title')?.touched
+                "
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  programForm.get('title')?.invalid &&
+                  programForm.get('title')?.touched
+                "
+              >
+                {{ getErrorMessage("title") }}
+              </div>
             </div>
-            <nav class="sidebar-nav mt-4">
-                <a class="active">Settings</a>
-                <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
-                <a [routerLink]="['/programs-builder', program.id, 'organize-contents']">Publish Course</a>
-            </nav>
-        </aside>
-
-        <!-- Main Content: Edit Program Form -->
-        <main [class.builder-main]="!inModal" [class.modal-main]="inModal">
-            <header class="page-header" *ngIf="!inModal">
-                <div class="header-text">
-                    <h1>Course Settings</h1>
-                    <p class="text-muted">General configuration and landing page details.</p>
-                </div>
-            </header>
-
-            <!-- Alerts -->
-            <div *ngIf="successMessage" class="alert-success-compact ">
-                {{ successMessage }}
+            <div class="form-group">
+              <label for="duration"
+                >Duration (days)<span class="required-indicator">*</span></label
+              >
+              <input
+                id="duration"
+                type="number"
+                formControlName="duration"
+                min="0"
+              />
             </div>
-            <div *ngIf="errorMessage" class="alert-error-compact ">
-                {{ errorMessage }}
+            <div class="form-group">
+              <label for="video_hours">Video (hrs)</label>
+              <input
+                id="video_hours"
+                type="number"
+                formControlName="video_hours"
+                min="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description"
+              >Description<span class="required-indicator">*</span></label
+            >
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="What will students learn in this program?"
+              rows="3"
+            ></textarea>
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                programForm.get('description')?.invalid &&
+                programForm.get('description')?.touched
+              "
+            >
+              {{ getErrorMessage("description") }}
+            </div>
+          </div>
+
+          <div class="media-upload-row">
+            <!-- Thumbnail Image Upload -->
+            <div class="form-group flex-1">
+              <label>Thumbnail Image</label>
+              <div class="upload-container">
+                <div
+                  class="upload-actions"
+                  style="flex-direction: column; align-items: flex-start"
+                >
+                  <div
+                    class="media-preview-thumb"
+                    *ngIf="thumbnailPreview"
+                    style="
+                      width: 200px;
+                      margin-bottom: 8px;
+                      border-radius: 8px;
+                      overflow: hidden;
+                      border: 1px solid #eee;
+                      aspect-ratio: 16/9;
+                    "
+                  >
+                    <app-program-featured-media
+                      [program]="program"
+                      media_type="IMAGE"
+                    ></app-program-featured-media>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <input
+                      id="thumbnail"
+                      type="file"
+                      accept="image/*"
+                      (change)="onThumbnailSelected($event)"
+                      style="display: none"
+                      #thumbInput
+                    />
+                    <button
+                      type="button"
+                      [class]="
+                        thumbnailPreview ? 'button small' : 'btn-black-small'
+                      "
+                      (click)="thumbInput.click()"
+                      [disabled]="isSubmitting"
+                    >
+                      {{ thumbnailPreview ? "Change" : "+" }}
+                    </button>
+                    <p
+                      class="text-muted small m-0"
+                      *ngIf="!thumbnailPreview && !thumbnailFile"
+                    >
+                      Select JPG/PNG
+                    </p>
+                    <p
+                      class="small text-truncate m-0"
+                      style="max-width: 150px"
+                      *ngIf="thumbnailFile"
+                    >
+                      {{ thumbnailFile.name }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="card p-5">
-                <div *ngIf="isLoading" class="py-5 text-center">
-                    <p class="text-muted">Loading program details...</p>
+            <!-- Preview Video Upload -->
+            <div class="form-group flex-1">
+              <label>Preview Video</label>
+              <div class="upload-container">
+                <div
+                  class="upload-actions"
+                  style="flex-direction: column; align-items: flex-start"
+                >
+                  <div
+                    class="media-preview-video"
+                    *ngIf="videoPreviewUrl"
+                    style="
+                      width: 200px;
+                      margin-bottom: 8px;
+                      border-radius: 8px;
+                      overflow: hidden;
+                      border: 1px solid #eee;
+                      aspect-ratio: 16/9;
+                    "
+                  >
+                    <app-program-featured-media
+                      [program]="program"
+                      media_type="VIDEO"
+                    ></app-program-featured-media>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <input
+                      id="previewVideo"
+                      type="file"
+                      accept="video/*"
+                      (change)="onVideoSelected($event)"
+                      style="display: none"
+                      #videoInput
+                    />
+                    <button
+                      type="button"
+                      [class]="
+                        videoPreviewUrl ? 'button small' : 'btn-black-small'
+                      "
+                      (click)="videoInput.click()"
+                      [disabled]="isSubmitting"
+                    >
+                      {{ videoPreviewUrl ? "Change" : "+" }}
+                    </button>
+                    <p
+                      class="text-muted small m-0"
+                      *ngIf="!videoPreviewUrl && !videoFile"
+                    >
+                      Select MP4/WebM
+                    </p>
+                    <p
+                      class="small text-truncate m-0"
+                      style="max-width: 150px"
+                      *ngIf="videoFile"
+                    >
+                      {{ videoFile.name }}
+                    </p>
+                  </div>
                 </div>
-
-                <form *ngIf="!isLoading && programForm" [formGroup]="programForm" (ngSubmit)="onSubmit()">
-                    <div class="program-row-grid">
-                        <div class="form-group flex-2">
-                            <label for="title">Course Title<span class="required-indicator">*</span></label>
-                            <input id="title" type="text" formControlName="title"
-                                placeholder="e.g. Master Class in Web Development"
-                                [class.is-invalid]="programForm.get('title')?.invalid && programForm.get('title')?.touched">
-                            <div class="invalid-feedback"
-                                *ngIf="programForm.get('title')?.invalid && programForm.get('title')?.touched">
-                                {{ getErrorMessage('title') }}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="duration">Duration (days)<span class="required-indicator">*</span></label>
-                            <input id="duration" type="number" formControlName="duration" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="video_hours">Video (hrs)</label>
-                            <input id="video_hours" type="number" formControlName="video_hours" min="0">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Description<span class="required-indicator">*</span></label>
-                        <textarea id="description" formControlName="description"
-                            placeholder="What will students learn in this program?" rows="3"></textarea>
-                        <div class="invalid-feedback"
-                            *ngIf="programForm.get('description')?.invalid && programForm.get('description')?.touched">
-                            {{ getErrorMessage('description') }}
-                        </div>
-                    </div>
-
-                    <div class="media-upload-row">
-                        <!-- Thumbnail Image Upload -->
-                        <div class="form-group flex-1">
-                            <label>Thumbnail Image</label>
-                            <div class="upload-container">
-                                <div class="upload-actions" style="flex-direction: column; align-items: flex-start;">
-                                    <div class="media-preview-thumb" *ngIf="thumbnailPreview"
-                                        style="width: 200px; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid #eee; aspect-ratio: 16/9;">
-                                        <app-program-featured-media [program]="program"
-                                            media_type="IMAGE"></app-program-featured-media>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <input id="thumbnail" type="file" accept="image/*"
-                                            (change)="onThumbnailSelected($event)" style="display: none;" #thumbInput>
-                                        <button type="button"
-                                            [class]="thumbnailPreview ? 'button small' : 'btn-black-small'"
-                                            (click)="thumbInput.click()" [disabled]="isSubmitting">
-                                            {{ thumbnailPreview ? 'Change' : '+' }}
-                                        </button>
-                                        <p class="text-muted small m-0" *ngIf="!thumbnailPreview && !thumbnailFile">
-                                            Select JPG/PNG</p>
-                                        <p class="small text-truncate m-0" style="max-width: 150px;"
-                                            *ngIf="thumbnailFile">
-                                            {{ thumbnailFile.name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Preview Video Upload -->
-                        <div class="form-group flex-1">
-                            <label>Preview Video</label>
-                            <div class="upload-container">
-                                <div class="upload-actions" style="flex-direction: column; align-items: flex-start;">
-                                    <div class="media-preview-video" *ngIf="videoPreviewUrl"
-                                        style="width: 200px; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid #eee; aspect-ratio: 16/9;">
-                                        <app-program-featured-media [program]="program"
-                                            media_type="VIDEO"></app-program-featured-media>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <input id="previewVideo" type="file" accept="video/*"
-                                            (change)="onVideoSelected($event)" style="display: none;" #videoInput>
-                                        <button type="button"
-                                            [class]="videoPreviewUrl ? 'button small' : 'btn-black-small'"
-                                            (click)="videoInput.click()" [disabled]="isSubmitting">
-                                            {{ videoPreviewUrl ? 'Change' : '+' }}
-                                        </button>
-                                        <p class="text-muted small m-0" *ngIf="!videoPreviewUrl && !videoFile">Select
-                                            MP4/WebM</p>
-                                        <p class="small text-truncate m-0" style="max-width: 150px;" *ngIf="videoFile">
-                                            {{ videoFile.name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br />
-<!-- 
+              </div>
+            </div>
+          </div>
+          <br />
+          <!-- 
                     <div class="form-group mb-4">
                         <label class="d-flex align-items-center gap-3 cursor-pointer" style="text-transform: none;">
                             <input type="checkbox" formControlName="is_active" style="width: 20px; height: 20px;">
@@ -136,30 +270,47 @@
                         </label>
                     </div> -->
 
-                    <!-- Categories -->
-                    <div class="form-group mb-5">
-                        <label style="margin-bottom: 12px; display: block;">Categories<span class="required-indicator">*</span></label>
-                        <div class="filter-options">
-                            <label [class.selected]="isCategoryChecked(category.id)"
-                                *ngFor="let category of categories">
-                                <input type="checkbox" [checked]="isCategoryChecked(category.id)"
-                                    (change)="onCategoryChange(category.id, $event)" style="display: none;">
-                                <span>{{ category.name }}</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="button" (click)="cancel()" [disabled]="isSubmitting">
-                            {{ inModal ? 'Cancel' : 'Back to Programs' }}
-                        </button>
-                        <button type="submit" class="button primary" [disabled]="programForm.invalid || isSubmitting">
-                            <span *ngIf="!isSubmitting">Update Course</span>
-                            <span *ngIf="isSubmitting">Updating &amp; Uploading...</span>
-                        </button>
-                    </div>
-                </form>
+          <!-- Categories -->
+          <div class="form-group mb-5">
+            <label style="margin-bottom: 12px; display: block"
+              >Categories<span class="required-indicator">*</span></label
+            >
+            <div class="filter-options">
+              <label
+                [class.selected]="isCategoryChecked(category.id)"
+                *ngFor="let category of categories"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isCategoryChecked(category.id)"
+                  (change)="onCategoryChange(category.id, $event)"
+                  style="display: none"
+                />
+                <span>{{ category.name }}</span>
+              </label>
             </div>
-        </main>
-    </div>
+          </div>
+
+          <div class="button-group">
+            <button
+              type="button"
+              class="button"
+              (click)="cancel()"
+              [disabled]="isSubmitting"
+            >
+              {{ inModal ? "Cancel" : "Back to Programs" }}
+            </button>
+            <button
+              type="submit"
+              class="button primary"
+              [disabled]="programForm.invalid || isSubmitting"
+            >
+              <span *ngIf="!isSubmitting">Update Course</span>
+              <span *ngIf="isSubmitting">Updating &amp; Uploading...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
 </div>
