@@ -95,6 +95,9 @@
         </button>
       </div>
       <div class="modal-body note-edit-body">
+        <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+          {{ errorMessage }}
+        </div>
         <div class="form-group">
           <label for="note-title">Note Title</label>
           <input
@@ -178,6 +181,9 @@
         </button>
       </div>
       <div class="modal-body">
+        <div *ngIf="errorMessage" class="alert-error-compact mb-4">
+          {{ errorMessage }}
+        </div>
         <div class="note-delete-content">
           <div class="delete-icon-wrap">
             <i class="fas fa-trash-alt"></i>

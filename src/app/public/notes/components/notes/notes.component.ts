@@ -20,6 +20,7 @@ export class NotesComponent extends ComponentBase {
   notePendingDelete: Note | null = null;
   notes: Note[] = [];
   notesLoading = true;
+  errorMessage = '';
 
   constructor(private notesService: NotesService) {
     super();
@@ -45,6 +46,7 @@ export class NotesComponent extends ComponentBase {
     this.editingNoteId = null;
     this.noteTitle = '';
     this.noteContent = '';
+    this.errorMessage = '';
     this.isNotePopupOpen = true;
   }
 
@@ -59,16 +61,19 @@ export class NotesComponent extends ComponentBase {
     this.editingNoteId = note.id;
     this.noteTitle = note.title;
     this.noteContent = note.content;
+    this.errorMessage = '';
     this.isNotePopupOpen = true;
   }
 
   openDeleteConfirm(note: Note, event: Event): void {
     event.stopPropagation();
+    this.errorMessage = '';
     this.notePendingDelete = note;
     this.isDeleteConfirmOpen = true;
   }
 
   closeDeleteConfirm(): void {
+    this.errorMessage = '';
     this.isDeleteConfirmOpen = false;
     this.notePendingDelete = null;
   }
@@ -93,11 +98,13 @@ export class NotesComponent extends ComponentBase {
       )
       .subscribe({
         next: (notes) => {
+          this.errorMessage = '';
           this.notes = notes;
           this.notesLoading = false;
           this.closeDeleteConfirm();
         },
-        error: () => {
+        error: (err) => {
+          this.errorMessage = err?.error?.error || 'Failed to delete note';
           this.notesLoading = false;
         },
       });
@@ -105,6 +112,7 @@ export class NotesComponent extends ComponentBase {
   }
 
   closeNotePopup(): void {
+    this.errorMessage = '';
     this.isNotePopupOpen = false;
     this.editingNoteId = null;
     this.noteTitle = '';
@@ -136,11 +144,13 @@ export class NotesComponent extends ComponentBase {
         )
         .subscribe({
           next: (notes) => {
+            this.errorMessage = '';
             this.notes = notes;
             this.notesLoading = false;
             this.closeNotePopup();
           },
-          error: () => {
+          error: (err) => {
+            this.errorMessage = err?.error?.error || 'Failed to update note';
             this.notesLoading = false;
           },
         });
@@ -155,11 +165,13 @@ export class NotesComponent extends ComponentBase {
         )
         .subscribe({
           next: (notes) => {
+            this.errorMessage = '';
             this.notes = notes;
             this.notesLoading = false;
             this.closeNotePopup();
           },
-          error: () => {
+          error: (err) => {
+            this.errorMessage = err?.error?.error || 'Failed to create note';
             this.notesLoading = false;
           },
         });
