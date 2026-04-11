@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { HttpBackend, HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
@@ -12,13 +12,20 @@ import { KeycloakConfig } from '../models/keycloak-config.model';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
+  private refreshTokenKey = 'auth_refresh_token';
+  private readonly httpWithoutInterceptors: HttpClient;
   private currentUserSubject = new BehaviorSubject<string | null>(
     this.getToken(),
   );
   public currentUser$ = this.currentUserSubject.asObservable();
   private keycloakConfig$!: Observable<KeycloakConfig>;
   private isLoggingOut = false;
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    httpBackend: HttpBackend,
+  ) {
+    this.httpWithoutInterceptors = new HttpClient(httpBackend);
+  }
 
   /**
    * Login with username and password
@@ -28,7 +35,7 @@ export class AuthService {
       .post<LoginResponse>(`${AppSettings.apiUrl}/auth/login/`, credentials)
       .pipe(
         tap((response) => {
-          this.setToken(response.access);
+          this.persistAuthTokens(response.access, response.refresh);
         }),
       );
   }
@@ -41,11 +48,18 @@ export class AuthService {
   }
 
   /**
-   * Set JWT token in localStorage
+   * Set JWT access (and optional refresh) in localStorage
    */
-  private setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
-    this.currentUserSubject.next(token);
+  private persistAuthTokens(access: string, refresh?: string | null): void {
+    localStorage.setItem(this.tokenKey, access);
+    if (refresh) {
+      localStorage.setItem(this.refreshTokenKey, refresh);
+    }
+    this.currentUserSubject.next(access);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.refreshTokenKey);
   }
 
   /**
@@ -60,7 +74,27 @@ export class AuthService {
    */
   private clearToken(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshTokenKey);
     this.currentUserSubject.next(null);
+  }
+
+  /**
+   * Exchange refresh token for new access + refresh. Uses HttpClient without interceptors.
+   */
+  refreshAccessToken(): Observable<LoginResponse> {
+    const refresh = this.getRefreshToken();
+    if (!refresh) {
+      return throwError(() => new Error('No refresh token'));
+    }
+    return this.httpWithoutInterceptors
+      .post<LoginResponse>(`${AppSettings.apiUrl}/auth/refresh/`, {
+        refresh,
+      })
+      .pipe(
+        tap((response) => {
+          this.persistAuthTokens(response.access, response.refresh);
+        }),
+      );
   }
 
   /**
@@ -78,7 +112,7 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          this.setToken(response.access);
+          this.persistAuthTokens(response.access, response.refresh);
           localStorage.setItem('id_token', response.id_token);
         }),
       );

@@ -6,33 +6,31 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Observable, throwError, from, firstValueFrom } from 'rxjs';
+import { catchError, switchMap, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { AppSettings } from 'src/app/common/appsettings';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   anonymousUrls: Array<string> = [`${AppSettings.apiUrl}/auth/keycloak-config`];
+
+  /** Coalesces concurrent 401s into a single refresh request. */
+  private refreshPromise: Promise<string> | null = null;
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    // Get the token from the auth service
     const token = this.authService.getToken();
 
-    // Clone the request and add the Authorization header if token exists
     if (
       token &&
       !this.anonymousUrls.includes(request.url) &&
-      !request.url.includes('s3.amazonaws.com')
+      !request.url.includes('s3.amazonaws.com') &&
+      !this.isAuthRefreshUrl(request.url)
     ) {
       request = request.clone({
         setHeaders: {
@@ -43,15 +41,90 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Handle 401 Unauthorized errors
-        if (error.status === 401) {
-          // Clear the token
-          //this.authService.logout();
-          this.authService.keycloakLogout();
+        if (error.status !== 401) {
+          return throwError(() => error);
         }
-        // Re-throw the error
-        return throwError(() => error);
+
+        if (this.isAuthRefreshUrl(request.url)) {
+          this.authService.keycloakLogout();
+          return throwError(() => error);
+        }
+
+        if (!this.shouldAttemptRefresh(request)) {
+          return throwError(() => error);
+        }
+
+        if (!this.authService.getRefreshToken()) {
+          this.authService.keycloakLogout();
+          return throwError(() => error);
+        }
+
+        return this.refreshAccessTokenOnce().pipe(
+          switchMap((newAccess) =>
+            next.handle(this.cloneRequestWithAuth(request, newAccess)),
+          ),
+          catchError((refreshErr) => {
+            this.authService.keycloakLogout();
+            return throwError(() => refreshErr);
+          }),
+        );
       }),
     );
+  }
+
+  private cloneRequestWithAuth(
+    request: HttpRequest<unknown>,
+    accessToken: string,
+  ): HttpRequest<unknown> {
+    if (
+      this.anonymousUrls.includes(request.url) ||
+      request.url.includes('s3.amazonaws.com') ||
+      this.isAuthRefreshUrl(request.url)
+    ) {
+      return request;
+    }
+    return request.clone({
+      setHeaders: { Authorization: `Bearer ${accessToken}` },
+    });
+  }
+
+  private refreshAccessTokenOnce(): Observable<string> {
+    if (!this.refreshPromise) {
+      const p = firstValueFrom(
+        this.authService.refreshAccessToken().pipe(
+          map(() => {
+            const t = this.authService.getToken();
+            if (!t) {
+              throw new Error('Missing access token after refresh');
+            }
+            return t;
+          }),
+        ),
+      ).finally(() => {
+        if (this.refreshPromise === p) {
+          this.refreshPromise = null;
+        }
+      });
+      this.refreshPromise = p;
+    }
+    return from(this.refreshPromise);
+  }
+
+  private isAuthRefreshUrl(url: string): boolean {
+    return url.includes('/auth/refresh');
+  }
+
+  private shouldAttemptRefresh(request: HttpRequest<unknown>): boolean {
+    const url = request.url;
+    if (
+      url.includes('/auth/login') ||
+      url.includes('/auth/exchange') ||
+      url.includes('/auth/refresh') ||
+      url.includes('/auth/keycloak-config') ||
+      url.includes('s3.amazonaws.com')
+    ) {
+      return false;
+    }
+    return true;
   }
 }
