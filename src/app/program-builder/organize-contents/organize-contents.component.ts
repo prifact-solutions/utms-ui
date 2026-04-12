@@ -89,13 +89,18 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
   }
 
   updateOrderAndPrevious(): void {
-    let globalOrder = 1;
+    let globalModuleOrder = 1, globalContentOrder = 1;
     const allContents: OrganizedContent[] = [];
+
+    //This recalculated order is only for display purposes and is not saved to DB
+    this.organizedModules.forEach(moduleGroup => {
+      moduleGroup.module.order = globalModuleOrder++;
+    })
 
     // First pass: collect all contents in order and assign global orders
     this.organizedModules.forEach(moduleGroup => {
       moduleGroup.contents.forEach(content => {
-        content.order = globalOrder++;
+        content.order = globalContentOrder++;
         allContents.push(content);
       });
     });
