@@ -1353,6 +1353,27 @@ html body .qp-title-box {
     }
 }
 
+// Question paper designer: form-builder injects global html,body{height:100%} and uses a
+// fixed full-viewport #form-design.main, so the window never scrolls. While this route is
+// active (class toggled from DesignQuestionPaperComponent), relax that so the page uses
+// normal document scrolling for the canvas column.
+html.qp-form-design-route,
+html.qp-form-design-route body {
+    height: auto;
+    min-height: 100%;
+}
+
+html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: min(100%, calc(100vw - 64px - 450px - 48px)) !important;
+    height: auto !important;
+    min-height: calc(100dvh - 9rem);
+    overflow: visible !important;
+    padding-bottom: 2rem;
+}
+
 @media (max-width: 1200px) {
     .ulm-public-header {
 

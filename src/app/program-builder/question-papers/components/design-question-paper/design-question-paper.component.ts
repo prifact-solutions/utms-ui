@@ -28,9 +28,16 @@ export class DesignQuestionPaperComponent extends ComponentBase {
 
   ngOnInit() {
     this.renderer.addClass(document.body, 'menu-clicked');
+    this.renderer.addClass(document.documentElement, 'qp-form-design-route');
     this.programId = this.route.snapshot.params['program_id'];
     this.qpId = this.route.snapshot.params['qp_id'];
     this.loading = false;
+  }
+
+  override ngOnDestroy(): void {
+    this.renderer.removeClass(document.documentElement, 'qp-form-design-route');
+    this.renderer.removeClass(document.body, 'menu-clicked');
+    super.ngOnDestroy();
   }
 
   onBack(event: any) {
