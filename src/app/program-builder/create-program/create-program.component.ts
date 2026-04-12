@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { Utils } from 'src/app/common/utils';
 import { Category, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 
@@ -90,15 +91,24 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
     }
   }
 
-  onVideoSelected(event: any): void {
-    const file: File = event.target.files?.[0];
-    if (file) {
-      this.videoFile = file;
-      if (this.videoPreviewUrl) {
-        URL.revokeObjectURL(this.videoPreviewUrl);
-      }
-      this.videoPreviewUrl = URL.createObjectURL(file);
+  onVideoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
     }
+    const reject = Utils.validateProgramPreviewVideoFile(file);
+    if (reject) {
+      this.errorMessage = reject;
+      input.value = '';
+      return;
+    }
+    this.errorMessage = null;
+    this.videoFile = file;
+    if (this.videoPreviewUrl) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+    }
+    this.videoPreviewUrl = URL.createObjectURL(file);
   }
 
   private uploadProgramMedia(programId: number): Observable<any> {

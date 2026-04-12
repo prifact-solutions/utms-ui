@@ -23,4 +23,30 @@ export class Utils {
         let parts = token?.split(".");
         return JSON.parse(atob(parts[1]));
     }
+
+    /**
+     * Preview video must be playable in HTML5 video (MP4/WebM typical).
+     * Returns a user-facing message if invalid, or null if accepted.
+     */
+    public static validateProgramPreviewVideoFile(file: File): string | null {
+        if (!file?.name) {
+            return null;
+        }
+        const dot = file.name.lastIndexOf('.');
+        const ext = dot >= 0 ? file.name.toLowerCase().slice(dot) : '';
+        if (ext === '.avi' || ext === '.wmv') {
+            return 'AVI and WMV formats are not supported for preview video. Please use MP4 or WebM formats.';
+        }
+        const mime = (file.type || '').toLowerCase();
+        if (
+            mime === 'video/x-msvideo' ||
+            mime === 'video/avi' ||
+            mime === 'video/msvideo' ||
+            mime === 'video/x-ms-wmv' ||
+            mime === 'video/wmv'
+        ) {
+            return 'AVI and WMV are not supported for preview video. Please use MP4 or WebM.';
+        }
+        return null;
+    }
 }
