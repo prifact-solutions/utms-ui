@@ -25,7 +25,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0",
-    "form-builder": "https://prifact-libs.s3-ap-southeast-1.amazonaws.com/form-builder-0.0.8.tgz"
+    "form-builder": "https://prifact-libs.s3-ap-southeast-1.amazonaws.com/form-builder-0.0.9.tgz"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.11",

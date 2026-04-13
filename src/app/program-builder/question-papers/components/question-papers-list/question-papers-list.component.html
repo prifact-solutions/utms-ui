@@ -66,8 +66,8 @@
           <!-- Normal view -->
           <div *ngIf="!editQpId || editQpId !== qp.id">
             <div class="qp-title">{{ qp.name }}</div>
-            <div class="qp-meta">
-              <span class="qp-score">{{ qp.total_score }} marks</span>
+            <div class="qp-meta" *ngIf="qp.total_score">
+              <span class="qp-score">Grade: {{ qp.total_score }}</span>
             </div>
           </div>
 
