@@ -25,13 +25,13 @@
 
                 <div>
 
-                    <button
+                    <button *ngIf="program.status != 'ACTIVE'"
                         type="button"
                         (click)="togglePublish()"
                         class="button primary black"
                         [disabled]="isPublishing"
                     >
-                        {{ program.status === 'ACTIVE' ? 'Unpublish' : 'Publish' }}
+                        Publish
                     </button>
                 </div>
             </div>
