@@ -104,9 +104,18 @@
 
     <div class="course-curriculum">
         <div class="curriculum-sidebar">
+            <p *ngIf="isCurriculumReadonly" class="curriculum-readonly-note">
+                This course is already published. Course content cannot be modified.
+            </p>
             <div class="curriculum-actions">
                 <h3>Modules <span class="count">({{ program.modules?.length || 0 }})</span> </h3>
-                <button (click)="addModule()"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                <button
+                    type="button"
+                    (click)="addModule()"
+                    [disabled]="isCurriculumReadonly"
+                    [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
+                >
+                    <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -125,8 +134,10 @@
                         <span class="module-title">{{ module.title }}</span>
                     </div>
                     <div class="module-links">
-                        <a class="link-edit" (click)="editModule(module, $event)">Edit</a>
-                        <a class="link-delete" (click)="deleteModule(module, $event)">Delete</a>
+                        <ng-container *ngIf="!isCurriculumReadonly">
+                            <a class="link-edit" (click)="editModule(module, $event)">Edit</a>
+                            <a class="link-delete" (click)="deleteModule(module, $event)">Delete</a>
+                        </ng-container>
                     </div>
                 </div>
 
@@ -151,10 +162,22 @@
                             </svg>
                             Question Papers
                         </a>
-                        <button class="button primary black" (click)="openAddLessonModal()">
+                        <button
+                            type="button"
+                            class="button primary black"
+                            (click)="openAddLessonModal()"
+                            [disabled]="isCurriculumReadonly"
+                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
+                        >
                             + Lesson
                         </button>
-                        <button class="button primary black" (click)="openAddExamModal()">
+                        <button
+                            type="button"
+                            class="button primary black"
+                            (click)="openAddExamModal()"
+                            [disabled]="isCurriculumReadonly"
+                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
+                        >
                             + Exam
                         </button>
                     </div>
@@ -173,8 +196,10 @@
                         </div>
                         <div class="content-actions">
                             <div class="content-links">
-                                <a class="link-edit" (click)="editContent(content)">Edit</a>
-                                <a class="link-delete" (click)="deleteContent(content)">Delete</a>
+                                <ng-container *ngIf="!isCurriculumReadonly">
+                                    <a class="link-edit" (click)="editContent(content)">Edit</a>
+                                    <a class="link-delete" (click)="deleteContent(content)">Delete</a>
+                                </ng-container>
                             </div>
                             <span class="type-badge" [class.exam]="content.content_type === 'EXAM'"
                                 [class.lesson]="content.content_type === 'LESSON'">
@@ -232,6 +257,7 @@
     <div class="loader"></div>
     <div class="loading-text">Loading Course Builder</div>
 </div>
+
 <!-- Edit Modal -->
 <div class="modal-overlay" *ngIf="showEditModal && program">
     <div class="modal-content-wrapper shadow-lg">

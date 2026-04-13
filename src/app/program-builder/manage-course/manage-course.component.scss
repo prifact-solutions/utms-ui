@@ -457,6 +457,23 @@
                 flex-direction: column;
                 background: #fafafa;
 
+                .curriculum-readonly-note {
+                    margin: 0;
+                    padding: 14px 16px 14px 18px;
+                    font-size: 0.8125rem;
+                    line-height: 1.5;
+                    font-weight: 600;
+                    color: #1a1a1a;
+                    letter-spacing: 0.01em;
+                    background: linear-gradient(90deg, rgba($accent-color, 0.12) 0%, #fff 42%);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                    border-left: 4px solid $accent-color;
+                    box-shadow:
+                        0 1px 0 rgba(255, 255, 255, 0.9) inset,
+                        0 4px 12px -4px rgba(0, 0, 0, 0.08);
+                    flex-shrink: 0;
+                }
+
                 .curriculum-actions {
                     display: flex;
                     gap: 8px;
@@ -481,6 +498,11 @@
                         svg {
                             width: 32px;
                             height: 32px;
+                        }
+
+                        &:disabled {
+                            opacity: 0.45;
+                            cursor: not-allowed;
                         }
                     }
                 }
@@ -613,6 +635,11 @@
                                     color: #111;
                                     background: transparent;
                                 }
+                            }
+
+                            .button.primary.black:disabled {
+                                opacity: 0.45;
+                                cursor: not-allowed;
                             }
                         }
                     }

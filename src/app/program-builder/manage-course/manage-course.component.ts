@@ -123,6 +123,11 @@ export class ManageCourseComponent
     return this.categories.find((c) => c.id === id)?.name;
   }
 
+  /** Published courses: structure changes are disabled in the UI (unpublish to edit). */
+  get isCurriculumReadonly(): boolean {
+    return this.program?.status === 'ACTIVE';
+  }
+
   openEditModal(): void {
     this.showEditModal = true;
   }
@@ -162,6 +167,9 @@ export class ManageCourseComponent
   }
 
   addModule(): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     this.showAddModuleModal = true;
   }
 
@@ -175,6 +183,9 @@ export class ManageCourseComponent
   }
 
   openAddLessonModal(): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     this.showAddLessonModal = true;
   }
 
@@ -190,6 +201,9 @@ export class ManageCourseComponent
   }
 
   openAddExamModal(): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     this.showAddExamModal = true;
   }
 
@@ -205,6 +219,9 @@ export class ManageCourseComponent
   }
 
   addExam(): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     if (this.selectedModule) {
       this.router.navigate([
         '/programs-builder',
@@ -219,6 +236,9 @@ export class ManageCourseComponent
 
   editModule(module: Module, event: Event): void {
     event.stopPropagation();
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     this.moduleToEdit = module;
     this.showEditModuleModal = true;
   }
@@ -236,6 +256,9 @@ export class ManageCourseComponent
 
   deleteModule(module: Module, event: Event): void {
     event.stopPropagation();
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     this.moduleToDelete = module;
     this.showDeleteConfirmModal = true;
   }
@@ -246,7 +269,9 @@ export class ManageCourseComponent
   }
 
   confirmDeleteModule(): void {
-    if (!this.moduleToDelete) return;
+    if (!this.moduleToDelete || this.isCurriculumReadonly) {
+      return;
+    }
 
     const sub = this.programService
       .deleteModule(this.programId, this.moduleToDelete.id)
@@ -268,6 +293,9 @@ export class ManageCourseComponent
   }
 
   editContent(content: ModuleContent): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     if (content.content_type === 'LESSON') {
       this.lessonToEdit = content;
       this.showEditLessonModal = true;
@@ -278,6 +306,9 @@ export class ManageCourseComponent
   }
 
   deleteContent(content: ModuleContent): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
     if (!confirm(`Are you sure you want to delete "${content.title}"?`)) return;
 
     const sub = this.programService
