@@ -43,19 +43,23 @@
   white-space: pre-wrap;
 }
 .end-exam-btn {
-  height: 30px;
-  line-height: 29px;
+  min-height: 32px;
   border: 1px solid #693bb3;
-  padding: 0 10px;
-  border-radius: 3px;
+  padding: 6px 10px;
+  border-radius: 6px;
   -webkit-transition: all ease 0.5s;
   transition: all ease 0.5s;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   vertical-align: middle;
   background: #693bb3;
   color: #fff;
-  font-size: 1em;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: center;
 }
 .qp-container {
   background: #fff;
@@ -130,8 +134,8 @@
     }
 
     h3 {
-      //font-size: 24px;
-      font-size: 1rem;
+      font-size: 24px;
+      // font-size: 1rem;
       font-weight: 600;
       margin: 0;
       color: #111;

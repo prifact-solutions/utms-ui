@@ -1,11 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import {
   Exam,
   ModuleContent,
   ModuleContentFile,
 } from '../../models/program.model';
 import { QuestionPaperAttemptContext } from 'form-builder';
-import { forkJoin, map, of, Subject, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  catchError,
+  forkJoin,
+  map,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ProgramsService } from '../../services/programs.service';
 import {
   ExamAttemptStatus,
@@ -18,6 +27,7 @@ import { ComponentBase } from 'src/app/common/componentbase';
   selector: 'app-exam',
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ExamComponent extends ComponentBase {
   lesson: ModuleContent | null = null;
@@ -66,6 +76,7 @@ export class ExamComponent extends ComponentBase {
           this.program_id = params.program_id;
           this.module_id = params.module_id;
           this.module_content_id = params.module_content_id;
+          this.loading = true;
         }),
         switchMap((params) => {
           return forkJoin([
@@ -100,7 +111,12 @@ export class ExamComponent extends ComponentBase {
             //   }),
             // )
             this.programService.getProgramCatalog(params.program_id),
-          ]);
+          ]).pipe(
+            catchError((err) => {
+              this.handleLoadError(err);
+              return EMPTY;
+            }),
+          );
         }),
         switchMap(([examDetails, catalog]) => {
           this.examContent = examDetails.content;
@@ -141,31 +157,29 @@ export class ExamComponent extends ComponentBase {
                   );
                 }
               }),
+              catchError((err) => {
+                this.handleLoadError(err);
+                return EMPTY;
+              }),
             );
         }),
       )
-    .subscribe({
-      next: (attempt) => {
-        this.attemptId = attempt.id;
+      .subscribe({
+        next: (attempt) => {
+          this.attemptId = attempt.id;
 
-        if (attempt.status == ExamAttemptStatus.COMPLETED) {
-          this.router.navigate(['exam-result', this.exam.id], {
-            relativeTo: this.route,
-          });
-        } else {
-          this.router.navigate(['take-exam', this.exam.id], {
-            relativeTo: this.route,
-          });
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage =
-          err?.error?.error || err?.message || 'Failed to load content';
-        this.triggerErrorToast();
-      },
-    });
+          if (attempt.status == ExamAttemptStatus.COMPLETED) {
+            this.router.navigate(['exam-result', this.exam.id], {
+              relativeTo: this.route,
+            });
+          } else {
+            this.router.navigate(['take-exam', this.exam.id], {
+              relativeTo: this.route,
+            });
+          }
+          this.loading = false;
+        },
+      });
     this.registerSubscription(sub);
   }
 
@@ -229,6 +243,13 @@ export class ExamComponent extends ComponentBase {
       this.showErrorToast = false;
       this.errorMessage = '';
     }, 5000);
+  }
+
+  private handleLoadError(err: any): void {
+    this.loading = false;
+    this.errorMessage =
+      err?.error?.error || err?.message || 'Failed to load content';
+    this.triggerErrorToast();
   }
 
   goToCatalog() {
