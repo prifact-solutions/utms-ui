@@ -12,6 +12,10 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
 })
 export class ListModulesComponent extends ComponentBase {
   modules: Module[] = [];
+  showDeleteConfirm = false;
+  modulePendingDelete: Module | null = null;
+  isDeletingModule = false;
+  deleteErrorMessage = '';
 
   constructor(
     private programService: ProgramsService,
@@ -36,17 +40,46 @@ export class ListModulesComponent extends ComponentBase {
       });
   }
 
-  onDelete(moduleId: number): void {
+  onDelete(module: Module): void {
+    this.modulePendingDelete = module;
+    this.showDeleteConfirm = true;
+    this.deleteErrorMessage = '';
+  }
+
+  closeDeleteConfirm(): void {
+    if (this.isDeletingModule) {
+      return;
+    }
+    this.showDeleteConfirm = false;
+    this.modulePendingDelete = null;
+    this.deleteErrorMessage = '';
+  }
+
+  confirmDeleteModule(): void {
+    if (!this.modulePendingDelete) {
+      return;
+    }
+    this.isDeletingModule = true;
+    this.deleteErrorMessage = '';
     const sub = this.programService
-      .deleteModule(this.program.id, moduleId)
+      .deleteModule(this.program.id, this.modulePendingDelete.id)
       .pipe(
         switchMap((_) => {
           return this.programService.getProgramCatalog(this.program.id);
         }),
       )
-      .subscribe((program) => {
-        this.program = program;
-        this.modules = program.modules || [];
+      .subscribe({
+        next: (program) => {
+          this.program = program;
+          this.modules = program.modules || [];
+          this.isDeletingModule = false;
+          this.closeDeleteConfirm();
+        },
+        error: () => {
+          this.isDeletingModule = false;
+          this.deleteErrorMessage =
+            'Could not delete this module. Please try again.';
+        },
       });
     this.registerSubscription(sub);
   }

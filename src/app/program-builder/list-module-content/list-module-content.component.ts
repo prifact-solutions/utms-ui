@@ -19,6 +19,10 @@ export class ListModuleContentComponent extends ComponentBase {
   module_contents: Array<ModuleContent> = [];
   module_id: number = 0;
   program_id: number = 0;
+  showDeleteConfirm = false;
+  contentPendingDelete: ModuleContent | null = null;
+  isDeletingContent = false;
+  deleteErrorMessage = '';
   constructor(
     private programService: ProgramsService,
     private route: ActivatedRoute,
@@ -54,13 +58,46 @@ export class ListModuleContentComponent extends ComponentBase {
         );
       });
   }
-  onDelete(id: number) {
+  onDelete(content: ModuleContent): void {
+    this.contentPendingDelete = content;
+    this.deleteErrorMessage = '';
+    this.showDeleteConfirm = true;
+  }
+
+  closeDeleteConfirm(): void {
+    if (this.isDeletingContent) {
+      return;
+    }
+    this.showDeleteConfirm = false;
+    this.contentPendingDelete = null;
+    this.deleteErrorMessage = '';
+  }
+
+  confirmDeleteContent(): void {
+    if (!this.contentPendingDelete) {
+      return;
+    }
+    this.isDeletingContent = true;
+    this.deleteErrorMessage = '';
     this.programService
-      .deleteModuleContent(this.program_id, this.module_id, id)
-      .subscribe((res) => {
-        this.module_contents = this.module_contents
-          .filter((mc) => mc.id !== id)
-          .sort((a, b) => (a.order || 0) - (b.order || 0));
+      .deleteModuleContent(
+        this.program_id,
+        this.module_id,
+        this.contentPendingDelete.id,
+      )
+      .subscribe({
+        next: () => {
+          this.module_contents = this.module_contents
+            .filter((mc) => mc.id !== this.contentPendingDelete?.id)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+          this.isDeletingContent = false;
+          this.closeDeleteConfirm();
+        },
+        error: () => {
+          this.isDeletingContent = false;
+          this.deleteErrorMessage =
+            'Could not delete this content. Please try again.';
+        },
       });
   }
 }

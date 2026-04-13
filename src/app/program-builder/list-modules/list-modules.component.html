@@ -97,7 +97,7 @@
             >
               Manage Content
             </button>
-            <button class="btn-icon text-error" title="Delete" (click)="onDelete(module.id)">🗑️</button>
+            <button class="btn-icon text-error" title="Delete" (click)="onDelete(module)">🗑️</button>
           </div>
         </div>
 
@@ -111,5 +111,59 @@
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<div
+  class="modal-overlay delete-confirm-overlay"
+  *ngIf="showDeleteConfirm && modulePendingDelete"
+  (click)="closeDeleteConfirm()"
+>
+  <div
+    class="modal-content-wrapper delete-confirm-modal"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal-header">
+      <h4>Delete module</h4>
+      <button
+        class="modal-close"
+        type="button"
+        (click)="closeDeleteConfirm()"
+        [disabled]="isDeletingModule"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="delete-confirm-content">
+        <div class="delete-icon-wrap">🗑️</div>
+        <p class="delete-message">
+          Are you sure you want to delete
+          <strong>{{ modulePendingDelete.title }}</strong>?
+        </p>
+        <p class="delete-subtext">This action cannot be undone.</p>
+        <p class="field-error delete-error" *ngIf="deleteErrorMessage">
+          {{ deleteErrorMessage }}
+        </p>
+      </div>
+      <div class="invite-actions invite-actions-split delete-confirm-actions">
+        <button
+          type="button"
+          class="btn-outline"
+          [disabled]="isDeletingModule"
+          (click)="closeDeleteConfirm()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-danger"
+          [disabled]="isDeletingModule"
+          (click)="confirmDeleteModule()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
   </div>
 </div>
