@@ -1,28 +1,112 @@
-<!-- <div class="lesson-container">
-  <div class="lesson-header">
-    <h1>{{ lesson?.title }}</h1>
-    <span class="content-type-badge">{{ lesson?.content_type }}</span>
+<div class="toast-container" *ngIf="showErrorToast && errorMessage">
+  <div class="toast-notification error">
+    <span class="toast-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" fill="#e53935" />
+        <path fill="#fff" d="M22 14h4v16h-4V14zm0 20h4v4h-4v-4z" />
+      </svg>
+    </span>
+    <div class="toast-message">{{ errorMessage }}</div>
   </div>
+</div>
 
-  <div class="lesson-footer">
-    <button class="btn-secondary" (click)="goToCatalog()">Go Back</button>
-    <div class="no-lesson-files" *ngIf="files.length === 0 && !next_module_content">
-      <button class="btn-primary" (click)="markAsComplete()">Next</button>
-    </div>
-    <button *ngIf="next_module_content" class="btn-primary" (click)="goToNextContent()">Next</button>
+<div class="learning-header">
+  <div class="title-area">
+    <a (click)="goToCatalog()" class="back-link"
+      ><svg
+        fill="#000000"
+        xmlns="http://www.w3.org/2000/svg"
+        width="64px"
+        height="64px"
+        viewBox="0 0 52 52"
+        enable-background="new 0 0 52 52"
+        xml:space="preserve"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            d="M48.6,23H15.4c-0.9,0-1.3-1.1-0.7-1.7l9.6-9.6c0.6-0.6,0.6-1.5,0-2.1l-2.2-2.2c-0.6-0.6-1.5-0.6-2.1,0 L2.5,25c-0.6,0.6-0.6,1.5,0,2.1L20,44.6c0.6,0.6,1.5,0.6,2.1,0l2.1-2.1c0.6-0.6,0.6-1.5,0-2.1l-9.6-9.6C14,30.1,14.4,29,15.3,29 h33.2c0.8,0,1.5-0.6,1.5-1.4v-3C50,23.8,49.4,23,48.6,23z"
+          ></path>
+        </g></svg></a>
+    <h3>{{ exam.name }}</h3>
   </div>
-</div> -->
-
-<!-- <div class="nodata" *ngIf="loading">Loading ...</div>
-<div *ngIf="!loading && attemptId && exam">
-  <app-form-attempt
-    [attemptId]="attemptId"
-    [subjectTitle]="exam.name"
-    [timeDiff]="timeDiff"
-    (save)="onSave($event)"
-  >
-  </app-form-attempt>
-</div> -->
-
-<!-- <app-errors [errors]="errors"></app-errors> -->
-        <router-outlet></router-outlet>
+  <div class="nav-actions">
+    <button
+      class="btn-nav"
+      (click)="goToPreviousContent()"
+      [disabled]="!previous_module_content"
+      aria-label="Previous"
+    >
+      <svg
+        version="1.1"
+        baseProfile="tiny"
+        id="Layer_1"
+        xmlns:x="&amp;ns_extend;"
+        xmlns:i="&amp;ns_ai;"
+        xmlns:graph="&amp;ns_graphs;"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+        width="64px"
+        height="64px"
+        viewBox="0 0 42 42"
+        xml:space="preserve"
+        transform="rotate(180)"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          <polygon
+            fill-rule="evenodd"
+            points="13.933,1 34,21.068 14.431,40.637 9.498,35.704 24.136,21.068 9,5.933 "
+          ></polygon>
+        </g>
+      </svg>
+    </button>
+    <button
+      class="btn-nav next"
+      (click)="goToNextContent()"
+      [disabled]="!next_module_content"
+      aria-label="Next"
+    >
+      <svg
+        version="1.1"
+        baseProfile="tiny"
+        id="Layer_1"
+        xmlns:x="&amp;ns_extend;"
+        xmlns:i="&amp;ns_ai;"
+        xmlns:graph="&amp;ns_graphs;"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+        width="64px"
+        height="64px"
+        viewBox="0 0 42 42"
+        xml:space="preserve"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          <polygon
+            fill-rule="evenodd"
+            points="13.933,1 34,21.068 14.431,40.637 9.498,35.704 24.136,21.068 9,5.933 "
+          ></polygon>
+        </g>
+      </svg>
+    </button>
+  </div>
+</div>
+<router-outlet></router-outlet>

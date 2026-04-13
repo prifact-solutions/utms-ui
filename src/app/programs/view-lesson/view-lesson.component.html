@@ -1,3 +1,16 @@
+<!-- Error toast (same container pattern as program details enrollment success) -->
+<div class="toast-container" *ngIf="showErrorToast && errorMessage">
+  <div class="toast-notification error">
+    <span class="toast-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" fill="#e53935" />
+        <path fill="#fff" d="M22 14h4v16h-4V14zm0 20h4v4h-4v-4z" />
+      </svg>
+    </span>
+    <div class="toast-message">{{ errorMessage }}</div>
+  </div>
+</div>
+
 <div class="learning-environment skeleton-loading" *ngIf="isLoading">
   <div class="learning-header">
     <div class="title-area">

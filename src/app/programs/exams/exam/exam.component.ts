@@ -24,6 +24,7 @@ export class ExamComponent extends ComponentBase {
   files: Array<ModuleContentFile> = [];
 
   next_module_content: ModuleContent | null = null;
+  previous_module_content: ModuleContent | null = null;
 
   program_id: number = 0;
   module_id: number = 0;
@@ -33,6 +34,9 @@ export class ExamComponent extends ComponentBase {
   attemptId!: number;
   timeDiff!: number;
   exam!: Exam;
+  examContent!: ModuleContent;
+  errorMessage = '';
+  showErrorToast = false;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   private dateSubject = new Subject<string>();
@@ -47,6 +51,8 @@ export class ExamComponent extends ComponentBase {
   }
 
   ngOnInit() {
+    this.errorMessage = '';
+    this.showErrorToast = false;
     let sub = this.route.params
       .pipe(
         map((params) => {
@@ -64,52 +70,102 @@ export class ExamComponent extends ComponentBase {
         switchMap((params) => {
           return forkJoin([
             //TO-DO: Send ExamId as input instead of fetch here
-            this.programService
-              .getExam(
-                params.program_id,
-                params.module_id,
-                params.module_content_id,
-              )
-              .pipe(
-                switchMap((examDetails) => {
-                  this.exam = examDetails.exam;
-                  this.timeDiff =
-                    examDetails.exam.duration_hours * 60 * 60 * 1000;
-                  return this.examService
-                    .getExamAttempt(this.program_id, examDetails.exam.id)
-                    .pipe(
-                      switchMap((attempt) => {
-                        if (attempt) {
-                          return of(attempt);
-                        } else {
-                          return this.examService.attemptExam(
-                            params.program_id,
-                            params.module_id,
-                            params.module_content_id,
-                            examDetails.exam.id,
-                          );
-                        }
-                      }),
-                    );
-                }),
-              ),
+            this.programService.getExam(
+              params.program_id,
+              params.module_id,
+              params.module_content_id,
+            ),
+            // .pipe(
+            //   switchMap((examDetails) => {
+            //     this.examContent = examDetails.content;
+            //     this.exam = examDetails.exam;
+            //     this.timeDiff =
+            //       examDetails.exam.duration_hours * 60 * 60 * 1000;
+            //     return this.examService
+            //       .getExamAttempt(this.program_id, examDetails.exam.id)
+            //       .pipe(
+            //         switchMap((attempt) => {
+            //           if (attempt) {
+            //             return of(attempt);
+            //           } else {
+            //             return this.examService.attemptExam(
+            //               params.program_id,
+            //               params.module_id,
+            //               params.module_content_id,
+            //               examDetails.exam.id,
+            //             );
+            //           }
+            //         }),
+            //       );
+            //   }),
+            // )
+            this.programService.getProgramCatalog(params.program_id),
           ]);
         }),
+        switchMap(([examDetails, catalog]) => {
+          this.examContent = examDetails.content;
+          this.exam = examDetails.exam;
+          this.timeDiff = examDetails.exam.duration_hours * 60 * 60 * 1000;
+          if (catalog && catalog.modules) {
+            const contents = catalog.modules.flatMap(
+              (m) => m.module_contents || [],
+            );
+            const currentIndex = contents.findIndex(
+              (c) => c.id == this.examContent.id,
+            );
+
+            if (currentIndex > 0) {
+              this.previous_module_content = contents[currentIndex - 1];
+            } else {
+              this.previous_module_content = null;
+            }
+
+            if (currentIndex < contents.length - 1) {
+              this.next_module_content = contents[currentIndex + 1];
+            } else {
+              this.next_module_content = null;
+            }
+          }
+          return this.examService
+            .getExamAttempt(this.program_id, examDetails.exam.id)
+            .pipe(
+              switchMap((attempt) => {
+                if (attempt) {
+                  return of(attempt);
+                } else {
+                  return this.examService.attemptExam(
+                    this.program_id,
+                    this.module_id,
+                    this.module_content_id,
+                    examDetails.exam.id,
+                  );
+                }
+              }),
+            );
+        }),
       )
-      .subscribe(([attempt]) => {
+    .subscribe({
+      next: (attempt) => {
         this.attemptId = attempt.id;
 
         if (attempt.status == ExamAttemptStatus.COMPLETED) {
           this.router.navigate(['exam-result', this.exam.id], {
             relativeTo: this.route,
           });
-        }else{
+        } else {
           this.router.navigate(['take-exam', this.exam.id], {
             relativeTo: this.route,
           });
         }
         this.loading = false;
-      });
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage =
+          err?.error?.error || err?.message || 'Failed to load content';
+        this.triggerErrorToast();
+      },
+    });
     this.registerSubscription(sub);
   }
 
@@ -126,7 +182,13 @@ export class ExamComponent extends ComponentBase {
           });
         },
         error: (error) => {
-          this.errors.push({ name: error.code, message: error.message });
+          this.errors.push({
+            name: (error as Error & { code?: string })?.code ?? 'error',
+            message: error?.message ?? 'Unknown error',
+          });
+          this.errorMessage =
+            error?.error?.error || error?.message || 'Failed to submit exam';
+          this.triggerErrorToast();
         },
       });
     this.registerSubscription(sub);
@@ -147,9 +209,28 @@ export class ExamComponent extends ComponentBase {
         });
     }
   }
+  goToPreviousContent() {
+    if (this.previous_module_content) {
+      this.goToContent(this.previous_module_content);
+    }
+  }
+  private goToContent(content: ModuleContent) {
+    const path = content.content_type == 'LESSON' ? 'lesson' : 'exam';
+    this.router.navigateByUrl(
+      `/programs/${this.program_id}/details/modules/${content.module_id}/contents/${content.id}/${path}`,
+    );
+  }
   onNextContentAvailable(next_content: ModuleContent) {
     this.next_module_content = next_content;
   }
+  private triggerErrorToast(): void {
+    this.showErrorToast = true;
+    setTimeout(() => {
+      this.showErrorToast = false;
+      this.errorMessage = '';
+    }, 5000);
+  }
+
   goToCatalog() {
     this.router.navigateByUrl(`/programs/${this.program_id}/details`);
   }

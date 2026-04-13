@@ -9,7 +9,7 @@ import { ModuleContent, ModuleContentFile } from '../models/program.model';
   selector: 'app-view-lesson',
   templateUrl: './view-lesson.component.html',
   styleUrls: ['./view-lesson.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ViewLessonComponent extends ComponentBase {
   lesson: ModuleContent | null = null;
@@ -21,68 +21,105 @@ export class ViewLessonComponent extends ComponentBase {
   program_id: number = 0;
   module_id: number = 0;
   isLoading: boolean = true;
+  errorMessage = '';
+  showErrorToast = false;
 
-  constructor(private programService: ProgramsService, private route: ActivatedRoute, private router: Router) { super(); }
+  constructor(
+    private programService: ProgramsService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    super();
+  }
 
   ngOnInit() {
-    let sub = this.route.params.pipe(
-      map((params) => {
-        return {
-          "program_id": params["program_id"],
-          "module_id": params["module_id"],
-          "module_content_id": params["module_content_id"]
-        }
-      }),
-      tap((params) => {
-        this.program_id = params.program_id;
-        this.module_id = params.module_id;
-        this.isLoading = true;
-        this.lesson = null;
-      }),
-      switchMap((params) => {
-        return combineLatest([
-          this.programService.getLesson(params.program_id, params.module_id, params.module_content_id),
-          this.programService.getProgramCatalog(params.program_id)
-        ]);
-      }))
-      .subscribe(([lesson, catalog]) => {
-        this.lesson = lesson.content;
-        this.files = lesson.files;
-        this.isLoading = false;
+    this.errorMessage = '';
+    this.showErrorToast = false;
+    let sub = this.route.params
+      .pipe(
+        map((params) => {
+          return {
+            program_id: params['program_id'],
+            module_id: params['module_id'],
+            module_content_id: params['module_content_id'],
+          };
+        }),
+        tap((params) => {
+          this.program_id = params.program_id;
+          this.module_id = params.module_id;
+          this.isLoading = true;
+          this.lesson = null;
+        }),
+        switchMap((params) => {
+          return combineLatest([
+            this.programService.getLesson(
+              params.program_id,
+              params.module_id,
+              params.module_content_id,
+            ),
+            this.programService.getProgramCatalog(params.program_id),
+          ]);
+        }),
+      )
+      .subscribe({
+        next: ([lesson, catalog]) => {
+          this.lesson = lesson.content;
+          this.files = lesson.files;
+          this.isLoading = false;
 
-        if (catalog && catalog.modules) {
-          const contents = catalog.modules.flatMap(m => m.module_contents || []);
-          const currentIndex = contents.findIndex(c => c.id == this.lesson?.id);
+          if (catalog && catalog.modules) {
+            const contents = catalog.modules.flatMap(
+              (m) => m.module_contents || [],
+            );
+            const currentIndex = contents.findIndex(
+              (c) => c.id == this.lesson?.id,
+            );
 
-          if (currentIndex > 0) {
-            this.previous_module_content = contents[currentIndex - 1];
-          } else {
-            this.previous_module_content = null;
+            if (currentIndex > 0) {
+              this.previous_module_content = contents[currentIndex - 1];
+            } else {
+              this.previous_module_content = null;
+            }
+
+            if (currentIndex < contents.length - 1) {
+              this.next_module_content = contents[currentIndex + 1];
+            } else {
+              this.next_module_content = null;
+            }
           }
-
-          if (currentIndex < contents.length - 1) {
-            this.next_module_content = contents[currentIndex + 1];
-          } else {
-            this.next_module_content = null;
-          }
-        }
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.lesson = null;
+          this.files = [];
+          this.errorMessage =
+            err?.error?.error || err?.message || 'Failed to load content';
+          this.triggerErrorToast();
+        },
       });
     this.registerSubscription(sub);
   }
 
   markAsComplete() {
     if (this.lesson) {
-      this.programService.updateLessonStatus(this.program_id, this.module_id, this.lesson?.id, "COMPLETED").subscribe((res) => {
-        this.next_module_content = res;
-        this.goToNextContent();
-      });
+      this.programService
+        .updateLessonStatus(
+          this.program_id,
+          this.module_id,
+          this.lesson?.id,
+          'COMPLETED',
+        )
+        .subscribe((res) => {
+          this.next_module_content = res;
+          this.goToNextContent();
+        });
     }
   }
   onNextContentAvailable(next_content: ModuleContent) {
     this.next_module_content = next_content;
   }
   goToCatalog() {
-    this.router.navigateByUrl(`/programs/${this.program_id}/details`)
+    this.router.navigateByUrl(`/programs/${this.program_id}/details`);
   }
   goToPreviousContent() {
     if (this.previous_module_content) {
@@ -93,14 +130,23 @@ export class ViewLessonComponent extends ComponentBase {
   goToNextContent() {
     if (this.next_module_content) {
       this.goToContent(this.next_module_content);
-    }
-    else {
+    } else {
       this.goToCatalog();
     }
   }
 
+  private triggerErrorToast(): void {
+    this.showErrorToast = true;
+    setTimeout(() => {
+      this.showErrorToast = false;
+      this.errorMessage = '';
+    }, 5000);
+  }
+
   private goToContent(content: ModuleContent) {
-    const path = content.content_type == "LESSON" ? "lesson" : "exam";
-    this.router.navigateByUrl(`/programs/${this.program_id}/details/modules/${content.module_id}/contents/${content.id}/${path}`);
+    const path = content.content_type == 'LESSON' ? 'lesson' : 'exam';
+    this.router.navigateByUrl(
+      `/programs/${this.program_id}/details/modules/${content.module_id}/contents/${content.id}/${path}`,
+    );
   }
 }
