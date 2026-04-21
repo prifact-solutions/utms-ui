@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,11 @@ import { AchievementsComponent } from './public/achievements/achievements.compon
 import { ProfileComponent } from './public/profile/profile.component';
 import { SettingsComponent } from './public/settings/settings.component';
 import { NotesComponent } from './public/notes/components/notes/notes.component';
+import { TenantInfoService } from './common/services/tenant-info.service';
+
+export function initializeTenantInfo(tenantInfoService: TenantInfoService): () => Promise<void> {
+  return () => tenantInfoService.loadInfo();
+}
 
 @NgModule({
   declarations: [
@@ -40,7 +45,14 @@ import { NotesComponent } from './public/notes/components/notes/notes.component'
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeTenantInfo,
+      deps: [TenantInfoService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

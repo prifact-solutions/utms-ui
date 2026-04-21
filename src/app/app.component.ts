@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
+import { TenantInfoService } from './common/services/tenant-info.service';
 
 @Component({
   selector: 'app-root',
@@ -8,16 +10,18 @@ import { AuthService } from 'src/app/utms-auth/services/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'utms-public';
   isAuthenticated = false;
   private authSubscription: Subscription | null = null;
 
   constructor(
     private authService: AuthService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private titleService: Title,
+    private tenantInfoService: TenantInfoService
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle(this.tenantInfoService.appTitle);
     this.isAuthenticated = this.authService.isAuthenticated();
     this.updateBodyClass();
 
