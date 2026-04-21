@@ -10,6 +10,13 @@ import { switchMap } from 'rxjs';
   styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent extends ComponentBase {
+  private readonly noteDateFormatter = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
   isNotePopupOpen = false;
   isViewNotePopupOpen = false;
   isDeleteConfirmOpen = false;
@@ -30,7 +37,7 @@ export class NotesComponent extends ComponentBase {
     this.notesLoading = true;
     const sub = this.notesService.getNotesForUser().subscribe({
       next: (notes) => {
-        this.notes = notes;
+        this.notes = this.sortNotesByUpdatedAt(notes);
         this.notesLoading = false;
       },
       error: () => {
@@ -99,7 +106,7 @@ export class NotesComponent extends ComponentBase {
       .subscribe({
         next: (notes) => {
           this.errorMessage = '';
-          this.notes = notes;
+          this.notes = this.sortNotesByUpdatedAt(notes);
           this.notesLoading = false;
           this.closeDeleteConfirm();
         },
@@ -145,7 +152,7 @@ export class NotesComponent extends ComponentBase {
         .subscribe({
           next: (notes) => {
             this.errorMessage = '';
-            this.notes = notes;
+            this.notes = this.sortNotesByUpdatedAt(notes);
             this.notesLoading = false;
             this.closeNotePopup();
           },
@@ -166,7 +173,7 @@ export class NotesComponent extends ComponentBase {
         .subscribe({
           next: (notes) => {
             this.errorMessage = '';
-            this.notes = notes;
+            this.notes = this.sortNotesByUpdatedAt(notes);
             this.notesLoading = false;
             this.closeNotePopup();
           },
@@ -181,5 +188,18 @@ export class NotesComponent extends ComponentBase {
 
   get isEditingNote(): boolean {
     return this.editingNoteId !== null;
+  }
+
+  private sortNotesByUpdatedAt(notes: Note[]): Note[] {
+    return [...notes].sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at));
+  }
+
+  formatUpdatedAt(updatedAt: string): string {
+    const parsedDate = new Date(updatedAt);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return updatedAt;
+    }
+
+    return this.noteDateFormatter.format(parsedDate);
   }
 }

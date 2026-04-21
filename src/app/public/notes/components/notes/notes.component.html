@@ -23,7 +23,7 @@
             (click)="viewNote(note)"
           >
             <div class="note-header">
-              <span class="note-date">{{ note.updated_at }}</span>
+              <span class="note-date">Last updated on {{ formatUpdatedAt(note.updated_at) }}</span>
               <div class="note-actions">
                 <button
                   class="note-action-btn"
@@ -160,7 +160,7 @@
       </div>
       <div class="modal-body">
         <div class="note-view-content">
-          <p class="note-view-date">{{ selectedNote.updated_at }}</p>
+          <p class="note-view-date">Last updated on {{ formatUpdatedAt(selectedNote.updated_at) }}</p>
           <h3>{{ selectedNote.title }}</h3>
           <p>{{ selectedNote.content }}</p>
         </div>
