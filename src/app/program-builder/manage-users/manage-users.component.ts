@@ -164,7 +164,7 @@ export class ManageUsersComponent extends ComponentBase {
         error: (err) => {
           this.inviteStatusType = 'error';
           if (err.status === 409) {
-            this.inviteStatusMessage = 'A user with this email already exists.';
+            this.inviteStatusMessage = err.error.message;
           } else {
             this.inviteStatusMessage = 'An unexpected error occurred.';
           }
