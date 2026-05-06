@@ -19,7 +19,9 @@
 .admin-page-container {
 
   padding-top: 50px;
-
+  @media (max-width: 1020px) {
+    padding-top: 0;
+  }
   .course-listing {
     padding-top: 16px;
     gap: 48px 24px;
@@ -209,11 +211,41 @@
   .explore-search-filters {
     display: flex;
     justify-content: flex-end;
-
-
     gap: 16px;
     flex: 1;
-
+    @media (max-width: 1020px) {
+      flex: auto;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .course-access{
+        order: 1;
+      }
+      .button.primary{
+        order: 2;
+      }
+      .search-box{
+        order: 3;
+        width: 100% !important;
+        padding: 0 15px !important;
+        svg{
+          margin-right: 8px !important;
+        }
+        input{
+          width: 100% !important;
+          opacity: 1 !important;
+        }
+      }
+    }
+    @media (max-width: 500px) {
+      flex: auto;
+      .course-access{
+        width: 100%;
+      }
+      .button.primary{
+        width: 100%;
+      }
+    }
   }
 
   .course-access {

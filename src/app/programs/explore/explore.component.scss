@@ -184,6 +184,13 @@
         margin: 0 auto;
     }
 
+    @media (max-width: 500px) {
+        .explore-search-filters {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+
     .course-access {
         flex-shrink: 0;
     }

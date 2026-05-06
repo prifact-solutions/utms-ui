@@ -378,13 +378,13 @@
 
             .lesson-number {
               font-size: 10px;
-              color: #fff;
+              color: #919191;
               width: 18px;
               height: 18px;
               display: flex;
               align-items: center;
               justify-content: center;
-              background: #111;
+              background: #dddddd;
               border-radius: 50%;
               flex-shrink: 0;
               font-weight: 700;
@@ -420,7 +420,8 @@
 
             &.status-completed {
               .lesson-number {
-                background: #28a745;
+                background: #111;
+                color: #fff;
               }
 
               .content-title {

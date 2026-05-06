@@ -91,7 +91,11 @@
       <div class="modal-header">
         <h4>{{ isEditingNote ? "Edit Note" : "Add New Note" }}</h4>
         <button class="modal-close" type="button" (click)="closeNotePopup()">
-          ✕
+          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+            <rect width="24" height="24" fill="none"/>
+            <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
       <div class="modal-body note-edit-body">
@@ -154,7 +158,11 @@
             <i class="fas fa-pencil-alt"></i>
           </button>
           <button class="modal-close" type="button" (click)="closeViewNotePopup()">
-            ✕
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" fill="none"/>
+              <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
         </div>
       </div>
@@ -177,7 +185,11 @@
       <div class="modal-header">
         <h4>Delete Note</h4>
         <button class="modal-close" type="button" (click)="closeDeleteConfirm()">
-          ✕
+          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+            <rect width="24" height="24" fill="none"/>
+            <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
       <div class="modal-body">
@@ -185,9 +197,9 @@
           {{ errorMessage }}
         </div>
         <div class="note-delete-content">
-          <div class="delete-icon-wrap">
+          <!-- <div class="delete-icon-wrap">
             <i class="fas fa-trash-alt"></i>
-          </div>
+          </div> -->
           <p class="delete-message">
             Are you sure you want to delete
             <strong>"{{ notePendingDelete.title }}"</strong>?

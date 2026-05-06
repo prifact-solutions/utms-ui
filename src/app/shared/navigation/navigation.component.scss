@@ -129,6 +129,7 @@ app-navigation {
           background: $accent-color;
         }
       }
+      
     }
 
     &.show-filter {
@@ -148,6 +149,15 @@ app-navigation {
             opacity: 1;
           }
         }
+          @media (max-width: 1020px) {
+          a{
+            padding: 0;
+            width: 30px;
+            strong{
+              display: none;
+            }
+          }
+        }
       }
     }
   }
@@ -161,7 +171,7 @@ app-navigation {
     top: 10px;
     left: 0;
     width: 100%;
-    min-width: 300px;
+    min-width: 200px;
     background: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     border-radius: 12px;
@@ -389,7 +399,9 @@ app-navigation {
     flex-direction: column;
     align-items: center;
     padding: 6px;
-
+    @media (max-width: 1020px) {
+      width: 54px;
+    }
     .nav-item-group {
       display: flex;
       flex-direction: column;
@@ -435,7 +447,9 @@ app-navigation {
         &.toggle-menu {
           height: 58px;
           visibility: hidden;
-
+          @media (max-width: 1020px) {
+            height: 40px;
+          }
           svg {
             height: 24px;
             width: 24px;
@@ -504,7 +518,7 @@ app-navigation {
       align-items: center;
       padding: 12px 0;
       position: relative;
-      margin-bottom: 138px;
+      margin: 24px 0;
 
       &::after,
       &::before {
@@ -578,6 +592,27 @@ app-navigation {
 
   }
 
-
+  @media (max-width: 1020px) {
+    .auth-header {
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px 15px 0 15px;
+      position: static;
+      margin-left: 54px;
+      width: calc(100% - 54px);
+      height: auto;
+      .logo{
+        order: 1;
+      }
+      .button{
+        order: 2;
+      }
+      .search-box-container{
+        order: 3;
+        flex: auto;
+        width: 100%;
+      }
+    }
+  }
 
 }

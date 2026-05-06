@@ -152,6 +152,11 @@ p {
     background-color: $accent-color;
     border-color: $accent-color;
     color: white;
+
+    &:hover {
+        background: $accent-hover;
+        border-color:$accent-hover;
+    }
 }
 
 .button.primary.black {
@@ -658,7 +663,6 @@ p {
     .main-content {
         margin: 64px 0 0 64px;
         padding: 24px;
-
     }
 }
 
@@ -950,7 +954,7 @@ html body {
                 transition: all 0.2s;
                 font-size: 1rem;
                 color: #666;
-
+                padding: 0;
                 &:hover {
                     background: #111;
                     color: #fff;
@@ -987,13 +991,19 @@ html body {
                     }
                 }
 
+                @media (max-width: 500px) {
+                    .button-group {
+                        flex-direction: column-reverse;
+                    }
+                }
+
                 .form-group input[type=text],
                 .form-group input[type=number],
                 .form-group input[type=email],
                 .form-group input[type=password],
                 .form-group textarea,
                 .form-group select {
-                    border-radius: 10px;
+                    border-radius: 8px;
                 }
 
                 .form-group {
@@ -1003,9 +1013,9 @@ html body {
 
                 .program-row-grid {
                     display: flex;
-                    gap: 16px;
+                    gap: 20px;
                     align-items: flex-start;
-                    margin-bottom: 1rem;
+                    margin-bottom: 20px;
 
                     .form-group {
                         margin-bottom: 0;
@@ -1017,6 +1027,30 @@ html body {
                         &:not(.flex-2) {
                             flex: 1;
                             min-width: 100px;
+                        }
+                    }
+                }
+
+                @media (max-width: 800px) {
+                    .program-row-grid {
+                        flex-wrap: wrap;
+                        .form-group {
+
+                            &.flex-2 {
+                                flex: auto;
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+
+                @media (max-width: 500px) {
+                    .program-row-grid {
+                        .form-group {
+                            &:not(.flex-2) {
+                                flex: auto;
+                                width: 100%;
+                            }
                         }
                     }
                 }
@@ -1064,7 +1098,6 @@ html body {
 
                         &:hover {
                             background: #333;
-                            transform: scale(1.05);
                         }
 
                         &:disabled {
@@ -1074,9 +1107,21 @@ html body {
                     }
                 }
 
+                @media (max-width: 800px) {
+                    .media-upload-row {
+                        flex-direction: column;
+                    }
+                }
+
                 .invalid-feedback {
                     font-size: .75rem;
                 }
+            }
+        }
+        @media (max-width: 800px) {
+            .modal-body,
+            .modal-header{
+                padding: 20px;
             }
         }
     }
@@ -1440,9 +1485,6 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
         padding: 16px;
     }
 
-
-
-
 }
 
 @media (max-width: 1200px) {
@@ -1504,6 +1546,14 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
             }
 
         }
+    }
+}
+
+@media (max-width: 1020px) {
+    html .user-signed-in .main-content {
+        margin-top: 0;
+        padding:15px;
+        margin-left: 54px;
     }
 }
 

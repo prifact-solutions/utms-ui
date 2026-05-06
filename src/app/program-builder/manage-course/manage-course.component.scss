@@ -1,5 +1,20 @@
 @import 'src/styles/variables';
-
+.curriculum-readonly-note {
+    width: 100%;
+    margin: 0;
+    padding: 14px 16px 14px 18px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    font-weight: 600;
+    color: #000;
+    letter-spacing: 0.01em;
+    background: #fffac7;
+    border-top: 1px solid rgb(227, 218, 119);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 .manage-course-view {
 
     .admin-page-container {
@@ -262,7 +277,9 @@
             display: flex;
             flex-direction: column;
             gap: 0;
-
+            @media (max-width: 650px) {
+                flex-direction: row;
+            }
         }
     }
 
@@ -274,7 +291,9 @@
         align-items: center;
         justify-content: space-between;
 
-
+        @media (max-width: 650px) {
+            gap: 20px;
+        }
 
         .module-info {
             margin-bottom: 16px;
@@ -347,7 +366,11 @@
 
         border-top: 1px solid rgba(0, 0, 0, 0.12);
         display: grid;
-        grid-template-columns: 33.33% 1fr;
+        grid-template-columns: 25% 1fr;
+
+        @media (max-width: 1020px) {
+            border-top: 0;
+        }
 
         .button.text-only {
             border: none;
@@ -370,18 +393,6 @@
 
             h2 {
                 font-size: 1.25rem;
-
-                span {
-                    display: block;
-                    font-size: 1rem;
-                    color: red;
-
-                    &.published {
-                        color: #1e8e3e;
-                    }
-
-
-                }
             }
         }
 
@@ -414,17 +425,27 @@
 
         .course-primary {
 
-            min-height: calc(100vh - 64px);
+            min-height: calc(100vh - 65px);
             padding: 24px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             gap: 24px;
-
+            @media (max-width: 1020px) {
+                padding: 15px;
+            }
+            .course-primary-top-section{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
             .c-details-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-
+                .back-nav{
+                    margin-bottom: 0;
+                }
                 .button.small {
                     background: #eee;
                     border: none;
@@ -433,71 +454,117 @@
                         background: #eaeaea;
                     }
                 }
+                span.status-badge {
+                    // display: block;
+                    // font-size: 1rem;
+                    // color: red;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: white;
+                    z-index: 100;
+                    background: rgba(0, 0, 0, 0.8);
+                    padding: 4px 10px;
+                    border-radius: 12px;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: rgba(255, 255, 255, 0.2);
+                    color: rgb(255, 255, 255);
+                    background: rgb(179, 45, 15);
+
+                    &.published {
+                        color: rgb(255, 255, 255);
+                        background: rgb(30, 114, 50);
+                    }
 
 
+                }
+            }
+
+            .main-header-actions{
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            @media ((min-width: 1000px) and (max-width: 1300px)) {
+                .main-header-actions a,
+                .main-header-actions button{
+                    width: 100%;
+                }
+            }
+            @media (max-width: 400px) {
+                .main-header-actions a,
+                .main-header-actions button{
+                    width: 100%;
+                }
+            }
+            .main-header-actions.only-edit{
+                justify-content: flex-end;
             }
         }
 
         .c-media {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             width: 100%;
         }
 
         .course-curriculum {
-            min-height: calc(100vh - 64px);
+            min-height: calc(100vh - 65px);
             display: flex;
             overflow: hidden;
-
+            position: relative;
+            
             .curriculum-sidebar {
                 width: 320px;
-
                 display: flex;
                 flex-direction: column;
                 background: #fafafa;
-
-                .curriculum-readonly-note {
-                    margin: 0;
-                    padding: 14px 16px 14px 18px;
-                    font-size: 0.8125rem;
-                    line-height: 1.5;
-                    font-weight: 600;
-                    color: #1a1a1a;
-                    letter-spacing: 0.01em;
-                    background: linear-gradient(90deg, rgba($accent-color, 0.12) 0%, #fff 42%);
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-                    border-left: 4px solid $accent-color;
-                    box-shadow:
-                        0 1px 0 rgba(255, 255, 255, 0.9) inset,
-                        0 4px 12px -4px rgba(0, 0, 0, 0.08);
-                    flex-shrink: 0;
-                }
 
                 .curriculum-actions {
                     display: flex;
                     gap: 8px;
                     min-height: 64px;
                     align-items: center;
-
+                    padding: 0 16px;
                     justify-content: space-between;
 
                     h3 {
                         font-size: .875rem;
-                        padding: 16px;
 
                     }
 
                     button {
-
-                        border: none;
-                        background-color: transparent;
+                        width: 28px;
+                        height: 28px;
+                        border: 1px solid #e2e2e2;
+                        border-radius: 50%;
+                        background: #fff;
+                        color: #666;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         cursor: pointer;
-                        min-width: 64px;
+                        transition: all 0.2s ease;
+                        padding: 0;
+
+                        &:hover {
+                        color: #111;
+                        border-color: #111;
+                        }
+
+                        &.delete:hover {
+                        color: #d93025;
+                        border-color: #d93025;
+                        }
 
                         svg {
-                            width: 32px;
-                            height: 32px;
+                            width: 18px;
+                            height: 18px;
+                            line-height: 0;
                         }
 
                         &:disabled {
@@ -556,22 +623,41 @@
                             gap: 12px;
                             opacity: 0;
                             transition: opacity 0.2s;
-
+                            @media (max-width: 650px) {
+                                gap: 5px;
+                            }
                             a {
-                                font-size: 0.75rem;
-                                text-decoration: none;
-                                font-weight: 500;
+                                width: 28px;
+                                height: 28px;
+                                border: 1px solid #b7b3b3;
+                                border-radius: 50%;
+                                background: none;
+                                color: #000;
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                                font-size: 11px;
+
+                                &:hover {
+                                    color: #111;
+                                    border-color: #111;
+                                    background: #fff;
+                                }
+
+                                &.delete:hover {
+                                    color: #d93025;
+                                    border-color: #d93025;
+                                }
 
                                 &.link-edit {
                                     color: $accent-color;
                                 }
 
-                                &.link-delete {
+                                &.link-delete:hover {
                                     color: #d93025;
-                                }
-
-                                &:hover {
-                                    text-decoration: underline;
+                                    border-color: #d93025;
                                 }
                             }
                         }
@@ -596,7 +682,9 @@
                 background: #eee;
                 overflow-y: auto;
                 padding: 24px;
-
+                @media (max-width: 1020px) {
+                    padding: 15px;
+                }
                 .module-details {
                     max-width: 700px;
                     margin: 0 auto;
@@ -606,25 +694,27 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-
+                        flex-wrap: wrap;
+                        gap:10px;
                         h3 {
                             font-size: 1.25rem;
 
                         }
 
                         .header-actions {
-                            gap: 16px;
+                            gap: 10px;
                             display: flex;
                             align-items: center;
+                            flex-wrap: wrap;
 
                             .qp-link {
                                 display: inline-flex;
                                 align-items: center;
                                 gap: 6px;
-                                color: #555;
+                                color: #000;
                                 border-color: #ddd;
                                 text-decoration: none;
-                                font-size: 0.8rem;
+                                background: #fff;
 
                                 svg {
                                     flex-shrink: 0;
@@ -633,7 +723,7 @@
                                 &:hover {
                                     border-color: #111;
                                     color: #111;
-                                    background: transparent;
+                                    background: #fff;
                                 }
                             }
 
@@ -791,5 +881,10 @@
         .text-error {
             color: #d93025;
         }
+    }
+
+    .manage-course-page-container.has-top-banner .course-primary,
+    .manage-course-page-container.has-top-banner .course-curriculum {
+        min-height: calc(100vh - 115px);
     }
 }
