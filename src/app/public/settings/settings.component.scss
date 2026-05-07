@@ -1,17 +1,20 @@
 @import 'src/styles/variables';
 
 .settings-page {
+    .dashboard-banner{
+        margin-bottom: 20px;
+    }
     .settings-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 24px;
     }
 
     .settings-card {
-        background: #fff;
-        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
         padding: 24px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 
         h3 {
             margin: 0 0 20px 0;
@@ -36,12 +39,13 @@
         align-items: center;
         padding: 16px 0;
         border-bottom: 1px solid #fafafa;
-
+        gap: 10px;
         &:last-child {
             border-bottom: none;
         }
 
         .setting-info {
+            width: calc(100% - 55px);
             strong {
                 display: block;
                 font-size: 0.9375rem;

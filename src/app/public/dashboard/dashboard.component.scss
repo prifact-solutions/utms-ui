@@ -195,7 +195,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        visibility: hidden;
+        display: none;
 
         .announcement-item {
             display: flex;

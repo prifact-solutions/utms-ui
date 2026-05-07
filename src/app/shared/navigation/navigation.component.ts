@@ -134,4 +134,28 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.showFilter = false;
     }
   }
+
+  tooltipVisible = false;
+  tooltipText = '';
+
+  tooltipX = 0;
+  tooltipY = 0;
+
+  showTooltip(event: MouseEvent, text: string) {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+
+    this.tooltipText = text;
+
+    this.tooltipX = rect.right + 12;
+
+    this.tooltipY =
+      rect.top + rect.height / 2;
+
+    this.tooltipVisible = true;
+  }
+
+  hideTooltip() {
+    this.tooltipVisible = false;
+  }
 }
