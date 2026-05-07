@@ -33,6 +33,7 @@ export class ManageCourseComponent
   public categories: Category[] = [];
   public isLoading: boolean = true;
   public showEditModal: boolean = false;
+  public showViewModal: boolean = false;
   public showAddLessonModal: boolean = false;
   public showAddExamModal: boolean = false;
   public showEditModuleModal: boolean = false;
@@ -127,8 +128,17 @@ export class ManageCourseComponent
   get isCurriculumReadonly(): boolean {
     return this.program?.status === 'ACTIVE';
   }
+  
+  openViewModal(): void {
+    this.showViewModal = true;
+  }
+
+  closeViewModal(): void {
+    this.showViewModal = false;
+  }
 
   openEditModal(): void {
+    this.showViewModal = false;
     this.showEditModal = true;
   }
 

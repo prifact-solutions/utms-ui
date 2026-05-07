@@ -15,83 +15,19 @@
                     </svg>
                     <span>Back to Courses</span>
                 </div>
-                <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
-                    {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
-                </span>
             </div>
             
             <div class="c-details">
                 <div class="c-title">
                     <h2>{{ program.title }}</h2>
-                </div>
-
-                <p>{{ program.description }}</p>
-                <div class="split">
-                    <div class="tag-list">
-                        <span class="tag" *ngFor="let catId of program.categories">
-                            {{ getCategoryLabel(catId) }}
-                        </span>
-                        <span class="no-data" *ngIf="!program.categories?.length">No categories assigned</span>
-                    </div>
-                    <div class="c-info">
-                        {{ program.duration }} Days ● {{ program.video_hours || 0 }} Hours
-                    </div>
-
-                </div>
-
-                <div class="c-media">
-                    <div class="media-item">
-                        <label>Preview Video</label>
-                        <div class="video-preview-box" (click)="!program.preview_video && openEditModal()"
-                            [class.clickable]="!program.preview_video">
-                            <app-program-featured-media [program]="program" media_type="VIDEO"
-                                *ngIf="program.preview_video"></app-program-featured-media>
-                            <div class="placeholder" *ngIf="!program.preview_video">
-                                <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <rect width="24" height="24"></rect>
-                                            <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                            <path d="M6 12H18" stroke="#000000" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </g>
-                                    </svg></span>
-                                No preview video uploaded
-                            </div>
-                        </div>
-                    </div>
-                    <div class="media-item">
-                        <label>Thumbnail / Featured Image</label>
-                        <div class="image-preview-box" (click)="!program.thumbnail && openEditModal()"
-                            [class.clickable]="!program.thumbnail">
-                            <app-program-featured-media [program]="program" media_type="IMAGE"
-                                *ngIf="program.thumbnail"></app-program-featured-media>
-                            <div class="placeholder" *ngIf="!program.thumbnail">
-                                <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <rect width="24" height="24"></rect>
-                                            <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                            <path d="M6 12H18" stroke="#000000" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </g>
-                                    </svg></span>
-                                No image uploaded
-                            </div>
-                        </div>
-                    </div>
-
+                    <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
+                        {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
+                    </span>
                 </div>
             </div>
         </div>
         <div class="main-header-actions"  [ngClass]="{ 'only-edit': program.status == 'ACTIVE' }">
-            <a (click)="openEditModal()" class="button">Edit</a>
+            <a (click)="openViewModal()" class="button">View Details</a>
             <button *ngIf="program.status != 'ACTIVE'"
                 type="button"
                 (click)="togglePublish()"
@@ -273,6 +209,96 @@
 <div class="loader-container" id="loader-container" *ngIf="isLoading">
     <div class="loader"></div>
     <div class="loading-text">Loading Course Builder</div>
+</div>
+
+<div class="modal-overlay" *ngIf="showViewModal && program">
+    <div class="modal-content-wrapper shadow-lg">
+        <div class="modal-header">
+            <div class="c-details-header">
+                <h4>{{ program.title }}</h4>
+                <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
+                    {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
+                </span>
+            </div>
+            <button class="modal-close" (click)="closeViewModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                    <rect width="24" height="24" fill="none"/>
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="c-details">
+                <p>{{ program.description }}</p>
+                <div class="split">
+                    <div class="tag-list">
+                        <span class="tag" *ngFor="let catId of program.categories">
+                            {{ getCategoryLabel(catId) }}
+                        </span>
+                        <span class="no-data" *ngIf="!program.categories?.length">No categories assigned</span>
+                    </div>
+                    <div class="c-info">
+                        {{ program.duration }} Days ● {{ program.video_hours || 0 }} Hours
+                    </div>
+
+                </div>
+                <div class="c-media">
+                    <div class="media-item">
+                        <label>Preview Video</label>
+                        <div class="video-preview-box" (click)="!program.preview_video && openEditModal()"
+                            [class.clickable]="!program.preview_video">
+                            <app-program-featured-media [program]="program" media_type="VIDEO"
+                                *ngIf="program.preview_video"></app-program-featured-media>
+                            <div class="placeholder" *ngIf="!program.preview_video">
+                                <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <rect width="24" height="24"></rect>
+                                            <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path d="M6 12H18" stroke="#000000" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </g>
+                                    </svg></span>
+                                No preview video uploaded
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-item">
+                        <label>Thumbnail / Featured Image</label>
+                        <div class="image-preview-box" (click)="!program.thumbnail && openEditModal()"
+                            [class.clickable]="!program.thumbnail">
+                            <app-program-featured-media [program]="program" media_type="IMAGE"
+                                *ngIf="program.thumbnail"></app-program-featured-media>
+                            <div class="placeholder" *ngIf="!program.thumbnail">
+                                <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <rect width="24" height="24"></rect>
+                                            <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path d="M6 12H18" stroke="#000000" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </g>
+                                    </svg></span>
+                                No image uploaded
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-actions view-course-details">
+                <button type="button" class="button" (click)="closeViewModal()">Close</button>
+                <button type="button" class="button primary" (click)="openEditModal()">Edit Course</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Edit Modal -->
