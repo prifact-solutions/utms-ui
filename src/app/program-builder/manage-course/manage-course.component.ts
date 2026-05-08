@@ -28,6 +28,7 @@ export class ManageCourseComponent
   extends ComponentBase
   implements OnInit, OnDestroy
 {
+  public activeTab: 'curriculum' | 'questions' = 'curriculum';
   public programId!: number;
   public program: Program | null = null;
   public categories: Category[] = [];
@@ -62,6 +63,10 @@ export class ManageCourseComponent
     this.programId = +this.route.snapshot.params['program_id'];
     this.loadData();
     this.renderer.addClass(this.document.body, 'manage-course-view');
+  }
+
+  setTab(tab: 'curriculum' | 'questions'): void {
+    this.activeTab = tab;
   }
 
   override ngOnDestroy(): void {

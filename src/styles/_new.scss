@@ -108,7 +108,7 @@ p {
         justify-content: end;
     }
 
-    > div:last-child {
+    >div:last-child {
         justify-self: end;
     }
 
@@ -155,7 +155,7 @@ p {
 
     &:hover {
         background: $accent-hover;
-        border-color:$accent-hover;
+        border-color: $accent-hover;
     }
 }
 
@@ -955,6 +955,7 @@ html body {
                 font-size: 1rem;
                 color: #666;
                 padding: 0;
+
                 &:hover {
                     background: #111;
                     color: #fff;
@@ -1034,6 +1035,7 @@ html body {
                 @media (max-width: 800px) {
                     .program-row-grid {
                         flex-wrap: wrap;
+
                         .form-group {
 
                             &.flex-2 {
@@ -1118,9 +1120,11 @@ html body {
                 }
             }
         }
+
         @media (max-width: 800px) {
+
             .modal-body,
-            .modal-header{
+            .modal-header {
                 padding: 20px;
             }
         }
@@ -1435,6 +1439,14 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
     padding-bottom: 2rem;
 }
 
+.qp-card .qp-card-right .dot-menu-wrapper .setting-icon {
+    position: relative;
+    left: 0;
+    top: 0;
+    padding: 0;
+    margin: 0;
+}
+
 @media (max-width: 1200px) {
     .ulm-public-header {
 
@@ -1552,7 +1564,7 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
 @media (max-width: 1020px) {
     html .user-signed-in .main-content {
         margin-top: 0;
-        padding:15px;
+        padding: 15px;
         margin-left: 54px;
     }
 }

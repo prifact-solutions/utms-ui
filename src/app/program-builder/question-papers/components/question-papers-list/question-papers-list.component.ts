@@ -30,6 +30,7 @@ export class QuestionPapersListComponent extends ComponentBase {
   questionPapers: QuestionPaper[] = [];
   selectedQP: QuestionPaper | null = null;
   showDelConfirm: boolean = false;
+  showAddQuestionPaperModal: boolean = false;
   editQpId: number | null = null;
   programId!: number;
   moduleId!: number;
@@ -226,9 +227,28 @@ export class QuestionPapersListComponent extends ComponentBase {
   }
 
   addQuestionPaper() {
-    this.router.navigate([
-      `/programs-builder/${this.programId}/question-papers/add`,
-    ]);
+    this.showAddQuestionPaperModal = true;
+  }
+
+  closeAddQuestionPaperModal() {
+    this.showAddQuestionPaperModal = false;
+  }
+
+  onQuestionPaperAdded() {
+    this.closeAddQuestionPaperModal();
+    this.loading = true;
+    const sub = this.qpService
+      .getAllQuestionPapersForProgram(this.programId)
+      .subscribe((questionPaperList) => {
+        this.loading = false;
+        this.questionPapers = questionPaperList.sort((a, b) =>
+          a.updated_date > b.updated_date ? -1 : 1,
+        );
+        this.questionPapers.forEach((qp) => {
+          this.loadOptionForQP(qp);
+        });
+      });
+    this.registerSubscription(sub);
   }
 
   updateTitle(newTitle: string, qp: QuestionPaper) {

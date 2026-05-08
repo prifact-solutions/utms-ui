@@ -15,6 +15,7 @@ import { ExamBackendService } from 'src/app/shared/services/exam-backend.service
     DesignQuestionPaperComponent,
     QuestionPapersListComponent,
   ],
+  exports: [QuestionPapersListComponent],
   imports: [
     CommonModule,
     DesignModule,

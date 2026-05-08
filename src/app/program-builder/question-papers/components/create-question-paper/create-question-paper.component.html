@@ -14,8 +14,10 @@
 
 		<div class="button-group">
 
-			<button class="button" (click)="onCancel()">Cancel</button>
-			<button class="button primary" (click)="saveQP()">Save</button>
+			<button class="button" (click)="onCancel()" [disabled]="isSaving">Cancel</button>
+			<button class="button primary" (click)="saveQP()" [disabled]="isSaving">
+				{{ isSaving ? 'Saving...' : 'Save' }}
+			</button>
 		</div>
 	</div>
 </div>
