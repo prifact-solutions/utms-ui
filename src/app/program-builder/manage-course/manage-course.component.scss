@@ -1020,4 +1020,56 @@ span.status-badge {
             flex-shrink: 1;
         }
     }
+
+    .note-delete-content {
+        text-align: center;
+        margin-bottom: 12px;
+
+        .delete-icon-wrap {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: rgba(217, 48, 37, 0.1);
+            color: #d93025;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .delete-message {
+            margin: 0;
+            color: #222;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .delete-subtext {
+            margin-top: 6px;
+            color: #8a8a8a;
+            font-size: 0.78rem;
+        }
+    }
+
+    .note-delete-actions {
+        margin-top: 0;
+        padding-top: 6px;
+        justify-content: center;
+
+        button {
+            width: auto;
+        }
+    }
+
+    .note-delete-btn {
+        background: #d93025;
+        border-color: #d93025;
+        color: #fff;
+
+        &:hover {
+            background: #b42318;
+            border-color: #b42318;
+        }
+    }
 }

@@ -367,18 +367,20 @@
         </div>
         <div class="modal-body p-0">
             <div class="p-5 text-center">
-
-                <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">
-                    Are you sure you want to delete "<strong>{{ moduleToDelete.title }}</strong>"?<br>
-                    This will permanently remove the module and all its contents.
-                </p>
+                <div class="note-delete-content">
+                    <p class="delete-message">
+                        Are you sure you want to delete "<strong>{{ moduleToDelete.title }}</strong>"?
+                    </p>
+                    <p class="delete-subtext">This action cannot be undone.</p>
+                </div>
             </div>
-            <div class="modal-footer bg-light p-4 d-flex gap-3 justify-content-center border-0"
-                style="border-radius: 0 0 20px 20px;">
-                <button class="button outline sm" (click)="closeDeleteConfirm()"
-                    style="min-width: 100px;">Cancel</button>
-                <button class="button danger sm" (click)="confirmDeleteModule()" style="min-width: 140px;">Yes,
-                    Delete</button>
+            <div class="button-group note-popup-actions note-delete-actions">
+                <button class="button" type="button" (click)="closeDeleteConfirm()">
+                    Cancel
+                </button>
+                <button class="button note-delete-btn" type="button" (click)="confirmDeleteModule()">
+                    Delete
+                </button>
             </div>
         </div>
     </div>
