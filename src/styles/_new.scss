@@ -159,6 +159,17 @@ p {
     }
 }
 
+.button.delete-btn {
+    background: #d93025;
+    border-color: #d93025;
+    color: #fff;
+
+    &:hover {
+        background: #b42318;
+        border-color: #b42318;
+    }
+}
+
 .button.primary.black {
     background-color: #111;
     border-color: #111;
