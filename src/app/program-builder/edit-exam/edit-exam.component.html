@@ -67,40 +67,43 @@
             <textarea id="context_text" formControlName="context_text"
               placeholder="Provide some context for this exam..." rows="4"></textarea>
           </div>
-
-          <div class="form-group" style="max-width: 15rem">
-            <label for="total_score">Total score<span class="required-indicator">*</span></label>
-            <input id="total_score" type="number" formControlName="total_score" min="1" />
-            <div class="invalid-feedback" *ngIf="
+          <div class="form-group-split-wrapper">
+            <div class="form-group">
+              <label for="total_score">Total score<span class="required-indicator">*</span></label>
+              <input id="total_score" type="number" formControlName="total_score" min="1" />
+              <div class="invalid-feedback" *ngIf="
                 examForm.get('total_score')?.invalid &&
                 examForm.get('total_score')?.touched
               ">
-              <span *ngIf="examForm.get('total_score')?.getError('required')">Total score is required</span>
+                <span *ngIf="examForm.get('total_score')?.getError('required')">Total score is required</span>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group" style="max-width: 15rem">
-            <label for="min_score">Qualifying score<span class="required-indicator">*</span></label>
-            <input id="min_score" type="number" formControlName="min_score" min="1" />
-            <div class="invalid-feedback" *ngIf="
+            <div class="form-group">
+              <label for="min_score">Qualifying score<span class="required-indicator">*</span></label>
+              <input id="min_score" type="number" formControlName="min_score" min="1" />
+              <div class="invalid-feedback" *ngIf="
                 examForm.get('min_score')?.invalid &&
                 examForm.get('min_score')?.touched
               ">
-              <span *ngIf="examForm.get('min_score')?.getError('required')">Qualifying score is required</span>
+                <span *ngIf="examForm.get('min_score')?.getError('required')">Qualifying score is required</span>
+              </div>
             </div>
-          </div>
-
-          <div class="form-group" style="max-width: 15rem">
-            <label for="duration">Exam duration (in hours)<span class="required-indicator">*</span></label>
-            <input id="duration" type="number" formControlName="duration" min="1" />
-            <div class="invalid-feedback" *ngIf="
+            <div class="form-group">
+              <label for="duration">Exam duration (in hours)<span class="required-indicator">*</span></label>
+              <input id="duration" type="number" formControlName="duration" min="1" />
+              <div class="invalid-feedback" *ngIf="
                 examForm.get('duration')?.invalid &&
                 examForm.get('duration')?.touched
               ">
-              <span *ngIf="examForm.get('duration')?.getError('required')">Exam duration is required</span>
+                <span *ngIf="examForm.get('duration')?.getError('required')">Exam duration is required</span>
+              </div>
+            </div>
+            <div class="form-group" style="max-width: 15rem">
+              <label for="order">Display Order<span class="required-indicator">*</span></label>
+              <input id="order" type="number" formControlName="order" min="1" />
             </div>
           </div>
-
           <div class="form-group">
             <label for="question_paper" class="form-label d-flex justify-content-between align-items-center">
               <span>Select Question Paper <span class="required-indicator">*</span></span>
@@ -125,11 +128,6 @@
               ">
               <span>Please select a question paper</span>
             </div>
-          </div>
-
-          <div class="form-group" style="max-width: 15rem">
-            <label for="order">Display Order<span class="required-indicator">*</span></label>
-            <input id="order" type="number" formControlName="order" min="1" />
           </div>
 
           <div class="form-actions mt-5">

@@ -21,10 +21,37 @@
 .file-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 5px;
   justify-content: space-between;
   font-size: 0.875rem;
   padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.file-item>div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.file-item>div .btn-icon {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #b7b3b3;
+  border-radius: 50%;
+  background: none;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
+
+  &:hover {
+    color: #d93025;
+    border-color: #d93025;
+  }
 }
 
 .media-upload-row {

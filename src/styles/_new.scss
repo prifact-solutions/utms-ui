@@ -1019,8 +1019,31 @@ html body {
                 }
 
                 .form-group {
-                    margin-bottom: 1rem;
+                    margin-bottom: 20px;
                     border-color: #aaa;
+
+                }
+
+                .form-group-split-wrapper {
+                    display: flex;
+                    width: 100%;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    gap: 20px;
+
+                    @media (max-width: 500px) {
+                        gap: 0;
+                    }
+
+                    .form-group {
+                        width: calc(50% - 10px);
+                    }
+
+                    @media (max-width: 500px) {
+                        .form-group {
+                            width: 100%;
+                        }
+                    }
                 }
 
                 .program-row-grid {

@@ -1,6 +1,8 @@
 @import 'variables';
 
 // Form Groups
+
+
 .form-group {
     margin-bottom: 20px;
 
@@ -42,6 +44,28 @@
     textarea {
         min-height: 120px;
         resize: vertical;
+    }
+}
+
+.form-group-split-wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+
+    @media (max-width: 500px) {
+        gap: 0;
+    }
+
+    .form-group {
+        width: calc(50% - 10px);
+    }
+
+    @media (max-width: 500px) {
+        .form-group {
+            width: 100%;
+        }
     }
 }
 
