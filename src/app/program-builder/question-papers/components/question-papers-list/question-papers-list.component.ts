@@ -293,4 +293,8 @@ export class QuestionPapersListComponent extends ComponentBase {
       relativeTo: this.route,
     });
   }
+
+  closeDeleteConfirm(): void {
+    this.showDelConfirm = false;
+  }
 }
