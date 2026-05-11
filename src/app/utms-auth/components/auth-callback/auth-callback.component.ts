@@ -34,11 +34,16 @@ export class AuthCallbackComponent extends ComponentBase {
             }
           }
           const code = params['code'];
+          const launchToken = params['launch_token'];
           const error = params['error'];
 
           if (code) {
             this.isLoading = true;
             return this.authService.exchangeCodeForToken(code);
+          } else if (launchToken) {
+            this.isLoading = true;
+            return this.authService.exchangeLaunchToken(launchToken);
+            //Get redirect Url too
           } else if (!error) {
             return of(this.authService.keycloakLogin(undefined));
           } else if (
@@ -52,9 +57,10 @@ export class AuthCallbackComponent extends ComponentBase {
         }),
       )
       .subscribe({
-        next: () => {
+        next: (res) => {
           this.isLoading = false;
-          this.router.navigateByUrl(this.returnUrl);
+          const target = res?.redirect_url || this.returnUrl;
+          this.router.navigateByUrl(target);
         },
         error: (error) => {
           this.isLoading = false;
@@ -62,8 +68,9 @@ export class AuthCallbackComponent extends ComponentBase {
           if (error.status === 401) {
             this.errorMessage = 'Invalid username or password';
           } else if (error.status === 404) {
-            this.errorMessage = 'User not found. Please contact the administrator.';
-          }else if (error.status === 0) {
+            this.errorMessage =
+              'User not found. Please contact the administrator.';
+          } else if (error.status === 0) {
             this.errorMessage = 'Unable to connect to the server';
           } else {
             this.errorMessage =

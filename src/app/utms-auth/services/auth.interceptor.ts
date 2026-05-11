@@ -15,7 +15,10 @@ import { AppSettings } from 'src/app/common/appsettings';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
-  anonymousUrls: Array<string> = [`${AppSettings.apiUrl}/auth/keycloak-config`];
+  anonymousUrls: Array<string> = [
+    `${AppSettings.apiUrl}/auth/keycloak-config`,
+    `${AppSettings.apiUrl}/auth/launch-exchange`
+  ];
 
   /** Coalesces concurrent 401s into a single refresh request. */
   private refreshPromise: Promise<string> | null = null;
@@ -119,6 +122,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (
       url.includes('/auth/login') ||
       url.includes('/auth/exchange') ||
+      url.includes('/auth/launch-exchange') || 
       url.includes('/auth/refresh') ||
       url.includes('/auth/keycloak-config') ||
       url.includes('s3.amazonaws.com')

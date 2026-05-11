@@ -118,6 +118,18 @@ export class AuthService {
       );
   }
 
+  public exchangeLaunchToken(launchToken: string): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${AppSettings.apiUrl}/auth/launch-exchange/`, {
+        launch_token: launchToken,
+      })
+      .pipe(
+        tap((response) => {
+          this.persistAuthTokens(response.access, response.refresh);
+        }),
+      );
+  }
+
   public sendInvite(
     email: string,
     isStaffAccount: boolean = false,
