@@ -40,6 +40,7 @@ export class ManageCourseComponent
   public showEditModuleModal: boolean = false;
   public showAddModuleModal: boolean = false;
   public showDeleteConfirmModal: boolean = false;
+  public showDeleteContentConfirmModal: boolean = false;
   public showEditLessonModal: boolean = false;
   public showEditExamModal: boolean = false;
   public selectedModule: Module | null = null;
@@ -47,6 +48,7 @@ export class ManageCourseComponent
   public lessonToEdit: ModuleContent | null = null;
   public examToEdit: ModuleContent | null = null;
   public moduleToDelete: Module | null = null;
+  public contentToDelete: ModuleContent | null = null;
   public isPublishing: boolean = false;
 
   constructor(
@@ -324,12 +326,26 @@ export class ManageCourseComponent
     if (this.isCurriculumReadonly) {
       return;
     }
-    if (!confirm(`Are you sure you want to delete "${content.title}"?`)) return;
+    this.contentToDelete = content;
+    this.showDeleteContentConfirmModal = true;
+  }
 
+  closeDeleteContentConfirm(): void {
+    this.showDeleteContentConfirmModal = false;
+    this.contentToDelete = null;
+  }
+
+  confirmDeleteContent(): void {
+    if (this.isCurriculumReadonly || !this.contentToDelete) {
+      return;
+    }
+
+    const content = this.contentToDelete;
     const sub = this.programService
       .deleteModuleContent(this.programId, content.module_id, content.id)
       .subscribe({
         next: () => {
+          this.closeDeleteContentConfirm();
           if (this.selectedModule) {
             this.fetchModuleContents(this.selectedModule);
           }
@@ -337,6 +353,7 @@ export class ManageCourseComponent
         error: (err) => {
           console.error('Error deleting content', err);
           alert('Failed to delete content');
+          this.closeDeleteContentConfirm();
         },
       });
     this.registerSubscription(sub);
