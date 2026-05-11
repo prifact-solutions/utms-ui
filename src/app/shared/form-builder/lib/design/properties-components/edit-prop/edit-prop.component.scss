@@ -1,11 +1,20 @@
-.edit-pane {
-    border-top: 1px solid #dee5e7;
-    padding-bottom: 50px;
+.edit-panel {
+    position: fixed;
+    padding: 20px;
+    background: #fff;
+    width: 420px;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+    right: 0;
+    top: 0;
+    height: 100vh;
+    overflow: auto;
+    z-index: 2;
+    padding-top: 72px;
 }
-.edit-pane-heading {
-    padding: 20px 20px 0;
+.edit-panel-heading {
+    padding: 20px 0 0 0;
 }
-.edit-pane-heading span {
+.edit-panel-heading span {
     font-size: 0.8em;
     background: #333;
     color: #fff;
@@ -15,9 +24,8 @@
     margin-left: -5px;
 }
 
-.edit-pane-heading strong {
+.edit-panel-heading strong {
     font-weight: 600;
     display: block;
-    font-size: 1.2em;
-    padding-top: 5px;
+    font-size: 1em;
 }

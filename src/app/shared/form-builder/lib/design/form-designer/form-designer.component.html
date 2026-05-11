@@ -2,12 +2,44 @@
   Loading ...
 </div>
 <div *ngIf="!loading">
-  <div class="qp-title-box">
-    <button class="button" (click)="onBack()">Back</button>
-    <h2 *ngIf="qpContext">{{qpContext.title}}</h2>
-    <button class="button primary" (click)="onSave()">Save question paper</button>
+  <div class="qp-title-box1">
+    <div class="left-header-section">
+      <div class="back-nav">
+        <a href="javascript:void(0)" (click)="onBack()">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </a>
+      </div>
+      <h2 *ngIf="qpContext">{{qpContext.title}}</h2>    
+    </div>
+    <div class="right-header-section">
+      <div class="total-marks">
+        <span class="marks-txt">Total Grade:</span>
+        <span class="marks-count">{{total_marks}}</span>
+      </div>
+      <button class="button primary" (click)="onSave()">Save question paper</button>
+    </div>
   </div>
-  <div *ngIf='qpContext != null' id="form-design" class="main">
+  <div *ngIf='qpContext != null' id="form-design" class="main form-design-wrapper"
+    [class.edit-prop-loaded]="editPropLoaded">
+    <div class="right-panel">
+      <div class="right-panel-heading">
+        <h3>Question Elements</h3>
+        <p>Drag components from this panel and drop them into the appropriate section.</p>
+      </div>
+      <div cdkDropList cdkDropListSortingDisabled [cdkDropListData]="filteredElementTypes"
+        [cdkDropListConnectedTo]="containerids" sourceDropList='cdkDropList' class="draggable-elements">
+        <div *ngFor="let item of filteredElementTypes" cdkDrag [cdkDragData]="item" class="draggable-element">
+          <div class="icon-text-section">
+            <i [ngClass]="item.icon"></i>
+            <strong>{{item.label}}</strong>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="#cccc" width="15px" height="15px" viewBox="0 0 1920 1920">
+              <path d="M600 1440c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 720c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 0c132.36 0 240 107.64 240 240S732.36 480 600 480 360 372.36 360 240 467.64 0 600 0Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240S1187.64 0 1320 0Z" fill-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
+      <app-edit-prop></app-edit-prop>
+    </div>
     <div class="drop-area-container">
       <div cdkDropList id="root-form-container" [cdkDropListData]="qpContext.schema.sections"
         (cdkDropListDropped)="onDrop($event)" [cdkDropListConnectedTo]="containerids"
@@ -20,24 +52,7 @@
 
       </div>
     </div>
-
-    <div class="right-pane">
-      <div class="total-marks">
-        Total Grade: <span class="marks-txt">{{total_marks}}</span>
-      </div>
-      <div cdkDropList cdkDropListSortingDisabled [cdkDropListData]="filteredElementTypes"
-        [cdkDropListConnectedTo]="containerids" sourceDropList='cdkDropList' class="draggable-elements">
-
-        <div *ngFor="let item of filteredElementTypes" cdkDrag [cdkDragData]="item" class="draggable-element">
-          <i [ngClass]="item.icon"></i>
-          <strong>{{item.label}}</strong>
-        </div>
-
-      </div>
-      <app-edit-prop></app-edit-prop>
-    </div>
   </div>
-</div>
 
 <lib-confirm [showConfirm]="showBackConfirm" [confirmMessage]="'Are you sure you want to leave this page? Any unsaved changes will be discarded.'"
 		(onPrimaryAction)="confirmBackAction($event)" (onSecondaryAction)="cancelBackAction($event)"></lib-confirm>

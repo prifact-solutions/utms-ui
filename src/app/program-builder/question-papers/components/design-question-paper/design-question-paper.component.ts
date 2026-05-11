@@ -41,9 +41,9 @@ export class DesignQuestionPaperComponent extends ComponentBase {
   }
 
   onBack(event: any) {
-    this.router.navigate([
-      `/programs-builder/${this.programId}/question-papers/`,
-    ]);
+    this.router.navigate([`/programs-builder/${this.programId}/manage/`], {
+      queryParams: { tab: 'question-papers' },
+    });
   }
 
   onSave(event: any) {

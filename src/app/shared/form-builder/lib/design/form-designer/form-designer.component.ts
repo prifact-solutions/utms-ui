@@ -1,5 +1,17 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, ViewEncapsulation, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  Renderer2,
+  Inject,
+} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { QuestionPaperDesignContext } from '../../model/context';
 import { FormElementTransientSettings, FormElementType, SectionElement, MCQElement } from '../../model/form-elements';
 import { FormDesignerService } from '../services/form-designer.service';
@@ -15,7 +27,7 @@ import { SamplesService } from '../../services/samples.service';
   styleUrls: ['./form-designer.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class FormDesignerComponent implements OnInit {
+export class FormDesignerComponent implements OnInit, OnDestroy {
 
   title = 'question-forms-designer';
   containerids: Array<string> = []
@@ -32,10 +44,17 @@ export class FormDesignerComponent implements OnInit {
   showBackConfirm: boolean = false;
   errorMessages: string[] = [];
   total_marks: number;
+  editPropLoaded: boolean = false;
 
-  constructor(private formSvc: FormDesignerService, private formBackendService: FormBuilderBackendService) { }
+  constructor(
+    private formSvc: FormDesignerService,
+    private formBackendService: FormBuilderBackendService,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
+  ) { }
 
   ngOnInit() {
+    this.renderer.addClass(this.document.body, 'question-paper-design-page');
     if (this.qpId) {
       this.formBackendService.getQuestionPaperDesignContext(this.qpId)
         .pipe(
@@ -59,6 +78,13 @@ export class FormDesignerComponent implements OnInit {
     this.formSvc.qpContext.subscribe((newQp) => { if (newQp != null) this.qpContext = newQp });
     this.formSvc.containderids.subscribe((ids) => { if (ids != null) this.containerids = ids });
     this.formSvc.total_marks.subscribe((totalMarks) => { if (totalMarks != null) this.total_marks = totalMarks });
+    this.formSvc.selected_element.subscribe((el) => {
+      this.editPropLoaded = el != null;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.renderer.removeClass(this.document.body, 'question-paper-design-page');
   }
   private savedSchema = "";
   

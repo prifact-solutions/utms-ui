@@ -209,7 +209,7 @@ a:hover {
   border-radius: 2px;
   outline: 1px dashed rgba(170, 170, 170, 0.7);
   outline-offset: -2px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .draggable {
@@ -226,9 +226,15 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  cursor: grab;
+  width: 100%;
+  flex-direction: column;
+  padding: 0;
+  gap: 10px;
+  font-size: 0.875rem;
 }
 .draggable-elements > .draggable-element {
-  width: calc(50% - 5px);
+  width: 100%;
 }
 .draggable-element {
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -236,14 +242,17 @@ a:hover {
   padding: 10px;
   align-items: center;
   display: flex;
-  flex-direction: column;
-  text-align: center;
-  min-height: 125px;
-  justify-content: center;
-  margin-bottom: 10px;
   font-size: 1em;
   line-height: normal;
   background: rgba(0, 0, 0, 0.015);
+  gap: 10px;
+  border-radius: 5px;
+  justify-content: space-between;
+  .icon-text-section{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 .draggable-element strong {
   font-weight: normal;
@@ -266,29 +275,36 @@ a:hover {
   padding: 20px;
 }
 .section-box.highlight {
-  box-shadow: 0px 0px 0px 2px #1155cc;
+  box-shadow: 0px 0px 0px 2px #111;
 }
 .expand-arrow {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #b7b3b3;
   border-radius: 50%;
-  display: flex;
+  background: none;
+  color: #000;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
 }
 .expand-arrow:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  color: #111;
+  border-color: #111;
+  background: #fff;
 }
 .expand-arrow::after {
   transition: all ease 0.25s;
 }
 .expand-arrow::after {
   content: " ";
-  border: 2px solid #1155cc;
-  border-width: 0 3px 3px 0;
-  width: 10px;
-  height: 10px;
+  border: 2px solid #111;
+  border-width: 0 2px 2px 0;
+  width: 6px;
+  height: 6px;
   transition: all ease 0.25s;
 }
 .expand-arrow.up::after {
@@ -297,7 +313,7 @@ a:hover {
 }
 .expand-arrow.down::after {
   transform: rotate(45deg);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .item-box-header {
   display: flex;
@@ -306,23 +322,31 @@ a:hover {
 }
 .item-box-title {
   margin-right: auto;
-  padding-left: 20px;
+  padding-left: 5px;
   font-weight: 600;
   font-size: 1.5em;
 }
 .item-box-options a {
-  font-size: 0.9em;
-}
-.item-box-options a {
-  font-size: 0.9em;
-  text-decoration: underline;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #b7b3b3;
+  border-radius: 50%;
+  background: none;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
+  margin-right: 10px;
 }
 .item-box-options a:hover {
-  font-size: 0.9em;
-  text-decoration: none;
+  color: #d93025;
+  border-color: #d93025;
 }
 .item-details {
-  padding: 20px 44px;
+  padding: 20px;
 }
 .item-details > p {
   padding: 0 0 20px;
@@ -380,7 +404,7 @@ a:hover {
 }
 
 .edit-form {
-  padding: 10px 20px 30px;
+  padding:10px 0 0 0;
 }
 .edit-form-item {
   padding-bottom: 10px;
@@ -392,11 +416,11 @@ a:hover {
   font-size: 0.9em;
 }
 .edit-form-item label {
-  font-size: 0.85em;
-  font-weight: 600;
   display: block;
-  padding-bottom: 3px;
-  margin: 0;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  padding-left: 10px;
 }
 .edit-form input,
 .edit-form textarea {

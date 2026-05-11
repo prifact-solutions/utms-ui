@@ -1,11 +1,11 @@
-<div *ngIf="selected_form_element != null" class="edit-pane">
-  <div class="edit-pane-heading">
-    <span>Properties</span>
+<div *ngIf="selected_form_element != null" class="edit-panel">
+  <div class="edit-panel-heading">
+    <!-- <span>Properties</span> -->
     <strong>
       {{getFormElementTypeLabel(selected_form_element.elementType)}}
     </strong>
   </div>
-
+  <p class="text-muted small-size">Customize the selected question using the controls below.</p>
 
   <app-section-properties *ngIf="selected_form_element.elementType == FormElementType.section"
     [item]="selected_form_element"></app-section-properties>

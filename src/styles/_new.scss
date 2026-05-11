@@ -1314,8 +1314,19 @@ html body {
     }
 }
 
-.manage-course-view.user-signed-in .main-content {
+.manage-course-view.user-signed-in .main-content,
+.question-paper-design-page.user-signed-in .main-content,
+.question-paper-design-page.user-signed-in .main-content {
     padding: 0;
+}
+
+.question-paper-design-page.user-signed-in app-navigation .auth-header,
+.question-paper-design-page.user-signed-in app-navigation .left-navigation{
+    display: none;
+}
+
+.question-paper-design-page.user-signed-in .main-content{
+    margin: 0;
 }
 
 /* HTML: <div class="loader"></div> */
