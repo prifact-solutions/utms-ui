@@ -1,0 +1,17 @@
+<label [innerHtml]="item.questionContent.value" class="question-text"></label>
+
+<div *ngFor="let v of item.options" class="inline-form-group">
+
+    <div class="inputGroup">
+        <input 
+            disabled 
+            id="design_{{item.settings.uniqueId + '_' + v.choiceValue}}" 
+            name="{{item.settings.uniqueId}}"
+            type="radio" 
+            [checked]="item.correctAnswer == v.choiceValue" 
+            />
+        <label for="design_{{item.settings.uniqueId + '_'  + v.choiceValue}}"
+            [innerHtml]="v.choiceContent.value"></label>  
+    </div>
+    
+</div>

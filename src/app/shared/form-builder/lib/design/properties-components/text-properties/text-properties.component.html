@@ -1,0 +1,15 @@
+<div class="edit-form">
+
+    <div class="edit-form-item">
+        <label>Marks</label>
+        <input type="text" [(ngModel)]="item.marks" (input)="onMarksChange()" />
+    </div>
+    <div class="edit-form-item">
+        <label>Question Text</label>
+
+            <angular-editor #editRef (focus)="onEditorFocus(editRef)"
+            (blur)="onEditorBlur(editRef)" [(ngModel)]="item.questionContent.value" [placeholder]="'Enter text here...'"
+            [config]="noToolBarConfig">
+        </angular-editor>
+    </div>
+</div>

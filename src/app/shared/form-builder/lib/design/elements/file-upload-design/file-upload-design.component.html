@@ -1,0 +1,4 @@
+<div class="descriptive-answer">
+    <label class="question-text" [innerHTML]="item.questionContent.value"></label>
+    <textarea *ngIf="item.showTextBox" type="text" id="{{item.settings.uniqueId}}" placeholder=""></textarea>
+</div>

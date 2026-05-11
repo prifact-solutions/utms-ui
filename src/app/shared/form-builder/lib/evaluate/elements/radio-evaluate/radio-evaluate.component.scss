@@ -1,0 +1,25 @@
+.option-list {
+  padding: 5px 0 10px;
+}
+.option-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 0.85em;
+}
+.option-item::before {
+  content: " ";
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.05);
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.option-item.sel {
+  font-weight: 500;
+}
+.option-item.sel::before {
+  background-color: #1fa34a;
+  border-color: #1fa34a;
+}

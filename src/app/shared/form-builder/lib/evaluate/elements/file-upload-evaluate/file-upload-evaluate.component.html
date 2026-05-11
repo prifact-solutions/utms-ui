@@ -1,0 +1,5 @@
+<div class="question-text" [innerHTML]="item.questionContent.value"></div>
+<p *ngIf="answer && item.showTextBox" class="answer-content">
+    {{answer.answerContent}}
+</p>
+<lib-file-list *ngIf="answer" [isReadOnly]="true"  [attempt_mode]="false" [session_id]="answer.sessionKey"></lib-file-list>

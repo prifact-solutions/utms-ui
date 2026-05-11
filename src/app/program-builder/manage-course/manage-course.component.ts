@@ -28,7 +28,7 @@ export class ManageCourseComponent
   extends ComponentBase
   implements OnInit, OnDestroy
 {
-  public activeTab: 'curriculum' | 'questions' = 'curriculum';
+  public activeTab: 'curriculum' | 'question-papers' = 'curriculum';
   public programId!: number;
   public program: Program | null = null;
   public categories: Category[] = [];
@@ -61,11 +61,17 @@ export class ManageCourseComponent
 
   ngOnInit(): void {
     this.programId = +this.route.snapshot.params['program_id'];
+    
+    const tab = this.route.snapshot.queryParams['tab'];
+    if(tab == 'question-papers') {
+      this.activeTab = 'question-papers';
+    }
+
     this.loadData();
     this.renderer.addClass(this.document.body, 'manage-course-view');
   }
 
-  setTab(tab: 'curriculum' | 'questions'): void {
+  setTab(tab: 'curriculum' | 'question-papers'): void {
     this.activeTab = tab;
   }
 

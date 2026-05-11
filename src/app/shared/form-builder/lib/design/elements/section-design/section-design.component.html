@@ -1,0 +1,40 @@
+<!--section container field-->
+<div class="item-box section-box" cdkDrag [cdkDragData]="item" appTrackClicks (clickOutside)="onClickOutside($event)"
+    (clickInside)="onClickInside($event)"
+    [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
+
+    <div class="item-box-header">
+        <div cdkDragHandle class="drag-handle">
+            <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                </path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+        </div>
+        <div class="item-box-title">
+            {{item.title}}
+        </div>
+        <div class="item-box-options">
+
+            <a (click)="removeField()"
+                [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
+                Delete Section
+            </a>
+
+        </div>
+        <div>
+            <a (click)="item.settings.toggle = !item.settings.toggle" class="expand-arrow"
+                [ngClass]="item.settings.toggle? 'down' : 'up'">
+            </a>
+        </div>
+    </div>
+    <div *ngIf='!item.settings.toggle' class="item-details">
+        <p [innerHtml]="item.description.value"></p>
+        <h3>Questions</h3>
+        <app-section-questions-design [item]='item'></app-section-questions-design>
+    </div>
+</div>
+
+<lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="confirmMessage"
+    (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>

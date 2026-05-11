@@ -1,0 +1,7 @@
+<span class='marks-text'>
+    <span>Grade:</span>
+    <strong class="whole-marks" *ngIf="whole > 0">{{whole}}</strong>
+    <strong *ngIf="f_numerator > 0">
+        <sup>{{f_numerator}}</sup>&frasl;<sub>{{f_denominator}}</sub>
+    </strong>
+</span>

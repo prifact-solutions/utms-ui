@@ -1,4 +1,4 @@
-import { QuestionPaperSchemaDefn } from 'form-builder/lib/model/question-paper';
+import { QuestionPaperSchemaDefn } from '../../../shared/form-builder/lib/model/question-paper';
 
 export class SaveQuestionPaper {
 	public schema!: QuestionPaperSchemaDefn;

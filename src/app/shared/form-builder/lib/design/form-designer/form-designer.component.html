@@ -1,0 +1,49 @@
+<div *ngIf="loading" class="loading">
+  Loading ...
+</div>
+<div *ngIf="!loading">
+  <div class="qp-title-box">
+    <button class="button" (click)="onBack()">Back</button>
+    <h2 *ngIf="qpContext">{{qpContext.title}}</h2>
+    <button class="button primary" (click)="onSave()">Save question paper</button>
+  </div>
+  <div *ngIf='qpContext != null' id="form-design" class="main">
+    <div class="drop-area-container">
+      <div cdkDropList id="root-form-container" [cdkDropListData]="qpContext.schema.sections"
+        (cdkDropListDropped)="onDrop($event)" [cdkDropListConnectedTo]="containerids"
+        [cdkDropListEnterPredicate]="canDrop.bind(this)" class="section-box-sontainer">
+        <!-- using canDrop.bind(this) above due to non availablity of this in canDrop context - https://github.com/angular/components/issues/16718-->
+        <span *ngIf="!qpContext.schema.sections.length" class="no-section">Drag and drop a section here to start
+          !</span>
+
+        <app-section-design *ngFor="let item of qpContext.schema.sections" [item]="item"></app-section-design>
+
+      </div>
+    </div>
+
+    <div class="right-pane">
+      <div class="total-marks">
+        Total Grade: <span class="marks-txt">{{total_marks}}</span>
+      </div>
+      <div cdkDropList cdkDropListSortingDisabled [cdkDropListData]="filteredElementTypes"
+        [cdkDropListConnectedTo]="containerids" sourceDropList='cdkDropList' class="draggable-elements">
+
+        <div *ngFor="let item of filteredElementTypes" cdkDrag [cdkDragData]="item" class="draggable-element">
+          <i [ngClass]="item.icon"></i>
+          <strong>{{item.label}}</strong>
+        </div>
+
+      </div>
+      <app-edit-prop></app-edit-prop>
+    </div>
+  </div>
+</div>
+
+<lib-confirm [showConfirm]="showBackConfirm" [confirmMessage]="'Are you sure you want to leave this page? Any unsaved changes will be discarded.'"
+		(onPrimaryAction)="confirmBackAction($event)" (onSecondaryAction)="cancelBackAction($event)"></lib-confirm>
+
+<div *ngIf="errorMessages.length" class="alert-box">
+  <div *ngFor="let err of errorMessages">
+    <span>{{err}}</span>
+  </div>
+</div>

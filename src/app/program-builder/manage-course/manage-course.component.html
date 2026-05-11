@@ -43,7 +43,7 @@
             (click)="setTab('curriculum')">
             Lessons &amp; Exams
         </button>
-        <button type="button" class="tab-btn" [class.active]="activeTab === 'questions'" (click)="setTab('questions')">
+        <button type="button" class="tab-btn" [class.active]="activeTab === 'question-papers'" (click)="setTab('question-papers')">
             Question Papers
         </button>
     </div>
@@ -153,7 +153,7 @@
         </div>
     </div>
 
-    <div class="course-questions" *ngIf="activeTab === 'questions'">
+    <div class="course-questions" *ngIf="activeTab === 'question-papers'">
         <app-question-papers-list></app-question-papers-list>
     </div>
 </div>

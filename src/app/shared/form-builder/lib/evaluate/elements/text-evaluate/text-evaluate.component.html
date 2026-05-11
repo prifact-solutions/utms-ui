@@ -1,0 +1,7 @@
+<div class="question-text" [innerHTML]="item.questionContent.value"></div>
+<p class="answer-content">
+    <ng-container  *ngIf="answer != null">{{answer.answerContent}}</ng-container>
+</p>
+<div class="no-answer" *ngIf="answer != null && !answer.isAnswered()">
+    No answer.
+</div> 

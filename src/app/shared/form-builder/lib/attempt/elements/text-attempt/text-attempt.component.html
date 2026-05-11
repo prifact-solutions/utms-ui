@@ -1,0 +1,14 @@
+<div class="answer-form">
+
+    <label [innerHTML]="item.questionContent.value"></label>
+
+    <textarea *ngIf="!isReadOnly" id="{{item.settings.uniqueId}}" placeholder="Write your answer here"
+        [(ngModel)]="answer.answerContent"></textarea>
+
+    <p *ngIf="isReadOnly" class="answer-content">
+        <ng-container *ngIf="answer != null && answer.isAnswered()">{{answer.answerContent}}</ng-container>
+    </p> 
+    <div class="no-answer" *ngIf="isReadOnly && answer != null && !answer.isAnswered()">
+        No answer.
+    </div>   
+</div>

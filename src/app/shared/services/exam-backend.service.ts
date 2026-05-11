@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import {
   Answer,
   EvaluationResult,
-  FormBuilderBackendService,
   QuestionPaperAttemptContext,
   QuestionPaperDesignContext,
   QuestionPaperEvaluateContext,
-  QuestionPaperSchemaDefn,
-} from 'form-builder';
+} from '../form-builder/lib/model/context';
+import { QuestionPaperSchemaDefn } from '../form-builder/lib/model/question-paper';
+import { FormBuilderBackendService } from '../form-builder/lib/services/form-builder-backend.service';
 import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { AppSettings } from 'src/app/common/appsettings';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';

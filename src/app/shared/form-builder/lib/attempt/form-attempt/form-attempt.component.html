@@ -1,0 +1,54 @@
+<div *ngIf='currentPage != null'>
+
+  <div class="attempt-header">
+    <div class="attempt-exam-details">
+      <div>
+        <span class="attempt-subject-title" *ngIf="subjectTitle">{{subjectTitle}}</span>
+        <span class="attempt-exam-title" *ngIf="examTitle">({{examTitle}})</span>
+
+      </div>
+      <span class="time-left" *ngIf="timeRemaining">
+        <i class="far fa-clock"></i> Time left: 
+        <span [ngClass]="{'greenTime': timeleft > 180000, 'redTime': timeleft <= 180000}">{{timeRemaining}}</span>
+      </span>
+    </div>
+    <div class="end-exam" *ngIf="currentPage.isPreview">
+      <button class="end-exam-btn" (click)='onSave(false)'>Save and complete</button>
+    </div>
+    <div class="review-exam" *ngIf="!currentPage.isPreview">
+      <button class="button" (click)='onReview()'>Review Answers</button>
+    </div>
+  </div>
+
+  <div *ngIf="showForm" class="attempt-body">
+    <div class="attempt-body-content">
+      <div class="qp-container" *ngIf="currentPage.isPreview">
+        <div class="qp-heading">Question Paper Summary</div>
+        <div class="qp-details">
+          <div class="qp-ans">
+            <span>Total questions: {{totalQuestions}}</span>
+            <span>Answered: {{answered}}</span>
+            <span>Unanswered: {{totalQuestions - answered}}</span>
+          </div>
+          <div>
+            Max Score: {{maxScore}}
+          </div>
+        </div>
+        <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
+      </div>
+      <ng-container *ngIf="!currentPage.isPreview">
+        <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
+      </ng-container>
+      <div class="attempt-body-button-group">
+        <button *ngIf=" !currentPage.isFirst && !currentPage.isPreview" class="prev-btn" (click)='onPrevious()'>
+          Previous</button>
+        <button *ngIf="!currentPage.isLast && !currentPage.isPreview" class=" next-btn" (click)='onNext()'>Next</button>
+        <button *ngIf="currentPage.isLast" class="review-button" (click)='onReview()'>Review
+          Answers</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<lib-confirm [showConfirm]="showSaveConfirm" [confirmMessage]="confirmMsg"
+  (onPrimaryAction)="confirmSaveAction($event)" (onSecondaryAction)="cancelSaveAction($event)"></lib-confirm>

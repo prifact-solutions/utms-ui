@@ -52,7 +52,7 @@ export class CreateQuestionPaperComponent extends ComponentBase {
           if (this.inModal) {
             this.saved.emit(newQp);
             this.closed.emit();
-            return;
+            //return;
           }
           this.router.navigate([
             `/programs-builder/${this.programId}/question-papers/${newQp.id}/design`,

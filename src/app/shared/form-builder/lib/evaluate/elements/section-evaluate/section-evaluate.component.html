@@ -1,0 +1,25 @@
+<!--section container field-->
+<div class="section-box">
+    <div class="item-box" appTrackClicks (clickOutside)="onClickOutside($event)" (clickInside)="onClickInside($event)"
+        [ngClass]="item.settings.uniqueId === selected_item_id_in_evaluate_mode? 'highlight' : ''">
+
+        <div class="item-box-header">
+            <div class="item-box-title">
+                {{item.title}}
+            </div>
+            <div>
+                <a (click)="item.settings.toggle = !item.settings.toggle" class="expand-arrow "
+                    [ngClass]="item.settings.toggle? 'down' : 'up'">
+                </a>
+            </div>
+        </div>
+
+        <div *ngIf='!item.settings.toggle' class="item-details">
+            <p [innerHtml]="item.description.value"></p>
+
+            <app-section-questions-evaluate [item]='item' class='preview'></app-section-questions-evaluate>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,82 @@
+.verify-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.marks-awarded {
+    margin-left: auto;
+}
+.marks-awarded input {
+    border: 1px solid #222;
+    padding: 5px;
+    font-size: 1em;
+    font-weight: 500;
+    height: 40px;
+    width: 75px;
+    text-align: center;
+}
+.teacher-remark {
+    width: 100%;
+    height: 40px;
+}
+.teacher-remark textarea {
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid #222;
+    width: 100%;
+    background: none;
+    padding: 5px;
+    font-weight: 500;
+}
+.verify-button {
+    display: flex;
+}
+.verify-button button {
+    display: flex;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.1);
+    color: #222;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85em;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+.marks-awarded-text {
+    width: 75px;
+    display: flex;
+    font-weight: 500;
+    background: #1b8d40;
+    color: #fff;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+}
+.teacher-remark-text {
+    font-weight: 500;
+    font-size: 0.85em;
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+.error-msg {
+	padding: 10px 20px;
+	position: fixed;
+	top: 60px;
+	width: calc(100% - 490px);
+	left: 15px;
+	background: #333;
+	color: #fff;
+	border-radius: 10px;
+	z-index: 10000;
+	font-size: 1.2em;
+	box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.4);
+	animation: erroranim 3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+.error-msg > div {
+    padding: 10px;
+}

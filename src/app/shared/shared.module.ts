@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PublicNavigationComponent } from './public-navigation/public-navigation.component';
 import { ProgramFeaturedMediaComponent } from './program-featured-media/program-featured-media.component';
+import { FormBuilderModule } from './form-builder/form-builder.module';
 
 @NgModule({
   declarations: [
@@ -15,8 +16,9 @@ import { ProgramFeaturedMediaComponent } from './program-featured-media/program-
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    FormBuilderModule
   ],
-  exports: [NavigationComponent, PublicNavigationComponent, ProgramFeaturedMediaComponent, FormsModule]
+  exports: [NavigationComponent, PublicNavigationComponent, ProgramFeaturedMediaComponent, FormsModule, FormBuilderModule]
 })
 export class SharedModule { }

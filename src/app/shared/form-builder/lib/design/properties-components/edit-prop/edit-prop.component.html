@@ -1,0 +1,20 @@
+<div *ngIf="selected_form_element != null" class="edit-pane">
+  <div class="edit-pane-heading">
+    <span>Properties</span>
+    <strong>
+      {{getFormElementTypeLabel(selected_form_element.elementType)}}
+    </strong>
+  </div>
+
+
+  <app-section-properties *ngIf="selected_form_element.elementType == FormElementType.section"
+    [item]="selected_form_element"></app-section-properties>
+  <app-radio-properties *ngIf="selected_form_element.elementType == FormElementType.multiple_choice"
+    [item]="selected_form_element"></app-radio-properties>
+  <app-static-properties *ngIf="selected_form_element.elementType == FormElementType.paragraph"
+    [item]="selected_form_element"></app-static-properties>
+  <app-text-properties *ngIf="selected_form_element.elementType == FormElementType.descriptive"
+    [item]="selected_form_element"></app-text-properties>
+  <app-file-properties *ngIf="selected_form_element.elementType == FormElementType.file_upload"
+  [item]="selected_form_element"></app-file-properties>  
+</div>

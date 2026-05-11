@@ -1,0 +1,49 @@
+<div class="edit-form">
+    <strong class="edit-form-title"> QuestionID:-{{item.name}}</strong>
+    <div class="edit-form-item">
+        <label>Grade</label>
+        <input type="text" [(ngModel)]="item.marks" (input)="onMarksChange()" placeholder="Ex: 1.5" />
+    </div>
+    <div class="edit-form-item">
+        <label>Question Text</label>
+        <angular-editor #editRef id='{{"editor_" + item.settings.uniqueId}}' (focus)="onEditorFocus(editRef)"
+            (blur)="onEditorBlur(editRef)" [(ngModel)]="item.questionContent.value" [placeholder]="'Enter text here...'"
+            [config]="noToolBarConfig">
+        </angular-editor>
+    </div>
+    <strong class="edit-form-title">Choices</strong>
+    <div cdkDropList [cdkDropListData]="item.options" (cdkDropListDropped)="onDrop($event)" class="change-choice-area">
+        <div cdkDrag cdkDragBoundary='.change-choice-area' *ngFor="let option of item.options; let valueIndex=index;"
+            class="choice-item ">
+
+            <div class="choice-heading">
+                <div cdkDragHandle class="drag-line">
+
+                </div>
+                <div (click)="setCorrectChoice(option)" class="choice-number"
+                    title="Mark the correct answer amongst the various opitions"
+                    [ngClass]="option.choiceValue === item.correctAnswer? 'correct' : 'wrong'">
+                    {{option.choiceValue}}
+                </div>
+                <div class="angular-editor-choice">
+                    <angular-editor #editRef id='{{"editor_" + item.settings.uniqueId + "_option_" + valueIndex}}'
+                        [(ngModel)]="option.choiceContent.value" (focus)="onEditorFocus(editRef)"
+                        (blur)="onEditorBlur(editRef)" [placeholder]="'Choice 1'" [config]="noToolBarConfig">
+                    </angular-editor>
+                </div>
+                <div class="remove-choice">
+                    <a (click)="removeOption(option)" title="Remove this option"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-choice">
+        <button class="button primary" (click)="addOption()">
+            + Add Choice
+        </button>
+    </div>
+</div>
+
+
+<lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="'Are you sure you want to remove this option?'"
+    (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>

@@ -1,0 +1,88 @@
+<ng-container *ngFor="let question of item.questions;let i= index;">
+  <div class="item-box question-box "
+    [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''" appTrackClicks
+    (clickOutside)="onClickOutside($event, question)" (clickInside)="onClickInside($event, question)">
+
+
+    <div *ngIf="question.elementType==FormElementType.descriptive">
+
+      <div class="item-box-header">
+        <div class="item-box-title">
+          Question: {{getQuestionIndexSection(question.settings.uniqueId) + 1}}
+        </div>
+        <div class="mark-container">
+          <app-mark-display [marks]="question.marks"></app-mark-display>
+        </div>
+        <div>
+          <a (click)="question.settings.toggle = !question.settings.toggle" class="expand-arrow"
+            [ngClass]="question.settings.toggle? 'down' : 'up'">
+          </a>
+        </div>
+      </div>
+
+      <div class="item-details">
+        <div *ngIf='!question.settings.toggle'>
+          <app-text-evaluate [item]='question'></app-text-evaluate>
+        </div>
+      </div>
+
+    </div>
+    <div *ngIf="question.elementType==FormElementType.file_upload">
+
+      <div class="item-box-header">
+        <div class="item-box-title">
+          Question: {{getQuestionIndexSection(question.settings.uniqueId) + 1}}
+        </div>
+        <div class="mark-container">
+          <app-mark-display [marks]="question.marks"></app-mark-display>
+        </div>
+        <div>
+          <a (click)="question.settings.toggle = !question.settings.toggle" class="expand-arrow"
+            [ngClass]="question.settings.toggle? 'down' : 'up'">
+          </a>
+        </div>
+      </div>
+
+      <div class="item-details">
+        <div *ngIf='!question.settings.toggle'>
+          <app-file-upload-evaluate [item]='question'></app-file-upload-evaluate>
+        </div>
+      </div>
+
+    </div>
+    <div *ngIf="question.elementType==FormElementType.multiple_choice">
+
+      <div class="item-box-header">
+        <div class="item-box-title">
+          Question: {{getQuestionIndexSection(question.settings.uniqueId)+ 1}}
+        </div>
+        <div class="mark-container">
+          <app-mark-display [marks]="question.marks"></app-mark-display>
+        </div>
+        <div>
+          <a (click)="question.settings.toggle = !question.settings.toggle" class="expand-arrow"
+            [ngClass]="question.settings.toggle? 'down' : 'up'">
+          </a>
+        </div>
+      </div>
+      <div *ngIf='!question.settings.toggle' class="item-details">
+        <app-radio-evaluate [item]='question'></app-radio-evaluate>
+      </div>
+
+    </div>
+    <div *ngIf="question.elementType==FormElementType.paragraph">
+      <app-static-evaluate *ngIf='!question.settings.toggle' [item]='question'></app-static-evaluate>
+    </div>
+
+    <app-eval-question *ngIf='!question.settings.toggle && (question.isQuestion())' [item]="question">
+    </app-eval-question>
+
+
+
+
+
+
+
+  </div>
+
+</ng-container>

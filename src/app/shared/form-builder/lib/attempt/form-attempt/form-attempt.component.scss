@@ -1,0 +1,33 @@
+@import '../../formstyle';
+
+.attempt-exam-details {
+	width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.attempt-exam-title {
+	font-size: 1.8em;
+}
+.attempt-subject-title {
+	font-size: 1.5em;
+	color: #666;
+}
+.time-left {
+	font-size: 1.2em;
+}
+.end-exam {
+	padding-left: 10px;
+	min-width: 155px;
+}
+.review-exam {
+	padding-left: 10px;
+	min-width: 190px;
+}
+.greenTime {
+	font-weight: 600;
+	color: #07d62b;
+}
+.redTime {
+	font-weight: 600;
+	color: #c92003;
+}

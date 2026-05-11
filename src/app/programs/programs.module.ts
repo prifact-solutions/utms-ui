@@ -7,7 +7,7 @@ import { DetailsComponent } from './details/details.component';
 import { ViewLessonComponent } from './view-lesson/view-lesson.component';
 import { FileViewerModule } from '../common/file-viewer/file-viewer.module';
 import { RouterModule } from '@angular/router';
-import { AttemptModule, FormBuilderBackendService } from 'form-builder';
+import { FormBuilderBackendService } from '../shared/form-builder/lib/services/form-builder-backend.service';
 import { ExamBackendService } from '../shared/services/exam-backend.service';
 import { TakeExamComponent } from './exams/take-exam/take-exam.component';
 import { SharedModule } from '../shared/shared.module';
@@ -24,7 +24,7 @@ import { ExamResultComponent } from './exams/exam-result/exam-result.component';
     ExamComponent,
     ExamResultComponent,
   ],
-  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, AttemptModule, SharedModule],
+  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, SharedModule],
   providers: [
     { provide: FormBuilderBackendService, useClass: ExamBackendService },
   ],

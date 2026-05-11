@@ -1,0 +1,23 @@
+.edit-pane {
+    border-top: 1px solid #dee5e7;
+    padding-bottom: 50px;
+}
+.edit-pane-heading {
+    padding: 20px 20px 0;
+}
+.edit-pane-heading span {
+    font-size: 0.8em;
+    background: #333;
+    color: #fff;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    margin-left: -5px;
+}
+
+.edit-pane-heading strong {
+    font-weight: 600;
+    display: block;
+    font-size: 1.2em;
+    padding-top: 5px;
+}

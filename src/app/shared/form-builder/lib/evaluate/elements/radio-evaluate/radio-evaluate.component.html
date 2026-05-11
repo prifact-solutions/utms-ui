@@ -1,0 +1,8 @@
+<div [innerHtml]="item.questionContent.value" class="question-text"></div>
+<div class="option-list">
+    <div *ngFor="let v of item.options">
+        <div class="option-item" [ngClass]="answer != null && answer.answerChoiceValue == v.choiceValue ? 'sel' : ''">
+            <span [innerHtml]="v.choiceContent.value"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="edit-form">
+
+    <div class="edit-form-item">
+        <label>Marks</label>
+        <input type="text" [(ngModel)]="item.marks" (input)="onMarksChange()" />
+    </div>
+    <div class="checkbox-item">
+        <label class="checkbox-text">Show textbox</label>
+        <input class="checkbox-input" type="checkbox" [(ngModel)]="item.showTextBox" />
+    </div>
+    <div class="edit-form-item">
+        <label>Question Text</label>
+            <angular-editor #editRef (focus)="onEditorFocus(editRef)"
+            (blur)="onEditorBlur(editRef)" [(ngModel)]="item.questionContent.value" [placeholder]="'Enter text here...'"
+            [config]="noToolBarConfig">
+        </angular-editor>
+    </div>
+</div>
