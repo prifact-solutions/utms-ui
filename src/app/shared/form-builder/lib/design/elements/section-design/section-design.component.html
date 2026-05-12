@@ -1,6 +1,5 @@
 <!--section container field-->
-<div class="item-box section-box" cdkDrag [cdkDragData]="item" appTrackClicks (clickOutside)="onClickOutside($event)"
-    (clickInside)="onClickInside($event)"
+<div class="item-box section-box" cdkDrag [cdkDragData]="item" appTrackClicks
     [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
 
     <div class="item-box-header">
@@ -16,8 +15,8 @@
             {{item.title}}
         </div>
         <div class="item-box-options">
-
-            <a (click)="removeField()"
+            <a (click)="onClickInside($event)"><i class="fas fa-pencil-alt"></i></a>
+            <a (click)="removeField()" class="delete"
                 [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
                 <i class="fas fa-trash-alt"></i>
             </a>

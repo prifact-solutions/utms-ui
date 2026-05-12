@@ -5,8 +5,7 @@
   <ng-container *ngFor="let question of item.questions;let i= index;">
 
     <div [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''" cdkDrag
-      [cdkDragData]="question" appTrackClicks (clickOutside)="onClickOutside($event, question)"
-      (clickInside)="onClickInside($event, question)" class="question-box draggable">
+      [cdkDragData]="question" appTrackClicks class="question-box draggable">
 
       <div *ngIf="question.elementType==FormElementType.descriptive" class="item-box ">
 
@@ -27,7 +26,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="removeField(question)"
+            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -64,7 +64,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="removeField(question)"
+            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -100,7 +101,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="removeField(question)"
+            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -129,7 +131,8 @@
 
           </div>
           <div class="item-box-options">
-            <a (click)="removeField(question)"
+            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -149,4 +152,4 @@
 </div>
 
 <lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="'Are you sure you want to delete this question?'"
-		(onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>
+  (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>

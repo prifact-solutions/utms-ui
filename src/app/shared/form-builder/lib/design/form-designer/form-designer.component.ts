@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { QuestionPaperDesignContext } from '../../model/context';
-import { FormElementTransientSettings, FormElementType, SectionElement, MCQElement } from '../../model/form-elements';
+import { FormElement, FormElementTransientSettings, FormElementType, SectionElement } from '../../model/form-elements';
 import { FormDesignerService } from '../services/form-designer.service';
 import { QuestionPaperSchemaDefn } from '../../model/question-paper';
 import { FormBuilderBackendService } from '../../services/form-builder-backend.service';
@@ -45,6 +45,8 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   errorMessages: string[] = [];
   total_marks: number;
   editPropLoaded: boolean = false;
+  /** Currently selected canvas element; drives centered edit overlay */
+  selectedElement: FormElement | null = null;
 
   constructor(
     private formSvc: FormDesignerService,
@@ -79,12 +81,23 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
     this.formSvc.containderids.subscribe((ids) => { if (ids != null) this.containerids = ids });
     this.formSvc.total_marks.subscribe((totalMarks) => { if (totalMarks != null) this.total_marks = totalMarks });
     this.formSvc.selected_element.subscribe((el) => {
+      this.selectedElement = el;
       this.editPropLoaded = el != null;
+      if (el != null) {
+        this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
+      } else {
+        this.renderer.removeStyle(this.document.body, 'overflow');
+      }
     });
+  }
+
+  closeQuestionEditOverlay(): void {
+    this.formSvc.setSelectedElement(null);
   }
 
   ngOnDestroy(): void {
     this.renderer.removeClass(this.document.body, 'question-paper-design-page');
+    this.renderer.removeStyle(this.document.body, 'overflow');
   }
   private savedSchema = "";
   

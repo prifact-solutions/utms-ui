@@ -1,19 +1,21 @@
 html,
 body {
-    height: 100%;
+  height: 100%;
 }
+
 body,
 h1,
 h2,
 h3,
 p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 a {
   cursor: pointer;
 }
+
 a:hover {
   text-decoration: none;
 }
@@ -172,9 +174,11 @@ a:hover {
   border: 1px solid #dee5e7;
   z-index: 100;
 }
+
 .dev-links a {
   margin-left: 20px;
 }
+
 .right-pane {
   width: 450px;
   position: fixed;
@@ -186,6 +190,7 @@ a:hover {
   z-index: 50;
   overflow: auto;
 }
+
 .main {
   padding: 90px 0 130px;
   overflow: auto;
@@ -196,12 +201,14 @@ a:hover {
   width: calc(100vw - 450px);
   background: #f0f3f4;
 }
+
 .drop-area-container {
   margin: auto;
   max-width: 800px;
   padding: 10px;
   border-radius: 2px;
 }
+
 .cdk-drop-list {
   background: rgba(0, 0, 0, 0.02);
   padding: 10px;
@@ -220,6 +227,7 @@ a:hover {
   margin-bottom: 10px;
   background: rgba(0, 0, 0, 0.02);
 }
+
 .draggable-elements {
   outline: none;
   background: none;
@@ -233,9 +241,11 @@ a:hover {
   gap: 10px;
   font-size: 0.875rem;
 }
-.draggable-elements > .draggable-element {
+
+.draggable-elements>.draggable-element {
   width: 100%;
 }
+
 .draggable-element {
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 2px;
@@ -248,12 +258,14 @@ a:hover {
   gap: 10px;
   border-radius: 5px;
   justify-content: space-between;
-  .icon-text-section{
+
+  .icon-text-section {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 }
+
 .draggable-element strong {
   font-weight: normal;
 }
@@ -271,12 +283,15 @@ a:hover {
   padding: 20px;
   border-radius: 5px;
 }
+
 .section-box-sontainer {
   padding: 20px;
 }
+
 .section-box.highlight {
   box-shadow: 0px 0px 0px 2px #111;
 }
+
 .expand-arrow {
   width: 28px;
   height: 28px;
@@ -291,14 +306,17 @@ a:hover {
   transition: all 0.2s ease;
   font-size: 11px;
 }
+
 .expand-arrow:hover {
   color: #111;
   border-color: #111;
   background: #fff;
 }
+
 .expand-arrow::after {
   transition: all ease 0.25s;
 }
+
 .expand-arrow::after {
   content: " ";
   border: 2px solid #111;
@@ -307,25 +325,30 @@ a:hover {
   height: 6px;
   transition: all ease 0.25s;
 }
+
 .expand-arrow.up::after {
   transform: rotate(225deg);
   margin-top: 4px;
 }
+
 .expand-arrow.down::after {
   transform: rotate(45deg);
   margin-bottom: 2px;
 }
+
 .item-box-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .item-box-title {
   margin-right: auto;
   padding-left: 5px;
   font-weight: 600;
   font-size: 1.5em;
 }
+
 .item-box-options a {
   width: 28px;
   height: 28px;
@@ -341,21 +364,31 @@ a:hover {
   font-size: 11px;
   margin-right: 10px;
 }
+
 .item-box-options a:hover {
+  color: #111;
+  border-color: #111;
+}
+
+.item-box-options a.delete:hover {
   color: #d93025;
   border-color: #d93025;
 }
+
 .item-details {
-  padding: 20px;
+  padding: 15px 30px;
 }
-.item-details > p {
+
+.item-details>p {
   padding: 0 0 20px;
   font-size: 1em;
 }
-.item-details > h3 {
+
+.item-details>h3 {
   font-size: 1.1em;
   padding-bottom: 5px;
 }
+
 .question-box {
   background: #fff;
   padding: 10px;
@@ -365,27 +398,39 @@ a:hover {
   outline-offset: -2px;
   margin-bottom: 10px;
 }
+
 .question-box .item-box-title {
   font-size: 1.1em;
   font-weight: 600;
 }
+
 .mark-container {
   position: relative;
   padding-right: 20px;
   font-size: 1em;
 }
+
 .marks-text {
-  background: rgba(0, 0, 0, 0.05);
-  padding: 5px 20px;
-  border-radius: 20px;
+  background: #111;
+  padding: 0px 14px;
+  border-radius: 14px;
+  color: #fff;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
 }
+
 .marks-text span {
   padding-right: 4px;
   font-size: 1em;
 }
+
 .descriptive-answer {
   padding-bottom: 10px;
 }
+
 .question-text {
   line-height: normal;
   padding: 15px 0 0;
@@ -393,7 +438,7 @@ a:hover {
 }
 
 .question-text img {
-   max-width:100%;
+  max-width: 100%;
 }
 
 .descriptive-answer textarea {
@@ -404,17 +449,20 @@ a:hover {
 }
 
 .edit-form {
-  padding:10px 0 0 0;
+  padding: 10px 0 0 0;
 }
+
 .edit-form-item {
   padding-bottom: 10px;
 }
+
 .edit-form-title {
   font-weight: 600;
   padding-bottom: 10px;
   display: block;
   font-size: 0.9em;
 }
+
 .edit-form-item label {
   display: block;
   font-weight: 600;
@@ -422,6 +470,7 @@ a:hover {
   font-size: 0.875rem;
   padding-left: 10px;
 }
+
 .edit-form input,
 .edit-form textarea {
   width: 100%;
@@ -429,50 +478,62 @@ a:hover {
   font-size: 1em;
   padding: 10px;
 }
+
 .angular-editor-textarea {
   margin: 0 !important;
   font-size: 1em;
   border: none !important;
   border-top: 1px solid #999 !important;
 }
+
 .angular-editor {
   border: 1px solid #999;
 }
+
 .angular-editor-toolbar {
   border: none !important;
 }
+
 .angular-editor-toolbar .angular-editor-toolbar-set {
   margin-right: 0 !important;
 }
+
 .right-pane .draggable-elements {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
 .question-container {
   outline: none;
 }
+
 .question-container:empty {
   outline: 1px dashed rgba(170, 170, 170, 0.7);
   outline-offset: -2px;
 }
+
 .cdk-drag-placeholder {
   opacity: 0.5;
   background-color: #fffedf;
 }
+
 .change-choice-area {
   outline: none;
   background: none;
   padding: 0;
 }
+
 .choice-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .choice-item {
   margin-bottom: 10px;
 }
+
 .choice-number {
   margin-right: auto;
   width: 32px;
@@ -486,11 +547,13 @@ a:hover {
   flex-shrink: 0;
   margin-right: 10px;
 }
+
 .choice-number.correct {
   background-color: #1fa34a;
   border-color: #1fa34a;
   color: #fff;
 }
+
 .remove-choice a {
   font-size: 0.8em;
   width: 32px;
@@ -501,6 +564,7 @@ a:hover {
   display: block;
   position: relative;
 }
+
 .remove-choice a::after {
   height: 16px;
   border-left: 2px solid #222;
@@ -510,6 +574,7 @@ a:hover {
   left: 14px;
   top: 7px;
 }
+
 .remove-choice a::before {
   height: 16px;
   border-left: 2px solid #222;
@@ -519,16 +584,20 @@ a:hover {
   left: 14px;
   top: 7px;
 }
+
 .remove-choice a:hover {
   background: rgba(0, 0, 0, 0.1);
 }
+
 .choice-item .angular-editor {
   background: #fff;
 }
+
 .choice-item .drag-line {
   width: 0;
   position: relative;
 }
+
 .choice-item .drag-line::before {
   content: " ";
   width: 10px;
@@ -539,6 +608,7 @@ a:hover {
   right: 3px;
   cursor: pointer;
 }
+
 .choice-item .drag-line::after {
   content: " ";
   height: 5px;
@@ -550,18 +620,23 @@ a:hover {
   top: 0;
   cursor: move;
 }
+
 .choice-item .angular-editor-choice {
   width: 100%;
 }
+
 .add-choice {
   padding-left: 42px;
 }
+
 .tab-container-item {
   display: none;
 }
+
 .tab-container-item.show {
   display: block;
 }
+
 .attempt-header {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
   background: #fff;
@@ -574,27 +649,33 @@ a:hover {
   align-items: center;
   justify-content: space-between;
 }
+
 .attempt-body {
   padding: 80px 20px 100px;
   background: #f0f3f4;
 }
+
 .attempt-body-content {
   margin: auto;
   max-width: 800px;
   padding-top: 20px;
 }
+
 .attempt-body-button-group {
   display: flex;
   align-items: center;
   padding: 10px 0;
   justify-content: space-between;
 }
+
 .attempt-body-content .item-box-title {
   padding-left: 0;
 }
+
 .attempt-body-content .item-details {
   padding: 0;
 }
+
 .attempt-body-content .question-box {
   padding: 0;
   outline: none;
@@ -607,6 +688,7 @@ a:hover {
   padding: 10px 0;
   margin-bottom: 0;
 }
+
 .answer-form textarea {
   width: 100%;
   padding: 20px;
@@ -614,6 +696,7 @@ a:hover {
   border: 1px solid #999;
   font-size: 1.1em;
 }
+
 .answer-sheet-static-text {
   padding: 21px;
   font-size: 1em;
@@ -621,6 +704,7 @@ a:hover {
   margin-bottom: 20px;
   border-radius: 3px;
 }
+
 .attempt-body-button-group button {
   cursor: pointer;
   border: none;
@@ -635,9 +719,11 @@ a:hover {
   min-width: 100px;
   justify-content: center;
 }
+
 .attempt-body-button-group button:hover {
   box-shadow: 0 0 0 250px rgba(0, 0, 0, 0.1) inset;
 }
+
 .attempt-body-button-group button.next-btn {
   margin-left: auto;
 }
@@ -646,6 +732,7 @@ a:hover {
   margin-left: auto;
   background: #1155cc;
 }
+
 .evaluation-wrapper {
   margin: auto;
   max-width: 800px;
@@ -654,34 +741,41 @@ a:hover {
 .evaluation-wrapper .item-box-title {
   padding-left: 0;
 }
+
 .evaluation-wrapper .item-details {
   padding: 0;
 }
+
 .evaluation-wrapper .question-box {
   outline: none;
   padding: 10px 20px 20px;
   background: rgba(0, 0, 0, 0.03);
   border-radius: 5px;
 }
+
 .evaluation-wrapper .question-text {
   font-size: 1.25em;
   padding: 0 0 10px;
 }
+
 .small-heading {
   font-size: 0.85em;
   font-weight: 500;
 }
-.angular-editor-toolbar button i{
+
+.angular-editor-toolbar button i {
   font-weight: 900 !important;
   font-family: Font Awesome\ 5 Free !important;
   font-style: normal !important;
   font-variant: normal !important;
   line-height: 1 !important;
 }
+
 label {
   display: inline-block;
   margin-bottom: .5rem;
 }
+
 .eval-main {
   padding: 90px 0 130px;
   overflow: auto;

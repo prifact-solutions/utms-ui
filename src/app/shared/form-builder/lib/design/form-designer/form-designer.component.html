@@ -6,10 +6,13 @@
     <div class="left-header-section">
       <div class="back-nav">
         <a href="javascript:void(0)" (click)="onBack()">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
         </a>
       </div>
-      <h2 *ngIf="qpContext">{{qpContext.title}}</h2>    
+      <h2 *ngIf="qpContext">{{qpContext.title}}</h2>
     </div>
     <div class="right-header-section">
       <div class="total-marks">
@@ -34,11 +37,12 @@
             <strong>{{item.label}}</strong>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="#cccc" width="15px" height="15px" viewBox="0 0 1920 1920">
-              <path d="M600 1440c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 720c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 0c132.36 0 240 107.64 240 240S732.36 480 600 480 360 372.36 360 240 467.64 0 600 0Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240S1187.64 0 1320 0Z" fill-rule="evenodd"/>
+            <path
+              d="M600 1440c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 720c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240 107.64-240 240-240ZM600 0c132.36 0 240 107.64 240 240S732.36 480 600 480 360 372.36 360 240 467.64 0 600 0Zm720 0c132.36 0 240 107.64 240 240s-107.64 240-240 240-240-107.64-240-240S1187.64 0 1320 0Z"
+              fill-rule="evenodd" />
           </svg>
         </div>
       </div>
-      <app-edit-prop></app-edit-prop>
     </div>
     <div class="drop-area-container">
       <div cdkDropList id="root-form-container" [cdkDropListData]="qpContext.schema.sections"
@@ -54,11 +58,52 @@
     </div>
   </div>
 
-<lib-confirm [showConfirm]="showBackConfirm" [confirmMessage]="'Are you sure you want to leave this page? Any unsaved changes will be discarded.'"
-		(onPrimaryAction)="confirmBackAction($event)" (onSecondaryAction)="cancelBackAction($event)"></lib-confirm>
-
-<div *ngIf="errorMessages.length" class="alert-box">
-  <div *ngFor="let err of errorMessages">
-    <span>{{err}}</span>
+  <!-- Centered preview + properties overlay when a question (or section) is selected -->
+  <div class="question-edit-overlay" *ngIf="selectedElement as sel">
+    <div class="question-edit-backdrop" (click)="closeQuestionEditOverlay()"></div>
+    <div class="question-edit-shell" role="dialog" aria-modal="true" aria-labelledby="question-edit-heading"
+      (click)="$event.stopPropagation()">
+      <button type="button" class="question-edit-close" (click)="closeQuestionEditOverlay()" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <div class="question-edit-row">
+        <div class="question-edit-preview-card">
+          <div id="question-edit-heading" class="question-edit-preview-heading">
+            {{ sel.elementType === FormElementType.section ? 'Section preview' : 'Question preview' }}
+          </div>
+          <div class="question-edit-preview-body">
+            <ng-container [ngSwitch]="sel.elementType">
+              <ng-container *ngSwitchCase="FormElementType.section">
+                <h4 class="question-edit-section-title">{{ $any(sel).title }}</h4>
+                <div class="question-edit-section-desc" [innerHTML]="$any(sel).description?.value"></div>
+              </ng-container>
+              <app-radio-design *ngSwitchCase="FormElementType.multiple_choice" [item]="$any(sel)"></app-radio-design>
+              <app-text-design *ngSwitchCase="FormElementType.descriptive" [item]="$any(sel)"></app-text-design>
+              <app-file-upload-design *ngSwitchCase="FormElementType.file_upload"
+                [item]="$any(sel)"></app-file-upload-design>
+              <app-static-design *ngSwitchCase="FormElementType.paragraph" [item]="$any(sel)"></app-static-design>
+            </ng-container>
+          </div>
+        </div>
+        <div class="question-edit-connector" aria-hidden="true">
+          <div class="question-edit-arrow"></div>
+        </div>
+        <div class="question-edit-side-panel">
+          <app-edit-prop></app-edit-prop>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <lib-confirm [showConfirm]="showBackConfirm"
+    [confirmMessage]="'Are you sure you want to leave this page? Any unsaved changes will be discarded.'"
+    (onPrimaryAction)="confirmBackAction($event)" (onSecondaryAction)="cancelBackAction($event)"></lib-confirm>
+
+  <div *ngIf="errorMessages.length" class="alert-box">
+    <div *ngFor="let err of errorMessages">
+      <span>{{err}}</span>
+    </div>
+  </div>

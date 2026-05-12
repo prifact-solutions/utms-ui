@@ -17,7 +17,7 @@ export class FormDesignerService {
 
   public qpContext: BehaviorSubject<QuestionPaperDesignContext> = new BehaviorSubject(null);
   public containderids: BehaviorSubject<Array<string>> = new BehaviorSubject(null);
-  public selected_element: BehaviorSubject<FormElement> = new BehaviorSubject(null);
+  public selected_element: BehaviorSubject<FormElement | null> = new BehaviorSubject<FormElement | null>(null);
   public total_marks: BehaviorSubject<number> = new BehaviorSubject(null);
 
 
@@ -50,7 +50,7 @@ export class FormDesignerService {
     this.containderids.next(this.getAllDropTargets())
   }
 
-  setSelectedElement(ele: FormElement) {
+  setSelectedElement(ele: FormElement | null) {
     this.selected_element.next(ele);
   }
 
