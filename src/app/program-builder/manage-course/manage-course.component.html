@@ -19,19 +19,30 @@
                     <span>Back to Courses</span>
                 </div>
             </div>
-
-            <div class="c-details">
-                <div class="c-title">
-                    <h2>{{ program.title }}</h2>
-                    <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
-                        {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
-                    </span>
+            <div class="c-details-wrapper">
+                <div class="c-details">
+                    <div class="c-title">
+                        <h2>{{ program.title }}</h2>
+                        <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
+                            {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <a href="javascript:void(0)" class="action-btn" type="button" title="Edit Course" (click)="openViewModal()">
+                        <i class="fas fa-info"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="action-btn" type="button" title="Edit Course" (click)="openEditModal()">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a *ngIf="program.status != 'ACTIVE'" href="javascript:void(0)" (click)="showDeleteCourseConfirm()" class="action-btn delete" type="button" title="Delete Course">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
                 </div>
             </div>
         </div>
         <div class="main-header-actions" [ngClass]="{ 'only-edit': program.status == 'ACTIVE' }">
-            <a (click)="openViewModal()" class="button">Course Details</a>
-			<a *ngIf="program.status != 'ACTIVE'" (click)="showDeleteCourseConfirm()" class="button">Delete</a>
+            <!-- <a (click)="openViewModal()" class="button">Course Details</a> -->
             <button *ngIf="program.status != 'ACTIVE'" type="button" (click)="togglePublish()"
                 class="button primary black" [disabled]="isPublishing">
                 Publish
