@@ -118,6 +118,13 @@ export class ProgramsService {
   public createProgram(program: Partial<Program>) {
     return this.http.post<Program>(`${AppSettings.apiUrl}/programs/`, program);
   }
+
+  public archiveProgram(program_id: number) {
+    return this.http.delete<Program>(
+      `${AppSettings.apiUrl}/programs/${program_id}/`,
+    );
+  }
+
   public updateProgram(id: number, program: Partial<Program> | FormData) {
     return this.http.put<Program>(
       `${AppSettings.apiUrl}/programs/${id}/`,

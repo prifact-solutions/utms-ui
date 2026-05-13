@@ -28,6 +28,7 @@
         </div>
         <div class="main-header-actions"  [ngClass]="{ 'only-edit': program.status == 'ACTIVE' }">
             <a (click)="openViewModal()" class="button">View Details</a>
+            <a *ngIf="program.status != 'ACTIVE'" (click)="showDeleteCourseConfirm()" class="button">Delete</a>
             <button *ngIf="program.status != 'ACTIVE'"
                 type="button"
                 (click)="togglePublish()"
@@ -343,6 +344,42 @@
     </div>
 </div>
 
+<!-- Delete Course Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteCourseConfirmModal && program">
+    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
+        <div class="modal-header border-0 pb-0">
+            <h4>Delete Course?</h4>
+            <button class="modal-close" (click)="closeDeleteCourseConfirm()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body p-0">
+            <div class="p-5 text-center">
+                <div class="note-delete-content">
+                    <p class="delete-message">
+                        Are you sure you want to delete "<strong>{{ program.title }}</strong>"?
+                    </p>
+                    <p class="delete-subtext">This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="button-group note-popup-actions note-delete-actions">
+                <button class="button" type="button" (click)="closeDeleteCourseConfirm()">
+                    Cancel
+                </button>
+                <button class="button note-delete-btn" type="button" (click)="confirmDeleteCourse()">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showDeleteConfirmModal && moduleToDelete">
     <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
@@ -434,6 +471,20 @@
             <app-edit-exam [inModal]="true" [programIdInput]="programId" [moduleIdInput]="selectedModule.id"
                 [contentIdInput]="examToEdit.id" (saved)="onExamUpdated()" (closed)="closeEditExamModal()">
             </app-edit-exam>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container" *ngIf="showDeleteToast">
+    <div class="toast-notification success">
+        <!-- <span class="toast-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px">
+                <path fill="#4caf50"
+                    d="M44,24c0-2.909-1.653-5.448-4.066-6.73c0.659-2.511,0.017-5.303-1.943-7.262 C36.528,8.544,34.6,7.816,32.67,7.816c-0.653,0-1.306,0.083-1.941,0.25C29.448,5.653,26.909,4,24,4s-5.448,1.653-6.73,4.066 c-0.636-0.167-1.288-0.25-1.941-0.25c-1.93,0-3.857,0.729-5.321,2.192c-1.959,1.959-2.602,4.75-1.943,7.262 C5.653,18.552,4,21.091,4,24s1.653,5.448,4.066,6.73c-0.659,2.511-0.017,5.303,1.943,7.262c1.463,1.463,3.391,2.192,5.321,2.192 c0.653,0,1.306-0.083,1.941-0.25C18.552,42.347,21.091,44,24,44s5.448-1.653,6.73-4.066c0.636,0.167,1.288,0.25,1.941,0.25 c1.93,0,3.857-0.729,5.321-2.192c1.959-1.959,2.602-4.75,1.943-7.262C42.347,29.448,44,26.909,44,24z" />
+                <path fill="#fff" d="M22 32.829L14.586 25.414 17.414 22.586 22 27.171 31.586 17.586 34.414 20.414z" />
+            </svg></span> -->
+        <div class="toast-message">
+            Course deleted successfully. Redirecting to the dashboard page ...
         </div>
     </div>
 </div>

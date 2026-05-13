@@ -38,6 +38,7 @@ export class ManageCourseComponent
   public showAddExamModal: boolean = false;
   public showEditModuleModal: boolean = false;
   public showAddModuleModal: boolean = false;
+  public showDeleteCourseConfirmModal: boolean = false;
   public showDeleteConfirmModal: boolean = false;
   public showEditLessonModal: boolean = false;
   public showEditExamModal: boolean = false;
@@ -47,6 +48,7 @@ export class ManageCourseComponent
   public examToEdit: ModuleContent | null = null;
   public moduleToDelete: Module | null = null;
   public isPublishing: boolean = false;
+  public showDeleteToast: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -276,6 +278,38 @@ export class ManageCourseComponent
   closeDeleteConfirm(): void {
     this.showDeleteConfirmModal = false;
     this.moduleToDelete = null;
+  }
+
+  showDeleteCourseConfirm(): void {
+    this.showDeleteCourseConfirmModal = true;
+  }
+
+  closeDeleteCourseConfirm(): void {
+    this.showDeleteCourseConfirmModal = false;
+  }
+
+  confirmDeleteCourse(): void {
+    if (this.isCurriculumReadonly) {
+      return;
+    }
+
+    const sub = this.programService
+      .archiveProgram(this.programId)
+      .subscribe({
+        next: () => {
+          this.closeDeleteCourseConfirm();
+          this.showDeleteToast = true;
+          setTimeout(() => {
+            this.showDeleteToast = false;
+            this.router.navigateByUrl('/dashboard');
+          }, 5000);
+        },
+        error: (err: any) => {
+          alert('Failed to delete course');
+          this.closeDeleteCourseConfirm();
+        },
+      });
+    this.registerSubscription(sub);
   }
 
   confirmDeleteModule(): void {
