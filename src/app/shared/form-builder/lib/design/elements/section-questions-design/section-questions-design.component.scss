@@ -1,0 +1,13 @@
+.no-question-helper-text{
+    font-size: 0.875rem;
+    color: #bdbdbd;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    min-height: 27px;
+    padding: 0 10px;
+}
+
+.cdk-drop-list-dragging .no-question-helper-text{
+    display: none;
+}

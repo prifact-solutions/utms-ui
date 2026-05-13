@@ -2,6 +2,9 @@
   [cdkDropListConnectedTo]="containerids" [cdkDropListEnterPredicate]="canDrop.bind(this)"
   (cdkDropListExited)="onDropExit($event)" class="question-container">
   <!-- using canDrop.bind(this) due to non availablity of this in canDrop context - https://github.com/angular/components/issues/16718-->
+  <div class="no-question-helper-text" *ngIf="item.questions?.length == 0">
+    Please drag and drop a static text or a multiple choice question here
+  </div>
   <ng-container *ngFor="let question of item.questions;let i= index;">
 
     <div [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''" cdkDrag

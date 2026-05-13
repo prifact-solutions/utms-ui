@@ -1163,6 +1163,10 @@ html body {
             }
         }
     }
+
+    .modal-content-wrapper.large-popup{
+        max-width: 1200px;
+    }
 }
 
 @keyframes fadeIn {
