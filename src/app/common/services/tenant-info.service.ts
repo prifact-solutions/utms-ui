@@ -5,6 +5,8 @@ import { AppSettings } from '../appsettings';
 
 interface TenantInfo {
   appTitle?: string;
+  appEmail?: string;
+  appLogo?: string;
 }
 
 @Injectable({
@@ -12,6 +14,7 @@ interface TenantInfo {
 })
 export class TenantInfoService {
   private readonly defaultAppTitle = 'UTMS';
+  private readonly defaultAppLogo = 'assets/images/logo2.svg';
   private info: TenantInfo = {};
 
   constructor(private http: HttpClient) {}
@@ -29,4 +32,8 @@ export class TenantInfoService {
   get appTitle(): string {
     return this.info.appTitle?.trim() || this.defaultAppTitle;
   }
+
+  get appLogo(): string {
+    return this.info.appLogo?.trim() || this.defaultAppLogo;
+  } 
 }

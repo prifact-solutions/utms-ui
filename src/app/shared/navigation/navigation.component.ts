@@ -1,10 +1,19 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { Utils } from 'src/app/common/utils';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { Category } from 'src/app/programs/models/program.model';
+import { TenantInfoService } from 'src/app/common/services/tenant-info.service';
 
 @Component({
   selector: 'app-navigation',
@@ -26,12 +35,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
   public selectedCategories: Set<number> = new Set<number>();
   @ViewChild('searchContainer') searchContainer!: ElementRef;
 
+  get appLogoPath(): string {
+    return this.tenantInfo.appLogo;
+  }
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private programsService: ProgramsService,
-  ) { }
+    private tenantInfo: TenantInfoService,
+  ) {}
 
   ngOnInit(): void {
     this.updateAuthStatus();
@@ -39,14 +53,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.updateAuthStatus();
     });
 
-    this.programsService.getAllCategories().subscribe(categories => {
+    this.programsService.getAllCategories().subscribe((categories) => {
       this.categories = categories;
     });
 
     this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-      )
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         let activeRoute = this.route.root;
         while (activeRoute.firstChild) {
@@ -105,8 +117,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.router.navigate(['/explore'], {
         queryParams: {
           q: this.searchTerm.trim() || null,
-          categories: categories || null
-        }
+          categories: categories || null,
+        },
       });
       this.showFilter = false;
     }
@@ -130,7 +142,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (this.showFilter && this.searchContainer && !this.searchContainer.nativeElement.contains(event.target)) {
+    if (
+      this.showFilter &&
+      this.searchContainer &&
+      !this.searchContainer.nativeElement.contains(event.target)
+    ) {
       this.showFilter = false;
     }
   }
@@ -149,8 +165,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     this.tooltipX = rect.right + 12;
 
-    this.tooltipY =
-      rect.top + rect.height / 2;
+    this.tooltipY = rect.top + rect.height / 2;
 
     this.tooltipVisible = true;
   }
