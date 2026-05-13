@@ -232,7 +232,6 @@ a:hover {
   outline: none;
   background: none;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   cursor: grab;
   width: 100%;
@@ -263,11 +262,13 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin: 0;
   }
 }
 
 .draggable-element strong {
   font-weight: normal;
+  white-space: nowrap;
 }
 
 .drop-area-container .draggable-element {
@@ -339,7 +340,7 @@ a:hover {
 .item-box-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .item-box-title {
@@ -348,7 +349,10 @@ a:hover {
   font-weight: 600;
   font-size: 1.5em;
 }
-
+.item-box-options{
+  display: flex;
+  align-items: center;
+}
 .item-box-options a {
   width: 28px;
   height: 28px;
@@ -356,7 +360,7 @@ a:hover {
   border-radius: 50%;
   background: none;
   color: #000;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -786,4 +790,25 @@ label {
   height: 100vh;
   width: calc(100vw - 450px);
   background: #f0f3f4;
+}
+
+.angular-editor .angular-editor-wrapper .angular-editor-textarea{
+  background-color: #fff !important;
+}
+
+@media (max-width: 1100px) {
+  .section-box-sontainer,
+  .section-box,
+  .item-details{
+    padding: 10px;
+  }
+  .draggable-elements {
+    flex-direction: row;
+    margin: 0;
+    height: auto;
+    min-height: 0;
+  }
+  .item-box-options a {
+    margin-right: 5px;
+  }
 }

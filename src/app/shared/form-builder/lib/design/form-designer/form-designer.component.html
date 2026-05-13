@@ -22,6 +22,15 @@
       <button class="button primary" (click)="onSave()">Save question paper</button>
     </div>
   </div>
+  <div class="qp-title-box1 mobile-view-only">
+    <div class="right-header-section">
+      <div class="total-marks">
+        <span class="marks-txt">Total Grade:</span>
+        <span class="marks-count">{{total_marks}}</span>
+      </div>
+      <button class="button primary" (click)="onSave()">Save</button>
+    </div>
+  </div>
   <div *ngIf='qpContext != null' id="form-design" class="main form-design-wrapper"
     [class.edit-prop-loaded]="editPropLoaded">
     <div class="right-panel">

@@ -11,3 +11,22 @@
 .cdk-drop-list-dragging .no-question-helper-text{
     display: none;
 }
+
+.mobile-view-mark-container{
+    display: none;
+}
+
+@media (max-width:1100px) {
+    .mark-container.web-view{
+        display: none;
+    }
+    .mobile-view-mark-container{
+        display: flex;
+        width: 100%;
+        padding: 10px 10px 0 10px;
+         .mark-container{
+            width: 100%;
+            padding: 0;
+         }
+    }
+}

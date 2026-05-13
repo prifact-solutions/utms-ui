@@ -100,7 +100,7 @@
           <div class="item-box-title">
             Question: {{getQuestionIndexSection(question.settings.uniqueId)+ 1}}
           </div>
-          <div class="mark-container">
+          <div class="mark-container web-view">
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
@@ -114,6 +114,11 @@
             <a (click)="question.settings.toggle = !question.settings.toggle" class="expand-arrow"
               [ngClass]="question.settings.toggle? 'down' : 'up'">
             </a>
+          </div>
+        </div>
+        <div class="mobile-view-mark-container">
+          <div class="mark-container">
+            <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
         </div>
         <div *ngIf='!question.settings.toggle' class="item-details">
