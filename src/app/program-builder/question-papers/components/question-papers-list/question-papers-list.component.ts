@@ -188,7 +188,7 @@ export class QuestionPapersListComponent extends ComponentBase {
     }
   }
 
-  delConfirmAction(event: any) {
+  delConfirmAction(): void {
     this.showDelConfirm = false;
     if (this.selectedQP) {
       this.qpService
@@ -224,6 +224,7 @@ export class QuestionPapersListComponent extends ComponentBase {
 
   cancelDelAction(evet: any) {
     this.showDelConfirm = false;
+    this.selectedQP = null;
   }
 
   addQuestionPaper() {
@@ -296,5 +297,6 @@ export class QuestionPapersListComponent extends ComponentBase {
 
   closeDeleteConfirm(): void {
     this.showDelConfirm = false;
+    this.selectedQP = null;
   }
 }

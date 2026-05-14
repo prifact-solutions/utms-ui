@@ -19,6 +19,7 @@ import { StaticPropertiesComponent } from './properties-components/static-proper
 import { TextPropertiesComponent } from './properties-components/text-properties/text-properties.component';
 import { TrackClicksDirective } from '../directives/track-clicks.directive';
 import { LibConfirmModule } from 'lib-confirm';
+import { UtmsCommonModule } from 'src/app/common/common.module';
 import { FilePropertiesComponent } from './properties-components/file-properties/file-properties.component';
 import { FileUploadDesignComponent } from './elements/file-upload-design/file-upload-design.component';
 
@@ -46,7 +47,8 @@ import { FileUploadDesignComponent } from './elements/file-upload-design/file-up
     FormsModule,
     MarkDisplayModule,
     DragDropModule,
-    LibConfirmModule
+    LibConfirmModule,
+    UtmsCommonModule
   ],
   exports: [FormDesignerComponent, TrackClicksDirective],
   providers: [ViewportRuler, Platform, DragDropRegistry,ScrollDispatcher]

@@ -1,0 +1,63 @@
+<div
+  class="modal-overlay delete-confirm-overlay"
+  *ngIf="visible"
+  (click)="onOverlayClick()"
+>
+  <div
+    class="modal-content-wrapper delete-confirm-modal"
+    [class.shadow-lg]="useShadow"
+    [class.note-delete-modal]="noteBodyPadding"
+    [ngStyle]="maxWidth ? { 'max-width': maxWidth } : null"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal-header" [class.border-0]="flushHeader" [class.pb-0]="flushHeader">
+      <h4>{{ title }}</h4>
+      <button class="modal-close" type="button" (click)="onCancel()" [disabled]="busy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" fill="none" />
+          <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+    <div class="modal-loading-overlay" *ngIf="showBusyOverlay && busy" aria-label="Loading">
+      <div class="spinner"></div>
+    </div>
+    <div class="modal-body" [class.p-0]="paddedInner">
+      <ng-container *ngIf="paddedInner">
+        <div class="p-5 text-center">
+          <div *ngIf="topAlert" class="alert-error-compact mb-4">{{ topAlert }}</div>
+          <div class="note-delete-content">
+            <p class="delete-message">{{ message }}</p>
+            <p class="field-error delete-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+          </div>
+        </div>
+        <div class="button-group note-popup-actions note-delete-actions">
+          <button type="button" class="button" [disabled]="busy" (click)="onCancel()">{{ cancelLabel }}</button>
+          <button type="button" class="button primary" [disabled]="busy" (click)="onConfirm()">{{ confirmLabel }}</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!paddedInner && toolbarButtons">
+        <div class="delete-confirm-content">
+          <p class="delete-message">{{ message }}</p>
+          <p class="field-error delete-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+        <div class="invite-actions invite-actions-split delete-confirm-actions">
+          <button type="button" class="btn-outline" [disabled]="busy" (click)="onCancel()">{{ cancelLabel }}</button>
+          <button type="button" class="btn-primary" [disabled]="busy" (click)="onConfirm()">{{ confirmLabel }}</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!paddedInner && !toolbarButtons">
+        <div *ngIf="topAlert" class="alert-error-compact mb-4">{{ topAlert }}</div>
+        <div class="note-delete-content">
+          <p class="delete-message">{{ message }}</p>
+          <p class="field-error delete-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+        <div class="button-group note-popup-actions note-delete-actions">
+          <button type="button" class="button" [disabled]="busy" (click)="onCancel()">{{ cancelLabel }}</button>
+          <button type="button" class="button primary" [disabled]="busy" (click)="onConfirm()">{{ confirmLabel }}</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

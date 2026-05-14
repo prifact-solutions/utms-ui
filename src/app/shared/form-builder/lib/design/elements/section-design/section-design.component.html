@@ -35,5 +35,13 @@
     </div>
 </div>
 
-<lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="confirmMessage"
-    (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>
+<app-delete-confirm
+  [visible]="showDelConfirm"
+  title="Remove section?"
+  [messageOverride]="confirmMessage"
+  [toolbarButtons]="false"
+  [useShadow]="true"
+  [noteBodyPadding]="true"
+  (cancel)="cancelDelAction()"
+  (confirm)="delConfirmAction()"
+></app-delete-confirm>

@@ -18,6 +18,7 @@ import { ProfileComponent } from './public/profile/profile.component';
 import { SettingsComponent } from './public/settings/settings.component';
 import { NotesComponent } from './public/notes/components/notes/notes.component';
 import { TenantInfoService } from './common/services/tenant-info.service';
+import { UtmsCommonModule } from './common/common.module';
 
 export function initializeTenantInfo(tenantInfoService: TenantInfoService): () => Promise<void> {
   return () => tenantInfoService.loadInfo();
@@ -43,7 +44,8 @@ export function initializeTenantInfo(tenantInfoService: TenantInfoService): () =
     UtmsAuthModule,
     SharedModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    UtmsCommonModule
   ],
   providers: [
     {

@@ -159,5 +159,13 @@
   </ng-container>
 </div>
 
-<lib-confirm [showConfirm]="showDelConfirm" [confirmMessage]="'Are you sure you want to delete this question?'"
-  (onPrimaryAction)="delConfirmAction($event)" (onSecondaryAction)="cancelDelAction($event)"></lib-confirm>
+<app-delete-confirm
+  [visible]="showDelConfirm"
+  title="Delete question?"
+  [messageOverride]="'Are you sure you want to delete this question?'"
+  [toolbarButtons]="false"
+  [useShadow]="true"
+  [noteBodyPadding]="true"
+  (cancel)="cancelDelAction()"
+  (confirm)="delConfirmAction()"
+></app-delete-confirm>

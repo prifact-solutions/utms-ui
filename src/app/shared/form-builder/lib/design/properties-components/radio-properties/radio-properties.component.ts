@@ -33,7 +33,7 @@ export class RadioPropertiesComponent implements OnInit {
     this.showDelConfirm = true;
   }
 
-  delConfirmAction(event: boolean) {
+  delConfirmAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
     if(this.selectedOption.choiceValue == this.item.correctAnswer){
@@ -42,7 +42,7 @@ export class RadioPropertiesComponent implements OnInit {
     this.item.options.splice(this.item.options.indexOf(this.selectedOption), 1)
   }
 
-  cancelDelAction(event: boolean) {
+  cancelDelAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
   }

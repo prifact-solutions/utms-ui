@@ -363,112 +363,49 @@
 </div>
 
 <!-- Delete Course Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showDeleteCourseConfirmModal && program">
-    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
-        <div class="modal-header border-0 pb-0">
-            <h4>Delete Course?</h4>
-            <button class="modal-close" (click)="closeDeleteCourseConfirm()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none" />
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body p-0">
-            <div class="p-5 text-center">
-                <div class="note-delete-content">
-                    <p class="delete-message">
-                        Are you sure you want to delete "<strong>{{ program.title }}</strong>"?
-                    </p>
-                    <p class="delete-subtext">This action cannot be undone.</p>
-                </div>
-            </div>
-            <div class="button-group note-popup-actions note-delete-actions">
-                <button class="button" type="button" (click)="closeDeleteCourseConfirm()">
-                    Cancel
-                </button>
-                <button class="button note-delete-btn" type="button" (click)="confirmDeleteCourse()">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteCourseConfirmModal && !!program"
+  title="Delete Course?"
+  [itemName]="program?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteCourseConfirm()"
+  (confirm)="confirmDeleteCourse()"
+></app-delete-confirm>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showDeleteConfirmModal && moduleToDelete">
-    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
-        <div class="modal-header border-0 pb-0">
-            <h4>Delete Module?</h4>
-            <button class="modal-close" (click)="closeDeleteConfirm()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none" />
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body p-0">
-            <div class="p-5 text-center">
-                <div class="note-delete-content">
-                    <p class="delete-message">
-                        Are you sure you want to delete "<strong>{{ moduleToDelete.title }}</strong>"?
-                    </p>
-                    <p class="delete-subtext">This action cannot be undone.</p>
-                </div>
-            </div>
-            <div class="button-group note-popup-actions note-delete-actions">
-                <button class="button" type="button" (click)="closeDeleteConfirm()">
-                    Cancel
-                </button>
-                <button class="button note-delete-btn" type="button" (click)="confirmDeleteModule()">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteConfirmModal && !!moduleToDelete"
+  title="Delete Module?"
+  [itemName]="moduleToDelete?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteConfirm()"
+  (confirm)="confirmDeleteModule()"
+></app-delete-confirm>
 
 <!-- Delete Content Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showDeleteContentConfirmModal && contentToDelete">
-    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
-        <div class="modal-header border-0 pb-0">
-            <h4>Delete {{ contentToDelete.content_type === 'EXAM' ? 'Exam' : 'Lesson' }}?</h4>
-            <button class="modal-close" (click)="closeDeleteContentConfirm()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none" />
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body p-0">
-            <div class="p-5 text-center">
-                <div class="note-delete-content">
-                    <p class="delete-message">
-                        Are you sure you want to delete "<strong>{{ contentToDelete.title }}</strong>"?
-                    </p>
-                    <p class="delete-subtext">This action cannot be undone.</p>
-                </div>
-            </div>
-            <div class="button-group note-popup-actions note-delete-actions">
-                <button class="button" type="button" (click)="closeDeleteContentConfirm()">
-                    Cancel
-                </button>
-                <button class="button note-delete-btn" type="button" (click)="confirmDeleteContent()">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteContentConfirmModal && !!contentToDelete"
+  [title]="deleteContentModalTitle()"
+  [itemName]="contentToDelete?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteContentConfirm()"
+  (confirm)="confirmDeleteContent()"
+></app-delete-confirm>
 
 <!-- Add Module Modal -->
 <div class="modal-overlay" *ngIf="showAddModuleModal && program">

@@ -370,6 +370,13 @@ export class ManageCourseComponent
     this.showDeleteContentConfirmModal = true;
   }
 
+  deleteContentModalTitle(): string {
+    if (!this.contentToDelete) {
+      return '';
+    }
+    return this.contentToDelete.content_type === 'EXAM' ? 'Delete Exam?' : 'Delete Lesson?';
+  }
+
   closeDeleteContentConfirm(): void {
     this.showDeleteContentConfirmModal = false;
     this.contentToDelete = null;

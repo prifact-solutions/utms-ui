@@ -9,6 +9,7 @@ import { TextAttemptComponent } from './elements/text-attempt/text-attempt.compo
 import { FormsModule } from '@angular/forms';
 import { MarkDisplayModule } from '../components/mark-display/mark-display.module';
 import { LibConfirmModule } from 'lib-confirm';
+import { UtmsCommonModule } from 'src/app/common/common.module';
 import { FileUploadSessionModule } from 'file-upload-session';
 import { FileUploadAttemptComponent } from './elements/file-upload-attempt/file-upload-attempt.component';
 
@@ -25,7 +26,8 @@ import { FileUploadAttemptComponent } from './elements/file-upload-attempt/file-
     FormsModule,
     MarkDisplayModule,
     LibConfirmModule,
-    FileUploadSessionModule
+    FileUploadSessionModule,
+    UtmsCommonModule
   ],
   exports: [FormAttemptComponent]
 })

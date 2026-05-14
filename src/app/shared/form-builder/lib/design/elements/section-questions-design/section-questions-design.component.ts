@@ -48,7 +48,7 @@ export class SectionQuestionsDesignComponent implements OnInit {
     this.showDelConfirm = true;
   }
 
-  delConfirmAction(event: boolean) {
+  delConfirmAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
     this.formSvc.removeElement(this.selectedQuestion.settings.uniqueId)
@@ -60,7 +60,7 @@ export class SectionQuestionsDesignComponent implements OnInit {
     this.formSvc.reassignQuestionNames()
   }
 
-  cancelDelAction(event: boolean) {
+  cancelDelAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
   }

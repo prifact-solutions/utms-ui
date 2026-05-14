@@ -448,59 +448,6 @@
         }
     }
 
-    .user-delete-overlay {
-        z-index: 2100;
-    }
-
-    .user-delete-modal {
-        max-width: 400px;
-        width: 100%;
-        border: 1px solid $border-color;
-        box-shadow: $shadow-lg;
-        overflow: hidden;
-    }
-
-    .user-delete-content {
-        text-align: center;
-        margin-bottom: 8px;
-
-        .delete-icon-wrap {
-            width: 46px;
-            height: 46px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            background: rgba(217, 48, 37, 0.1);
-            color: #d93025;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-        }
-
-        .delete-message {
-            margin: 0;
-            color: $text-main;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .delete-subtext {
-            margin-top: 6px;
-            color: #8a8a8a;
-            font-size: 0.78rem;
-        }
-
-        .delete-error {
-            margin-top: 12px;
-            text-align: center;
-        }
-    }
-
-    .user-delete-actions {
-        margin-top: 4px;
-        padding-top: 6px;
-    }
-
     .modal-body>.invite-actions {
         margin-top: 8px;
         display: flex;

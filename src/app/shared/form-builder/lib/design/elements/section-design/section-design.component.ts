@@ -32,7 +32,7 @@ export class SectionDesignComponent implements OnInit {
     this.showDelConfirm = true;
   }
 
-  delConfirmAction(event: boolean) {
+  delConfirmAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
     this.formSvc.removeElement(this.item.settings.uniqueId);
@@ -50,7 +50,7 @@ export class SectionDesignComponent implements OnInit {
     }
   }
 
-  cancelDelAction(event: boolean) {
+  cancelDelAction(): void {
     this.showDelConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
   }

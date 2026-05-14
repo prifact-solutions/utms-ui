@@ -238,47 +238,25 @@
       </div>
     </div>
 
-    <!-- Delete user confirmation -->
-    <div class="modal-overlay user-delete-overlay" *ngIf="showDeleteConfirm && userPendingDelete"
-      (click)="closeDeleteConfirm()">
-      <div class="modal-content-wrapper user-delete-modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h4>Delete user</h4>
-          <button class="modal-close" type="button" (click)="closeDeleteConfirm()" [disabled]="isDeletingUser">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-              <rect width="24" height="24" fill="none" />
-              <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
-        </div>
-        <div class="modal-loading-overlay" *ngIf="isDeletingUser" aria-label="Deleting user">
-          <div class="spinner"></div>
-        </div>
-        <div class="modal-body">
-          <div class="user-delete-content">
-            <p class="delete-message">
-              Are you sure you want to remove
-              <strong>{{ getUserName(userPendingDelete) }}</strong>
-              ({{ userPendingDelete.email }})?
-            </p>
-            <p class="delete-subtext">This action cannot be undone.</p>
-            <p class="field-error delete-error" *ngIf="deleteErrorMessage">
-              {{ deleteErrorMessage }}
-            </p>
-          </div>
-          <div class="invite-actions invite-actions-split user-delete-actions">
-            <button type="button" class="button" [disabled]="isDeletingUser" (click)="closeDeleteConfirm()">
-              Cancel
-            </button>
-            <button type="button" class="button delete-btn" [disabled]="isDeletingUser" (click)="confirmDeleteUser()">
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-delete-confirm
+      [visible]="showDeleteConfirm && !!userPendingDelete"
+      title="Delete user"
+      messageLead="Are you sure you want to remove "
+      [itemName]="getUserName(userPendingDelete)"
+      [itemDetail]="'(' + userPendingDelete.email + ')'"
+      [toolbarButtons]="false"
+      [useShadow]="true"
+      [noteBodyPadding]="true"
+      [deleteErrorMessage]="deleteErrorMessage"
+      [busy]="isDeletingUser"
+      [showBusyOverlay]="true"
+      [useInviteActionRow]="true"
+      [userDeleteActions]="true"
+      [primaryDeleteClass]="'delete-btn'"
+      [userDeleteOverlay]="true"
+      (cancel)="closeDeleteConfirm()"
+      (confirm)="confirmDeleteUser()"
+    ></app-delete-confirm>
 
     <div class="modal-overlay invite-success-overlay" *ngIf="showInviteSuccessPopup"
       (click)="closeInviteSuccessPopup()">
