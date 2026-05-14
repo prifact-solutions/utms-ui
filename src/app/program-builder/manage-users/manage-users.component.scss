@@ -105,10 +105,11 @@
         background: #fff;
         padding: 16px;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
         .search-bar {
             flex: 1;
+
             input {
                 width: 100%;
                 padding: 10px 16px;
@@ -116,7 +117,10 @@
                 border-radius: 8px;
                 font-size: 0.9rem;
                 outline: none;
-                &:focus { border-color: #111; }
+
+                &:focus {
+                    border-color: #111;
+                }
             }
         }
 
@@ -215,8 +219,15 @@
             font-size: 0.75rem;
             font-weight: 600;
 
-            &.staff { background: #eef2ff; color: #4f46e5; }
-            &.student { background: #f0fdf4; color: #16a34a; }
+            &.staff {
+                background: #eef2ff;
+                color: #4f46e5;
+            }
+
+            &.student {
+                background: #f0fdf4;
+                color: #16a34a;
+            }
         }
 
         .status-indicator {
@@ -245,28 +256,36 @@
         .table-actions {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
         }
 
         .icon-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #b7b3b3;
+            border-radius: 50%;
             background: none;
-            border: none;
-            padding: 8px;
+            color: #000;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            color: #999;
-            transition: color 0.2s;
-            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 11px;
 
             i {
-                font-size: 0.875rem;
+                font-size: 11px;
             }
 
             &:hover {
                 color: #111;
+                border-color: #111;
+                background: #fff;
             }
 
             &.danger:hover {
-                color: #dc2626;
+                color: #d93025;
+                border-color: #d93025;
             }
         }
     }
@@ -314,12 +333,13 @@
         input[type="email"],
         input[type="text"] {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px;
+            border: 1px solid #111;
             border-radius: 8px;
-            border: 1px solid #eee;
-            font-size: 0.9rem;
             font-family: inherit;
-            outline: none;
+            min-height: 40px;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
             &:focus {
                 border-color: #111;
@@ -329,14 +349,13 @@
 
         select {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px;
+            border: 1px solid #111;
             border-radius: 8px;
-            border: 1px solid #eee;
-            background: #fff;
-            font-size: 0.9rem;
             font-family: inherit;
-            cursor: pointer;
-            outline: none;
+            min-height: 40px;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
             &:focus {
                 border-color: #111;
@@ -375,14 +394,17 @@
         }
 
         .invite-actions {
-            margin-top: 8px;
             display: flex;
-            justify-content: center;
-            gap: 8px;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #d1d7dc;
+        }
 
-            &.invite-actions-split {
-                justify-content: center;
-            }
+        .invite-actions.user-delete-actions {
+            border-top: 0;
         }
 
         .invite-form-row.disabled {
@@ -426,61 +448,7 @@
         }
     }
 
-    .user-delete-overlay {
-        z-index: 2100;
-    }
-
-    .user-delete-modal {
-        max-width: 400px;
-        width: 100%;
-        border: 1px solid $border-color;
-        box-shadow: $shadow-lg;
-        overflow: hidden;
-    }
-
-    .user-delete-content {
-        text-align: center;
-        margin-bottom: 8px;
-
-        .delete-icon-wrap {
-            width: 46px;
-            height: 46px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            background: rgba(217, 48, 37, 0.1);
-            color: #d93025;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-        }
-
-        .delete-message {
-            margin: 0;
-            color: $text-main;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .delete-subtext {
-            margin-top: 6px;
-            color: #8a8a8a;
-            font-size: 0.78rem;
-        }
-
-        .delete-error {
-            margin-top: 12px;
-            text-align: center;
-        }
-    }
-
-    .user-delete-actions {
-        margin-top: 4px;
-        padding-top: 8px;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .modal-body > .invite-actions {
+    .modal-body>.invite-actions {
         margin-top: 8px;
         display: flex;
         justify-content: center;

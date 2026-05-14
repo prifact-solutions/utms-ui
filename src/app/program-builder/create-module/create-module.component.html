@@ -1,4 +1,4 @@
-<div [class.admin-page-container]="!inModal" [class.container]="!inModal" *ngIf="program">
+<div [class.admin-page-container]="!inModal" [class.container]="!inModal" >
     <div [class.builder-layout]="!inModal">
         <!-- Sidebar: Program Info -->
         <aside class="builder-sidebar" *ngIf="!inModal">
@@ -20,7 +20,7 @@
             <header class="page-header" *ngIf="!inModal">
                 <div class="header-text">
                     <h1>Add New Module</h1>
-                    <p class="text-muted">Create a new section for your program curriculum.</p>
+                    <p class="text-muted">Create a new module for your program curriculum.</p>
                 </div>
             </header>
 
@@ -47,7 +47,7 @@
 
                 <div class="form-actions mt-5">
                     <button type="button" class="button"
-                        (click)="inModal ? closed.emit() : router.navigate(['/programs-builder', program.id, 'modules'])">Cancel</button>
+                        (click)="inModal ? closed.emit() : router.navigate(['/programs-builder', programId, 'modules'])">Cancel</button>
                     <button type="submit" class="button primary" [disabled]="moduleForm.invalid">
                         Create Module
                     </button>

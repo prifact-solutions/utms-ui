@@ -1,4 +1,4 @@
-import { EvaluationResult } from 'form-builder';
+import { EvaluationResult } from '../../../shared/form-builder/lib/model/context';
 
 export class SaveEvaluationResult {
 	public marks_scored!: number;

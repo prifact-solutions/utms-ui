@@ -1,0 +1,73 @@
+<div id={{item.settings.uniqueId}}>
+
+  <ng-container *ngFor="let question of item.questions">
+
+    <div class="question-item" *ngIf="question.elementType==FormElementType.descriptive">
+      <div class="item-box question-box ">
+        <div class="item-box-header">
+          <div class="item-box-title">
+            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
+              {{questionNumbers[question.name]}}</span>
+            <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
+              (click)="goToQuestion(question.name)">
+              {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
+            </button>
+          </div>
+          <div>
+            <app-mark-display [marks]="question.marks"></app-mark-display>
+          </div>
+        </div>
+
+        <div class="item-details">
+          <app-text-attempt [item]='question' [isReadOnly]="selectedPage.isPreview" (onSetAnswer)="onAnswerChange($event)"></app-text-attempt>
+        </div>
+      </div>
+    </div>
+    <div class="question-item" *ngIf="question.elementType==FormElementType.file_upload">
+      <div class="item-box question-box ">
+        <div class="item-box-header">
+          <div class="item-box-title">
+            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
+              {{questionNumbers[question.name]}}</span>
+            <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
+              (click)="goToQuestion(question.name)">
+              {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
+            </button>
+          </div>
+          <div>
+            <app-mark-display [marks]="question.marks"></app-mark-display>
+          </div>
+        </div>
+
+        <div class="item-details">
+          <app-file-upload-attempt [item]='question' [isReadOnly]="selectedPage.isPreview" (onSetAnswer)="onAnswerChange($event)"></app-file-upload-attempt>
+        </div>
+      </div>
+    </div>
+    <div class="question-item" *ngIf="question.elementType==FormElementType.multiple_choice">
+      <div class="item-box question-box ">
+        <div class="item-box-header">
+          <div class="item-box-title">
+            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
+              {{questionNumbers[question.name]}}</span>
+            <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
+              (click)="goToQuestion(question.name)">
+              {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
+            </button>
+          </div>
+          <div>
+            <app-mark-display [marks]="question.marks"></app-mark-display>
+          </div>
+        </div>
+
+        <div class="item-details">
+          <app-radio-attempt [item]='question' [isReadOnly]="selectedPage.isPreview" (onSetAnswer)="onAnswerChange($event)"></app-radio-attempt>
+        </div>
+      </div>
+    </div>
+    <div class="question-item" *ngIf="question.elementType==FormElementType.paragraph">
+      <app-static-attempt [item]='question'></app-static-attempt>
+    </div>
+
+  </ng-container>
+</div>

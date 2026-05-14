@@ -1,0 +1,15 @@
+<div *ngFor="let s of qpContext.schema.sections" class="right-pane-section">
+    <div class="right-pane-section-heading">
+        <div>{{s.title}}</div>
+        <div>{{getMarksSectionSummary(s)}}</div>
+    </div>
+    <div class="right-pane-section-container">
+        <ng-container *ngFor="let q of s.questions">
+            <div  *ngIf="q.isQuestion()" (click)="onQuestionClicked(q)" class="right-pane-section-box"
+                [ngClass]="getEvaluationForQuestion(q) >=0 ? 'verified' : 'not-verified'">
+                <strong>{{q.name}}</strong>
+                <div>{{getEvaluationForQuestion(q)}}</div>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<!--section container field-->
+<div class="item-box section-box">
+    <div class="item-box-header">
+        <div class="item-box-title">{{item.title}}</div>
+    </div>
+    <div class="item-details">
+        <p [innerHtml]="item.description.value"></p>
+        <app-section-questions-attempt [item]='item' class='preview'></app-section-questions-attempt>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="answer-form">
+
+    <label [innerHTML]="item.questionContent.value"></label>
+
+    <textarea *ngIf="!isReadOnly && item.showTextBox" id="{{item.settings.uniqueId}}" placeholder="Write your answer here"
+		[(ngModel)]="answer.answerContent"></textarea>
+
+	<p *ngIf="isReadOnly" class="answer-content">
+		<ng-container  *ngIf="answer != null">{{answer.answerContent}}</ng-container>
+	</p>	
+		
+	<lib-file-upload-session *ngIf="sessionObj" [createSessionModel]="sessionObj" [isReadOnly]="isReadOnly" (fileCount)="onFileCount($event)" (sessionCreated)="onSession($event)">
+	</lib-file-upload-session>	
+</div>

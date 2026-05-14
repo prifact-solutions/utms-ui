@@ -1,4 +1,4 @@
-import { QuestionPaperSchemaDefn } from 'form-builder';
+import { QuestionPaperSchemaDefn } from '../../shared/form-builder/lib/model/question-paper';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
 
 export interface ModuleContentWithFiles {

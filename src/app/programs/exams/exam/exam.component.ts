@@ -4,7 +4,7 @@ import {
   ModuleContent,
   ModuleContentFile,
 } from '../../models/program.model';
-import { QuestionPaperAttemptContext } from 'form-builder';
+import { QuestionPaperAttemptContext } from '../../../shared/form-builder/lib/model/context';
 import {
   EMPTY,
   catchError,

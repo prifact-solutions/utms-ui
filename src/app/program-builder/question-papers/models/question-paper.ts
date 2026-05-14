@@ -1,4 +1,4 @@
-import { QuestionPaperSchemaDefn } from "form-builder";
+import { QuestionPaperSchemaDefn } from '../../../shared/form-builder/lib/model/question-paper';
 
 export class QuestionPaper {
 	public id!: number;

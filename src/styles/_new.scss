@@ -108,7 +108,7 @@ p {
         justify-content: end;
     }
 
-    > div:last-child {
+    >div:last-child {
         justify-self: end;
     }
 
@@ -155,7 +155,18 @@ p {
 
     &:hover {
         background: $accent-hover;
-        border-color:$accent-hover;
+        border-color: $accent-hover;
+    }
+}
+
+.button.delete-btn {
+    background: #d93025;
+    border-color: #d93025;
+    color: #fff;
+
+    &:hover {
+        background: #b42318;
+        border-color: #b42318;
     }
 }
 
@@ -955,6 +966,7 @@ html body {
                 font-size: 1rem;
                 color: #666;
                 padding: 0;
+
                 &:hover {
                     background: #111;
                     color: #fff;
@@ -1007,8 +1019,31 @@ html body {
                 }
 
                 .form-group {
-                    margin-bottom: 1rem;
+                    margin-bottom: 20px;
                     border-color: #aaa;
+
+                }
+
+                .form-group-split-wrapper {
+                    display: flex;
+                    width: 100%;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    gap: 20px;
+
+                    @media (max-width: 500px) {
+                        gap: 0;
+                    }
+
+                    .form-group {
+                        width: calc(50% - 10px);
+                    }
+
+                    @media (max-width: 500px) {
+                        .form-group {
+                            width: 100%;
+                        }
+                    }
                 }
 
                 .program-row-grid {
@@ -1034,6 +1069,7 @@ html body {
                 @media (max-width: 800px) {
                     .program-row-grid {
                         flex-wrap: wrap;
+
                         .form-group {
 
                             &.flex-2 {
@@ -1118,12 +1154,18 @@ html body {
                 }
             }
         }
+
         @media (max-width: 800px) {
+
             .modal-body,
-            .modal-header{
+            .modal-header {
                 padding: 20px;
             }
         }
+    }
+
+    .modal-content-wrapper.large-popup{
+        max-width: 1200px;
     }
 }
 
@@ -1276,8 +1318,19 @@ html body {
     }
 }
 
-.manage-course-view.user-signed-in .main-content {
+.manage-course-view.user-signed-in .main-content,
+.question-paper-design-page.user-signed-in .main-content,
+.question-paper-design-page.user-signed-in .main-content {
     padding: 0;
+}
+
+.question-paper-design-page.user-signed-in app-navigation .auth-header,
+.question-paper-design-page.user-signed-in app-navigation .left-navigation{
+    display: none;
+}
+
+.question-paper-design-page.user-signed-in .main-content{
+    margin: 0;
 }
 
 /* HTML: <div class="loader"></div> */
@@ -1435,6 +1488,14 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
     padding-bottom: 2rem;
 }
 
+.qp-card .qp-card-right .dot-menu-wrapper .setting-icon {
+    position: relative;
+    left: 0;
+    top: 0;
+    padding: 0;
+    margin: 0;
+}
+
 @media (max-width: 1200px) {
     .ulm-public-header {
 
@@ -1552,7 +1613,7 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
 @media (max-width: 1020px) {
     html .user-signed-in .main-content {
         margin-top: 0;
-        padding:15px;
+        padding: 15px;
         margin-left: 54px;
     }
 }

@@ -1,0 +1,214 @@
+.delete-confirm-overlay {
+  z-index: 2100;
+}
+
+.delete-confirm-modal {
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.delete-confirm-modal.note-delete-modal .modal-body {
+  padding: 20px 24px 22px;
+}
+
+.delete-confirm-content {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.delete-confirm-content .delete-icon-wrap,
+.note-delete-content .delete-icon-wrap {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: rgba(217, 48, 37, 0.1);
+  color: #d93025;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.delete-confirm-content .delete-message,
+.note-delete-content .delete-message {
+  margin: 0;
+  color: #222;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.delete-confirm-content .delete-subtext,
+.note-delete-content .delete-subtext {
+  margin-top: 6px;
+  color: #8a8a8a;
+  font-size: 0.78rem;
+}
+
+.delete-confirm-content .delete-error {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.note-delete-content {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.note-delete-actions {
+  margin-top: 0;
+  padding-top: 6px;
+  justify-content: center;
+}
+
+.note-delete-actions button {
+  width: auto;
+}
+
+.note-delete-btn {
+  background: #d93025;
+  border-color: #d93025;
+  color: #fff;
+}
+
+.note-delete-btn:hover {
+  background: #b42318;
+  border-color: #b42318;
+}
+
+.delete-btn {
+  background: #d93025;
+  border-color: #d93025;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #b42318;
+  border-color: #b42318;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.delete-confirm-actions .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: #222;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-confirm-actions .btn-outline:hover:not(:disabled) {
+  border-color: #bdbdbd;
+  background: #f8f9fa;
+}
+
+.delete-confirm-actions .btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 8px;
+  gap: 0.5rem;
+  background-color: #d93025;
+  color: #fff;
+  border: none;
+  transition: 0.2s ease;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #b42318;
+  box-shadow: 0 4px 12px rgba(217, 48, 37, 0.25);
+}
+
+.btn-danger:disabled {
+  background-color: #f1f3f5;
+  color: #adb5bd;
+  border-color: #dee2e6;
+  cursor: not-allowed;
+}
+
+.modal-loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+  border-radius: 12px;
+}
+
+.modal-loading-overlay .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f1f3f5;
+  border-top-color: #0d6efd;
+  border-radius: 50%;
+  animation: confirm-spin 1s linear infinite;
+}
+
+.invite-actions.invite-actions-split.user-delete-actions {
+  border-top: 0;
+}
+
+.invite-actions.invite-actions-split {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.user-delete-actions {
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+@keyframes confirm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.field-error.delete-error {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.user-delete-overlay.delete-confirm-overlay {
+  z-index: 2100;
+}
+
+.delete-confirm-modal.user-delete-modal {
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}

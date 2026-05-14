@@ -1,0 +1,17 @@
+<div class="student-summery-heading">
+  <div class="image">
+    <img *ngIf="showImg" [src]="qpContext.student_info.image_url" (error)="noImg()">
+  </div>
+  <div class="sudent-details">
+    <h2>{{qpContext.student_info.display_name}}</h2>
+    <h3>{{qpContext.student_info.serial_number}}</h3>
+  </div>
+</div>
+
+
+<div class="marks-display">
+  <div class="final-mark">
+    {{getTotalMarksSummary()}}
+  </div>
+  <button class="button primary" (click)="onCommitMarks()">Save Marks</button>
+</div>

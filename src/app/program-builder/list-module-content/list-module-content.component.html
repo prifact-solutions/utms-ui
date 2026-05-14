@@ -23,7 +23,7 @@
         <div class="header-text">
           <h1>{{ module.title }}</h1>
           <p class="text-muted">
-            Review and manage lessons or exams for this section.
+            Review and manage lessons or exams for this module.
           </p>
         </div>
         <div class="header-actions">
@@ -146,60 +146,13 @@
   </div>
 </div>
 
-<div
-  class="modal-overlay delete-confirm-overlay"
-  *ngIf="showDeleteConfirm && contentPendingDelete"
-  (click)="closeDeleteConfirm()"
->
-  <div
-    class="modal-content-wrapper delete-confirm-modal"
-    (click)="$event.stopPropagation()"
-  >
-    <div class="modal-header">
-      <h4>Delete content</h4>
-      <button
-        class="modal-close"
-        type="button"
-        (click)="closeDeleteConfirm()"
-        [disabled]="isDeletingContent"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-            <rect width="24" height="24" fill="none"/>
-            <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="delete-confirm-content">
-        <div class="delete-icon-wrap">🗑️</div>
-        <p class="delete-message">
-          Are you sure you want to delete
-          <strong>{{ contentPendingDelete.title }}</strong>?
-        </p>
-        <p class="delete-subtext">This action cannot be undone.</p>
-        <p class="field-error delete-error" *ngIf="deleteErrorMessage">
-          {{ deleteErrorMessage }}
-        </p>
-      </div>
-      <div class="invite-actions invite-actions-split delete-confirm-actions">
-        <button
-          type="button"
-          class="btn-outline"
-          [disabled]="isDeletingContent"
-          (click)="closeDeleteConfirm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn-danger"
-          [disabled]="isDeletingContent"
-          (click)="confirmDeleteContent()"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteConfirm && !!contentPendingDelete"
+  title="Delete content"
+  [itemName]="contentPendingDelete?.title || ''"
+  [showTrashIcon]="true"
+  [busy]="isDeletingContent"
+  [deleteErrorMessage]="deleteErrorMessage"
+  (cancel)="closeDeleteConfirm()"
+  (confirm)="confirmDeleteContent()"
+></app-delete-confirm>

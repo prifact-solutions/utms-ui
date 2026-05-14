@@ -1,10 +1,13 @@
-<p *ngIf="isCurriculumReadonly && !isLoading && program" class="curriculum-readonly-note" >
+<p *ngIf="isCurriculumReadonly && !isLoading && program" class="curriculum-readonly-note">
     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-        <path d="M12 15H12.01M12 12V9M4.98207 19H19.0179C20.5615 19 21.5233 17.3256 20.7455 15.9923L13.7276 3.96153C12.9558 2.63852 11.0442 2.63852 10.2724 3.96153L3.25452 15.9923C2.47675 17.3256 3.43849 19 4.98207 19Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path
+            d="M12 15H12.01M12 12V9M4.98207 19H19.0179C20.5615 19 21.5233 17.3256 20.7455 15.9923L13.7276 3.96153C12.9558 2.63852 11.0442 2.63852 10.2724 3.96153L3.25452 15.9923C2.47675 17.3256 3.43849 19 4.98207 19Z"
+            stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
     <span>This course is already published. Course content cannot be modified.</span>
 </p>
-<div class="manage-course-page-container" *ngIf="!isLoading && program" [ngClass]="{ 'has-top-banner': isCurriculumReadonly }">
+<div class="manage-course-page-container" *ngIf="!isLoading && program"
+    [ngClass]="{ 'has-top-banner': isCurriculumReadonly }">
     <div class="course-primary">
         <div class="course-primary-top-section">
             <div class="c-details-header">
@@ -16,48 +19,64 @@
                     <span>Back to Courses</span>
                 </div>
             </div>
-            
-            <div class="c-details">
-                <div class="c-title">
-                    <h2>{{ program.title }}</h2>
-                    <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
-                        {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
-                    </span>
+            <div class="c-details-wrapper">
+                <div class="c-details">
+                    <div class="c-title">
+                        <h2>{{ program.title }}</h2>
+                        <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
+                            {{ program.status === 'ACTIVE' ? 'Published' : 'Draft' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <a href="javascript:void(0)" class="action-btn" type="button" title="Edit Course" (click)="openViewModal()">
+                        <i class="fas fa-info"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="action-btn" type="button" title="Edit Course" (click)="openEditModal()">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a *ngIf="program.status != 'ACTIVE'" href="javascript:void(0)" (click)="showDeleteCourseConfirm()" class="action-btn delete" type="button" title="Delete Course">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="main-header-actions"  [ngClass]="{ 'only-edit': program.status == 'ACTIVE' }">
-            <a (click)="openViewModal()" class="button">View Details</a>
-            <a *ngIf="program.status != 'ACTIVE'" (click)="showDeleteCourseConfirm()" class="button">Delete</a>
-            <button *ngIf="program.status != 'ACTIVE'"
-                type="button"
-                (click)="togglePublish()"
-                class="button primary black"
-                [disabled]="isPublishing"
-            >
+        <div class="main-header-actions" [ngClass]="{ 'only-edit': program.status == 'ACTIVE' }">
+            <!-- <a (click)="openViewModal()" class="button">Course Details</a> -->
+            <button *ngIf="program.status != 'ACTIVE'" type="button" (click)="togglePublish()"
+                class="button primary black" [disabled]="isPublishing">
                 Publish
             </button>
         </div>
     </div>
 
-    <div class="course-curriculum" >
+    <div class="manage-course-tabs">
+        <button type="button" class="tab-btn" [class.active]="activeTab === 'curriculum'"
+            (click)="setTab('curriculum')">
+            Lessons &amp; Exams
+        </button>
+        <button type="button" class="tab-btn" [class.active]="activeTab === 'question-papers'" (click)="setTab('question-papers')">
+            Question Papers
+        </button>
+    </div>
+
+    <div class="course-curriculum" *ngIf="activeTab === 'curriculum'">
         <div class="curriculum-sidebar">
             <div class="curriculum-actions">
                 <h3>Modules <span class="count">({{ program.modules?.length || 0 }})</span> </h3>
-                <button *ngIf="!isCurriculumReadonly"
-                    type="button"
-                    (click)="addModule()"
+                <button *ngIf="!isCurriculumReadonly" type="button" (click)="addModule()"
                     [disabled]="isCurriculumReadonly"
-                    [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
-                >
+                    [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null">
                     <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24">
                         <g id="Complete">
-                        <g data-name="add" id="add-2">
-                        <g>
-                        <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="19" y2="5"/>
-                        <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="5" x2="19" y1="12" y2="12"/>
-                        </g>
-                        </g>
+                            <g data-name="add" id="add-2">
+                                <g>
+                                    <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" x1="12" x2="12" y1="19" y2="5" />
+                                    <line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" x1="5" x2="19" y1="12" y2="12" />
+                                </g>
+                            </g>
                         </g>
                     </svg>
                 </button>
@@ -92,34 +111,17 @@
                 <div class="module-view-header">
                     <h3>{{ selectedModule.title }}</h3>
                     <div class="header-actions">
-                        <a
-                            class="button qp-link"
-                            [routerLink]="['/programs-builder', programId, 'question-papers']"
-                        >
-                            <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
-                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            </svg> -->
+                        <!-- <a class="button qp-link" [routerLink]="['/programs-builder', programId, 'question-papers']">
                             Question Papers
-                        </a>
-                        <button
-                            *ngIf="!isCurriculumReadonly"
-                            type="button"
-                            class="button primary black"
-                            (click)="openAddLessonModal()"
-                            [disabled]="isCurriculumReadonly"
-                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
-                        >
+                        </a> -->
+                        <button *ngIf="!isCurriculumReadonly" type="button" class="button primary black"
+                            (click)="openAddLessonModal()" [disabled]="isCurriculumReadonly"
+                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null">
                             Add Lesson
                         </button>
-                        <button
-                            *ngIf="!isCurriculumReadonly"
-                            type="button"
-                            class="button primary black"
-                            (click)="openAddExamModal()"
-                            [disabled]="isCurriculumReadonly"
-                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null"
-                        >
+                        <button *ngIf="!isCurriculumReadonly" type="button" class="button primary black"
+                            (click)="openAddExamModal()" [disabled]="isCurriculumReadonly"
+                            [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null">
                             Add Exam
                         </button>
                     </div>
@@ -162,6 +164,10 @@
             </ng-template>
         </div>
     </div>
+
+    <div class="course-questions" *ngIf="activeTab === 'question-papers'">
+        <app-question-papers-list></app-question-papers-list>
+    </div>
 </div>
 
 <!-- Add Lesson Modal -->
@@ -171,14 +177,16 @@
             <h4>Add New Lesson</h4>
             <button class="modal-close" (click)="closeAddLessonModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
         <div class="modal-body">
-            <app-create-lesson [inModal]="true" [programIdInput]="programId" [moduleIdInput]="selectedModule.id"
+            <app-create-lesson [inModal]="true" [programId]="programId" [moduleId]="selectedModule.id"
                 (saved)="onLessonAdded()" (closed)="closeAddLessonModal()">
             </app-create-lesson>
         </div>
@@ -192,9 +200,11 @@
             <h4>Add New Exam</h4>
             <button class="modal-close" (click)="closeAddExamModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
@@ -223,9 +233,11 @@
             </div>
             <button class="modal-close" (click)="closeViewModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
@@ -255,7 +267,8 @@
                                 <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
                                         <g id="SVGRepo_iconCarrier">
                                             <rect width="24" height="24"></rect>
                                             <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
@@ -278,7 +291,8 @@
                                 <span class="plus-icon"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
                                         <g id="SVGRepo_iconCarrier">
                                             <rect width="24" height="24"></rect>
                                             <path d="M12 6V18" stroke="#000000" stroke-linecap="round"
@@ -309,14 +323,16 @@
             <h4>Edit Course Details</h4>
             <button class="modal-close" (click)="closeEditModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
         <div class="modal-body">
-            <app-edit-program [inModal]="true" [programId]="programId" (saved)="onProgramUpdated()"
+            <app-edit-program [inModal]="true" [program]="program" [programId]="programId" (saved)="onProgramUpdated()"
                 (closed)="closeEditModal()">
             </app-edit-program>
         </div>
@@ -330,27 +346,6 @@
             <h4>Edit Module</h4>
             <button class="modal-close" (click)="closeEditModuleModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body">
-            <app-edit-module [inModal]="true" [programIdInput]="programId" [moduleIdInput]="moduleToEdit.id"
-                (saved)="onModuleUpdated()" (closed)="closeEditModuleModal()">
-            </app-edit-module>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Course Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showDeleteCourseConfirmModal && program">
-    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
-        <div class="modal-header border-0 pb-0">
-            <h4>Delete Course?</h4>
-            <button class="modal-close" (click)="closeDeleteCourseConfirm()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                     <rect width="24" height="24" fill="none" />
                     <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
                         stroke-linejoin="round" />
@@ -359,58 +354,58 @@
                 </svg>
             </button>
         </div>
-        <div class="modal-body p-0">
-            <div class="p-5 text-center">
-                <div class="note-delete-content">
-                    <p class="delete-message">
-                        Are you sure you want to delete "<strong>{{ program.title }}</strong>"?
-                    </p>
-                    <p class="delete-subtext">This action cannot be undone.</p>
-                </div>
-            </div>
-            <div class="button-group note-popup-actions note-delete-actions">
-                <button class="button" type="button" (click)="closeDeleteCourseConfirm()">
-                    Cancel
-                </button>
-                <button class="button note-delete-btn" type="button" (click)="confirmDeleteCourse()">
-                    Delete
-                </button>
-            </div>
+        <div class="modal-body">
+            <app-edit-module [inModal]="true" [programId]="programId" [module]="moduleToEdit"
+                (saved)="onModuleUpdated()" (closed)="closeEditModuleModal()">
+            </app-edit-module>
         </div>
     </div>
 </div>
 
+<!-- Delete Course Confirmation Modal -->
+<app-delete-confirm
+  [visible]="showDeleteCourseConfirmModal && !!program"
+  title="Delete Course?"
+  [itemName]="program?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteCourseConfirm()"
+  (confirm)="confirmDeleteCourse()"
+></app-delete-confirm>
+
 <!-- Delete Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showDeleteConfirmModal && moduleToDelete">
-    <div class="modal-content-wrapper shadow-lg" style="max-width: 450px;">
-        <div class="modal-header border-0 pb-0">
-            <button class="modal-close" (click)="closeDeleteConfirm()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body p-0">
-            <div class="p-5 text-center">
-                <div class="mb-4" style="font-size: 3.5rem; color: #d93025; opacity: 0.15;">🗑️</div>
-                <h3 class="mb-2" style="font-size: 1.5rem; font-weight: 700;">Delete Module?</h3>
-                <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">
-                    Are you sure you want to delete "<strong>{{ moduleToDelete.title }}</strong>"?<br>
-                    This will permanently remove the module and all its contents.
-                </p>
-            </div>
-            <div class="modal-footer bg-light p-4 d-flex gap-3 justify-content-center border-0"
-                style="border-radius: 0 0 20px 20px;">
-                <button class="button outline sm" (click)="closeDeleteConfirm()"
-                    style="min-width: 100px;">Cancel</button>
-                <button class="button danger sm" (click)="confirmDeleteModule()" style="min-width: 140px;">Yes,
-                    Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteConfirmModal && !!moduleToDelete"
+  title="Delete Module?"
+  [itemName]="moduleToDelete?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteConfirm()"
+  (confirm)="confirmDeleteModule()"
+></app-delete-confirm>
+
+<!-- Delete Content Confirmation Modal -->
+<app-delete-confirm
+  [visible]="showDeleteContentConfirmModal && !!contentToDelete"
+  [title]="deleteContentModalTitle()"
+  [itemName]="contentToDelete?.title || ''"
+  [showQuotesAroundItem]="true"
+  [useShadow]="true"
+  [flushHeader]="true"
+  [paddedInner]="true"
+  [maxWidth]="'450px'"
+  [toolbarButtons]="false"
+  (cancel)="closeDeleteContentConfirm()"
+  (confirm)="confirmDeleteContent()"
+></app-delete-confirm>
 
 <!-- Add Module Modal -->
 <div class="modal-overlay" *ngIf="showAddModuleModal && program">
@@ -419,9 +414,11 @@
             <h4>Add New Module</h4>
             <button class="modal-close" (click)="closeAddModuleModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
@@ -440,9 +437,11 @@
             <h4>Edit Lesson</h4>
             <button class="modal-close" (click)="closeEditLessonModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
@@ -461,9 +460,11 @@
             <h4>Edit Exam</h4>
             <button class="modal-close" (click)="closeEditExamModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-                    <rect width="24" height="24" fill="none"/>
-                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect width="24" height="24" fill="none" />
+                    <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" />
                 </svg>
             </button>
         </div>

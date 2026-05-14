@@ -63,7 +63,7 @@
           *ngFor="let module of modules; let i = index"
           class="curriculum-item card"
         >
-          <div class="item-number">Section {{ i + 1 }}</div>
+          <div class="item-number">Module {{ i + 1 }}</div>
           <div class="curriculum-content">
             <h3>{{ module.title }}</h3>
             <div class="curriculum-meta" *ngIf="module.module_contents">
@@ -102,7 +102,7 @@
         </div>
 
         <div *ngIf="modules.length === 0" class="empty-state">
-          <p>No modules added yet. Start by creating your first section.</p>
+          <p>No modules added yet. Start by creating your first module.</p>
           <a
             [routerLink]="['/programs-builder', program.id, 'modules', 'add']"
             class="btn-outline mt-3"
@@ -114,60 +114,13 @@
   </div>
 </div>
 
-<div
-  class="modal-overlay delete-confirm-overlay"
-  *ngIf="showDeleteConfirm && modulePendingDelete"
-  (click)="closeDeleteConfirm()"
->
-  <div
-    class="modal-content-wrapper delete-confirm-modal"
-    (click)="$event.stopPropagation()"
-  >
-    <div class="modal-header">
-      <h4>Delete module</h4>
-      <button
-        class="modal-close"
-        type="button"
-        (click)="closeDeleteConfirm()"
-        [disabled]="isDeletingModule"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" fill="none"/>
-          <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="delete-confirm-content">
-        <div class="delete-icon-wrap">🗑️</div>
-        <p class="delete-message">
-          Are you sure you want to delete
-          <strong>{{ modulePendingDelete.title }}</strong>?
-        </p>
-        <p class="delete-subtext">This action cannot be undone.</p>
-        <p class="field-error delete-error" *ngIf="deleteErrorMessage">
-          {{ deleteErrorMessage }}
-        </p>
-      </div>
-      <div class="invite-actions invite-actions-split delete-confirm-actions">
-        <button
-          type="button"
-          class="btn-outline"
-          [disabled]="isDeletingModule"
-          (click)="closeDeleteConfirm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="btn-danger"
-          [disabled]="isDeletingModule"
-          (click)="confirmDeleteModule()"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-delete-confirm
+  [visible]="showDeleteConfirm && !!modulePendingDelete"
+  title="Delete module"
+  [itemName]="modulePendingDelete?.title || ''"
+  [showTrashIcon]="true"
+  [busy]="isDeletingModule"
+  [deleteErrorMessage]="deleteErrorMessage"
+  (cancel)="closeDeleteConfirm()"
+  (confirm)="confirmDeleteModule()"
+></app-delete-confirm>

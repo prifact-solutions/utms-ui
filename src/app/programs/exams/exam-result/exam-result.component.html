@@ -18,8 +18,8 @@
       </svg>
     </div>
     <div class="alert alert-success">
-      Congratulations! You have successfully completed the exam. Score:
-      {{ score }}
+      <p>Congratulations! You have successfully completed the exam.</p>
+      <p>Score: {{ score }}</p>
     </div>
     <div class="success-summary">
       <div>
@@ -29,8 +29,9 @@
   </div>
   <div *ngIf="!isExamPassed">
     <div class="alert alert-success">
-      You did not clear the exam. Score: {{ score }} Passing score:
-      {{ passing_score }}
+      <p>You did not clear the exam.</p>
+      <p>Score: {{ score }}</p>
+      <p>Passing score: {{ passing_score }}</p>
     </div>
     <div class="success-summary">
       <div>

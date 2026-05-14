@@ -1,0 +1,36 @@
+.right-pane-section {
+    margin: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 20px;
+}
+.right-pane-section-heading {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+.right-pane-section-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+.right-pane-section-box {
+    padding: 10px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #dee5e7;
+    width: calc(25% - 10px);
+    margin: 10px 10px 0 0;
+    background: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+.right-pane-section-box strong {
+    font-size: 0.85em;
+    font-weight: 400;
+}
+.right-pane-section-box div {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.right-pane-section-box.verified {
+    background: #1b8d40;
+    color: #fff;
+}

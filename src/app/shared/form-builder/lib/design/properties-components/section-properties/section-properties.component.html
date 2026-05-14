@@ -1,0 +1,11 @@
+<div class="edit-form">
+    <div class="edit-form-item">
+        <label>Section Title</label>
+        <input type="text" [(ngModel)]="item.title" />
+    </div>
+    <div class="edit-form-item">
+        <label>Description/Instructions</label>
+        <angular-editor [(ngModel)]="item.description.value" [placeholder]="'Enter instructional text here if any...'"
+            [config]="globalEditorConfig"></angular-editor>
+    </div>
+</div>

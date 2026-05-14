@@ -16,6 +16,7 @@ import { CreateExamComponent } from './create-exam/create-exam.component';
 import { QuestionPapersModule } from './question-papers/question-papers.module';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { SharedModule } from '../shared/shared.module';
+import { UtmsCommonModule } from 'src/app/common/common.module';
 import { ProgramReportComponent } from './program-report/program-report.component';
 import { ReportComponent } from './report/report.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
@@ -46,7 +47,8 @@ import { ManageCourseComponent } from './manage-course/manage-course.component';
     ReactiveFormsModule,
     FormsModule,
     QuestionPapersModule,
-    SharedModule
+    SharedModule,
+    UtmsCommonModule
   ]
 })
 export class ProgramBuilderModule { }

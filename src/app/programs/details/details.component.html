@@ -146,7 +146,7 @@
         <div class="syllabus-header">
             <h3>Course Content</h3>
             <div class="summary">
-                {{ catalog.modules?.length || 0 }} sections • {{ getTotalContents() }} lectures
+                {{ getCourseContentSummary() }}
             </div>
         </div>
 
@@ -156,14 +156,17 @@
                     [class.no-contents]="module.module_contents.length === 0">
                     <span class="chevron" [class.open]="isOpen(i)" *ngIf="module.module_contents.length > 0"></span>
                     <span class="chevron-placeholder" *ngIf="module.module_contents.length === 0"></span>
-                    <span class="module-title">{{ module.title }}</span>
-                    <span class="module-meta">{{ module.module_contents.length }} lectures</span>
+                    <div class="module-header-body">
+                        <span class="module-title">{{ module.title }}</span>
+                        <span class="module-meta">{{ getModuleContentSummary(module.id) }}</span>
+                    </div>
                 </button>
 
                 <div class="accordion-panel" [class.open]="isOpen(i)">
                     <div class="lesson-item" *ngFor="let content of module.module_contents; let j = index"
                         (click)="navigateToLesson(content)"
                         [class.status-completed]="getStatus(content) === 'COMPLETED'"
+                        [class.status-locked]="getStatus(content) === 'LOCKED'"
                         [class.active]="isActiveLesson(content.id)">
                         <span class="lesson-number">{{ j + 1 }}</span>
                         <span class="content-title">{{ content.title }}</span>

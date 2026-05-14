@@ -1,0 +1,32 @@
+.no-question-helper-text{
+    font-size: 0.875rem;
+    color: #bdbdbd;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    min-height: 27px;
+    padding: 0 10px;
+}
+
+.cdk-drop-list-dragging .no-question-helper-text{
+    display: none;
+}
+
+.mobile-view-mark-container{
+    display: none;
+}
+
+@media (max-width:1100px) {
+    .mark-container.web-view{
+        display: none;
+    }
+    .mobile-view-mark-container{
+        display: flex;
+        width: 100%;
+        padding: 10px 10px 0 10px;
+         .mark-container{
+            width: 100%;
+            padding: 0;
+         }
+    }
+}

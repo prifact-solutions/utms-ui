@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { forkJoin, map, of, Subject, switchMap, tap } from 'rxjs';
-import { QuestionPaperAttemptContext } from 'form-builder';
+import { QuestionPaperAttemptContext } from '../../../shared/form-builder/lib/model/context';
 import { ExamBackendService } from 'src/app/shared/services/exam-backend.service';
 import {
   Exam,

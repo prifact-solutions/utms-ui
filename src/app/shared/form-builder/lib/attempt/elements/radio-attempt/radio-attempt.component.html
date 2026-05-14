@@ -1,0 +1,13 @@
+<div class="answer-form">
+    <label [innerHTML]="item.questionContent.value"></label>
+    <div *ngFor="let v of item.options" class="inline-form-group">
+        <div class="inputGroup">
+            <input id="attempt_{{item.settings.uniqueId + '_' + v.choiceValue}}" value="{{v.choiceValue}}"
+                name="{{item.settings.uniqueId}}" [(ngModel)]="answer.answerChoiceValue" type="radio" [disabled]="isReadOnly" />
+
+            <label for="attempt_{{item.settings.uniqueId + '_'  + v.choiceValue}}" [innerHtml]="v.choiceContent.value" [ngClass]="{hideInput:isReadOnly}">
+            </label>
+        </div>
+    </div>
+    <button *ngIf="!isReadOnly" class="button" (click)="onClear()">Clear selection</button>
+</div>

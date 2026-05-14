@@ -15,13 +15,13 @@ import {
 } from '../models/program.model';
 import { ProgramProgress } from '../models/program_progress.model';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private _currentProgramId = new BehaviorSubject<string | null>(null);
 
@@ -30,9 +30,29 @@ export class ProgramsService {
   setProgramId(id: string | null) {
     this._currentProgramId.next(id);
   }
+  private categoriesCache$: ReplaySubject<Array<Category>> = new ReplaySubject(1);
+
+  private httpInProgress = false;
+  private cacheLoaded = false;
 
   public getAllCategories() {
-    return this.http.get<Array<Category>>(`${AppSettings.apiUrl}/categories/`);
+    if (this.cacheLoaded) {
+      return this.categoriesCache$;
+    }
+    if (this.httpInProgress) {
+      return this.categoriesCache$;
+    } else {
+      this.httpInProgress = true;
+      return this.http
+        .get<Array<Category>>(`${AppSettings.apiUrl}/categories/`)
+
+        .pipe(
+          tap((categories) => {
+            this.categoriesCache$.next(categories);
+            this.cacheLoaded = true;
+            this.httpInProgress = false;
+          }));
+    }
   }
 
   public getAllPrograms() {
@@ -49,7 +69,8 @@ export class ProgramsService {
     );
   }
   public getProgramById(id: number) {
-    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}`);
+    console.log(`Fetching program with ID ${id} from API`);
+    return this.http.get<Program>(`${AppSettings.apiUrl}/programs/${id}/`);
   }
   public getProgramCatalog(id: number) {
     return this.http.get<Program>(

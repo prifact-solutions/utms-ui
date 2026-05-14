@@ -1,0 +1,20 @@
+<div *ngIf="draftElement != null" class="edit-panel">
+  <div class="edit-panel-heading">
+    <!-- <span>Properties</span> -->
+    <strong>
+      {{getFormElementTypeLabel(draftElement.elementType)}}
+    </strong>
+  </div>
+  <p class="text-muted small-size">Customize the selected question using the controls below. Click Save to apply changes to the paper.</p>
+
+  <app-section-properties *ngIf="draftElement.elementType == FormElementType.section"
+    [item]="draftElement"></app-section-properties>
+  <app-radio-properties *ngIf="draftElement.elementType == FormElementType.multiple_choice"
+    [item]="draftElement"></app-radio-properties>
+  <app-static-properties *ngIf="draftElement.elementType == FormElementType.paragraph"
+    [item]="draftElement"></app-static-properties>
+  <app-text-properties *ngIf="draftElement.elementType == FormElementType.descriptive"
+    [item]="draftElement"></app-text-properties>
+  <app-file-properties *ngIf="draftElement.elementType == FormElementType.file_upload"
+  [item]="draftElement"></app-file-properties>
+</div>

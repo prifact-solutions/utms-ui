@@ -1,0 +1,9 @@
+<div class="edit-form">
+    <div class="edit-form-item">
+        <label>Content</label>
+        <angular-editor #editRef (focus)="onEditorFocus(editRef)"
+            (blur)="onEditorBlur(editRef)" [(ngModel)]="item.content.value" [placeholder]="'Enter text here...'"
+            [config]="noToolBarConfig">
+        </angular-editor>
+    </div>
+</div>

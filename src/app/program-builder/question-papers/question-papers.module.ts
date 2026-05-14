@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CreateQuestionPaperComponent } from './components/create-question-paper/create-question-paper.component';
 import { DesignQuestionPaperComponent } from './components/design-question-paper/design-question-paper.component';
 import { QuestionPapersListComponent } from './components/question-papers-list/question-papers-list.component';
-import { DesignModule, FormBuilderBackendService } from 'form-builder';
-import { LibConfirmModule } from 'lib-confirm';
+import { FormBuilderModule } from '../../shared/form-builder/form-builder.module';
+import { FormBuilderBackendService } from '../../shared/form-builder/lib/services/form-builder-backend.service';
 import { FormsModule } from '@angular/forms';
 import { UtmsCommonModule } from 'src/app/common/common.module';
 import { ExamBackendService } from 'src/app/shared/services/exam-backend.service';
@@ -15,10 +15,10 @@ import { ExamBackendService } from 'src/app/shared/services/exam-backend.service
     DesignQuestionPaperComponent,
     QuestionPapersListComponent,
   ],
+  exports: [QuestionPapersListComponent],
   imports: [
     CommonModule,
-    DesignModule,
-    LibConfirmModule,
+    FormBuilderModule,
     FormsModule,
     UtmsCommonModule,
   ],

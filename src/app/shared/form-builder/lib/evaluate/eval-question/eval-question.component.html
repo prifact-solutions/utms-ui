@@ -1,0 +1,22 @@
+<div class="verify-control">
+    <div class="teacher-remark">
+        <textarea *ngIf="isEdit" [(ngModel)]="evalCopy.remarks" placeholder="Teacher Remarks"></textarea>
+        <div class="teacher-remark-text" *ngIf="!isEdit">{{evalCommitted.remarks}}</div>
+    </div>
+    <div class="marks-awarded">
+        <input *ngIf="isEdit" type="number" step="{{step}}" min="0" max="{{item.marks}}" [(ngModel)]="evalCopy.marks_awarded"
+            placeholder="Marks">
+        <div class="marks-awarded-text" *ngIf="!isEdit">{{evalCommitted.marks_awarded}}</div>
+    </div>
+    <div class="verify-button">
+        <button *ngIf="isEdit" (click)="onApply()">Save</button>
+        <button *ngIf="isEdit && evalCommitted != null" (click)="onCancel()">Cancel</button>
+        <button *ngIf="!isEdit" (click)="onEdit()">Change</button>
+    </div>
+</div>
+
+<div *ngIf="errorMessage" class="error-msg">
+	<div>
+		<span>{{errorMessage}}</span>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+<div *ngIf="loading" class="loading">
+  Loading ...
+</div>
+<div *ngIf='!loading && qpContext != null' class="evaluation">
+  <div class="eval-main">
+    <div class="evaluation-wrapper">
+      <app-section-evaluate *ngFor="let item of qpContext.schema.sections" [item]="item"></app-section-evaluate>
+    </div>
+  </div>
+
+  <div class="right-pane">
+    <app-student-summary [qpContext]="qpContext" (marksCommitted)="onMarksCommit($event)"></app-student-summary>
+    <app-marks-summary [qpContext]="qpContext"></app-marks-summary>
+  </div>
+</div>

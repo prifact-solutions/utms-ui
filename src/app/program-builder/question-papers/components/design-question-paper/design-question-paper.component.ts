@@ -1,6 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormElementType } from 'form-builder';
+import { FormElementType } from '../../../../shared/form-builder/lib/model/form-elements';
 import { ComponentBase } from 'src/app/common/componentbase';
 
 @Component({
@@ -41,15 +41,18 @@ export class DesignQuestionPaperComponent extends ComponentBase {
   }
 
   onBack(event: any) {
-    this.router.navigate([
-      `/programs-builder/${this.programId}/question-papers/`,
-    ]);
+    this.router.navigate([`/programs-builder/${this.programId}/manage/`], {
+      queryParams: { tab: 'question-papers' },
+    });
   }
 
   onSave(event: any) {
-    this.router.navigate([
-      `/programs-builder/${this.programId}/question-papers/`,
-    ]);
+    // this.router.navigate([
+    //   `/programs-builder/${this.programId}/question-papers/`,
+    // ]);
+    this.router.navigate([`/programs-builder/${this.programId}/manage/`], {
+      queryParams: { tab: 'question-papers' },
+    });
     //this.alertService.newAlert('Question paper saved successfully');
   }
 }

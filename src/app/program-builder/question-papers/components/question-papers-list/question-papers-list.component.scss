@@ -1,23 +1,19 @@
 @import 'src/styles/variables';
 
 // ─── Card List (vertical stack of horizontal cards) ───────────────────────────
-.qp-list {
-	display: flex;
-	flex-direction: column;
-
-}
+.qp-list {}
 
 // ─── Single Horizontal Card ───────────────────────────────────────────────────
 .qp-card {
-	background: #fff;
-	position: relative;
-
-	padding: 8px 50px 8px 0;
 	display: flex;
 	align-items: center;
 	gap: 16px;
-	border-top: 1px solid rgba(0, 0, 0, .08);
-
+	padding: 15px;
+	background: #fff;
+	border-radius: 10px;
+	margin: 20px 0;
+	position: relative;
+	border: solid 1px #ededed;
 
 	// Left icon
 	.qp-icon {
@@ -101,6 +97,10 @@
 		gap: 12px;
 		flex-shrink: 0;
 
+		.dot-menu-wrapper {
+			position: relative;
+		}
+
 		.qp-status-badge {
 			font-size: 0.7rem;
 			font-weight: 700;
@@ -126,6 +126,13 @@
 			color: #ccc;
 		}
 	}
+}
+
+.qp-card.skeleton-card {
+	justify-content: flex-start;
+	align-items: flex-start;
+	height: auto;
+	min-height: 0;
 }
 
 // ─── Skeleton Loading ─────────────────────────────────────────────────────────
