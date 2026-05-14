@@ -209,7 +209,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-create-exam [inModal]="true" [programIdInput]="programId" [moduleIdInput]="selectedModule.id"
+            <app-create-exam [inModal]="true" [programId]="programId" [moduleId]="selectedModule.id"
                 (saved)="onExamAdded()" (closed)="closeAddExamModal()">
             </app-create-exam>
         </div>
@@ -423,7 +423,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-create-module [inModal]="true" [programIdInput]="programId" (saved)="onModuleAdded()"
+            <app-create-module [inModal]="true" [programId]="programId" (saved)="onModuleAdded()"
                 (closed)="closeAddModuleModal()">
             </app-create-module>
         </div>
@@ -469,8 +469,8 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-edit-exam [inModal]="true" [programIdInput]="programId" [moduleIdInput]="selectedModule.id"
-                [contentIdInput]="examToEdit.id" (saved)="onExamUpdated()" (closed)="closeEditExamModal()">
+            <app-edit-exam [inModal]="true" [programId]="programId" [moduleId]="selectedModule.id"
+                [moduleContentId]="examToEdit.id" (saved)="onExamUpdated()" (closed)="closeEditExamModal()">
             </app-edit-exam>
         </div>
     </div>

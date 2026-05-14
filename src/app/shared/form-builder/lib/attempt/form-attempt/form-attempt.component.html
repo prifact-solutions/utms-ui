@@ -23,8 +23,8 @@
     <div class="end-exam" *ngIf="currentPage.isPreview">
       <button class="end-exam-btn" (click)="onSave(false)">Submit Exam</button>
     </div>
-    <div class="review-exam" *ngIf="!currentPage.isPreview">
-      <button class="button" (click)="onReview()">Review Answers</button>
+    <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
+      <button class="overhead-review-button" (click)="onReview()">Review Answers</button>
     </div>
   </div>
 

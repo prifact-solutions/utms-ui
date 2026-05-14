@@ -738,6 +738,21 @@ a:hover {
   background: #1155cc;
 }
 
+.overhead-review-button {
+  background: #1155cc;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  font-size: 0.85em;
+  display: flex;
+  padding: 0 20px;
+  border-radius: 5px;
+  height: 40px;
+  align-items: center;
+  min-width: 100px;
+  justify-content: center;
+}
+
 .evaluation-wrapper {
   margin: auto;
   max-width: 800px;

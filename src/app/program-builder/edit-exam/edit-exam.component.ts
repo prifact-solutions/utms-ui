@@ -26,7 +26,7 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
   @Input() inModal = false;
   @Input() programId = 0;
   @Input() moduleId = 0;
-  @Input() contentId = 0;
+  @Input() moduleContentId = 0;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -37,7 +37,6 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
   exam_id!: number;
   examContent!: ModuleContentWithExam;
 
-  moduleContentId!: number;
   previous_order: number = 1;
   isLoading = false;
 

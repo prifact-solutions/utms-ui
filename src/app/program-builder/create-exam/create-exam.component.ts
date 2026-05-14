@@ -35,7 +35,6 @@ export class CreateExamComponent
 
   @Input() programId = 0;
   @Input() moduleId = 0
-  @Input() set moduleIdInput(id: number) { if (id) this.moduleId = id; }
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
