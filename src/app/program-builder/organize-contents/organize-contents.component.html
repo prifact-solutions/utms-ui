@@ -50,7 +50,7 @@
       <div *ngIf="!isLoading && organizedModules.length > 0" class="organized-view">
         <div *ngFor="let moduleGroup of organizedModules" class="mb-5">
           <div class="section-header d-flex align-items-center gap-3 mb-4">
-            <span class="section-badge">Section {{ moduleGroup.module.order }}</span>
+            <span class="section-badge">Module {{ moduleGroup.module.order }}</span>
             <h2 class="m-0" style="font-size: 1.5rem;">{{ moduleGroup.module.title }}</h2>
           </div>
 
