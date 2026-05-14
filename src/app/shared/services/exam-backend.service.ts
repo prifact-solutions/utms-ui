@@ -9,7 +9,7 @@ import {
   QuestionPaperEvaluateContext,
   QuestionPaperSchemaDefn,
 } from 'form-builder';
-import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, first, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { AppSettings } from 'src/app/common/appsettings';
 import { QuestionPaper } from 'src/app/program-builder/question-papers/models/question-paper';
 import { SaveQuestionPaper } from 'src/app/program-builder/question-papers/models/save-question-paper';
@@ -29,6 +29,7 @@ export class ExamBackendService extends FormBuilderBackendService {
     questionPaperId: number,
   ): Observable<QuestionPaperDesignContext> {
     return this.programsService.programId$.pipe(
+      first(),
       switchMap((id) => {
         return this.http.get<QuestionPaper>(
           `${AppSettings.apiUrl}/programs/${id}/question-papers/${questionPaperId}`,
@@ -65,6 +66,7 @@ export class ExamBackendService extends FormBuilderBackendService {
     });
     qpObj.total_score = maxScore;
     return this.programsService.programId$.pipe(
+      first(),
       switchMap((id) => {
         return this.http.put<any>(
           `${AppSettings.apiUrl}/programs/${id}/question-papers/${questionPaperId}`,
@@ -77,6 +79,7 @@ export class ExamBackendService extends FormBuilderBackendService {
     attemptKey: string,
   ): Observable<QuestionPaperAttemptContext> {
     return this.programsService.programId$.pipe(
+      first(),
       switchMap((id) => {
         return this.http.get<QuestionPaperAttemptContext>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/details`,
@@ -86,6 +89,7 @@ export class ExamBackendService extends FormBuilderBackendService {
   }
   saveAnswers(attemptKey: string, answers: Answer[]) {
     return this.programsService.programId$.pipe(
+      first(),
       switchMap((id) => {
         return this.http.post<Answer[]>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/answers`,
@@ -97,6 +101,7 @@ export class ExamBackendService extends FormBuilderBackendService {
   getAnswers(attemptKey: string, questions: string[]): Observable<Answer[]> {
     let qNames = questions.join(',');
     return this.programsService.programId$.pipe(
+      first(),
       switchMap((id) => {
         return this.http.get<ExamAnswer[]>(
           `${AppSettings.apiUrl}/programs/${id}/examattempt/${+attemptKey}/answers?questions=${qNames}`,
