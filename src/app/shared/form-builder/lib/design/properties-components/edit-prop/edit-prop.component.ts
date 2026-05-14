@@ -22,14 +22,6 @@ export class EditPropComponent implements OnInit {
     });
   }
 
-  saveDraft(): void {
-    this.formSvc.commitEditingDraft();
-  }
-
-  cancelDraft(): void {
-    this.formSvc.setSelectedElement(null);
-  }
-
   getFormElementTypeLabel(elementType: FormElementType): string {
     return FormElementTransientSettings.getAllFormElementTypes().filter(x => x.elementType == elementType)[0].label
   }

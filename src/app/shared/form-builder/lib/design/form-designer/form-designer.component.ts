@@ -180,6 +180,14 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
     }
   }
 
+  saveEditDraft(): void {
+    this.formSvc.commitEditingDraft();
+  }
+
+  cancelEditDraft(): void {
+    this.formSvc.setSelectedElement(null);
+  }
+
   confirmBackAction(event: boolean) {
     this.showBackConfirm = false;
     document.getElementById('form-design').style.overflowY = "visible";
