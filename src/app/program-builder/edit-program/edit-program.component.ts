@@ -18,28 +18,19 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   isSubmitting = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
-
   thumbnailPreview: string | null = null;
   thumbnailFile: File | null = null;
 
   videoPreviewUrl: string | null = null;
   videoFile: File | null = null;
 
-  program: Program | null = null;
   isLoading = false;
 
   categories: Array<Category> = [];
-  
-  @Input() inModal: boolean = false;
-  @Input() set programId(id: number) {
-    if (id) {
-       this._programId = id;
-    }
-  }
-  get programId(): number {
-    return this._programId;
-  }
-  private _programId: number = 0;
+
+  @Input() programId: number = 0;
+  @Input() program: Program | null = null;
+
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -65,19 +56,12 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
 
   loadProgram(): void {
     this.isLoading = true;
-    const subscription = this.programsService.getProgramById(this.programId).subscribe({
-      next: (program) => {
-        this.program = program;
-        this.initializeForm();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading program:', error);
-        this.errorMessage = 'Failed to load program. Please try again.';
-        this.isLoading = false;
-      }
-    });
-    this.registerSubscription(subscription);
+
+    if (this.program) {
+      this.initializeForm();
+      this.isLoading = false;
+    }
+
   }
 
   initializeForm(): void {
@@ -215,13 +199,14 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       next: () => {
         this.successMessage = 'Program updated successfully!';
         this.isSubmitting = false;
-        if (this.inModal) {
-            this.saved.emit();
-        } else {
-            setTimeout(() => {
-                this.router.navigateByUrl('/programs-builder');
-              }, 1500);
-        }
+        this.program.title = formValue.title;
+        this.program.description = formValue.description;
+        this.program.duration = parseFloat(formValue.duration);
+        this.program.difficulty = formValue.difficulty;
+        this.program.video_hours = formValue.video_hours;
+        this.program.categories = categories;
+        this.saved.emit();
+
       },
       error: (error) => {
         console.error('Error updating program:', error);
@@ -233,11 +218,9 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   }
 
   cancel(): void {
-    if (this.inModal) {
-        this.closed.emit();
-    } else {
-        this.router.navigateByUrl('/programs-builder');
-    }
+
+    this.closed.emit();
+
   }
 
   markFormGroupTouched(formGroup: FormGroup): void {

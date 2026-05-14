@@ -24,17 +24,16 @@ import { QuestionPapersService } from '../question-papers/services/question-pape
 })
 export class EditExamComponent extends ComponentBase implements OnInit, OnDestroy {
   @Input() inModal = false;
-  @Input() set programIdInput(id: number) { if (id) this.programId = id; }
-  @Input() set moduleIdInput(id: number) { if (id) this.moduleId = id; }
-  @Input() set contentIdInput(id: number) { if (id) this.moduleContentId = id; }
+  @Input() programId = 0;
+  @Input() moduleId = 0;
+  @Input() contentId = 0;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
   program: Program | null = null;
   module: Module | null = null;
   examForm!: FormGroup;
-  programId!: number;
-  moduleId!: number;
+
   exam_id!: number;
   examContent!: ModuleContentWithExam;
 
@@ -68,23 +67,10 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
         +this.route.snapshot.queryParams['previous_order'] || 1;
       this.exam_id = +this.route.snapshot.params['exam_id'];
     }
-    this.fetchData();
     this.loadExam();
   }
 
-  private fetchData(): void {
-    this.programsService
-      .getProgramById(this.programId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((program) => (this.program = program));
 
-    this.programsService
-      .getModulesForProgram(this.programId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((modules) => {
-        this.module = modules.find((m) => m.id === this.moduleId) || null;
-      });
-  }
 
   private loadExam(): void {
     this.isLoading = true;

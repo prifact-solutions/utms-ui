@@ -186,7 +186,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-create-lesson [inModal]="true" [programIdInput]="programId" [moduleIdInput]="selectedModule.id"
+            <app-create-lesson [inModal]="true" [programId]="programId" [moduleId]="selectedModule.id"
                 (saved)="onLessonAdded()" (closed)="closeAddLessonModal()">
             </app-create-lesson>
         </div>
@@ -332,7 +332,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-edit-program [inModal]="true" [programId]="programId" (saved)="onProgramUpdated()"
+            <app-edit-program [inModal]="true" [program]="program" [programId]="programId" (saved)="onProgramUpdated()"
                 (closed)="closeEditModal()">
             </app-edit-program>
         </div>
@@ -355,7 +355,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <app-edit-module [inModal]="true" [programIdInput]="programId" [moduleIdInput]="moduleToEdit.id"
+            <app-edit-module [inModal]="true" [programId]="programId" [module]="moduleToEdit"
                 (saved)="onModuleUpdated()" (closed)="closeEditModuleModal()">
             </app-edit-module>
         </div>

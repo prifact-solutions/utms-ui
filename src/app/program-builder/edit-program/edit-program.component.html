@@ -1,12 +1,12 @@
 <div
-  [class.admin-page-container]="!inModal"
-  [class.container]="!inModal"
-  [class.modal-form-container]="inModal"
+  [class.admin-page-container]="false"
+  [class.container]="false"
+  [class.modal-form-container]="false"
   *ngIf="program"
 >
-  <div [class.builder-layout]="!inModal">
+  <div [class.builder-layout]="false">
     <!-- Sidebar: Info (Hidden in Modal) -->
-    <aside class="builder-sidebar" *ngIf="!inModal">
+    <aside class="builder-sidebar" *ngIf="false">
       <div class="program-mini-card card">
         <app-program-featured-media
           [program]="program"
@@ -40,15 +40,7 @@
     </aside>
 
     <!-- Main Content: Edit Program Form -->
-    <main [class.builder-main]="!inModal" [class.modal-main]="inModal">
-      <header class="page-header" *ngIf="!inModal">
-        <div class="header-text">
-          <h1>Course Settings</h1>
-          <p class="text-muted">
-            General configuration and landing page details.
-          </p>
-        </div>
-      </header>
+    <main [class.builder-main]="false" [class.modal-main]="true">
 
       <!-- Alerts -->
       <div *ngIf="successMessage" class="alert-success-compact">
@@ -298,7 +290,7 @@
               (click)="cancel()"
               [disabled]="isSubmitting"
             >
-              {{ inModal ? "Cancel" : "Back to Programs" }}
+              {{ true ? "Cancel" : "Back to Programs" }}
             </button>
             <button
               type="submit"

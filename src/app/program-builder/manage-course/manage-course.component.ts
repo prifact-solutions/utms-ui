@@ -163,7 +163,6 @@ export class ManageCourseComponent
 
   onProgramUpdated(): void {
     this.showEditModal = false;
-    this.loadProgram();
   }
 
   goBack(): void {
