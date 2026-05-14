@@ -1,41 +1,10 @@
-<div [class.admin-page-container]="!inModal" [class.container]="!inModal" *ngIf="program && module">
-  <div [class.builder-layout]="!inModal">
+<div [class.admin-page-container]="false" [class.container]="false">
+  <div [class.builder-layout]="false">
     <!-- Sidebar: Program Info -->
-    <aside class="builder-sidebar" *ngIf="!inModal">
-      <div class="program-mini-card card">
-        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
-        <div class="p-4">
-          <h4>{{ program.title }}</h4>
-          <p class="text-muted small">
-            Module: <strong>{{ module.title }}</strong>
-          </p>
-        </div>
-      </div>
-      <nav class="sidebar-nav mt-4">
-        <a [routerLink]="[
-            '/',
-            'programs-builder',
-            program.id,
-            'modules',
-            module.id,
-            'lessons',
-          ]">⬅ Back to Content</a>
-        <a class="active">Add Exam</a>
-      </nav>
-    </aside>
+
 
     <!-- Main Content: Create Exam Form -->
-    <main [class.builder-main]="!inModal">
-      <header class="page-header" *ngIf="!inModal">
-        <div class="header-text">
-          <h1>Add New Exam</h1>
-          <p class="text-muted">
-            Create a formal assessment for the "<strong>{{
-              module.title
-              }}</strong>" section.
-          </p>
-        </div>
-      </header>
+    <main [class.builder-main]="false">
 
       <!-- Alerts -->
       <div *ngIf="successMessage" class="alert-success-compact mb-4">
@@ -46,7 +15,7 @@
       </div>
 
 
-      <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+      <form *ngIf="examForm" [formGroup]="examForm" (ngSubmit)="onSubmit()">
         <div class="form-group mb-4">
           <label for="title">Exam Title<span class="required-indicator">*</span></label>
           <input id="title" type="text" formControlName="title" placeholder="e.g. Final Assessment: Web Fundamentals"
@@ -130,17 +99,7 @@
 
         </div>
         <div class="form-actions mt-5">
-          <button type="button" class="button" (click)="
-                inModal ? closed.emit() :
-                router.navigate([
-                  '/',
-                  'programs-builder',
-                  programId,
-                  'modules',
-                  moduleId,
-                  'lessons',
-                ])
-              " [disabled]="isSubmitting">
+          <button type="button" class="button" (click)="closed.emit()" [disabled]="isSubmitting">
             Cancel
           </button>
           <button type="submit" class="button primary" [disabled]="examForm.invalid || isSubmitting">

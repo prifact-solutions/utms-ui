@@ -13,7 +13,7 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
 })
 export class CreateModuleComponent extends ComponentBase implements OnInit {
   @Input() inModal = false;
-  @Input() set programIdInput(id: number) { if (id !== undefined && id !== null) this.programId = id; }
+  @Input() programId = 0;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -29,35 +29,23 @@ export class CreateModuleComponent extends ComponentBase implements OnInit {
     public router: Router,
     private programService: ProgramsService
   ) { super(); }
-  public program: Program | null = null;
-  public programId: number = 0;
 
   ngOnInit() {
     if (!this.inModal) {
       this.programId = +this.route.snapshot.params['program_id'];
     }
-    
-    this.programService.getProgramById(this.programId).subscribe((program) => {
-      this.program = program;
-      if (program.modules) {
-          const maxOrder = Math.max(0, ...program.modules.map(m => m.order || 0));
-          this.moduleForm.patchValue({ order: maxOrder + 1 });
-      }
-    });
+
   }
 
   onSubmit() {
     if (this.moduleForm.invalid) return;
-    if (!this.program) {
-      alert('Module data missing. Please try again.');
-      return;
-    }
+
     const moduleData = {
       title: this.moduleForm.value.title,
       order: this.moduleForm.value.order,
 
     };
-    this.programService.createModule(this.program?.id, moduleData)
+    this.programService.createModule(this.programId, moduleData)
       .subscribe({
         next: () => {
           if (this.inModal) {
