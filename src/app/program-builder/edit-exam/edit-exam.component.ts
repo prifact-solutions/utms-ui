@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentBase } from 'src/app/common/componentbase';
 import {
@@ -22,7 +30,10 @@ import { QuestionPapersService } from '../question-papers/services/question-pape
   templateUrl: './edit-exam.component.html',
   styleUrls: ['./edit-exam.component.scss'],
 })
-export class EditExamComponent extends ComponentBase implements OnInit, OnDestroy {
+export class EditExamComponent
+  extends ComponentBase
+  implements OnInit, OnDestroy
+{
   @Input() inModal = false;
   @Input() programId = 0;
   @Input() moduleId = 0;
@@ -53,6 +64,7 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
     private route: ActivatedRoute,
     public router: Router,
     private qpService: QuestionPapersService,
+    private host: ElementRef<HTMLElement>,
   ) {
     super();
   }
@@ -69,8 +81,6 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
     this.loadExam();
   }
 
-
-
   private loadExam(): void {
     this.isLoading = true;
     this.programsService
@@ -84,6 +94,7 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Failed to load exam';
+          this.scrollToTopOfForm();
           this.isLoading = false;
         },
       });
@@ -123,10 +134,23 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
       });
   }
 
+  private scrollToTopOfForm(): void {
+    queueMicrotask(() => {
+      const modalBody = this.host.nativeElement.closest('.modal-body');
+      if (modalBody) {
+        modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
   onSubmit(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (this.examForm.invalid) {
       this.errorMessage = 'Please fill in all required fields';
-      return;
     }
 
     if (
@@ -134,20 +158,20 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
       this.examForm.get('min_score')?.value
     ) {
       this.errorMessage = 'Total score must be greater than Qualifying score';
-      return;
     }
 
     const selectedQPId = this.examForm.get('question_paper')?.value;
     const selectedQP = this.questionPapers.find((qp) => qp.id == selectedQPId);
     if (selectedQP?.total_score != this.examForm.get('total_score')?.value) {
-      this.errorMessage =
-        'Total scores of the exam and the selected question paper must match';
+      this.errorMessage = `Total score of the exam (${selectedQP?.total_score ?? 0}) does not match the selected question paper score (${this.examForm.get('total_score')?.value ?? 0})`;
+    }
+
+    if (this.errorMessage) {
+      this.scrollToTopOfForm();
       return;
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     const contentPayload: Partial<ModuleContent> = {
       title: this.examForm.get('title')?.value,
@@ -188,6 +212,7 @@ export class EditExamComponent extends ComponentBase implements OnInit, OnDestro
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Failed to create exam';
+          this.scrollToTopOfForm();
           this.isSubmitting = false;
         },
       });
