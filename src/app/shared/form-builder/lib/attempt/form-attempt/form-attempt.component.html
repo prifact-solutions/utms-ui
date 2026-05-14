@@ -13,7 +13,7 @@
       </span>
     </div>
     <div class="end-exam" *ngIf="currentPage.isPreview">
-      <button class="end-exam-btn" (click)='onSave(false)'>Save and complete</button>
+      <button class="end-exam-btn" (click)='onSave(false)'>Submit Exam</button>
     </div>
     <div class="review-exam" *ngIf="!currentPage.isPreview">
       <button class="button" (click)='onReview()'>Review Answers</button>

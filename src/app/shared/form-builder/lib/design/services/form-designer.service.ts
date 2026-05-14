@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { QPStatus, QuestionPaperDesignContext } from '../../model/context';
 import { AnswerChoice, FormElement, FormElementTransientSettings, FormElementType, MCQElement, QuestionElement, RichTextString, SectionElement, StaticElement, TextElement, FileUploadElement } from '../../model/form-elements';
 import { QuestionPaperSchemaDefn } from '../../model/question-paper';
+import { UtilsService } from '../../services/utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,11 @@ export class FormDesignerService {
   public qpContext: BehaviorSubject<QuestionPaperDesignContext> = new BehaviorSubject(null);
   public containderids: BehaviorSubject<Array<string>> = new BehaviorSubject(null);
   public selected_element: BehaviorSubject<FormElement | null> = new BehaviorSubject<FormElement | null>(null);
+  /** Deep clone of the selected canvas element; property panel and overlay preview bind to this until Save. */
+  public editingDraft: BehaviorSubject<FormElement | null> = new BehaviorSubject<FormElement | null>(null);
   public total_marks: BehaviorSubject<number> = new BehaviorSubject(null);
+
+  private editingLiveTarget: FormElement | null = null;
 
 
   private getAllDropTargets(): Array<string> {
@@ -34,7 +39,9 @@ export class FormDesignerService {
   setQuestionPaperContext(qpContext: QuestionPaperDesignContext) {
     this.qpContext.next(qpContext);
     this.containderids.next(this.getAllDropTargets());
+    this.editingLiveTarget = null;
     this.selected_element.next(null);
+    this.editingDraft.next(null);
     let totalMarks: number = 0;
     qpContext.schema.sections.forEach(sec => {
       sec.questions.forEach(q => {
@@ -52,6 +59,119 @@ export class FormDesignerService {
 
   setSelectedElement(ele: FormElement | null) {
     this.selected_element.next(ele);
+    this.editingLiveTarget = ele;
+    if (ele == null) {
+      this.editingDraft.next(null);
+    } else {
+      this.editingDraft.next(FormDesignerService.cloneFormElementForEdit(ele));
+    }
+  }
+
+  commitEditingDraft(): boolean {
+    const live = this.editingLiveTarget;
+    const draft = this.editingDraft.value;
+    if (live == null || draft == null || live.elementType !== draft.elementType) {
+      return false;
+    }
+    const oldMarks = live.isQuestion() ? +(<QuestionElement>live).marks || 0 : 0;
+    const newMarks = draft.isQuestion() ? +(<QuestionElement>draft).marks || 0 : 0;
+    FormDesignerService.applyDraftOntoLive(live, draft);
+    if (live.isQuestion()) {
+      const cur = this.total_marks.value ?? 0;
+      this.total_marks.next(cur - oldMarks + newMarks);
+    }
+    this.setSelectedElement(null);
+    return true;
+  }
+
+  private static cloneFormElementForEdit(el: FormElement): FormElement {
+    const plain = UtilsService.jsonCopy(el);
+    const clone = FormElement.parseFormElement(plain);
+    FormDesignerService.restoreDesignSettingsFromPlainJson(clone, plain);
+    return clone;
+  }
+
+  private static restoreDesignSettingsFromPlainJson(node: FormElement, plain: any): void {
+    if (plain?.settings != null && node.settings != null) {
+      node.settings.uniqueId = plain.settings.uniqueId;
+      node.settings.toggle = plain.settings.toggle;
+      node.settings.label = plain.settings.label;
+      node.settings.icon = plain.settings.icon;
+      node.settings.elementType = plain.settings.elementType;
+    }
+    if (node.elementType === FormElementType.section) {
+      const sec = node as SectionElement;
+      const psec = plain;
+      if (psec?.questions != null) {
+        for (let i = 0; i < sec.questions.length; i++) {
+          FormDesignerService.restoreDesignSettingsFromPlainJson(sec.questions[i], psec.questions[i]);
+        }
+      }
+    }
+  }
+
+  private static applyDraftOntoLive(live: FormElement, draft: FormElement): void {
+    if (live.elementType !== draft.elementType) {
+      return;
+    }
+    switch (draft.elementType) {
+      case FormElementType.section: {
+        const L = live as SectionElement;
+        const D = draft as SectionElement;
+        L.title = D.title;
+        L.description.value = D.description.value;
+        L.description.isHtml = D.description.isHtml;
+        break;
+      }
+      case FormElementType.paragraph: {
+        const L = live as StaticElement;
+        const D = draft as StaticElement;
+        L.content.value = D.content.value;
+        L.content.isHtml = D.content.isHtml;
+        break;
+      }
+      case FormElementType.descriptive: {
+        const L = live as TextElement;
+        const D = draft as TextElement;
+        L.name = D.name;
+        L.marks = D.marks;
+        L.questionContent.value = D.questionContent.value;
+        L.questionContent.isHtml = D.questionContent.isHtml;
+        break;
+      }
+      case FormElementType.multiple_choice: {
+        const L = live as MCQElement;
+        const D = draft as MCQElement;
+        L.name = D.name;
+        L.marks = D.marks;
+        L.questionContent.value = D.questionContent.value;
+        L.questionContent.isHtml = D.questionContent.isHtml;
+        L.correctAnswer = D.correctAnswer;
+        L.options.length = 0;
+        for (const op of D.options) {
+          const ac = new AnswerChoice();
+          ac.choiceValue = op.choiceValue;
+          const rc = new RichTextString();
+          rc.value = op.choiceContent.value;
+          rc.isHtml = !!op.choiceContent.isHtml;
+          ac.choiceContent = rc;
+          L.options.push(ac);
+        }
+        break;
+      }
+      case FormElementType.file_upload: {
+        const L = live as FileUploadElement;
+        const D = draft as FileUploadElement;
+        L.name = D.name;
+        L.marks = D.marks;
+        L.questionContent.value = D.questionContent.value;
+        L.questionContent.isHtml = D.questionContent.isHtml;
+        L.showTextBox = D.showTextBox;
+        break;
+      }
+      default:
+        break;
+    }
   }
 
 
@@ -147,7 +267,7 @@ export class FormDesignerService {
     for (let s of this.qpContext.value.schema.sections) {
       if (s.settings.uniqueId == uniqueId) {
         this.qpContext.value.schema.sections.splice(section_index, 1)
-        this.selected_element.next(null)
+        this.setSelectedElement(null)
         return true;
       }
 
@@ -155,7 +275,7 @@ export class FormDesignerService {
       for (let q of s.questions) {
         if (q.settings.uniqueId == uniqueId) {
           s.questions.splice(q_index, 1)
-          this.selected_element.next(null)
+          this.setSelectedElement(null)
           return true;
         }
         q_index++;

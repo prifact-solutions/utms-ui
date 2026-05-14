@@ -47,6 +47,8 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   editPropLoaded: boolean = false;
   /** Currently selected canvas element; drives centered edit overlay */
   selectedElement: FormElement | null = null;
+  /** Clone shown in overlay preview; edits apply to canvas only after Save in the side panel. */
+  editDraftPreview: FormElement | null = null;
 
   constructor(
     private formSvc: FormDesignerService,
@@ -88,6 +90,9 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
       } else {
         this.renderer.removeStyle(this.document.body, 'overflow');
       }
+    });
+    this.formSvc.editingDraft.subscribe((d) => {
+      this.editDraftPreview = d;
     });
   }
 

@@ -11,15 +11,19 @@ import { FormDesignerService } from '../../services/form-designer.service';
 })
 export class EditPropComponent implements OnInit {
 
-  selected_form_element: FormElement | null = null;
+  draftElement: FormElement | null = null;
   FormElementType = FormElementType;
 
   constructor(private formSvc: FormDesignerService) { }
 
   ngOnInit(): void {
-    this.formSvc.selected_element.subscribe((formElement) => {
-      this.selected_form_element = formElement;
+    this.formSvc.editingDraft.subscribe((formElement) => {
+      this.draftElement = formElement;
     });
+  }
+
+  saveDraft(): void {
+    this.formSvc.commitEditingDraft();
   }
 
   getFormElementTypeLabel(elementType: FormElementType): string {

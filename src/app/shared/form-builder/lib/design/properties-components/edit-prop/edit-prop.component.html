@@ -1,20 +1,23 @@
-<div *ngIf="selected_form_element != null" class="edit-panel">
+<div *ngIf="draftElement != null" class="edit-panel">
   <div class="edit-panel-heading">
     <!-- <span>Properties</span> -->
     <strong>
-      {{getFormElementTypeLabel(selected_form_element.elementType)}}
+      {{getFormElementTypeLabel(draftElement.elementType)}}
     </strong>
   </div>
-  <p class="text-muted small-size">Customize the selected question using the controls below.</p>
+  <p class="text-muted small-size">Customize the selected question using the controls below. Click Save to apply changes to the paper.</p>
 
-  <app-section-properties *ngIf="selected_form_element.elementType == FormElementType.section"
-    [item]="selected_form_element"></app-section-properties>
-  <app-radio-properties *ngIf="selected_form_element.elementType == FormElementType.multiple_choice"
-    [item]="selected_form_element"></app-radio-properties>
-  <app-static-properties *ngIf="selected_form_element.elementType == FormElementType.paragraph"
-    [item]="selected_form_element"></app-static-properties>
-  <app-text-properties *ngIf="selected_form_element.elementType == FormElementType.descriptive"
-    [item]="selected_form_element"></app-text-properties>
-  <app-file-properties *ngIf="selected_form_element.elementType == FormElementType.file_upload"
-  [item]="selected_form_element"></app-file-properties>  
+  <app-section-properties *ngIf="draftElement.elementType == FormElementType.section"
+    [item]="draftElement"></app-section-properties>
+  <app-radio-properties *ngIf="draftElement.elementType == FormElementType.multiple_choice"
+    [item]="draftElement"></app-radio-properties>
+  <app-static-properties *ngIf="draftElement.elementType == FormElementType.paragraph"
+    [item]="draftElement"></app-static-properties>
+  <app-text-properties *ngIf="draftElement.elementType == FormElementType.descriptive"
+    [item]="draftElement"></app-text-properties>
+  <app-file-properties *ngIf="draftElement.elementType == FormElementType.file_upload"
+  [item]="draftElement"></app-file-properties>
+  <div class="edit-draft-actions">
+    <button type="button" class="button primary" (click)="saveDraft()">Save</button>
+  </div>
 </div>
