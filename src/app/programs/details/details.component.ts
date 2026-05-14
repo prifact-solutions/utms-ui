@@ -38,12 +38,56 @@ export class DetailsComponent extends ComponentBase {
     super();
   }
 
-  public getTotalContents(): number {
-    if (!this.catalog) return 0;
-    return (this.catalog.modules || []).reduce(
-      (acc, m) => acc + (m.module_contents?.length || 0),
-      0,
-    );
+  public getCourseContentSummary(): string {
+    if (!this.catalog) {
+      return '';
+    }
+    const modules = this.catalog.modules || [];
+    let lessonCount = 0;
+    let examCount = 0;
+    for (const m of modules) {
+      for (const c of m.module_contents ?? []) {
+        if (c.content_type === 'LESSON') {
+          lessonCount++;
+        } else if (c.content_type === 'EXAM') {
+          examCount++;
+        }
+      }
+    }
+    const moduleCount = modules.length;
+    const parts: string[] = [];
+    parts.push(`${moduleCount} ${moduleCount === 1 ? 'module' : 'modules'}`);
+    if (lessonCount > 0) {
+      parts.push(`${lessonCount} ${lessonCount === 1 ? 'lesson' : 'lessons'}`);
+    }
+    if (examCount > 0) {
+      parts.push(`${examCount} ${examCount === 1 ? 'exam' : 'exams'}`);
+    }
+    return parts.join(' • ');
+  }
+
+  public getModuleContentSummary(moduleId: number): string {
+    const module = this.catalog.modules.find((module) => module.id == moduleId);
+    if (!module) {
+      return '';
+    }
+    let lessonCount = 0;
+    let examCount = 0;
+    for (const c of module.module_contents ?? []) {
+      if (c.content_type === 'LESSON') {
+        lessonCount++;
+      } else if (c.content_type === 'EXAM') {
+        examCount++;
+      }
+    }
+    const parts: string[] = [];
+    if (lessonCount > 0) {
+      parts.push(`${lessonCount} ${lessonCount === 1 ? 'lesson' : 'lessons'}`);
+    }
+    if (examCount > 0) {
+      parts.push(`${examCount} ${examCount === 1 ? 'exam' : 'exams'}`);
+    }
+    return parts.join(' • ');
   }
 
   getCategoryLabel(id: number) {
@@ -265,7 +309,7 @@ export class DetailsComponent extends ComponentBase {
       return content.duration + ' min';
     } else {
       const duration = content.duration;
-      return duration > 59 ? duration/60 + ' hrs' : duration + ' min';
+      return duration > 59 ? duration / 60 + ' hrs' : duration + ' min';
     }
   }
 }

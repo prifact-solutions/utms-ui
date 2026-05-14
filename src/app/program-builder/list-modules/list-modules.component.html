@@ -63,7 +63,7 @@
           *ngFor="let module of modules; let i = index"
           class="curriculum-item card"
         >
-          <div class="item-number">Section {{ i + 1 }}</div>
+          <div class="item-number">Module {{ i + 1 }}</div>
           <div class="curriculum-content">
             <h3>{{ module.title }}</h3>
             <div class="curriculum-meta" *ngIf="module.module_contents">
@@ -102,7 +102,7 @@
         </div>
 
         <div *ngIf="modules.length === 0" class="empty-state">
-          <p>No modules added yet. Start by creating your first section.</p>
+          <p>No modules added yet. Start by creating your first module.</p>
           <a
             [routerLink]="['/programs-builder', program.id, 'modules', 'add']"
             class="btn-outline mt-3"
