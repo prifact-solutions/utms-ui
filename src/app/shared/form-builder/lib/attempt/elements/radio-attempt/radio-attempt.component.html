@@ -1,13 +1,33 @@
 <div class="answer-form">
     <label [innerHTML]="item.questionContent.value"></label>
-    <div *ngFor="let v of item.options" class="inline-form-group">
-        <div class="inputGroup">
-            <input id="attempt_{{item.settings.uniqueId + '_' + v.choiceValue}}" value="{{v.choiceValue}}"
-                name="{{item.settings.uniqueId}}" [(ngModel)]="answer.answerChoiceValue" type="radio" [disabled]="isReadOnly" />
 
-            <label for="attempt_{{item.settings.uniqueId + '_'  + v.choiceValue}}" [innerHtml]="v.choiceContent.value" [ngClass]="{hideInput:isReadOnly}">
+    <div *ngFor="let v of item.options; let i = index" class="inline-form-group">
+        <div class="inputGroup">
+            <input
+                id="attempt_{{ item.settings.uniqueId + '_' + v.choiceValue }}"
+                [value]="v.choiceValue"
+                [name]="item.settings.uniqueId"
+                [(ngModel)]="answer.answerChoiceValue"
+                type="radio"
+                [disabled]="isReadOnly"
+            />
+
+            <label
+                for="attempt_{{ item.settings.uniqueId + '_' + v.choiceValue }}"
+                [ngClass]="{ hideInput: isReadOnly }"
+            >
+                {{ i + 1 }}.
+                <span [innerHTML]="v.choiceContent.value"></span>
+                <div class="checkmark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                        <path d="M4.89163 13.2687L9.16582 17.5427L18.7085 8" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
             </label>
         </div>
     </div>
-    <button *ngIf="!isReadOnly" class="button" (click)="onClear()">Clear selection</button>
+
+    <button *ngIf="!isReadOnly" class="button" (click)="onClear()">
+        Clear selection
+    </button>
 </div>
