@@ -34,8 +34,16 @@ export class FormAttemptService {
     });
 
     this.pages = this.pageSplitter.getSplit(this.qpContext.value.schema);
-    let reviewPage = this.pageSplitter.getReviewPage(this.qpContext.value.schema);
-    this.selected_page.next(reviewPage);
+
+    //Instead of showing the review page, directly jump to Q.1
+    if (this.pages.length > 0) {
+      this.selected_page.next(this.pages[0]);
+    } else {
+      // optional fallback if there are no question pages
+      this.selected_page.next(this.pageSplitter.getReviewPage(this.qpContext.value.schema));
+    }
+    // let reviewPage = this.pageSplitter.getReviewPage(this.qpContext.value.schema);
+    // this.selected_page.next(reviewPage);
   }
 
   ensureAnswerObjectCreated() {
