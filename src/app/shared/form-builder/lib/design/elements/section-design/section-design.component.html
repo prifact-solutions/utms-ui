@@ -36,6 +36,7 @@
 </div>
 
 <app-delete-confirm
+  *ngIf="showDelConfirm"
   [visible]="showDelConfirm"
   title="Remove section?"
   [messageOverride]="confirmMessage"

@@ -160,6 +160,7 @@
 </div>
 
 <app-delete-confirm
+  *ngIf="showDelConfirm"
   [visible]="showDelConfirm"
   title="Delete question?"
   [messageOverride]="'Are you sure you want to delete this question?'"

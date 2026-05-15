@@ -97,6 +97,7 @@
 </div>
 
 <app-delete-confirm
+  *ngIf="showDelConfirm && !!selectedQP"
   [visible]="showDelConfirm && !!selectedQP"
   title="Delete Question Paper?"
   [itemName]="selectedQP?.name || ''"

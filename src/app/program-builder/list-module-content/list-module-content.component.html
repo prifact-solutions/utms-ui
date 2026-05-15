@@ -3,7 +3,10 @@
     <!-- Sidebar: Program Info -->
     <aside class="builder-sidebar">
       <div class="program-mini-card card">
-        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
+        <app-program-featured-media
+          [program]="program"
+          media_type="IMAGE"
+        ></app-program-featured-media>
         <div class="p-4">
           <h4>{{ program.title }}</h4>
           <p class="text-muted small">
@@ -12,7 +15,9 @@
         </div>
       </div>
       <nav class="sidebar-nav mt-4">
-        <a [routerLink]="['/', 'programs-builder', program.id, 'modules']">⬅ Back to Modules</a>
+        <a [routerLink]="['/', 'programs-builder', program.id, 'modules']"
+          >⬅ Back to Modules</a
+        >
         <a class="active">Module Content</a>
       </nav>
     </aside>
@@ -30,7 +35,8 @@
           <div class="dropdown-group">
             <button class="btn-primary">Add Content ▾</button>
             <div class="dropdown-content">
-              <a [routerLink]="[
+              <a
+                [routerLink]="[
                   '/',
                   'programs-builder',
                   program.id,
@@ -38,15 +44,18 @@
                   module.id,
                   'lessons',
                   'add',
-                ]" [queryParams]="{
+                ]"
+                [queryParams]="{
                   previous_order:
                     module_contents.length > 0
                       ? module_contents[module_contents.length - 1].order
                       : 0,
-                }">
+                }"
+              >
                 Add Lesson
               </a>
-              <a [routerLink]="[
+              <a
+                [routerLink]="[
                   '/',
                   'programs-builder',
                   program.id,
@@ -54,12 +63,14 @@
                   module.id,
                   'exams',
                   'add',
-                ]" [queryParams]="{
+                ]"
+                [queryParams]="{
                   previous_order:
                     module_contents.length > 0
                       ? module_contents[module_contents.length - 1].order
                       : 0,
-                }">
+                }"
+              >
                 Add Exam
               </a>
             </div>
@@ -68,18 +79,24 @@
       </header>
 
       <div class="curriculum-list" *ngIf="module_contents">
-        <div *ngFor="let content of module_contents; let i = index" class="curriculum-item card">
+        <div
+          *ngFor="let content of module_contents; let i = index"
+          class="curriculum-item card"
+        >
           <div class="item-number">{{ i + 1 }}</div>
           <div class="curriculum-content">
             <div class="d-flex align-items-center gap-3">
               <span class="type-icon" style="font-size: 1.4rem">{{
                 content.content_type === "LESSON" ? "📖" : "📝"
-                }}</span>
+              }}</span>
               <div>
                 <h3 class="m-0">{{ content.title }}</h3>
                 <div class="curriculum-meta mt-1">
-                  <span class="section-badge" style="font-size: 0.65rem; padding: 0.1rem 0.6rem">{{ content.content_type
-                    }}</span>
+                  <span
+                    class="section-badge"
+                    style="font-size: 0.65rem; padding: 0.1rem 0.6rem"
+                    >{{ content.content_type }}</span
+                  >
                   <span class="dot">•</span>
                   <span>Order: {{ content.order }}</span>
                 </div>
@@ -87,7 +104,9 @@
             </div>
           </div>
           <div class="curriculum-actions">
-            <button class="btn-icon" [routerLink]="
+            <button
+              class="btn-icon"
+              [routerLink]="
                 content.content_type == 'LESSON'
                   ? [
                       '/programs-builder',
@@ -107,10 +126,16 @@
                       content.id,
                       'edit',
                     ]
-              " title="Edit">
+              "
+              title="Edit"
+            >
               ⚙️
             </button>
-            <button class="btn-icon text-error" (click)="onDelete(content)" title="Delete">
+            <button
+              class="btn-icon text-error"
+              (click)="onDelete(content)"
+              title="Delete"
+            >
               🗑️
             </button>
           </div>
@@ -121,7 +146,8 @@
             This module is empty. Add your first lesson or exam to get started.
           </p>
           <div class="d-flex gap-3 justify-content-center mt-3">
-            <a [routerLink]="[
+            <a
+              [routerLink]="[
                 '/',
                 'programs-builder',
                 program.id,
@@ -129,8 +155,12 @@
                 module.id,
                 'lessons',
                 'add',
-              ]" class="btn-outline">Add Lesson</a>
-            <a [routerLink]="[
+              ]"
+              class="btn-outline"
+              >Add Lesson</a
+            >
+            <a
+              [routerLink]="[
                 '/',
                 'programs-builder',
                 program.id,
@@ -138,7 +168,10 @@
                 module.id,
                 'exams',
                 'add',
-              ]" class="btn-outline">Add Exam</a>
+              ]"
+              class="btn-outline"
+              >Add Exam</a
+            >
           </div>
         </div>
       </div>
@@ -147,6 +180,7 @@
 </div>
 
 <app-delete-confirm
+  *ngIf="showDeleteConfirm && !!contentPendingDelete"
   [visible]="showDeleteConfirm && !!contentPendingDelete"
   title="Delete content"
   [itemName]="contentPendingDelete?.title || ''"

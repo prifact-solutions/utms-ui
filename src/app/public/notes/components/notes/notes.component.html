@@ -132,6 +132,7 @@
   </div>
 
   <app-delete-confirm
+    *ngIf="isDeleteConfirmOpen && !!notePendingDelete"  
     [visible]="isDeleteConfirmOpen && !!notePendingDelete"
     title="Delete Note"
     [itemName]="notePendingDelete?.title || ''"

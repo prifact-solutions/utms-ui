@@ -46,6 +46,7 @@
 
 
 <app-delete-confirm
+  *ngIf="showDelConfirm"
   [visible]="showDelConfirm"
   title="Delete option?"
   [messageOverride]="'Are you sure you want to delete this option?'"

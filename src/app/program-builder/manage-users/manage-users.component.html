@@ -239,6 +239,7 @@
     </div>
 
     <app-delete-confirm
+      *ngIf="showDeleteConfirm && !!userPendingDelete"
       [visible]="showDeleteConfirm && !!userPendingDelete"
       title="Delete user"
       messageLead="Are you sure you want to remove "

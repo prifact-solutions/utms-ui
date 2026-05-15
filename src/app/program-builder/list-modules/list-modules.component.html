@@ -97,7 +97,13 @@
             >
               Manage Content
             </button>
-            <button class="btn-icon text-error" title="Delete" (click)="onDelete(module)">🗑️</button>
+            <button
+              class="btn-icon text-error"
+              title="Delete"
+              (click)="onDelete(module)"
+            >
+              🗑️
+            </button>
           </div>
         </div>
 
@@ -115,6 +121,7 @@
 </div>
 
 <app-delete-confirm
+  *ngIf="showDeleteConfirm && !!modulePendingDelete"
   [visible]="showDeleteConfirm && !!modulePendingDelete"
   title="Delete module"
   [itemName]="modulePendingDelete?.title || ''"
