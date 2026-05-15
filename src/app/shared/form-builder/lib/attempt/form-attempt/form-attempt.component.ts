@@ -68,9 +68,24 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   confirmMsg: string;
   isNextChanging: boolean = false;
   isPreviousChanging: boolean = false;
+  isPageLoading: boolean = false;
 
   get isPageChanging(): boolean {
     return this.isNextChanging || this.isPreviousChanging;
+  }
+
+  get currentQuestionIndex(): number {
+    if (!this.qpContext || !this.selectedQuestionName) {
+      return 0;
+    }
+    return this.qpContext.questionNumbers?.[this.selectedQuestionName] || 0;
+  }
+
+  get progressPercent(): number {
+    if (!this.totalQuestions || !this.currentQuestionIndex) {
+      return 0;
+    }
+    return Math.round((this.currentQuestionIndex / this.totalQuestions) * 100);
   }
 
   constructor(
@@ -166,6 +181,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
             }
           });
         }
+        this.isPageLoading = false;
       });
   }
 
@@ -179,6 +195,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       return;
     }
     this.isNextChanging = true;
+    this.isPageLoading = true;
     this.formSvc
       .onNextPage(this.currentPage, null)
       .pipe(finalize(() => (this.isNextChanging = false)))
@@ -190,6 +207,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       return;
     }
     this.isPreviousChanging = true;
+    this.isPageLoading = true;
     this.formSvc
       .onPrevPage(this.currentPage, null)
       .pipe(finalize(() => (this.isPreviousChanging = false)))
@@ -232,6 +250,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isPageLoading = true;
     this.formSvc
       .saveAnswersOfPage(this.currentPage)
       .pipe(
@@ -368,5 +387,15 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     return (
       this.sectionGroups?.reduce((sum, g) => sum + g.questions.length, 0) || 0
     );
+  }
+
+  getQuestionNumber(groupIndex: number, questionIndex: number): number {
+    let count = 0;
+
+    for (let i = 0; i < groupIndex; i++) {
+      count += this.sectionGroups[i].questions.length;
+    }
+
+    return count + questionIndex + 1;
   }
 }

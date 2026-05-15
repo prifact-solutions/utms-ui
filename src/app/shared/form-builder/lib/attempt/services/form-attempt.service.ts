@@ -22,13 +22,16 @@ export class FormAttemptService {
     this.qpContext.next(qpContext);
     //ensure there is answer object place holder created 
     //this.ensureAnswerObjectCreated()
+    this.qpContext.value.totalQuestions = 0;
+    this.qpContext.value.maxScore = 0;
+    this.qpContext.value.questionNumbers = {};
+    let globalIndex = 1;
     this.qpContext.value.schema.sections.forEach(sec => {
-      let i = 1;
       sec.questions.forEach(q => {
         if (q.isQuestion()) {
           this.qpContext.value.totalQuestions ++;
           this.qpContext.value.maxScore += +q.marks;
-          this.qpContext.value.questionNumbers[q.name] = i++;
+          this.qpContext.value.questionNumbers[q.name] = globalIndex++;
         }
       });
     });

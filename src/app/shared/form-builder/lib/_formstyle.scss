@@ -424,6 +424,11 @@ a:hover {
   font-weight: 600;
 }
 
+.question-box .item-box-title .question-number-text{
+  font-size: 2em;
+  font-weight: normal;
+}
+
 .mark-container {
   position: relative;
   padding-right: 20px;
@@ -717,7 +722,7 @@ a:hover {
   font-weight: 500;
   font-weight: 500;
   font-size: 1.25em;
-  padding: 10px 0;
+  padding:0 0 10px 0;
   margin-bottom: 0;
 }
 
