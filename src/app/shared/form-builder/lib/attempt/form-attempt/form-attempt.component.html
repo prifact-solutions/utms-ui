@@ -9,8 +9,9 @@
           >({{ examTitle }})</span
         >
       </div>
+    </div>
+    <div class="attempt-header-right-section">
       <span class="time-left" *ngIf="timeRemaining">
-        <i class="far fa-clock"></i> Time left:
         <span
           [ngClass]="{
             greenTime: timeleft > 180000,
@@ -19,13 +20,13 @@
           >{{ timeRemaining }}</span
         >
       </span>
-    </div>
     <div class="end-exam" *ngIf="currentPage.isPreview">
-      <button class="end-exam-btn" (click)="onSave(false)">Submit Exam</button>
+        <button class="button primary" (click)="onSave(false)">Submit Exam</button>
     </div>
     <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
       <button class="overhead-review-button" (click)="onReview()">Review Answers</button>
     </div>
+  </div>
   </div>
 
   <div *ngIf="showForm" class="attempt-body">

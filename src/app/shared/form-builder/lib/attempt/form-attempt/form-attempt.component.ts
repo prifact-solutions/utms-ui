@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewEncapsulation, Output, EventEmitter, Renderer2, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { QuestionPaperAttemptContext, Answer } from '../../model/context';
 import { FormElementTransientSettings, FormElementType } from '../../model/form-elements';
 import { FormAttemptService } from '../services/form-attempt.service';
@@ -15,7 +16,7 @@ import { map, switchMap } from 'rxjs/operators';
   providers: [FormAttemptService],
   encapsulation: ViewEncapsulation.None
 })
-export class FormAttemptComponent implements OnInit {
+export class FormAttemptComponent implements OnInit, OnDestroy {
   
   title = 'question-forms-attempt';
   containerids: Array<string> = []
@@ -41,11 +42,17 @@ export class FormAttemptComponent implements OnInit {
   answered:number;
   confirmMsg: string;
 
-  constructor(public formSvc: FormAttemptService, private formBackEndService: FormBuilderBackendService) {
+  constructor(
+    public formSvc: FormAttemptService,
+    private formBackEndService: FormBuilderBackendService,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
+  ) {
 
   }
 
   ngOnInit() {
+    this.renderer.addClass(this.document.body, 'form-attempt-page');
     if(this.attemptId){
       this.formBackEndService.getQuestionPaperAttemptContext(this.attemptId.toString())
       .pipe(
@@ -119,6 +126,7 @@ export class FormAttemptComponent implements OnInit {
   }
 
   ngOnDestroy(){
+    this.renderer.removeClass(this.document.body, 'form-attempt-page');
     this.sub.unsubscribe();
   }
 

@@ -9,15 +9,18 @@
 	font-size: 1.8em;
 }
 .attempt-subject-title {
-	font-size: 1.5em;
-	color: #666;
+	font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5em;
+	font-weight: bold;
 }
 .time-left {
 	font-size: 1.2em;
+	white-space: nowrap;
 }
 .end-exam {
 	padding-left: 10px;
-	min-width: 155px;
 }
 .review-exam {
 	padding-left: 10px;
@@ -25,7 +28,7 @@
 }
 .greenTime {
 	font-weight: 600;
-	color: #07d62b;
+	color: #000;
 }
 .redTime {
 	font-weight: 600;

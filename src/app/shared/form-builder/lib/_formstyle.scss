@@ -643,21 +643,29 @@ a:hover {
 }
 
 .attempt-header {
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
-  background: #fff;
-  padding: 20px;
-  height: 80px;
-  position: fixed;
-  width: 100%;
-  z-index: 100;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 15px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 22;
+  .attempt-header-right-section{
+    display: flex;
+    align-items: center;
+  }
 }
 
 .attempt-body {
   padding: 80px 20px 100px;
-  background: #f0f3f4;
+  background: #fafafa;
+  min-height: 100vh;
 }
 
 .attempt-body-content {

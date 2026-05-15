@@ -2,7 +2,14 @@
 
 // ─── Card List (vertical stack of horizontal cards) ───────────────────────────
 .qp-list {}
-
+.p-heading{
+	button{
+		background: #fff;
+	}
+	button:hover{
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+}
 // ─── Single Horizontal Card ───────────────────────────────────────────────────
 .qp-card {
 	display: flex;
