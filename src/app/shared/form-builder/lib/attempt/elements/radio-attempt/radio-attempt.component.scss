@@ -8,7 +8,7 @@ https://codepen.io/BuddyLReno/pen/boGRPO?__cf_chl_jschl_tk__=4f0c8560821bef3fe7d
   position: relative;
 }
 .inputGroup label {
-  padding: 15px 15px;
+  padding: 15px 50px 15px 15px;
   width: 100%;
   display: block;
   text-align: left;
@@ -102,4 +102,19 @@ label.hideInput:after {
 }
 label.hideInput {
   cursor: default;
+}
+
+.top-question-with-clear{
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+  .clear-text{
+    color: #666;
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: flex;
+    padding-right: 10px;
+  }
 }
