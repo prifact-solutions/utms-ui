@@ -280,7 +280,7 @@ a:hover {
   background: #fff;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #dee5e7;
-  border-radius: 5px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -743,22 +743,27 @@ a:hover {
 }
 
 .attempt-body-button-group button {
-  cursor: pointer;
-  border: none;
-  background: #444;
-  color: #fff;
-  font-size: 0.85em;
-  display: flex;
-  padding: 0 20px;
-  border-radius: 5px;
-  height: 40px;
+  display: inline-flex;
   align-items: center;
-  min-width: 100px;
   justify-content: center;
+  min-height: 40px;
+  border-radius: 24px;
+  font-weight: 600;
+  min-width: 120px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 0 24px;
+  font-size: 0.875rem;
+  color: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: #fff;
 }
 
 .attempt-body-button-group button:hover {
-  box-shadow: 0 0 0 250px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 0 0 250px rgba(0, 0, 0, 0.05) inset;
 }
 
 .attempt-body-button-group button.next-btn {
@@ -767,11 +772,12 @@ a:hover {
 
 .attempt-body-button-group button.review-button {
   margin-left: auto;
-  background: #1155cc;
+  background: #000;
+  color: #fff;
 }
 
 .overhead-review-button {
-  background: #1155cc;
+  background: #000;
   cursor: pointer;
   border: none;
   color: #fff;

@@ -1,6 +1,10 @@
 <div class="answer-form">
-    <label [innerHTML]="item.questionContent.value"></label>
-
+    <div class="top-question-with-clear">
+        <label [innerHTML]="item.questionContent.value"></label>
+        <a *ngIf="!isReadOnly" class="clear-text" (click)="onClear()">
+            Clear
+        </a>
+    </div>
     <div *ngFor="let v of item.options; let i = index" class="inline-form-group">
         <div class="inputGroup">
             <input
@@ -27,7 +31,5 @@
         </div>
     </div>
 
-    <button *ngIf="!isReadOnly" class="button" (click)="onClear()">
-        Clear selection
-    </button>
+    
 </div>
