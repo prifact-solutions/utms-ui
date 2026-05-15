@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -31,10 +39,10 @@ interface UploadFile {
 })
 export class CreateExamComponent
   extends ComponentBase
-  implements OnInit, OnDestroy {
-
+  implements OnInit, OnDestroy
+{
   @Input() programId = 0;
-  @Input() moduleId = 0
+  @Input() moduleId = 0;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -59,12 +67,12 @@ export class CreateExamComponent
     private route: ActivatedRoute,
     public router: Router,
     private qpService: QuestionPapersService,
+    private host: ElementRef<HTMLElement>,
   ) {
     super();
   }
 
   ngOnInit(): void {
-
     this.initializeForm();
   }
 
@@ -87,31 +95,45 @@ export class CreateExamComponent
       });
   }
 
+  private scrollToTopOfForm(): void {
+    queueMicrotask(() => {
+      const modalBody = this.host.nativeElement.closest('.modal-body');
+      if (modalBody) {
+        modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
   onSubmit(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (this.examForm.invalid) {
       this.errorMessage = 'Please fill in all required fields';
-      return;
     }
 
     if (
       this.examForm.get('total_score')?.value <
       this.examForm.get('min_score')?.value
     ) {
-      this.errorMessage = 'Total score must be greater than Qualifying score';
-      return;
+      this.errorMessage =
+        'Total score must be greater than the Qualifying score';
     }
 
     const selectedQPId = this.examForm.get('question_paper')?.value;
     const selectedQP = this.questionPapers.find((qp) => qp.id == selectedQPId);
     if (selectedQP?.total_score != this.examForm.get('total_score')?.value) {
-      this.errorMessage =
-        'Total scores of the exam and the selected question paper must match';
+      this.errorMessage = `Total score of the exam (${selectedQP?.total_score ?? 0}) does not match the selected question paper score (${this.examForm.get('total_score')?.value ?? 0})`;
+    }
+
+    if (this.errorMessage) {
+      this.scrollToTopOfForm();
       return;
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     const contentPayload: Partial<ModuleContent> = {
       title: this.examForm.get('title')?.value,
@@ -141,12 +163,11 @@ export class CreateExamComponent
           this.successMessage = 'Exam created successfully!';
           this.isSubmitting = false;
 
-
           this.saved.emit();
-
         },
         error: (err) => {
           this.errorMessage = err?.error?.error || 'Failed to create exam';
+          this.scrollToTopOfForm();
           this.isSubmitting = false;
         },
       });

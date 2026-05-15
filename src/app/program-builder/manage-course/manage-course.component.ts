@@ -67,7 +67,7 @@ export class ManageCourseComponent
     this.programId = +this.route.snapshot.params['program_id'];
     
     const tab = this.route.snapshot.queryParams['tab'];
-    if(tab == 'question-papers') {
+    if (tab == 'question-papers') {
       this.activeTab = 'question-papers';
     }
 
@@ -77,6 +77,21 @@ export class ManageCourseComponent
 
   setTab(tab: 'curriculum' | 'question-papers'): void {
     this.activeTab = tab;
+    if (tab === 'curriculum') {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: 'question-papers' },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
   }
 
   override ngOnDestroy(): void {
@@ -106,7 +121,15 @@ export class ManageCourseComponent
         next: (modules) => {
           if (this.program) {
             this.program.modules =
-              modules.sort((a, b) => (a.order || 0) - (b.order || 0)) || [];
+              modules.sort((a, b) => {
+                const byOrder = (a.order ?? 0) - (b.order ?? 0);
+                if (byOrder !== 0) {
+                  return byOrder;
+                }
+                const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return ta - tb;
+              }) || [];
           }
           this.isLoading = false;
 
@@ -179,9 +202,15 @@ export class ManageCourseComponent
       .getModuleContentsForModule(this.programId, module.id)
       .subscribe({
         next: (contents) => {
-          module.module_contents = contents.sort(
-            (a, b) => (a.order || 0) - (b.order || 0),
-          );
+          module.module_contents = contents.sort((a, b) => {
+            const byOrder = (a.order ?? 0) - (b.order ?? 0);
+            if (byOrder !== 0) {
+              return byOrder;
+            }
+            const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+            const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+            return ta - tb;
+          });
         },
         error: (err: any) => {
           console.error('Error fetching module contents', err);
@@ -305,22 +334,20 @@ export class ManageCourseComponent
       return;
     }
 
-    const sub = this.programService
-      .archiveProgram(this.programId)
-      .subscribe({
-        next: () => {
-          this.closeDeleteCourseConfirm();
-          this.showDeleteToast = true;
-          setTimeout(() => {
-            this.showDeleteToast = false;
-            this.router.navigateByUrl('/dashboard');
-          }, 5000);
-        },
-        error: (err: any) => {
-          alert('Failed to delete course');
-          this.closeDeleteCourseConfirm();
-        },
-      });
+    const sub = this.programService.archiveProgram(this.programId).subscribe({
+      next: () => {
+        this.closeDeleteCourseConfirm();
+        this.showDeleteToast = true;
+        setTimeout(() => {
+          this.showDeleteToast = false;
+          this.router.navigateByUrl('/dashboard');
+        }, 5000);
+      },
+      error: (err: any) => {
+        alert('Failed to delete course');
+        this.closeDeleteCourseConfirm();
+      },
+    });
     this.registerSubscription(sub);
   }
 
@@ -373,7 +400,9 @@ export class ManageCourseComponent
     if (!this.contentToDelete) {
       return '';
     }
-    return this.contentToDelete.content_type === 'EXAM' ? 'Delete Exam?' : 'Delete Lesson?';
+    return this.contentToDelete.content_type === 'EXAM'
+      ? 'Delete Exam?'
+      : 'Delete Lesson?';
   }
 
   closeDeleteContentConfirm(): void {
@@ -433,7 +462,9 @@ export class ManageCourseComponent
 
   togglePublish(): void {
     if (!this.program) return;
-    this.router.navigateByUrl(`/programs-builder/${this.programId}/organize-contents`);
+    this.router.navigateByUrl(
+      `/programs-builder/${this.programId}/organize-contents`,
+    );
 
     // this.isPublishing = true;
     // const newStatus = this.program.status === 'ACTIVE' ? 'DRAFT' : 'ACTIVE';
