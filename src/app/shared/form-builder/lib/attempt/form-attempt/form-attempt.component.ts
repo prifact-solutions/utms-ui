@@ -24,6 +24,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   @Input() attemptId: number;
   qpContext: QuestionPaperAttemptContext;
   currentPage: QuestionPage;
+  sectionGroups: Array<{ sectionTitle: string; totalMarks: number; questions: Array<{ questionName: string; questionNumber: number; title: string; status: 'answered' | 'not-answered' | 'not-seen'; marks: number }> }> = [];
+  totalMarks: number = 0;
+  selectedQuestionName: string;
+  visitedQuestions: Set<string> = new Set<string>();
   FormElementType = FormElementType;
   @Input() examTitle: string;
   @Input() subjectTitle: string;
@@ -85,11 +89,16 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
         }
       }); 
     }
-    this.formSvc.qpContext.subscribe(newQp => this.qpContext = newQp);
+    this.formSvc.qpContext.subscribe(newQp => {
+      this.qpContext = newQp;
+      this.buildQuestionList();
+    });
     this.formSvc.selected_page.pipe(
       switchMap(pg => {
         let qUniqueNames = [];
         this.currentPage = pg;
+        this.updateSelectedQuestionName(pg);
+        this.markPageSeen(pg);
         this.currentPage.sections.forEach(sec => {
           sec.questions.forEach(q => {
             if(q.isQuestion()){
@@ -113,6 +122,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
         this.qpContext.answers = ans;
       }
       this.formSvc.ensureAnswerObjectCreated();
+      this.refreshQuestionStatuses();
       if(this.currentPage.isPreview){
         this.answered = 0;
         this.qpContext.answers.forEach(ans => {
@@ -169,12 +179,111 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     this.showSaveConfirm = false;
   }
 
+  goToQuestion(questionName: string) {
+    if (!this.formSvc.pages) {
+      return;
+    }
+    const selectedPage = this.formSvc.pages.find(p =>
+      p.sections.some(sec => sec.questions.some(q => q.name === questionName))
+    );
+    if (selectedPage) {
+      this.formSvc.selected_page.next(selectedPage);
+      this.selectedQuestionName = questionName;
+    }
+  }
+
+  private updateSelectedQuestionName(page: QuestionPage) {
+    if (!page || page.isPreview) {
+      this.selectedQuestionName = null;
+      return;
+    }
+    const questions = page.sections[0]?.questions?.filter(q => q.isQuestion()) || [];
+    this.selectedQuestionName = questions.length ? questions[questions.length - 1].name : null;
+  }
+
+  private markPageSeen(page: QuestionPage) {
+    if (!page || page.isPreview) {
+      return;
+    }
+    page.sections.forEach(sec => {
+      sec.questions.forEach(q => {
+        if (q.isQuestion()) {
+          this.visitedQuestions.add(q.name);
+        }
+      });
+    });
+    this.refreshQuestionStatuses();
+  }
+
+  private refreshQuestionStatuses() {
+    if (!this.sectionGroups || !this.qpContext) {
+      return;
+    }
+    this.sectionGroups.forEach(group => {
+      group.questions.forEach(item => {
+        const answer = this.qpContext.answers?.find(a => a.question_name === item.questionName);
+        if (answer?.isAnswered()) {
+          item.status = 'answered';
+        } else if (this.visitedQuestions.has(item.questionName)) {
+          item.status = 'not-answered';
+        } else {
+          item.status = 'not-seen';
+        }
+      });
+    });
+  }
+
+  private buildQuestionList() {
+    if (!this.qpContext?.schema?.sections) {
+      this.sectionGroups = [];
+      this.totalMarks = 0;
+      return;
+    }
+    const groups: { [key: string]: { sectionTitle: string; totalMarks: number; questions: any[] } } = {};
+    this.qpContext.schema.sections.forEach(sec => {
+      if (!groups[sec.title]) {
+        groups[sec.title] = { sectionTitle: sec.title, totalMarks: 0, questions: [] };
+      }
+      sec.questions.forEach(question => {
+        if (question.isQuestion()) {
+          const number = this.qpContext.questionNumbers[question.name];
+          const q = {
+            questionName: question.name,
+            questionNumber: number,
+            title: this.getQuestionTitle(question),
+            status: 'not-seen',
+            marks: question.marks
+          };
+          groups[sec.title].questions.push(q);
+          groups[sec.title].totalMarks += question.marks;
+        }
+      });
+    });
+    this.sectionGroups = Object.values(groups);
+    this.totalMarks = this.sectionGroups.reduce((sum, group) => sum + group.totalMarks, 0);
+    this.refreshQuestionStatuses();
+  }
+
+  private getQuestionTitle(question: any): string {
+    const content = question?.questionContent?.value || '';
+    const stripped = content.replace(/<[^>]*>/g, '').trim();
+    const truncated = stripped.split('\n')[0].trim();
+    return truncated.length > 80 ? truncated.substring(0, 80) + '...' : truncated || 'Question';
+  }
+
   onReview() {
     this.formSvc.saveAnswersOfPage(this.currentPage)
       .subscribe(_ => {
         let reviewPage = this.formSvc.pageSplitter.getReviewPage(this.qpContext.schema);
         this.formSvc.selected_page.next(reviewPage);
       })
+  }
+
+  get totalQuestionCount(): number {
+    return this.sectionGroups?.reduce(
+      (sum, g) => sum + g.questions.length,
+      0
+    ) || 0;
   }
 
 }
