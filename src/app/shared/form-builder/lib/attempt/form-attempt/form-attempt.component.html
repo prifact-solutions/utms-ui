@@ -78,11 +78,27 @@
             <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
           </ng-container>
           <div class="attempt-body-button-group">
-            <button *ngIf="!currentPage.isFirst && !currentPage.isPreview" class="prev-btn" (click)="onPrevious()">
-              Previous
+            <button
+              *ngIf="!currentPage.isFirst && !currentPage.isPreview"
+              class="prev-btn"
+              (click)="onPrevious()"
+              [disabled]="isPageChanging"
+            >
+              <ng-container *ngIf="!isPreviousChanging">Previous</ng-container>
+              <ng-container *ngIf="isPreviousChanging">
+                <span class="spinner-btn" aria-hidden="true"></span>
+              </ng-container>
             </button>
-            <button *ngIf="!currentPage.isLast && !currentPage.isPreview" class="next-btn" (click)="onNext()">
-              Next
+            <button
+              *ngIf="!currentPage.isLast && !currentPage.isPreview"
+              class="next-btn"
+              (click)="onNext()"
+              [disabled]="isPageChanging"
+            >
+              <ng-container *ngIf="!isNextChanging">Next</ng-container>
+              <ng-container *ngIf="isNextChanging">
+                <span class="spinner-btn" aria-hidden="true"></span>
+              </ng-container>
             </button>
             <button *ngIf="currentPage.isLast" class="review-button" (click)="onReview()">
               Review Answers

@@ -19,7 +19,7 @@ import { FormAttemptService } from '../services/form-attempt.service';
 import { QuestionPage } from '../services/question-paper-pagination';
 import { timer, of } from 'rxjs';
 import { FormBuilderBackendService } from '../../services/form-builder-backend.service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-attempt',
@@ -66,6 +66,12 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   maxScore: number;
   answered: number;
   confirmMsg: string;
+  isNextChanging: boolean = false;
+  isPreviousChanging: boolean = false;
+
+  get isPageChanging(): boolean {
+    return this.isNextChanging || this.isPreviousChanging;
+  }
 
   constructor(
     public formSvc: FormAttemptService,
@@ -169,11 +175,25 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   }
 
   onNext() {
-    this.formSvc.onNextPage(this.currentPage, null).subscribe();
+    if (this.isPageChanging) {
+      return;
+    }
+    this.isNextChanging = true;
+    this.formSvc
+      .onNextPage(this.currentPage, null)
+      .pipe(finalize(() => (this.isNextChanging = false)))
+      .subscribe();
   }
 
   onPrevious() {
-    this.formSvc.onPrevPage(this.currentPage, null).subscribe();
+    if (this.isPageChanging) {
+      return;
+    }
+    this.isPreviousChanging = true;
+    this.formSvc
+      .onPrevPage(this.currentPage, null)
+      .pipe(finalize(() => (this.isPreviousChanging = false)))
+      .subscribe();
   }
 
   onSave(autoSave: boolean) {
