@@ -107,8 +107,8 @@
           <div class="form-group">
             <label for="question_paper" class="form-label d-flex justify-content-between align-items-center">
               <span>Select Question Paper <span class="required-indicator">*</span></span>
-              <a [routerLink]="['/programs-builder', programId, 'question-papers']" target="_blank" class="small"
-                style="font-weight: 500; font-size: 0.75rem;">Manage Question Papers ↗</a>
+              <!-- <a [routerLink]="['/programs-builder', programId, 'question-papers']" target="_blank" class="small"
+                style="font-weight: 500; font-size: 0.75rem;">Manage Question Papers ↗</a> -->
             </label>
             <select id="question_paper" class="form-control" formControlName="question_paper" [class.is-invalid]="
                 examForm.get('question_paper')?.invalid &&

@@ -352,8 +352,6 @@ span.status-badge {
             padding: 12px 20px 0 20px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.12);
             max-width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
             .tab-btn {
                 border: 1px solid #fff;
                 border-bottom: 0;
@@ -365,7 +363,9 @@ span.status-badge {
                 cursor: pointer;
                 color: #979797;
                 position: relative;
-
+                @media (max-width: 900px) {
+                    padding: 15px;
+                }
                 &.active::after {
                     content: '';
                     position: absolute;
@@ -801,7 +801,12 @@ span.status-badge {
                             display: flex;
                             align-items: center;
                             flex-wrap: wrap;
-
+                            button{
+                                background: #fff;
+                            }
+                            button:hover{
+                                background-color: rgba(0, 0, 0, 0.05);
+                            }
                             .qp-link {
                                 display: inline-flex;
                                 align-items: center;

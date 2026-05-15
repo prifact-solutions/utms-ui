@@ -114,12 +114,12 @@
                         <!-- <a class="button qp-link" [routerLink]="['/programs-builder', programId, 'question-papers']">
                             Question Papers
                         </a> -->
-                        <button *ngIf="!isCurriculumReadonly" type="button" class="button primary black"
+                        <button *ngIf="!isCurriculumReadonly" type="button" class="button"
                             (click)="openAddLessonModal()" [disabled]="isCurriculumReadonly"
                             [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null">
                             Add Lesson
                         </button>
-                        <button *ngIf="!isCurriculumReadonly" type="button" class="button primary black"
+                        <button *ngIf="!isCurriculumReadonly" type="button" class="button"
                             (click)="openAddExamModal()" [disabled]="isCurriculumReadonly"
                             [attr.title]="isCurriculumReadonly ? 'Course content cannot be modified' : null">
                             Add Exam
