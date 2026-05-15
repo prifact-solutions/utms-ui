@@ -6,8 +6,9 @@
       <div class="item-box question-box ">
         <div class="item-box-header">
           <div class="item-box-title">
-            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
-              {{questionNumbers[question.name]}}</span>
+            <span class="question-number-text" [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">
+              Q:<strong>{{questionNumbers[question.name]}}</strong>
+            </span>
             <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
               (click)="goToQuestion(question.name)">
               {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
@@ -27,8 +28,9 @@
       <div class="item-box question-box ">
         <div class="item-box-header">
           <div class="item-box-title">
-            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
-              {{questionNumbers[question.name]}}</span>
+            <span class="question-number-text" [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">
+              Q:<strong>{{questionNumbers[question.name]}}</strong>
+            </span>
             <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
               (click)="goToQuestion(question.name)">
               {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
@@ -47,15 +49,16 @@
     <div class="question-item" *ngIf="question.elementType==FormElementType.multiple_choice">
       <div class="item-box question-box ">
         <div class="item-box-header">
-          <div class="item-box-title">
-            <span [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">Question:
-              {{questionNumbers[question.name]}}</span>
+          <!-- <div class="item-box-title">
+            <span class="question-number-text" [ngClass]="{'enter-ans': selectedPage.isPreview && !questionAnswers[question.name]}">
+              Q:<strong>{{questionNumbers[question.name]}}</strong>
+            </span>
             <button *ngIf="selectedPage.isPreview" [ngClass]="(questionAnswers[question.name] ? 'edit-ans-btn' : 'enter-ans-btn')"
               (click)="goToQuestion(question.name)">
               {{(questionAnswers[question.name] ? 'Edit Answer' : 'Enter Answer')}}
             </button>
-          </div>
-          <div>
+          </div> -->
+          <div class="grade-text-in-qpaper">
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
         </div>

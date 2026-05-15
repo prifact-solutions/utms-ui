@@ -1510,6 +1510,18 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
     margin: 0;
 }
 
+.grade-text-in-qpaper .marks-text{
+    background: none;
+    padding: 0px;
+    border-radius: 0px;
+    color: #666;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 0.875rem;
+}
+
 @media (max-width: 1200px) {
     .ulm-public-header {
 
