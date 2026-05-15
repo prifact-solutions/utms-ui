@@ -4,90 +4,97 @@
       <div>
         <span class="attempt-subject-title" *ngIf="subjectTitle">{{
           subjectTitle
-        }}</span>
-        <span class="attempt-exam-title" *ngIf="examTitle"
-          >({{ examTitle }})</span
-        >
+          }}</span>
+        <span class="attempt-exam-title" *ngIf="examTitle">({{ examTitle }})</span>
       </div>
     </div>
     <div class="attempt-header-right-section">
       <span class="time-left" *ngIf="timeRemaining">
-        <span
-          [ngClass]="{
+        <span [ngClass]="{
             greenTime: timeleft > 180000,
             redTime: timeleft <= 180000,
-          }"
-          >{{ timeRemaining }}</span
-        >
+          }">{{ timeRemaining }}</span>
       </span>
-    <div class="end-exam" *ngIf="currentPage.isPreview">
+      <div class="end-exam" *ngIf="currentPage.isPreview">
         <button class="button primary" (click)="onSave(false)">Submit Exam</button>
+      </div>
+      <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
+        <button class="button" (click)="onReview()">Review Answers</button>
+      </div>
     </div>
-    <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
-      <button class="overhead-review-button" (click)="onReview()">Review Answers</button>
-    </div>
-  </div>
   </div>
 
   <div *ngIf="showForm" class="attempt-body">
-    <div class="attempt-body-content">
-      <div class="qp-container" *ngIf="currentPage.isPreview">
-        <div class="qp-heading">Question Paper Summary</div>
-        <div class="qp-details">
-          <div class="qp-ans">
-            <span>Total questions: {{ totalQuestions }}</span>
-            <span>Answered: {{ answered }}</span>
-            <span>Unanswered: {{ totalQuestions - answered }}</span>
-          </div>
-          <div>Max Score: {{ maxScore }}</div>
+    <div class="attempt-body-grid">
+      <aside class="attempt-left-panel" *ngIf="sectionGroups?.length && !currentPage.isPreview">
+        <div class="question-list-header">
+         <div class="title-text">Questions ({{ totalQuestionCount }})</div> 
+         <div class="grade-text">Grade: {{ totalMarks }}</div>
         </div>
-        <app-section-attempt
-          *ngFor="let item of currentPage.sections"
-          [item]="item"
-        ></app-section-attempt>
-      </div>
-      <ng-container *ngIf="!currentPage.isPreview">
-        <app-section-attempt
-          *ngFor="let item of currentPage.sections"
-          [item]="item"
-        ></app-section-attempt>
-      </ng-container>
-      <div class="attempt-body-button-group">
-        <button
-          *ngIf="!currentPage.isFirst && !currentPage.isPreview"
-          class="prev-btn"
-          (click)="onPrevious()"
-        >
-          Previous
-        </button>
-        <button
-          *ngIf="!currentPage.isLast && !currentPage.isPreview"
-          class="next-btn"
-          (click)="onNext()"
-        >
-          Next
-        </button>
-        <button
-          *ngIf="currentPage.isLast"
-          class="review-button"
-          (click)="onReview()"
-        >
-          Review Answers
-        </button>
+        <ul class="question-list">
+          <li *ngFor="let group of sectionGroups" class="section-group">
+
+            <div class="section-header">
+              <span class="section-title">{{ group.sectionTitle }}</span>
+              <span class="section-marks">Grade: {{ group.totalMarks }}</span>
+            </div>
+
+            <div class="section-questions">
+              <a href="javascript:void(0)" *ngFor="let question of group.questions; let i = index"
+                [class.active]="question.questionName === selectedQuestionName"
+                [class.answered]="question.status === 'answered'"
+                [class.not-answered]="question.status === 'not-answered'"
+                [class.not-seen]="question.status === 'not-seen'" (click)="goToQuestion(question.questionName)">
+
+                <span class="question-number">{{ i + 1 }}</span>
+
+                <div class="question-content">
+                  <span class="question-title">{{ question.title }}</span>
+                </div>
+
+                <span class="question-marks">+{{ question.marks }}</span>
+
+              </a>
+            </div>
+
+          </li>
+        </ul>
+      </aside>
+      <div class="attempt-body-content-wrapper">
+        <div class="attempt-body-content" [class.full-width]="!sectionGroups?.length || currentPage.isPreview">
+          <div class="qp-container" *ngIf="currentPage.isPreview">
+            <div class="qp-heading">Question Paper Summary</div>
+            <div class="qp-details">
+              <div class="qp-ans">
+                <span>Total questions: {{ totalQuestions }}</span>
+                <span>Answered: {{ answered }}</span>
+                <span>Unanswered: {{ totalQuestions - answered }}</span>
+              </div>
+              <div>Max Score: {{ maxScore }}</div>
+            </div>
+            <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
+          </div>
+          <ng-container *ngIf="!currentPage.isPreview">
+            <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
+          </ng-container>
+          <div class="attempt-body-button-group">
+            <button *ngIf="!currentPage.isFirst && !currentPage.isPreview" class="prev-btn" (click)="onPrevious()">
+              Previous
+            </button>
+            <button *ngIf="!currentPage.isLast && !currentPage.isPreview" class="next-btn" (click)="onNext()">
+              Next
+            </button>
+            <button *ngIf="currentPage.isLast" class="review-button" (click)="onReview()">
+              Review Answers
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- <lib-confirm [showConfirm]="showSaveConfirm" [confirmMessage]="confirmMsg"
+  <!-- <lib-confirm [showConfirm]="showSaveConfirm" [confirmMessage]="confirmMsg"
   (onPrimaryAction)="confirmSaveAction($event)" (onSecondaryAction)="cancelSaveAction($event)"></lib-confirm> -->
-<app-confirm
-  [visible]="showSaveConfirm"
-  title="Submit exam?"
-  cancelLabel="Cancel"
-  confirmLabel="Submit"
-  [toolbarButtons]="false"
-  [message]="confirmMsg"
-  (cancel)="cancelSaveAction($event)"
-  (confirm)="confirmSaveAction($event)"
-></app-confirm>
+  <app-confirm [visible]="showSaveConfirm" title="Submit exam?" cancelLabel="Cancel" confirmLabel="Submit"
+    [toolbarButtons]="false" [message]="confirmMsg" (cancel)="cancelSaveAction($event)"
+    (confirm)="confirmSaveAction($event)"></app-confirm>
