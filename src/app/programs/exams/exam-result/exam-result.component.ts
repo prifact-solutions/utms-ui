@@ -8,7 +8,7 @@ import {
   ExamResultStatus,
 } from 'src/app/shared/services/exam-backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, switchMap, tap } from 'rxjs';
+import { forkJoin, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-exam-result',
@@ -32,8 +32,22 @@ export class ExamResultComponent extends ComponentBase {
   examId!: number;
   score: number = 0;
   passing_score: number = 0;
+  examTotalScore: number = 100;
+  examName: string = '';
   isExamPassed: boolean = false;
   attemptId!: number;
+
+  get scorePercent(): number {
+    return this.examTotalScore
+      ? Math.min(100, Math.round((this.score / this.examTotalScore) * 100))
+      : 0;
+  }
+
+  get passingThresholdPercent(): number {
+    return this.examTotalScore
+      ? Math.min(100, Math.round((this.passing_score / this.examTotalScore) * 100))
+      : 0;
+  }
 
   ngOnInit() {
     let sub = this.route.params
@@ -53,14 +67,32 @@ export class ExamResultComponent extends ComponentBase {
           this.examId = params.exam_id;
         }),
         switchMap((params) => {
-          return this.examService.getExamAttempt(this.program_id, this.examId);
+          return forkJoin([
+            this.programService
+              .getExam(
+                params.program_id,
+                params.module_id,
+                params.module_content_id,
+              )
+              .pipe(
+                tap((examDetails) => {
+                  this.examTotalScore = examDetails.exam.total_score ?? 100;
+                  this.examName = examDetails.exam.name;
+                }),
+              ),
+            this.examService.getExamAttempt(this.program_id, this.examId),
+          ]);
         }),
       )
-      .subscribe((attempt) => {
+      .subscribe(([examDetails, attempt]) => {
         if (attempt && attempt.status == ExamAttemptStatus.COMPLETED) {
           this.attemptId = attempt.id;
           if (attempt.score) {
             this.score = attempt.score;
+          }
+          const attemptTotalScore = (attempt as any)?.total_score;
+          if (attemptTotalScore != null) {
+            this.examTotalScore = attemptTotalScore;
           }
           this.passing_score = attempt.passing_score;
           this.isExamPassed =
