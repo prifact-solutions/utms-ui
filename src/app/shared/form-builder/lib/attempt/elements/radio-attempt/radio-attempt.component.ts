@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MCQAnswer } from '../../../model/context';
 import { MCQElement } from '../../../model/form-elements';
 import { FormAttemptService } from '../../services/form-attempt.service';
@@ -21,6 +21,7 @@ export class RadioAttemptComponent extends QuestionAnswerBaseComponent implement
 
   @Input() item: MCQElement;
   @Input() isReadOnly: boolean;
+  @Output() override onSetAnswer: EventEmitter<QuestionAnswer> = new EventEmitter<QuestionAnswer>();
   private emittedAnswer: boolean = false;
 
   get answer(): MCQAnswer {
@@ -40,7 +41,22 @@ export class RadioAttemptComponent extends QuestionAnswerBaseComponent implement
   ngOnInit(): void {
   }
 
+  onAnswerChoiceChange(choiceValue: string | number) {
+    const ans = this.answer;
+    ans.answerChoiceValue = choiceValue;
+    this.emitAnswerState(ans);
+  }
+
   onClear() {
-    this.answer.answerChoiceValue = undefined;
+    const ans = this.answer;
+    ans.answerChoiceValue = undefined;
+    this.emitAnswerState(ans);
+  }
+
+  private emitAnswerState(answer: MCQAnswer) {
+    const answerState = new QuestionAnswer(answer);
+    this.emittedAnswer = answer.isAnswered();
+    this.formAttemptSvc.notifyAnswerChanged(answerState);
+    this.onSetAnswer.emit(answerState);
   }
 }

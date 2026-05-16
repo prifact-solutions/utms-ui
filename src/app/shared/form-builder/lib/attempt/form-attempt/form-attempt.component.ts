@@ -17,7 +17,7 @@ import {
 } from '../../model/form-elements';
 import { FormAttemptService } from '../services/form-attempt.service';
 import { QuestionPage } from '../services/question-paper-pagination';
-import { timer, of } from 'rxjs';
+import { timer, of, Subscription } from 'rxjs';
 import { FormBuilderBackendService } from '../../services/form-builder-backend.service';
 import { map, switchMap, tap, finalize } from 'rxjs/operators';
 
@@ -69,6 +69,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   isNextChanging: boolean = false;
   isPreviousChanging: boolean = false;
   isPageLoading: boolean = false;
+  private answerChangesSub: Subscription;
 
   get isPageChanging(): boolean {
     return this.isNextChanging || this.isPreviousChanging;
@@ -139,6 +140,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       this.qpContext = newQp;
       this.buildQuestionList();
     });
+    this.answerChangesSub = this.formSvc.answerChanges.subscribe((answer) => {
+      this.visitedQuestions.add(answer.name);
+      this.refreshQuestionStatuses();
+    });
     this.formSvc.selected_page
       .pipe(
         switchMap((pg) => {
@@ -165,11 +170,11 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       )
       .subscribe((res) => {
         if (res.length) {
-          let ans = [];
+          let ans: Answer[] = [];
           res.forEach((a) => {
             ans.push(Answer.parseAnswer(a));
           });
-          this.qpContext.answers = ans;
+          this.mergeAnswers(ans);
         }
         this.formSvc.ensureAnswerObjectCreated();
         this.refreshQuestionStatuses();
@@ -188,6 +193,9 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.renderer.removeClass(this.document.body, 'form-attempt-page');
     this.sub.unsubscribe();
+    if (this.answerChangesSub) {
+      this.answerChangesSub.unsubscribe();
+    }
   }
 
   onNext() {
@@ -319,6 +327,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     if (!this.sectionGroups || !this.qpContext) {
       return;
     }
+    let answeredCount = 0;
     this.sectionGroups.forEach((group) => {
       group.questions.forEach((item) => {
         const answer = this.qpContext.answers?.find(
@@ -326,12 +335,30 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
         );
         if (answer?.isAnswered()) {
           item.status = 'answered';
+          answeredCount++;
         } else if (this.visitedQuestions.has(item.questionName)) {
           item.status = 'not-answered';
         } else {
           item.status = 'not-seen';
         }
       });
+    });
+    this.answered = answeredCount;
+  }
+
+  private mergeAnswers(answers: Answer[]) {
+    if (!this.qpContext.answers) {
+      this.qpContext.answers = [];
+    }
+    answers.forEach((answer) => {
+      const existingIndex = this.qpContext.answers.findIndex(
+        (a) => a.question_name === answer.question_name,
+      );
+      if (existingIndex >= 0) {
+        this.qpContext.answers[existingIndex] = answer;
+      } else {
+        this.qpContext.answers.push(answer);
+      }
     });
   }
 

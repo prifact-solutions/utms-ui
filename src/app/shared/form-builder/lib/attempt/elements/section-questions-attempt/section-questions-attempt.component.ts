@@ -57,6 +57,7 @@ export class SectionQuestionsAttemptComponent implements OnInit {
   onAnswerChange(event: QuestionAnswer){
     setTimeout(() => {
       this.questionAnswers[event.name] = event.isAnswered;
+      this.formSvc.notifyAnswerChanged(event);
     }, 0);
   }
 
