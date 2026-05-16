@@ -241,7 +241,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   }
 
   onBackToQuestions() {
-    if (!this.formSvc.pages?.length) {
+    if (!this.formSvc.pages?.length || this.isPageLoading) {
       return;
     }
     this.isPageLoading = true;
@@ -249,8 +249,9 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       const firstQuestionPage = this.formSvc.pages[0];
       if (firstQuestionPage) {
         this.formSvc.selected_page.next(firstQuestionPage);
+      } else {
+        this.isPageLoading = false;
       }
-      this.isPageLoading = false;
     });
   }
 
@@ -416,12 +417,19 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   }
 
   onReview() {
-    this.formSvc.saveAnswersOfPage(this.currentPage).subscribe((_) => {
-      let reviewPage = this.formSvc.pageSplitter.getReviewPage(
-        this.qpContext.schema,
-      );
-      this.formSvc.selected_page.next(reviewPage);
-    });
+    if (this.isPageChanging || this.isPageLoading) {
+      return;
+    }
+    this.isPageLoading = true;
+    this.formSvc
+      .saveAnswersOfPage(this.currentPage)
+      .pipe(finalize(() => (this.isPageLoading = false)))
+      .subscribe((_) => {
+        let reviewPage = this.formSvc.pageSplitter.getReviewPage(
+          this.qpContext.schema,
+        );
+        this.formSvc.selected_page.next(reviewPage);
+      });
   }
 
   get totalQuestionCount(): number {
