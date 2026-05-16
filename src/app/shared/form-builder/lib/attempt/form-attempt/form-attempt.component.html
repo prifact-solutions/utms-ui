@@ -16,11 +16,11 @@
           }">{{ timeRemaining }}</span>
       </span>
       <div class="end-exam" *ngIf="currentPage.isPreview">
-        <button class="button secondary" (click)="onBackToQuestions()">Back to Questions</button>
-        <button class="button primary" (click)="onSave(false)">Submit Exam</button>
+        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading">Back to Questions</button>
+        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading">Submit Exam</button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
-        <button class="button" (click)="onReview()">Review Answers</button>
+        <button class="button" (click)="onReview()" [disabled]="isPageChanging || isPageLoading">Review Answers</button>
       </div>
     </div>
   </div>
@@ -88,7 +88,7 @@
               <div class="question-progress-fill" [style.width.%]="progressPercent"></div>
             </div>
           </div>
-          <div class="qp-container" *ngIf="currentPage.isPreview">
+          <div class="qp-container" *ngIf="currentPage.isPreview" [class.is-loading]="isPageLoading">
             <div class="qp-heading">Question Paper Summary</div>
             <div class="qp-details">
               <div class="qp-summary-stats">
@@ -152,7 +152,7 @@
                 <span class="spinner-btn" aria-hidden="true"></span>
               </ng-container>
             </button>
-            <button *ngIf="currentPage.isLast" class="review-button" (click)="onReview()">
+            <button *ngIf="currentPage.isLast" class="review-button" (click)="onReview()" [disabled]="isPageChanging || isPageLoading">
               Review Answers
             </button>
           </div>
