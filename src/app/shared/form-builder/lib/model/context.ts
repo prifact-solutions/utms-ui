@@ -223,9 +223,9 @@ export class TextAnswer extends Answer {
 }
 
 export class MCQAnswer extends Answer {
-    answerChoiceValue: string;
+    answerChoiceValue: string | number;
     isAnswered(): boolean {
-        if(!this.answerChoiceValue){
+        if(this.answerChoiceValue == null || this.answerChoiceValue === ""){
             return false;
         }
         return true;

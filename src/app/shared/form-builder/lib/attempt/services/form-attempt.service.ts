@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, of } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, of } from 'rxjs';
 import { Answer, MCQAnswer, QuestionPaperAttemptContext, TextAnswer, FileUploadAnswer } from '../../model/context';
 import { FormElementType, QuestionElement } from '../../model/form-elements';
 import { DefaultQuestionPaperPagination, QuestionPage } from './question-paper-pagination';
 import { FormBuilderBackendService } from '../../services/form-builder-backend.service';
 import { tap } from 'rxjs/operators';
+import { QuestionAnswer } from '../../model/question-answer';
 
 @Injectable()
 export class FormAttemptService {
@@ -14,6 +15,7 @@ export class FormAttemptService {
 
   public qpContext: BehaviorSubject<QuestionPaperAttemptContext> = new BehaviorSubject(null);
   public selected_page: ReplaySubject<QuestionPage> = new ReplaySubject(1);
+  public answerChanges: Subject<QuestionAnswer> = new Subject<QuestionAnswer>();
   pages: Array<QuestionPage> = null;
   pageSplitter = new DefaultQuestionPaperPagination();
 
@@ -135,5 +137,9 @@ export class FormAttemptService {
       return new FileUploadAnswer({ question_name: question.name })
     }
     throw new Error("Unknown question element type")
+  }
+
+  notifyAnswerChanged(answer: QuestionAnswer) {
+    this.answerChanges.next(answer);
   }
 }

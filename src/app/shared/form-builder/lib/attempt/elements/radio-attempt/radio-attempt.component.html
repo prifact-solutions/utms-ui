@@ -11,7 +11,8 @@
                 id="attempt_{{ item.settings.uniqueId + '_' + v.choiceValue }}"
                 [value]="v.choiceValue"
                 [name]="item.settings.uniqueId"
-                [(ngModel)]="answer.answerChoiceValue"
+                [ngModel]="answer.answerChoiceValue"
+                (ngModelChange)="onAnswerChoiceChange($event)"
                 type="radio"
                 [disabled]="isReadOnly"
             />
