@@ -145,7 +145,8 @@
     (confirm)="confirmDeleteNote()"
   ></app-delete-confirm>
 
-  <div class="notes-page-loading-overlay" *ngIf="notesLoading" aria-busy="true" aria-live="polite">
-    <div class="spinner" aria-label="Loading notes"></div>
+  <div class="loader-container" id="loader-container" *ngIf="notesLoading">
+    <div class="loader"></div>
+    <div class="loading-text">Loading Notes</div>
   </div>
 </div>

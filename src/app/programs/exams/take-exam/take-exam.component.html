@@ -13,7 +13,10 @@
   </div>
 </div> -->
 
-<div class="nodata" *ngIf="loading">Loading ...</div>
+<div class="loader-container" id="loader-container" *ngIf="loading">
+    <div class="loader"></div>
+    <div class="loading-text">Loading Exam</div>
+</div>
 <div *ngIf="!loading && attemptId && exam">
   <!-- <app-form-attempt [attemptId]="attemptId" [examTitle]="exam.examination_name"
 		[subjectTitle]="exam.subject_title" [timeDiff]="timeDiff" (save)="onSave($event)">
