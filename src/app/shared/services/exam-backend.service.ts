@@ -185,6 +185,7 @@ export class ExamAttempt {
   public exam_id!: number;
   public score?: number;
   public passing_score!: number;
+  public total_score?: number;
   public result?: ExamResultStatus;
   public status!: ExamAttemptStatus;
 }
