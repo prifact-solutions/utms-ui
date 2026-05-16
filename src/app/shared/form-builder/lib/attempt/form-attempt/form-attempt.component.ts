@@ -232,6 +232,20 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     }
   }
 
+  onBackToQuestions() {
+    if (!this.formSvc.pages?.length) {
+      return;
+    }
+    this.isPageLoading = true;
+    this.formSvc.saveAnswersOfPage(this.currentPage).subscribe(() => {
+      const firstQuestionPage = this.formSvc.pages[0];
+      if (firstQuestionPage) {
+        this.formSvc.selected_page.next(firstQuestionPage);
+      }
+      this.isPageLoading = false;
+    });
+  }
+
   confirmSaveAction(event: boolean) {
     this.showSaveConfirm = false;
     this.formBackEndService

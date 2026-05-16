@@ -176,6 +176,9 @@
 	white-space: nowrap;
 }
 .end-exam {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 	padding-left: 10px;
 }
 .review-exam {

@@ -16,6 +16,7 @@
           }">{{ timeRemaining }}</span>
       </span>
       <div class="end-exam" *ngIf="currentPage.isPreview">
+        <button class="button secondary" (click)="onBackToQuestions()">Back to Questions</button>
         <button class="button primary" (click)="onSave(false)">Submit Exam</button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
