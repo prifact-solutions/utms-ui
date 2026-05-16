@@ -17,10 +17,10 @@
   </div>
 
   <div>
-    <div *ngIf="isLoading; else summaryContent" class="loader-wrap">
-      <div class="spinner"></div>
+    <div class="loader-container" id="loader-container" *ngIf="isLoading; else summaryContent">
+      <div class="loader"></div>
+      <div class="loading-text">Loading Reports</div>
     </div>
-
     <ng-template #summaryContent>
       <div class="report-kpis">
         <div class="kpi">
