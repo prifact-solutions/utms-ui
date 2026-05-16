@@ -1634,6 +1634,12 @@ html.qp-form-design-route .secondary-page-content-wrapper #form-design.main {
 
         }
     }
+
+    .user-signed-in.form-attempt-page {
+        .program-detail-page .inner {
+            padding-bottom: 0vh;
+        }
+    }
 }
 
 @media (max-width: 1020px) {

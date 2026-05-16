@@ -1,5 +1,5 @@
 <div *ngIf="currentPage != null">
-  <div class="attempt-header">
+  <div class="attempt-header web-view-header">
     <div class="attempt-exam-details">
       <div>
         <span class="attempt-subject-title" *ngIf="subjectTitle">{{
@@ -24,8 +24,19 @@
       </div>
     </div>
   </div>
+  <div class="attempt-header mobile-view-footer">
+    <div class="attempt-header-right-section">
+      <div class="end-exam" *ngIf="currentPage.isPreview">
+        <button class="button secondary" (click)="onBackToQuestions()">Back</button>
+        <button class="button primary" (click)="onSave(false)">Submit</button>
+      </div>
+      <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
+        <button class="button" (click)="onReview()">Review Answers</button>
+      </div>
+    </div>
+  </div>
 
-  <div *ngIf="showForm" class="attempt-body">
+  <div *ngIf="showForm" class="attempt-body" [class.review-questions-body]="currentPage.isPreview">
     <div class="attempt-body-grid">
       <aside class="attempt-left-panel" *ngIf="sectionGroups?.length && !currentPage.isPreview">
         <div class="question-list-header">
@@ -67,7 +78,7 @@
   </li>
 </ul>
       </aside>
-      <div class="attempt-body-content-wrapper">
+      <div class="attempt-body-content-wrapper" [class.review-questions]="currentPage.isPreview">
         <div class="attempt-body-content" [class.full-width]="!sectionGroups?.length || currentPage.isPreview">
           <div class="question-progress" *ngIf="!currentPage.isPreview && currentQuestionIndex">
             <div class="question-progress-text">
@@ -80,12 +91,33 @@
           <div class="qp-container" *ngIf="currentPage.isPreview">
             <div class="qp-heading">Question Paper Summary</div>
             <div class="qp-details">
-              <div class="qp-ans">
-                <span>Total questions: {{ totalQuestions }}</span>
-                <span>Answered: {{ answered }}</span>
-                <span>Unanswered: {{ totalQuestions - answered }}</span>
+              <div class="qp-summary-stats">
+                <div class="qp-summary-item">
+                  <span class="qp-summary-label">Total Questions</span>
+                  <span class="qp-summary-value">{{ totalQuestions }}</span>
+                </div>
+                <div class="qp-summary-item answered">
+                  <span class="qp-summary-label">Answered</span>
+                  <span class="qp-summary-value">{{ answered }}</span>
+                </div>
+                <div class="qp-summary-item pending">
+                  <span class="qp-summary-label">Unanswered</span>
+                  <span class="qp-summary-value">{{ totalQuestions - answered }}</span>
+                </div>
+                <div class="qp-summary-item score">
+                  <span class="qp-summary-label">Max Score</span>
+                  <span class="qp-summary-value">{{ maxScore }}</span>
+                </div>
               </div>
-              <div>Max Score: {{ maxScore }}</div>
+              <!-- <div class="qp-summary-progress" *ngIf="totalQuestions">
+                <div class="qp-summary-progress-text">
+                  <span>Completion</span>
+                  <strong>{{ answered }} / {{ totalQuestions }}</strong>
+                </div>
+                <div class="qp-summary-progress-track">
+                  <div class="qp-summary-progress-fill" [style.width.%]="(answered / totalQuestions) * 100"></div>
+                </div>
+              </div> -->
             </div>
             <app-section-attempt *ngFor="let item of currentPage.sections" [item]="item"></app-section-attempt>
           </div>
