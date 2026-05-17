@@ -103,8 +103,8 @@
             Cancel
           </button>
           <button type="submit" class="button primary" [disabled]="examForm.invalid || isSubmitting">
-            <span *ngIf="!isSubmitting">Create Exam</span>
-            <span *ngIf="isSubmitting">Creating...</span>
+            <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+            <span class="button-loader-label">{{ isSubmitting ? 'Creating...' : 'Create Exam' }}</span>
           </button>
         </div>
       </form>

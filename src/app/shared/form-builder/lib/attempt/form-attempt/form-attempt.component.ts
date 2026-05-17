@@ -69,6 +69,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   isNextChanging: boolean = false;
   isPreviousChanging: boolean = false;
   isPageLoading: boolean = false;
+  isSubmittingExam: boolean = false;
   private answerChangesSub: Subscription;
 
   get isPageChanging(): boolean {
@@ -257,8 +258,13 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
 
   confirmSaveAction(event: boolean) {
     this.showSaveConfirm = false;
+    if (this.isSubmittingExam) {
+      return;
+    }
+    this.isSubmittingExam = true;
     this.formBackEndService
       .saveAnswers(this.attemptId.toString(), this.qpContext.answers)
+      .pipe(finalize(() => (this.isSubmittingExam = false)))
       .subscribe((_) => {
         this.save.emit(true);
       });

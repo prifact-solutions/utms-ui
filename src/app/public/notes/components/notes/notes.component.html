@@ -114,7 +114,8 @@
             (click)="saveNote()">
             <ng-container *ngIf="!isSavingNote">{{ isEditingNote ? "Update" : "Save" }}</ng-container>
             <ng-container *ngIf="isSavingNote">
-              <span class="spinner-btn" aria-hidden="true"></span>
+              <span class="button-loader" aria-hidden="true"></span>
+              <span class="button-loader-label">{{ isEditingNote ? "Updating..." : "Saving..." }}</span>
             </ng-container>
           </button>
         </div>

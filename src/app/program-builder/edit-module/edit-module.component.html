@@ -43,8 +43,8 @@
                         <button type="button" class="button"
                             (click)="closed.emit()">Cancel</button>
                         <button type="submit" class="button primary" [disabled]="moduleForm.invalid || isSubmitting">
-                            <span *ngIf="!isSubmitting">Update Module</span>
-                            <span *ngIf="isSubmitting">Updating...</span>
+                            <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+                            <span class="button-loader-label">{{ isSubmitting ? 'Updating...' : 'Update Module' }}</span>
                         </button>
                     </div>
                 </form>

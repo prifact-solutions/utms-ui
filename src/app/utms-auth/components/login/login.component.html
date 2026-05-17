@@ -58,7 +58,7 @@
           <button type="submit" class="button primary " [disabled]="loginForm.invalid || isLoading">
             <span *ngIf="!isLoading">Sign In</span>
             <span *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
-              <span class="spinner-sm"></span>
+              <span class="button-loader" aria-hidden="true"></span>
               Signing in...
             </span>
           </button>

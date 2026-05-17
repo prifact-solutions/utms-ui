@@ -297,8 +297,8 @@
               class="button primary"
               [disabled]="programForm.invalid || isSubmitting"
             >
-              <span *ngIf="!isSubmitting">Update Course</span>
-              <span *ngIf="isSubmitting">Updating &amp; Uploading...</span>
+              <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+              <span class="button-loader-label">{{ isSubmitting ? 'Updating & Uploading...' : 'Update Course' }}</span>
             </button>
           </div>
         </form>
