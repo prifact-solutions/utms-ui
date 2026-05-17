@@ -27,6 +27,7 @@ export class NotesComponent extends ComponentBase {
   notePendingDelete: Note | null = null;
   notes: Note[] = [];
   notesLoading = true;
+  isSavingNote = false;
   errorMessage = '';
 
   constructor(private notesService: NotesService) {
@@ -119,6 +120,9 @@ export class NotesComponent extends ComponentBase {
   }
 
   closeNotePopup(): void {
+    if (this.isSavingNote) {
+      return;
+    }
     this.errorMessage = '';
     this.isNotePopupOpen = false;
     this.editingNoteId = null;
@@ -132,6 +136,10 @@ export class NotesComponent extends ComponentBase {
   }
 
   saveNote(): void {
+    if (this.isSavingNote) {
+      return;
+    }
+
     const trimmedTitle = this.noteTitle.trim();
     const trimmedContent = this.noteContent.trim();
 
@@ -139,6 +147,7 @@ export class NotesComponent extends ComponentBase {
       return;
     }
 
+    this.isSavingNote = true;
     this.notesLoading = true;
 
     if (this.editingNoteId !== null) {
@@ -154,11 +163,13 @@ export class NotesComponent extends ComponentBase {
             this.errorMessage = '';
             this.notes = this.sortNotesByUpdatedAt(notes);
             this.notesLoading = false;
+            this.isSavingNote = false;
             this.closeNotePopup();
           },
           error: (err) => {
             this.errorMessage = err?.error?.error || 'Failed to update note';
             this.notesLoading = false;
+            this.isSavingNote = false;
           },
         });
       this.registerSubscription(sub);
@@ -175,11 +186,13 @@ export class NotesComponent extends ComponentBase {
             this.errorMessage = '';
             this.notes = this.sortNotesByUpdatedAt(notes);
             this.notesLoading = false;
+            this.isSavingNote = false;
             this.closeNotePopup();
           },
           error: (err) => {
             this.errorMessage = err?.error?.error || 'Failed to create note';
             this.notesLoading = false;
+            this.isSavingNote = false;
           },
         });
       this.registerSubscription(sub);

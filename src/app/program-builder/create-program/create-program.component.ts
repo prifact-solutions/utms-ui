@@ -142,6 +142,10 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
     if (this.programForm.invalid) {
       this.markFormGroupTouched(this.programForm);
       return;
