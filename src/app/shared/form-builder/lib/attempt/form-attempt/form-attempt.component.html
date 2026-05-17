@@ -16,10 +16,10 @@
           }">{{ timeRemaining }}</span>
       </span>
       <div class="end-exam" *ngIf="currentPage.isPreview">
-        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmittingExam">Back to Questions</button>
-        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmittingExam">
-          <span *ngIf="isSubmittingExam" class="button-loader" aria-hidden="true"></span>
-          <span class="button-loader-label">{{ isSubmittingExam ? 'Submitting...' : 'Submit Exam' }}</span>
+        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmitBusy">Back to Questions</button>
+        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmitBusy">
+          <span *ngIf="isSubmitBusy" class="button-loader" aria-hidden="true"></span>
+          <span class="button-loader-label">{{ isSubmitBusy ? 'Submitting...' : 'Submit Exam' }}</span>
         </button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
@@ -30,10 +30,10 @@
   <div class="attempt-header mobile-view-footer">
     <div class="attempt-header-right-section">
       <div class="end-exam" *ngIf="currentPage.isPreview">
-        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmittingExam">Back</button>
-        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmittingExam">
-          <span *ngIf="isSubmittingExam" class="button-loader" aria-hidden="true"></span>
-          <span class="button-loader-label">{{ isSubmittingExam ? 'Submitting...' : 'Submit' }}</span>
+        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmitBusy">Back</button>
+        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmitBusy">
+          <span *ngIf="isSubmitBusy" class="button-loader" aria-hidden="true"></span>
+          <span class="button-loader-label">{{ isSubmitBusy ? 'Submitting...' : 'Submit' }}</span>
         </button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
@@ -170,5 +170,5 @@
   <!-- <lib-confirm [showConfirm]="showSaveConfirm" [confirmMessage]="confirmMsg"
   (onPrimaryAction)="confirmSaveAction($event)" (onSecondaryAction)="cancelSaveAction($event)"></lib-confirm> -->
   <app-confirm [visible]="showSaveConfirm" title="Submit exam?" cancelLabel="Cancel" confirmLabel="Submit"
-    [toolbarButtons]="false" [message]="confirmMsg" (cancel)="cancelSaveAction($event)"
+    [busy]="isSubmitBusy" [toolbarButtons]="false" [message]="confirmMsg" (cancel)="cancelSaveAction($event)"
     (confirm)="confirmSaveAction($event)"></app-confirm>

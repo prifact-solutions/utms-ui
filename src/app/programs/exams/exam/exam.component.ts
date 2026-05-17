@@ -47,6 +47,7 @@ export class ExamComponent extends ComponentBase {
   examContent!: ModuleContent;
   errorMessage = '';
   showErrorToast = false;
+  isSubmittingExam: boolean = false;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   private dateSubject = new Subject<string>();
@@ -184,6 +185,11 @@ export class ExamComponent extends ComponentBase {
   }
 
   onSave(event: any) {
+    if (this.isSubmittingExam) {
+      return;
+    }
+
+    this.isSubmittingExam = true;
     let sub = this.examService
       .completeAttempt(this.program_id, this.attemptId)
       .subscribe({
@@ -203,6 +209,7 @@ export class ExamComponent extends ComponentBase {
           this.errorMessage =
             error?.error?.error || error?.message || 'Failed to submit exam';
           this.triggerErrorToast();
+          this.isSubmittingExam = false;
         },
       });
     this.registerSubscription(sub);
