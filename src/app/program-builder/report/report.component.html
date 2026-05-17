@@ -17,9 +17,51 @@
   </div>
 
   <div>
-    <div class="loader-container" id="loader-container" *ngIf="isLoading; else summaryContent">
-      <div class="loader"></div>
-      <div class="loading-text">Loading Reports</div>
+    <div *ngIf="isLoading; else summaryContent" aria-hidden="true">
+      <div class="report-kpis report-kpis-skeleton">
+        <div class="kpi kpi-skeleton" *ngFor="let _ of [1, 2, 3]">
+          <span class="skeleton-line skeleton-label"></span>
+          <span class="skeleton-line skeleton-value"></span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="report-table">
+          <colgroup>
+            <col style="width: 520px;">
+            <col style="width: 140px;">
+            <col style="width: 160px;">
+            <col style="width: 180px;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th class="num">Students</th>
+              <th class="num">Avg score</th>
+              <th class="num">Avg completion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="report-row-skeleton" *ngFor="let _ of [1, 2, 3, 4, 5]">
+              <td>
+                <span class="skeleton-line skeleton-program"></span>
+              </td>
+              <td class="num">
+                <span class="skeleton-line skeleton-number"></span>
+              </td>
+              <td class="num">
+                <span class="skeleton-line skeleton-number"></span>
+              </td>
+              <td class="num">
+                <div class="completion">
+                  <span class="skeleton-line skeleton-bar"></span>
+                  <span class="skeleton-line skeleton-pct"></span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <ng-template #summaryContent>
       <div class="report-kpis">

@@ -15,6 +15,22 @@
     <div class="container notes-content">
       <section class="section">
         <div class="notes-grid-container">
+          <div class="notes-grid notes-skeleton-grid" *ngIf="notesLoading" aria-hidden="true">
+            <div class="note-card note-card-skeleton" *ngFor="let _ of [1, 2, 3, 4, 5, 6]">
+              <div class="note-header">
+                <span class="skeleton-line skeleton-date"></span>
+                <div class="note-actions">
+                  <span class="skeleton-action"></span>
+                  <span class="skeleton-action"></span>
+                </div>
+              </div>
+              <span class="skeleton-line skeleton-title"></span>
+              <span class="skeleton-line skeleton-text"></span>
+              <span class="skeleton-line skeleton-text"></span>
+              <span class="skeleton-line skeleton-text short"></span>
+            </div>
+          </div>
+
           <div class="notes-grid" *ngIf="!notesLoading">
             <!-- Placeholder for dynamic notes -->
             <div *ngFor="let note of notes; let i = index" class="note-card under-construction"
@@ -143,9 +159,4 @@
     (cancel)="closeDeleteConfirm()"
     (confirm)="confirmDeleteNote()"
   ></app-delete-confirm>
-
-  <div class="loader-container" id="loader-container" *ngIf="notesLoading">
-    <div class="loader"></div>
-    <div class="loading-text">Loading Notes</div>
-  </div>
 </div>

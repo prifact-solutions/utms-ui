@@ -122,6 +122,23 @@
             </svg>
         </div>
 
+        <div *ngIf="isLoading" class="course-listing" aria-hidden="true">
+            <div class="skeleton-card-2" *ngFor="let _ of [1,2,3,4,5,6,7,8]">
+                <div class="skeleton-media skeleton"></div>
+                <div class="skeleton-bubble skeleton" style="position: absolute; top: 10px; right: 10px; width: 72px;">
+                </div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title skeleton"></div>
+                    <div class="skeleton-text skeleton"></div>
+                    <div class="skeleton-text skeleton short"></div>
+                    <div class="card-categories" style="margin-top: 4px;">
+                        <div class="skeleton-category skeleton"></div>
+                        <div class="skeleton-category skeleton"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div *ngIf="!isLoading && !errorMessage && filteredPrograms.length > 0" class="course-listing">
             <div *ngFor="let program of filteredPrograms" class="c-card-2 admin-card"
                 [routerLink]="['/programs-builder', program.id, 'manage']">
