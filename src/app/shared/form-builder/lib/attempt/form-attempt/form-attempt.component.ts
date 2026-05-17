@@ -387,15 +387,16 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       sec.questions.forEach((question) => {
         if (question.isQuestion()) {
           const number = this.qpContext.questionNumbers[question.name];
+          const marks = this.getQuestionMarks(question);
           const q = {
             questionName: question.name,
             questionNumber: number,
             title: this.getQuestionTitle(question),
             status: 'not-seen',
-            marks: question.marks,
+            marks,
           };
           groups[sec.title].questions.push(q);
-          groups[sec.title].totalMarks += question.marks;
+          groups[sec.title].totalMarks += marks;
         }
       });
     });
@@ -414,6 +415,11 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     return truncated.length > 80
       ? truncated.substring(0, 80) + '...'
       : truncated || 'Question';
+  }
+
+  private getQuestionMarks(question: any): number {
+    const marks = Number(question?.marks);
+    return Number.isFinite(marks) ? marks : 0;
   }
 
   onReview() {
