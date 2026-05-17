@@ -8,7 +8,7 @@ import {
   ExamResultStatus,
 } from 'src/app/shared/services/exam-backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, map, switchMap, tap } from 'rxjs';
+import { finalize, forkJoin, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-exam-result',
@@ -36,6 +36,7 @@ export class ExamResultComponent extends ComponentBase {
   examName: string = '';
   isExamPassed: boolean = false;
   attemptId!: number;
+  isRetakingExam: boolean = false;
 
   get scorePercent(): number {
     return this.examTotalScore
@@ -139,8 +140,14 @@ export class ExamResultComponent extends ComponentBase {
       });
   }
   retakeExam() {
+    if (this.isRetakingExam) {
+      return;
+    }
+
+    this.isRetakingExam = true;
     let sub = this.examService
       .archiveAttempt(this.program_id, this.attemptId)
+      .pipe(finalize(() => (this.isRetakingExam = false)))
       .subscribe({
         next: (_) => {
           this.router.navigate(['../../take-exam', this.examId], {

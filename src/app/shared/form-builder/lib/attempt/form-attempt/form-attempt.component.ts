@@ -53,6 +53,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   @Input() examTitle: string;
   @Input() subjectTitle: string;
   @Input() timeDiff: number;
+  @Input() isCompletingSubmit: boolean = false;
   hours: string;
   minutes: string;
   seconds: string;
@@ -74,6 +75,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
 
   get isPageChanging(): boolean {
     return this.isNextChanging || this.isPreviousChanging;
+  }
+
+  get isSubmitBusy(): boolean {
+    return this.isSubmittingExam || this.isCompletingSubmit;
   }
 
   get currentQuestionIndex(): number {
@@ -224,6 +229,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
   }
 
   onSave(autoSave: boolean) {
+    if (this.isSubmitBusy) {
+      return;
+    }
+
     if (!autoSave) {
       this.confirmMsg = 'Are you sure you want to submit the exam?';
       let unanswered = this.totalQuestions - this.answered;
@@ -258,7 +267,7 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
 
   confirmSaveAction(event: boolean) {
     this.showSaveConfirm = false;
-    if (this.isSubmittingExam) {
+    if (this.isSubmitBusy) {
       return;
     }
     this.isSubmittingExam = true;

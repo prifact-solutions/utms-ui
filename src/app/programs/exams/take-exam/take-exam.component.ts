@@ -31,6 +31,7 @@ export class TakeExamComponent extends ComponentBase {
   timeDiff!: number;
   exam!: Exam;
   examId!: number;
+  isSubmittingExam: boolean = false;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   private dateSubject = new Subject<string>();
@@ -104,6 +105,11 @@ export class TakeExamComponent extends ComponentBase {
   }
 
   onSave(event: any) {
+    if (this.isSubmittingExam) {
+      return;
+    }
+
+    this.isSubmittingExam = true;
     let sub = this.examService
       .completeAttempt(this.program_id, this.attemptId)
       .subscribe(
@@ -117,6 +123,7 @@ export class TakeExamComponent extends ComponentBase {
         },
         (err) => {
           this.errors.push({ name: err.code, message: err.message });
+          this.isSubmittingExam = false;
         },
       );
     this.registerSubscription(sub);

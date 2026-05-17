@@ -72,8 +72,9 @@
         </div>
         <div class="success-summary" *ngIf="!isExamPassed">
           <div>
-            <button class="button primary" (click)="retakeExam()">
-              Retake exam
+            <button class="button primary" (click)="retakeExam()" [disabled]="isRetakingExam">
+              <span *ngIf="isRetakingExam" class="button-loader" aria-hidden="true"></span>
+              <span class="button-loader-label">{{ isRetakingExam ? 'Starting...' : 'Retake exam' }}</span>
             </button>
           </div>
         </div>
