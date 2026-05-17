@@ -230,6 +230,21 @@
       width: auto;
       padding-bottom: 0;
     }
+
+    .note-submit-btn {
+      min-width: 82px;
+    }
+
+    .spinner-btn {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0, 0, 0, 0.35);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: notes-button-spin 0.8s linear infinite;
+      vertical-align: middle;
+    }
   }
 
   .note-view-content {
@@ -316,5 +331,11 @@
 @keyframes notes-skeleton-shimmer {
   100% {
     transform: translateX(100%);
+  }
+}
+
+@keyframes notes-button-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

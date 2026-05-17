@@ -82,7 +82,7 @@
       (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h4>{{ isEditingNote ? "Edit Note" : "Add New Note" }}</h4>
-        <button class="modal-close" type="button" (click)="closeNotePopup()">
+        <button class="modal-close" type="button" (click)="closeNotePopup()" [disabled]="isSavingNote">
           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
             <rect width="24" height="24" fill="none" />
             <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
@@ -106,12 +106,16 @@
         </div>
 
         <div class="button-group note-popup-actions">
-          <button class="button" type="button" (click)="closeNotePopup()">
+          <button class="button" type="button" (click)="closeNotePopup()" [disabled]="isSavingNote">
             Cancel
           </button>
-          <button class="button primary" type="button" [disabled]="!noteTitle.trim() || !noteContent.trim()"
+          <button class="button primary note-submit-btn" type="button"
+            [disabled]="isSavingNote || !noteTitle.trim() || !noteContent.trim()"
             (click)="saveNote()">
-            {{ isEditingNote ? "Update" : "Save" }}
+            <ng-container *ngIf="!isSavingNote">{{ isEditingNote ? "Update" : "Save" }}</ng-container>
+            <ng-container *ngIf="isSavingNote">
+              <span class="spinner-btn" aria-hidden="true"></span>
+            </ng-container>
           </button>
         </div>
       </div>
