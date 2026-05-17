@@ -52,6 +52,7 @@ export class ManageCourseComponent
   public contentToDelete: ModuleContent | null = null;
   public isPublishing: boolean = false;
   public showDeleteToast: boolean = false;
+  public contentItemsLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -198,6 +199,7 @@ export class ManageCourseComponent
   }
 
   fetchModuleContents(module: Module): void {
+    this.contentItemsLoading = true;
     const sub = this.programService
       .getModuleContentsForModule(this.programId, module.id)
       .subscribe({
@@ -211,9 +213,15 @@ export class ManageCourseComponent
             const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
             return ta - tb;
           });
+          if (this.selectedModule?.id === module.id) {
+            this.contentItemsLoading = false;
+          }
         },
         error: (err: any) => {
           console.error('Error fetching module contents', err);
+          if (this.selectedModule?.id === module.id) {
+            this.contentItemsLoading = false;
+          }
         },
       });
     this.registerSubscription(sub);

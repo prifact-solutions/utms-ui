@@ -1167,6 +1167,10 @@ html body {
     .modal-content-wrapper.large-popup{
         max-width: 1200px;
     }
+
+    .modal-content-wrapper.medium-sized{
+        max-width: 600px;
+    }
 }
 
 @keyframes fadeIn {

@@ -9,6 +9,7 @@
   color: $error-color;
   margin-left: 2px;
 }
+
 .rounded-md {
   border-radius: $border-radius-md;
 }
@@ -58,4 +59,31 @@
       cursor: not-allowed;
     }
   }
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #b7b3b3;
+  border-radius: 50%;
+  background: none;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
+
+  &:hover {
+    color: #d93025;
+    border-color: #d93025;
+  }
+}
+
+.attached-item-details{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 5px;
 }
