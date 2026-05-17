@@ -27,11 +27,39 @@
           </div>
         </div> -->
 
-        <div class="users-table-container" [class.is-loading]="usersLoading">
-          <div class="loader-container" id="loader-container" *ngIf="usersLoading">
-            <div class="loader"></div>
-            <div class="loading-text">Loading Users</div>
-          </div>
+        <div class="users-table-container">
+          <table class="users-table" *ngIf="usersLoading" aria-hidden="true">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="user-row-skeleton" *ngFor="let _ of [1, 2, 3, 4, 5]">
+                <td>
+                  <div class="user-cell">
+                    <span class="skeleton-avatar"></span>
+                    <span class="skeleton-line skeleton-name"></span>
+                  </div>
+                </td>
+                <td>
+                  <span class="skeleton-line skeleton-email"></span>
+                </td>
+                <td>
+                  <span class="skeleton-line skeleton-role"></span>
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <span class="skeleton-action"></span>
+                    <span class="skeleton-action"></span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <table class="users-table" *ngIf="!usersLoading">
             <thead>
               <tr>
@@ -43,6 +71,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr *ngIf="users.length == 0">
+                <td colspan="4" class="no-users">No users found.</td>
+              </tr>
               <tr *ngFor="let user of users">
                 <td>
                   <div class="user-cell">
