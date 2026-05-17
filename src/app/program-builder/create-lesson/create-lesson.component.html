@@ -89,7 +89,9 @@
                 <div class="upload-actions">
                   <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none" />
                   <button type="button" class="btn-black-small" (click)="fileInput.click()" [disabled]="isSubmitting">
-                    +
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 12H20M12 4V20" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </button>
                   <p class="text-muted small m-0">
                     Add Files (PDF, Images, Video, Documents)
@@ -101,9 +103,24 @@
 
           <div *ngIf="filesToUpload.length > 0" class="curriculum-list mt-3">
             <div *ngFor="let uploadFile of filesToUpload; let i = index"
-              class="card p-3 d-flex flex-row align-items-center gap-3">
+              class="card attached-item-details">
               <span class="type-icon" style="font-size: 1.5rem">
-                {{ uploadFile.uploaded ? "✅" : "📎" }}
+                <div *ngIf="uploadFile.uploaded">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                    <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="green"/>
+                  </svg>
+                </div>
+                <div *ngIf="!uploadFile.uploaded">
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="20px" height="20px" viewBox="-8 0 32 32" version="1.1">
+                      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                          <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-212.000000, -151.000000)" fill="#000000">
+                              <path d="M226,155 L226,175 C226,178.313 223.313,181 220,181 C216.687,181 214,178.313 214,175 L214,157 C214,154.791 215.791,153 218,153 C220.209,153 222,154.791 222,157 L222,175 C222,176.104 221.104,177 220,177 C218.896,177 218,176.104 218,175 L218,159 L216,159 L216,175 C216,177.209 217.791,179 220,179 C222.209,179 224,177.209 224,175 L224,157 C224,153.687 221.313,151 218,151 C214.687,151 212,153.687 212,157 L212,176 C212.493,179.945 215.921,183 220,183 C224.079,183 227.507,179.945 228,176 L228,155 L226,155" id="attachment" sketch:type="MSShapeGroup">
+
+                  </path>
+                          </g>
+                      </g>
+                  </svg>
+                </div>
               </span>
               <div class="flex-1">
                 <div class="d-flex justify-content-between align-items-center mb-1">
@@ -131,7 +148,7 @@
               </div>
               <button type="button" class="btn-icon text-error" (click)="removeFile(i)"
                 *ngIf="!isSubmitting && !uploadFile.uploaded">
-                🗑️
+                <i class="fas fa-trash-alt"></i>
               </button>
             </div>
           </div>

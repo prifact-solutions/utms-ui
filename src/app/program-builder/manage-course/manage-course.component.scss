@@ -711,8 +711,6 @@ span.status-badge {
 
                             display: flex;
                             gap: 12px;
-                            opacity: 0;
-                            transition: opacity 0.2s;
 
                             @media (max-width: 650px) {
                                 gap: 5px;
@@ -752,11 +750,6 @@ span.status-badge {
                                     border-color: #d93025;
                                 }
                             }
-                        }
-
-                        &:hover .module-links,
-                        &.active .module-links {
-                            opacity: 1;
                         }
                     }
 
@@ -939,6 +932,59 @@ span.status-badge {
                             opacity: 1;
                         }
 
+                        .content-item-skeleton {
+                            pointer-events: none;
+
+                            .skeleton-line,
+                            .skeleton-link,
+                            .skeleton-badge {
+                                display: block;
+                                overflow: hidden;
+                                position: relative;
+                                background: #eee;
+                                border-radius: 6px;
+
+                                &::after {
+                                    content: '';
+                                    position: absolute;
+                                    inset: 0;
+                                    transform: translateX(-100%);
+                                    background: linear-gradient(
+                                        90deg,
+                                        transparent,
+                                        rgba(255, 255, 255, 0.7),
+                                        transparent
+                                    );
+                                    animation: manage-course-skeleton-shimmer 1.4s infinite;
+                                }
+                            }
+
+                            .skeleton-title {
+                                width: min(360px, 70%);
+                                height: 18px;
+                                margin-bottom: 8px;
+                            }
+
+                            .skeleton-meta {
+                                width: 86px;
+                                height: 12px;
+                            }
+
+                            .skeleton-link {
+                                width: 32px;
+                                height: 12px;
+
+                                &.delete {
+                                    width: 44px;
+                                }
+                            }
+
+                            .skeleton-badge {
+                                width: 64px;
+                                height: 24px;
+                            }
+                        }
+
                         .no-content {
                             padding: 48px;
                             text-align: center;
@@ -1062,5 +1108,11 @@ span.status-badge {
         button {
             flex-shrink: 1;
         }
+    }
+}
+
+@keyframes manage-course-skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
     }
 }

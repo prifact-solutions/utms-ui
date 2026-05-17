@@ -130,6 +130,21 @@
 
 
                 <div class="content-list">
+                    <ng-container *ngIf="contentItemsLoading; else contentItems">
+                        <div class="content-item content-item-skeleton" *ngFor="let _ of [1, 2, 3]" aria-hidden="true">
+                            <div class="content-info">
+                                <span class="skeleton-line skeleton-title"></span>
+                                <span class="skeleton-line skeleton-meta"></span>
+                            </div>
+                            <div class="content-actions">
+                                <span class="skeleton-link"></span>
+                                <span class="skeleton-link delete"></span>
+                                <span class="skeleton-badge"></span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #contentItems>
                     <div class="content-item" *ngFor="let content of selectedModule.module_contents">
 
 
@@ -155,6 +170,7 @@
                     <div class="no-content" *ngIf="!selectedModule.module_contents?.length">
                         <p>No content added to this module yet.</p>
                     </div>
+                    </ng-template>
                 </div>
             </div>
             <ng-template #noSelection>
