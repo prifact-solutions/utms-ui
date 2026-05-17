@@ -46,10 +46,11 @@
                 </div>
 
                 <div class="form-actions mt-5">
-                    <button type="button" class="button"
+                    <button type="button" class="button" [disabled]="isSubmitting"
                         (click)="inModal ? closed.emit() : router.navigate(['/programs-builder', programId, 'modules'])">Cancel</button>
-                    <button type="submit" class="button primary" [disabled]="moduleForm.invalid">
-                        Create Module
+                    <button type="submit" class="button primary" [disabled]="moduleForm.invalid || isSubmitting">
+                        <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+                        <span class="button-loader-label">{{ isSubmitting ? 'Creating...' : 'Create Module' }}</span>
                     </button>
                 </div>
             </form>

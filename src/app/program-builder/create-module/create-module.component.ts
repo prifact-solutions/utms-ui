@@ -22,6 +22,7 @@ export class CreateModuleComponent extends ComponentBase implements OnInit {
     title: ['', Validators.required],
     order: [1, [Validators.required, Validators.min(1)]]
   });
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +39,10 @@ export class CreateModuleComponent extends ComponentBase implements OnInit {
   }
 
   onSubmit() {
+    if (this.isSubmitting) return;
     if (this.moduleForm.invalid) return;
+
+    this.isSubmitting = true;
 
     const moduleData = {
       title: this.moduleForm.value.title,
@@ -48,6 +52,7 @@ export class CreateModuleComponent extends ComponentBase implements OnInit {
     this.programService.createModule(this.programId, moduleData)
       .subscribe({
         next: () => {
+          this.isSubmitting = false;
           if (this.inModal) {
             this.saved.emit();
           } else {
@@ -57,6 +62,7 @@ export class CreateModuleComponent extends ComponentBase implements OnInit {
         },
         error: err => {
           console.error(err);
+          this.isSubmitting = false;
           alert('Failed to create module');
         }
       });

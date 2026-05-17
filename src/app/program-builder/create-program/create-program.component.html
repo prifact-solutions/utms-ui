@@ -112,8 +112,8 @@
           <div class="button-group">
             <button type="button" class="button" (click)="cancel()" [disabled]="isSubmitting">Cancel</button>
             <button type="submit" class="button primary create-course-submit-btn" [disabled]="programForm.invalid || isSubmitting">
-              <span *ngIf="!isSubmitting">Create Course</span>
-              <span *ngIf="isSubmitting" class="spinner-btn" aria-hidden="true"></span>
+              <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+              <span class="button-loader-label">{{ isSubmitting ? 'Creating...' : 'Create Course' }}</span>
             </button>
           </div>
         </form>

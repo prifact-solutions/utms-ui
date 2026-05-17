@@ -170,8 +170,8 @@
             Cancel
           </button>
           <button type="submit" class="button primary" [disabled]="lessonForm.invalid || isSubmitting">
-            <span *ngIf="!isSubmitting">Create Content</span>
-            <span *ngIf="isSubmitting">Creating...</span>
+            <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+            <span class="button-loader-label">{{ isSubmitting ? 'Creating...' : 'Create Content' }}</span>
           </button>
         </div>
       </form>

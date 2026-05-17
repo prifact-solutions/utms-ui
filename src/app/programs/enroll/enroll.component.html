@@ -76,8 +76,8 @@
                     </div>
 
                     <button class="btn-primary w-100 py-3 mt-2" (click)="enroll(program.id)" [disabled]="isSubmitting">
-                        <span *ngIf="!isSubmitting">Confirm Enrollment</span>
-                        <span *ngIf="isSubmitting">Joining...</span>
+                        <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+                        <span class="button-loader-label">{{ isSubmitting ? 'Joining...' : 'Confirm Enrollment' }}</span>
                     </button>
 
                     <p class="terms-text mt-4 text-muted small">

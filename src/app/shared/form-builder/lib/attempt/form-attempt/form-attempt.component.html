@@ -16,8 +16,11 @@
           }">{{ timeRemaining }}</span>
       </span>
       <div class="end-exam" *ngIf="currentPage.isPreview">
-        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading">Back to Questions</button>
-        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading">Submit Exam</button>
+        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmittingExam">Back to Questions</button>
+        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmittingExam">
+          <span *ngIf="isSubmittingExam" class="button-loader" aria-hidden="true"></span>
+          <span class="button-loader-label">{{ isSubmittingExam ? 'Submitting...' : 'Submit Exam' }}</span>
+        </button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
         <button class="button" (click)="onReview()" [disabled]="isPageChanging || isPageLoading">Review Answers</button>
@@ -27,8 +30,11 @@
   <div class="attempt-header mobile-view-footer">
     <div class="attempt-header-right-section">
       <div class="end-exam" *ngIf="currentPage.isPreview">
-        <button class="button secondary" (click)="onBackToQuestions()">Back</button>
-        <button class="button primary" (click)="onSave(false)">Submit</button>
+        <button class="button secondary" (click)="onBackToQuestions()" [disabled]="isPageLoading || isSubmittingExam">Back</button>
+        <button class="button primary" (click)="onSave(false)" [disabled]="isPageLoading || isSubmittingExam">
+          <span *ngIf="isSubmittingExam" class="button-loader" aria-hidden="true"></span>
+          <span class="button-loader-label">{{ isSubmittingExam ? 'Submitting...' : 'Submit' }}</span>
+        </button>
       </div>
       <div class="review-exam" *ngIf="!currentPage.isPreview && !currentPage.isLast">
         <button class="button" (click)="onReview()">Review Answers</button>
