@@ -55,7 +55,7 @@
                 <div class="button-group">
                     <button type="button" class="button" (click)="closeEnrollModal()" [disabled]="isSubmitting">Cancel</button>
                     <button type="button" class="button primary" (click)="confirmEnrollment()" [disabled]="isSubmitting">
-                        <span *ngIf="!isSubmitting">Confirm Enrollment</span>
+                        <span *ngIf="!isSubmitting">Confirm</span>
                         <span *ngIf="isSubmitting">Enrolling...</span>
                     </button>
                 </div>
