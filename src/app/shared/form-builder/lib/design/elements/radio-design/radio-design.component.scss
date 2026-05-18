@@ -55,6 +55,9 @@ https://codepen.io/BuddyLReno/pen/boGRPO?__cf_chl_jschl_tk__=4f0c8560821bef3fe7d
   /*cursor: pointer;*/
   -webkit-transition: all 200ms ease-in;
   transition: all 200ms ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .inputGroup input:checked ~ label {
   font-weight: 600;
@@ -69,9 +72,10 @@ https://codepen.io/BuddyLReno/pen/boGRPO?__cf_chl_jschl_tk__=4f0c8560821bef3fe7d
     background-color: #54E0C7;
     border-color: #54E0C7;
     */
-
+  content: "\2713";
   background-color: #1fa34a;
   border-color: #1fa34a;
+  color: #fff;
 }
 .inputGroup input {
   width: 32px;

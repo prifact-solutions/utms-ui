@@ -25,6 +25,10 @@
   .course-listing {
     padding-top: 16px;
     gap: 48px 24px;
+    app-program-featured-media{
+      min-height: 150px;
+      position: relative;
+    }
   }
 
   .filter-options-container {

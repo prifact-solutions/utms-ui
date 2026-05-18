@@ -141,7 +141,6 @@
                     class="media-preview-thumb"
                     *ngIf="thumbnailPreview"
                     style="
-                      width: 200px;
                       margin-bottom: 8px;
                       border-radius: 8px;
                       overflow: hidden;
@@ -165,13 +164,18 @@
                     />
                     <button
                       type="button"
-                      [class]="
-                        thumbnailPreview ? 'button small' : 'btn-black-small'
-                      "
+                      class="btn-black-small"
                       (click)="thumbInput.click()"
                       [disabled]="isSubmitting"
                     >
-                      {{ thumbnailPreview ? "Change" : "+" }}
+                      <ng-container *ngIf="thumbnailPreview">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 20 20" fill="none">
+                          <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.8 12.963L2 18l4.8-.63L18.11 6.58a2.612 2.612 0 00-3.601-3.785L3.8 12.963z"/>
+                        </svg>
+                      </ng-container>
+                      <ng-container *ngIf="!thumbnailPreview">
+                        <svg _ngcontent-lbk-c18="" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none"><path _ngcontent-lbk-c18="" d="M4 12H20M12 4V20" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </ng-container>
                     </button>
                     <p
                       class="text-muted small m-0"
@@ -180,8 +184,13 @@
                       Select JPG/PNG
                     </p>
                     <p
+                      class="text-muted small m-0"
+                      *ngIf="!thumbnailFile"
+                    >
+                      Edit Thumbnail Image
+                    </p>
+                    <p
                       class="small text-truncate m-0"
-                      style="max-width: 150px"
                       *ngIf="thumbnailFile"
                     >
                       {{ thumbnailFile.name }}
@@ -203,7 +212,6 @@
                     class="media-preview-video"
                     *ngIf="videoPreviewUrl"
                     style="
-                      width: 200px;
                       margin-bottom: 8px;
                       border-radius: 8px;
                       overflow: hidden;
@@ -227,13 +235,18 @@
                     />
                     <button
                       type="button"
-                      [class]="
-                        videoPreviewUrl ? 'button small' : 'btn-black-small'
-                      "
+                      class="btn-black-small"
                       (click)="videoInput.click()"
                       [disabled]="isSubmitting"
                     >
-                      {{ videoPreviewUrl ? "Change" : "+" }}
+                      <ng-container *ngIf="videoPreviewUrl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 20 20" fill="none">
+                          <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.8 12.963L2 18l4.8-.63L18.11 6.58a2.612 2.612 0 00-3.601-3.785L3.8 12.963z"/>
+                        </svg>
+                      </ng-container>
+                      <ng-container *ngIf="!videoPreviewUrl">
+                        <svg _ngcontent-lbk-c18="" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none"><path _ngcontent-lbk-c18="" d="M4 12H20M12 4V20" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </ng-container>
                     </button>
                     <p
                       class="text-muted small m-0"
@@ -243,7 +256,6 @@
                     </p>
                     <p
                       class="small text-truncate m-0"
-                      style="max-width: 150px"
                       *ngIf="videoFile"
                     >
                       {{ videoFile.name }}

@@ -22,24 +22,26 @@
             </div>
             <div class="recently-accessed-courses" *ngIf="recentPrograms.length > 0">
                 <h2>Recently Accessed Courses</h2>
-                <div class="recent-card" *ngFor="let program of recentPrograms" (click)="goToProgram(program.id)">
-                    <div class="recent-thumbnail">
-                        <app-program-featured-media [program]="program" media_type="IMAGE"
-                            *ngIf="program.thumbnail"></app-program-featured-media>
-                        <div class="thumbnail-placeholder" *ngIf="!program.thumbnail"
-                            [style.background-color]="getProgramColor(program.title)">
-                            {{ getProgramInitials(program.title) }}
+                <div class="recent-card-wrapper">
+                    <div class="recent-card" *ngFor="let program of recentPrograms" (click)="goToProgram(program.id)">
+                        <div class="recent-thumbnail">
+                            <app-program-featured-media [program]="program" media_type="IMAGE"
+                                *ngIf="program.thumbnail"></app-program-featured-media>
+                            <div class="thumbnail-placeholder" *ngIf="!program.thumbnail"
+                                [style.background-color]="getProgramColor(program.title)">
+                                {{ getProgramInitials(program.title) }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="recent-info">
-                        <strong class="recent-title">{{ program.title }}</strong>
-                        <div class="recent-time">{{ getTimeAgo(program.accessedAt) }}</div>
-                    </div>
-                    <div class="recent-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+                        <div class="recent-info">
+                            <strong class="recent-title">{{ program.title }}</strong>
+                            <div class="recent-time">{{ getTimeAgo(program.accessedAt) }}</div>
+                        </div>
+                        <div class="recent-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>

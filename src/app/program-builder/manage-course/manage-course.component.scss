@@ -888,6 +888,8 @@ span.status-badge {
                                     font-weight: 700;
                                     text-transform: uppercase;
                                     letter-spacing: 0.02em;
+                                    min-width: 67px;
+                                    text-align: center;
 
                                     &.lesson {
                                         background: #90398f;
@@ -1115,4 +1117,10 @@ span.status-badge {
     100% {
         transform: translateX(100%);
     }
+}
+
+.media-upload-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
 }
