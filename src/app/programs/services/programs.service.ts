@@ -336,4 +336,10 @@ export class ProgramsService {
       `${AppSettings.apiUrl}/programs/reports/${programId}`,
     );
   }
+  public unpublishProgram(program_id: number) {
+    return this.http.put(
+      `${AppSettings.apiUrl}/programs/${program_id}/unpublish/`,
+      {},
+    );
+  }
 }

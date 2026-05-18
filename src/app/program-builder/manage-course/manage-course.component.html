@@ -104,6 +104,15 @@
       >
         Confirm & Preview
       </button>
+      <button
+        *ngIf="program.status != 'DRAFT'"
+        type="button"
+        (click)="showUnpublishConfirm=true"
+        class="button primary black"
+        [disabled]="isPublishing"
+      >
+        Unpublish
+      </button>
     </div>
   </div>
 
@@ -850,3 +859,13 @@
     </div>
   </div>
 </div>
+<app-confirm
+  [visible]="showUnpublishConfirm"
+  title="Unpublish Course?"
+  cancelLabel="Cancel"
+  confirmLabel="Unpublish"
+  [toolbarButtons]="false"
+  [message]="'Unpublishing this course will disenroll students who have not completed this course yet. Do you want to continue?'"
+  (cancel)="showUnpublishConfirm=false"
+  (confirm)="unpublishCourse($event)"
+></app-confirm>

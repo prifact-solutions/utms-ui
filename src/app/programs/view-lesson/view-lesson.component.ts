@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ProgramsService } from '../services/programs.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
-import { combineLatest, map, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Subject, switchMap, tap } from 'rxjs';
 import { ModuleContent, ModuleContentFile } from '../models/program.model';
 
 @Component({
@@ -14,6 +14,8 @@ import { ModuleContent, ModuleContentFile } from '../models/program.model';
 export class ViewLessonComponent extends ComponentBase {
   lesson: ModuleContent | null = null;
   files: Array<ModuleContentFile> = [];
+
+  markAsCompleteSubject$: Subject<void> = new Subject<void>();
 
   next_module_content: ModuleContent | null = null;
   previous_module_content: ModuleContent | null = null;
@@ -66,6 +68,9 @@ export class ViewLessonComponent extends ComponentBase {
           this.lesson = lesson.content;
           this.files = lesson.files;
           this.isLoading = false;
+          if (this.files.length == 0) {
+            this.markAsCompleteSubject$.next();
+          }
 
           if (catalog && catalog.modules) {
             const contents = catalog.modules.flatMap(
@@ -98,6 +103,10 @@ export class ViewLessonComponent extends ComponentBase {
         },
       });
     this.registerSubscription(sub);
+    let sub1 = this.markAsCompleteSubject$.subscribe(() => {
+      this.markAsComplete();
+    });
+    this.registerSubscription(sub1);
   }
 
   markAsComplete() {
@@ -111,7 +120,6 @@ export class ViewLessonComponent extends ComponentBase {
         )
         .subscribe((res) => {
           this.next_module_content = res;
-          this.goToNextContent();
         });
     }
   }

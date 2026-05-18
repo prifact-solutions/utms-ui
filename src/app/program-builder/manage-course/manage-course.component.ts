@@ -26,8 +26,7 @@ import { switchMap } from 'rxjs';
 })
 export class ManageCourseComponent
   extends ComponentBase
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   public activeTab: 'curriculum' | 'question-papers' = 'curriculum';
   public programId!: number;
   public program: Program | null = null;
@@ -54,6 +53,7 @@ export class ManageCourseComponent
   public showDeleteToast: boolean = false;
   public contentItemsLoading: boolean = false;
 
+  public showUnpublishConfirm: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -467,6 +467,13 @@ export class ManageCourseComponent
       this.fetchModuleContents(this.selectedModule);
     }
   }
+  unpublishCourse(event): void {
+    if (!this.program) return;
+    this.programService.unpublishProgram(this.programId).subscribe((res) => {
+      this.showUnpublishConfirm = false;
+      this.loadProgram();
+    });
+  }
 
   togglePublish(): void {
     if (!this.program) return;
@@ -474,42 +481,5 @@ export class ManageCourseComponent
       `/programs-builder/${this.programId}/organize-contents`,
     );
 
-    // this.isPublishing = true;
-    // const newStatus = this.program.status === 'ACTIVE' ? 'DRAFT' : 'ACTIVE';
-    // const newIsActive = newStatus === 'ACTIVE';
-
-    // const payload: any = {
-    //   title: this.program.title,
-    //   description: this.program.description,
-    //   duration: this.program.duration,
-    //   is_active: newIsActive,
-    //   status: newStatus,
-    //   difficulty: this.program.difficulty || 'Beginner',
-    //   video_hours: this.program.video_hours || 0,
-    //   categories: this.program.categories || [],
-    // };
-
-    // const sub = this.programService
-    //   .updateProgram(this.programId, payload)
-    //   .subscribe({
-    //     next: (updatedProgram) => {
-    //       if (this.program) {
-    //         this.program.status = updatedProgram?.status || newStatus;
-    //         this.program.is_active =
-    //           updatedProgram?.is_active !== undefined
-    //             ? updatedProgram.is_active
-    //             : newIsActive;
-    //       }
-    //       this.isPublishing = false;
-    //     },
-    //     error: (err) => {
-    //       console.error('Error updating program status', err);
-    //       this.isPublishing = false;
-    //       alert(
-    //         'Failed to update course status. Please ensure all required course details are filled.',
-    //       );
-    //     },
-    //   });
-    // this.registerSubscription(sub);
   }
 }
