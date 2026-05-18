@@ -1,4 +1,7 @@
-<div *ngIf="loading" class="loading">Loading ...</div>
+<div class="loader-container" id="loader-container" *ngIf="loading">
+  <div class="loader"></div>
+  <div class="loading-text">Loading Question Paper</div>
+</div>
 <div *ngIf="!loading">
   <div class="qp-title-box1">
     <div class="left-header-section">
@@ -26,8 +29,9 @@
         <span class="marks-txt">Total Grade:</span>
         <span class="marks-count">{{ total_marks }}</span>
       </div>
-      <button class="button primary" (click)="onSave()">
-        Save question paper
+      <button class="button primary" (click)="onSave()" [disabled]="isSubmitting">
+        <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+        <span class="button-loader-label">{{ isSubmitting ? 'Saving...' : 'Save question paper' }}</span>
       </button>
     </div>
   </div>
@@ -37,7 +41,10 @@
         <span class="marks-txt">Total Grade:</span>
         <span class="marks-count">{{ total_marks }}</span>
       </div>
-      <button class="button primary" (click)="onSave()">Save</button>
+      <button class="button primary" (click)="onSave()" [disabled]="isSubmitting">
+        <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
+        <span class="button-loader-label">{{ isSubmitting ? 'Saving...' : 'Save' }}</span>
+      </button>
     </div>
   </div>
   <div
@@ -130,7 +137,7 @@
                       : ""
           }}
         </h4>
-        <button class="modal-close" (click)="closeQuestionEditOverlay()">
+        <button class="modal-close" (click)="closeQuestionEditOverlay()" [disabled]="isSavingEditDraft">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24px"
@@ -239,8 +246,11 @@
           </div>
         </div>
         <div class="edit-draft-actions" *ngIf="editDraftPreview">
-          <button type="button" class="button" (click)="cancelEditDraft()">Cancel</button>
-          <button type="button" class="button primary" (click)="saveEditDraft()">Save</button>
+          <button type="button" class="button" (click)="cancelEditDraft()" [disabled]="isSavingEditDraft">Cancel</button>
+          <button type="button" class="button primary" (click)="saveEditDraft()" [disabled]="isSavingEditDraft">
+            <span *ngIf="isSavingEditDraft" class="button-loader" aria-hidden="true"></span>
+            <span class="button-loader-label">{{ isSavingEditDraft ? 'Saving...' : 'Save' }}</span>
+          </button>
         </div>
       </div>
     </div>

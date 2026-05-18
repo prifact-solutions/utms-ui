@@ -17,7 +17,7 @@ import { FormElement, FormElementTransientSettings, FormElementType, SectionElem
 import { FormDesignerService } from '../services/form-designer.service';
 import { QuestionPaperSchemaDefn } from '../../model/question-paper';
 import { FormBuilderBackendService } from '../../services/form-builder-backend.service';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, finalize } from 'rxjs/operators';
 import { SamplesService } from '../../services/samples.service';
 
 
@@ -41,6 +41,8 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   @Output() back: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() save: EventEmitter<boolean> = new EventEmitter<boolean>();
   loading: boolean = true;
+  isSubmitting: boolean = false;
+  isSavingEditDraft: boolean = false;
   showBackConfirm: boolean = false;
   errorMessages: string[] = [];
   total_marks: number;
@@ -117,8 +119,13 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   }
   
   onSave() {
+    if (this.isSubmitting) {
+      return;
+    }
     if (this.validateQp()) {
+      this.isSubmitting = true;
       this.formBackendService.saveQuestionPaperSchema(this.qpId, this.qpContext.schema)
+        .pipe(finalize(() => this.isSubmitting = false))
         .subscribe(_ => {
           this.savedSchema = JSON.stringify(this.qpContext.schema);
           this.save.emit(true);
@@ -181,10 +188,20 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   }
 
   saveEditDraft(): void {
-    this.formSvc.commitEditingDraft();
+    if (this.isSavingEditDraft) {
+      return;
+    }
+    this.isSavingEditDraft = true;
+    setTimeout(() => {
+      this.formSvc.commitEditingDraft();
+      this.isSavingEditDraft = false;
+    }, 250);
   }
 
   cancelEditDraft(): void {
+    if (this.isSavingEditDraft) {
+      return;
+    }
     this.formSvc.setSelectedElement(null);
   }
 
