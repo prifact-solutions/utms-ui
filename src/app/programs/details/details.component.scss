@@ -549,14 +549,17 @@
   padding: 0;
 
   h3 {
-    font-size: 32px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding-bottom: 5px;
   }
 
   p {
-    font-weight: bold;
+    font-weight: normal;
+    font-size: 0.875rem;
   }
 
   .button-group {
-    margin-top: 48px;
+    margin-top: 10px;
   }
 }

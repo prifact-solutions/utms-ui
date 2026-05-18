@@ -1001,6 +1001,7 @@ html body {
 
                     .button {
                         flex-shrink: 1;
+                        width: auto;
                     }
                 }
 
@@ -1170,6 +1171,10 @@ html body {
 
     .modal-content-wrapper.medium-sized{
         max-width: 600px;
+    }
+    
+    .modal-content-wrapper.small-sized{
+        max-width: 400px;
     }
 }
 
