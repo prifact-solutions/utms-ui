@@ -9,7 +9,10 @@
     <div class="toast-message">{{ errorMessage }}</div>
   </div>
 </div>
-<div class="nodata" *ngIf="loading">Loading ...</div>
+<div class="loader-container" id="loader-container" *ngIf="loading">
+    <div class="loader"></div>
+    <div class="loading-text">Loading Exam</div>
+</div>
 <div class="learning-header" *ngIf="!loading">
   <div class="title-area">
     <a (click)="goToCatalog()" class="back-link"

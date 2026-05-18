@@ -19,7 +19,7 @@
             <div class="skeleton-text skeleton short"></div>
         </div>
     </div>
-    <section class="syllabus-container">
+    <section class="syllabus-container" *ngIf="isChildRouteActive()">
         <div class="skeleton-h3 skeleton"></div>
         <div class="skeleton-summary skeleton"></div>
         <div class="skeleton-accordion">
@@ -142,7 +142,7 @@
             </div>
         </ng-container>
     </div>
-    <section class="syllabus-container">
+    <section class="syllabus-container" *ngIf="isChildRouteActive()">
         <div class="syllabus-header">
             <h3>Course Content</h3>
             <div class="summary">
