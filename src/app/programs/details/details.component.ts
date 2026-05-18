@@ -26,6 +26,9 @@ export class DetailsComponent extends ComponentBase {
   public showEnrollModal: boolean = false;
   public isSubmitting: boolean = false;
   public showToast: boolean = false;
+  public isRedirectingToContent: boolean = false;
+  private progressLoaded: boolean = false;
+  private hasAutoNavigatedToContent: boolean = false;
 
   constructor(
     private programService: ProgramsService,
@@ -174,6 +177,10 @@ export class DetailsComponent extends ComponentBase {
           this.isLoading = true;
           this.catalog = null;
           this.isEnrolled = false; // Reset enrollment state
+          this.progress = {};
+          this.progressLoaded = false;
+          this.hasAutoNavigatedToContent = false;
+          this.isRedirectingToContent = false;
           this.programId = +params['program_id']; // Ensure it's a number
           return this.programService.getProgramCatalog(params['program_id']);
         }),
@@ -196,6 +203,7 @@ export class DetailsComponent extends ComponentBase {
           this.isEnrolled = true;
         }
         this.isLoading = false;
+        this.redirectEnrolledUserToContent();
       });
     this.registerSubscription(sub1);
 
@@ -213,8 +221,30 @@ export class DetailsComponent extends ComponentBase {
         progresses?.forEach((progress) => {
           this.progress[progress.content_id] = progress.status;
         });
+        this.progressLoaded = true;
+        this.redirectEnrolledUserToContent();
       });
     this.registerSubscription(sub2);
+  }
+
+  private redirectEnrolledUserToContent(): void {
+    if (
+      this.hasAutoNavigatedToContent ||
+      !this.isEnrolled ||
+      !this.progressLoaded ||
+      !this.catalog ||
+      this.isChildRouteActive()
+    ) {
+      return;
+    }
+
+    this.hasAutoNavigatedToContent = true;
+    this.isRedirectingToContent = true;
+    this.cdRef.detectChanges();
+
+    setTimeout(() => {
+      this.onContinueLearning();
+    });
   }
 
   onContinueLearning() {
@@ -276,6 +306,8 @@ export class DetailsComponent extends ComponentBase {
                 this.progress[p.content_id] = p.status;
               });
             }
+            this.progressLoaded = true;
+            this.redirectEnrolledUserToContent();
             this.cdRef.detectChanges();
           });
 
