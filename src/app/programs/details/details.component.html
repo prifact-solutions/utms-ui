@@ -144,7 +144,7 @@
     </div>
     <section class="syllabus-container" *ngIf="isChildRouteActive()">
         <div class="syllabus-header">
-            <h3>Course Content</h3>
+            <h3>{{catalog.title | titlecase }}</h3>
             <div class="summary">
                 {{ getCourseContentSummary() }}
             </div>

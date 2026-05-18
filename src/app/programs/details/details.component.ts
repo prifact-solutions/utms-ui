@@ -2,8 +2,8 @@ import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { ProgramsService } from '../services/programs.service';
 import { Category, ModuleContent, Program } from '../models/program.model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, switchMap } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, startWith, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { RecentProgramsService } from 'src/app/common/recent-programs.service';
 
@@ -29,6 +29,7 @@ export class DetailsComponent extends ComponentBase {
   public isRedirectingToContent: boolean = false;
   private progressLoaded: boolean = false;
   private hasAutoNavigatedToContent: boolean = false;
+  public courseCompletionStatus: string = 'INCOMPLETE';
 
   constructor(
     private programService: ProgramsService,
@@ -212,15 +213,22 @@ export class DetailsComponent extends ComponentBase {
         filter((user) => {
           return user != null;
         }),
-        switchMap((user) => this.route.params),
+        switchMap((user) => this.router.events),
+        filter(event => event instanceof NavigationEnd),
+        startWith(null),
         switchMap((params) => {
-          return this.programService.getProgramProgress(params['program_id']);
+          return this.programService.getProgramProgress(this.programId);
         }),
       )
       .subscribe((progresses) => {
+        let allCompleted = true;
         progresses?.forEach((progress) => {
           this.progress[progress.content_id] = progress.status;
+          if (progress.status !== 'COMPLETED') {
+            allCompleted = false;
+          }
         });
+        this.courseCompletionStatus = allCompleted ? 'COMPLETED' : 'INCOMPLETE';
         this.progressLoaded = true;
         this.redirectEnrolledUserToContent();
       });
