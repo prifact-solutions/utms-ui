@@ -1,87 +1,111 @@
-<div class="admin-page-container container" *ngIf="program">
-  <div class="builder-layout">
-    <aside class="builder-sidebar">
-      <div class="program-mini-card card">
-        <app-program-featured-media [program]="program" media_type="IMAGE"></app-program-featured-media>
-        <div class="p-4">
-          <h4>{{ program.title }}</h4>
-          <p class="text-muted small">{{ program.description | slice:0:80 }}...</p>
-          <hr>
-          <div class="meta-row">
-            <span>Duration: <strong>{{ program.duration }}d</strong></span>
-            <span class="badge" [class.bg-success]="program.is_active">{{ program.status == 'ACTIVE' ? 'Active' : 'Draft'
-              }}</span>
+<div class="loader-container" id="loader-container" *ngIf="isLoading">
+  <div class="loader"></div>
+  <div class="loading-text">Loading Course Builder</div>
+</div>
+
+<div class="manage-course-page-container organize-course-page" *ngIf="!isLoading && program">
+  <div class="course-primary">
+    <div class="course-primary-top-section">
+      <div class="c-details-header">
+        <a class="back-nav" [routerLink]="['/programs-builder', program.id, 'manage']">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19 12H5M5 12L12 19M5 12L12 5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Back to Course Builder</span>
+        </a>
+      </div>
+      <div class="c-details-wrapper">
+        <div class="c-details">
+          <div class="c-title">
+            <h2>{{ program.title }}</h2>
+            <span class="status-badge" [class.published]="program.status === 'ACTIVE'">
+              {{ program.status === "ACTIVE" ? "Published" : "Draft" }}
+            </span>
           </div>
         </div>
       </div>
-      <nav class="sidebar-nav mt-4">
-        <a [routerLink]="['/programs-builder', program.id, 'edit']">Settings</a>
-        <a [routerLink]="['/programs-builder', program.id, 'modules']">Curriculum</a>
-        <a class="active">Publish Course</a>
-      </nav>
-    </aside>
+    </div>
+    <div class="main-header-actions">
+      <button class="button primary black" type="button" (click)="saveAllChanges()" [disabled]="isSaving">
+        <span *ngIf="isSaving" class="button-loader" aria-hidden="true"></span>
+        <span class="button-loader-label">{{ isSaving ? "Saving..." : "Confirm & Publish" }}</span>
+      </button>
+    </div>
+  </div>
 
-    <main class="builder-main">
-      <header class="page-header">
-        <div class="header-text">
-          <h1>Publish Course</h1>
-          <p class="text-muted">Review the order of content and make the course available to public.</p>
-        </div>
-        <div class="header-actions">
-          <button class="btn-primary" (click)="saveAllChanges()" [disabled]="isSaving || isLoading">
-            <span *ngIf="!isSaving">Publish</span>
-            <span *ngIf="isSaving">Saving...</span>
-          </button>
-        </div>
-      </header>
-
-      <div *ngIf="isLoading" class="py-5 text-center">
-        <p class="text-muted">Loading course structure...</p>
-      </div>
-
-      <!-- Alerts -->
-      <div *ngIf="successMessage" class="alert-success-compact mb-4">
-        {{ successMessage }}
-      </div>
-      <div *ngIf="errorMessage" class="alert-error-compact mb-4">
-        {{ errorMessage }}
-      </div>
-
-      <div *ngIf="!isLoading && organizedModules.length > 0" class="organized-view">
-        <div *ngFor="let moduleGroup of organizedModules" class="mb-5">
-          <div class="section-header d-flex align-items-center gap-3 mb-4">
-            <span class="section-badge">Module {{ moduleGroup.module.order }}</span>
-            <h2 class="m-0" style="font-size: 1.5rem;">{{ moduleGroup.module.title }}</h2>
+  <div class="course-curriculum">
+    <div class="module-view">
+      <div class="module-details">
+        <div class="module-view-header">
+          <div>
+            <h3>Organize Contents</h3>
+            <p>Review every module and content sequence before publishing this course.</p>
           </div>
+        </div>
 
-          <div class="curriculum-list">
-            <div *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId"
-              class="reorder-item card p-4 mb-3">
-              <div class="d-flex align-items-center gap-4">
-                <span class="drag-handle" style="font-size: 1.5rem; opacity: 0.3; cursor: grab;">≡</span>
+        <div *ngIf="successMessage" class="alert-success-compact">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert-error-compact">
+          {{ errorMessage }}
+        </div>
 
-                <div class="content-info flex-1">
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <span class="type-badge">{{ content.content_type | titlecase }}</span>
+        <ng-container *ngIf="organizedModules.length > 0; else noModules">
+          <div class="module-section" *ngFor="let moduleGroup of organizedModules">
+            <div class="module-section-header">
+              <h4>{{ moduleGroup.module.title }}</h4>
+              <!-- <span>({{ moduleGroup.contents.length }} {{ moduleGroup.contents.length === 1 ? "item" : "items" }})</span> -->
+            </div>
+
+            <div class="content-list" *ngIf="moduleGroup.contents.length > 0; else noContent">
+              <div
+                class="content-item"
+                *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId"
+              >
+                <div class="content-item-left-section">
+                  <span class="drag-handle" aria-hidden="true">&#8801;</span>
+                  <div class="content-info">
+                    <span class="content-title">{{ content.title }}</span>
+                    <!-- <span class="content-meta">Order: {{ content.order }}</span> -->
                   </div>
-                  <h4 class="m-0" style="font-size: 1.1rem;">{{ content.title }}</h4>
                 </div>
-
-                <div class="mini-input">
-                  <label>Order</label>
-                  <input type="number" [value]="content.order"
-                    (change)="onOrderChange(content, $any($event.target).value)" [min]="1">
+                <div class="content-actions">
+                  <label class="order-input">
+                    <span>Order</span>
+                    <input
+                      type="number"
+                      [value]="content.order"
+                      (change)="onOrderChange(content, $any($event.target).value)"
+                      [min]="1"
+                    />
+                  </label>
+                  <span class="type-badge" [ngClass]="getContentTypeClass(content)">
+                    {{ content.content_type === "EXAM" ? "Exam" : "Lesson" }}
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div *ngIf="!isLoading && organizedModules.length === 0" class="empty-state">
-        <p>No content has been added to this program yet.</p>
-        <a [routerLink]="['/programs-builder', programId, 'modules']" class="btn-primary mt-3">Add Content</a>
+            <ng-template #noContent>
+              <div class="no-content">
+                <p>No content added to this module yet.</p>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+
+        <ng-template #noModules>
+          <div class="no-modules">
+            <p>No modules created yet.</p>
+          </div>
+        </ng-template>
       </div>
-    </main>
+    </div>
   </div>
 </div>

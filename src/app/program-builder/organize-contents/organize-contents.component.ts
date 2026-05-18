@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
@@ -20,9 +21,10 @@ interface OrganizedModule {
   templateUrl: './organize-contents.component.html',
   styleUrls: ['./organize-contents.component.scss']
 })
-export class OrganizeContentsComponent extends ComponentBase implements OnInit {
+export class OrganizeContentsComponent extends ComponentBase implements OnInit, OnDestroy {
   program: Program | null = null;
   organizedModules: OrganizedModule[] = [];
+  selectedModuleGroup: OrganizedModule | null = null;
   isLoading = false;
   isSaving = false;
   programId: number = 0;
@@ -32,14 +34,22 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private programsService: ProgramsService
+    private programsService: ProgramsService,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.renderer.addClass(this.document.body, 'manage-course-view');
     this.programId = +this.route.snapshot.params['program_id'];
     this.loadData();
+  }
+
+  override ngOnDestroy(): void {
+    this.renderer.removeClass(this.document.body, 'manage-course-view');
+    super.ngOnDestroy();
   }
 
   loadData(): void {
@@ -54,6 +64,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
       next: (program) => {
         this.program = program;
         this.organizeContents(program.modules || []);
+        this.selectedModuleGroup = this.organizedModules[0] || null;
         this.isLoading = false;
       },
       error: (error) => {
@@ -86,6 +97,10 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
     });
 
     this.updateOrderAndPrevious();
+  }
+
+  selectModuleGroup(moduleGroup: OrganizedModule): void {
+    this.selectedModuleGroup = moduleGroup;
   }
 
   updateOrderAndPrevious(): void {
@@ -158,6 +173,13 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
 
     // Trigger explicit change detection by re-assigning organizedModules reference
     this.organizedModules = [...this.organizedModules];
+    this.selectedModuleGroup = this.organizedModules.find(mg =>
+      mg.module.id === moduleGroup.module.id
+    ) || null;
+  }
+
+  getContentTypeClass(content: OrganizedContent): string {
+    return content.content_type === 'EXAM' ? 'exam' : 'lesson';
   }
 
   onPreviousContentChange(content: OrganizedContent, previousId: number): void {
@@ -188,7 +210,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit {
         this.successMessage = 'Content organization saved successfully!';
         this.isSaving = false;
         setTimeout(() => {
-          this.router.navigate(['/programs-builder', this.programId, 'modules']);
+          this.router.navigate(['/programs-builder', this.programId, 'manage']);
         }, 1500);
       },
       error: (err) => {
