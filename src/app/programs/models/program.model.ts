@@ -52,6 +52,7 @@ export interface Program {
   short_description?: string;
   modules?: Module[];
   is_enrolled?: boolean;
+  allow_enrollment: boolean;
 }
 
 export interface ModuleContentFileUrl {

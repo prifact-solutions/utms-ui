@@ -12,6 +12,26 @@
   cursor: pointer;
 }
 
+.enrollment-checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  text-transform: none;
+  margin-bottom: 0;
+  padding-left: 0;
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 20px;
+  }
+}
+
 .flex-wrap {
   flex-wrap: wrap;
 }

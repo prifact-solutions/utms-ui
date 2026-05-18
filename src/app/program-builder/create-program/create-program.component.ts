@@ -53,7 +53,8 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
       duration: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
       video_hours: [0],
-      categories: []
+      categories: [],
+      allow_enrollment: [true]
     });
   }
 
@@ -166,7 +167,8 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
       difficulty: 'Beginner',
       video_hours: formValue.video_hours ?? 0,
       categories: categories,
-      thumbnail: null
+      thumbnail: null,
+      allow_enrollment: formValue.allow_enrollment
     };
 
     const subscription = this.programsService.createProgram(fd).pipe(
@@ -208,7 +210,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   }
 
   resetForm(): void {
-    this.programForm.reset({ categories: [] });
+    this.programForm.reset({ categories: [], allow_enrollment: true });
     this.thumbnailPreview = null;
     this.thumbnailFile = null;
     if (this.videoPreviewUrl) {

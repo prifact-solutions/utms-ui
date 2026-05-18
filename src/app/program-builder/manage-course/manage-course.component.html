@@ -469,6 +469,9 @@
             {{ program.duration }} Days ● {{ program.video_hours || 0 }} Hours
           </div>
         </div>
+        <div class="c-info">
+          Enrollment: {{ (program.allow_enrollment ?? true) ? 'Allowed' : 'Not allowed' }}
+        </div>
         <div class="c-media">
           <div class="media-item">
             <label>Preview Video</label>

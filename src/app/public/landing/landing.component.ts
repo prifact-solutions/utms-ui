@@ -40,7 +40,7 @@ export class LandingComponent extends ComponentBase implements OnInit, OnDestroy
 
     let sub = this.programsService.getAllPrograms()
       .subscribe(programs => {
-        this.programs = programs;
+        this.programs = programs.filter(program => program.allow_enrollment);
         this.isLoading = false;
       });
     this.registerSubscription(sub);

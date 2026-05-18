@@ -114,7 +114,7 @@ export class ExploreComponent extends ComponentBase implements OnInit {
 
     let sub1 = combineLatest(this.programsService.getAllPrograms(), this.programsService.getAllCategories())
       .subscribe(([programs, categories]) => {
-        this.programs = programs;
+        this.programs = programs.filter(program => program.allow_enrollment);
         this.isLoading = false;
         this.categories = categories;
 

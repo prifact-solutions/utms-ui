@@ -74,7 +74,8 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       // is_active: [this.program.is_active, Validators.required],
       categories: [this.program.categories || []],
       difficulty: [this.program.difficulty || 'Beginner', Validators.required],
-      video_hours: [this.program.video_hours || 0]
+      video_hours: [this.program.video_hours || 0],
+      allow_enrollment: [this.program.allow_enrollment ?? true]
     });
 
     if (this.program.thumbnail) {
@@ -190,7 +191,8 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       // is_active: formValue.is_active,
       difficulty: formValue.difficulty,
       video_hours: formValue.video_hours,
-      categories: categories
+      categories: categories,
+      allow_enrollment: formValue.allow_enrollment
     };
 
     const subscription = this.programsService.updateProgram(this.programId, fd).pipe(
@@ -205,6 +207,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
         this.program.difficulty = formValue.difficulty;
         this.program.video_hours = formValue.video_hours;
         this.program.categories = categories;
+        this.program.allow_enrollment = formValue.allow_enrollment;
         this.saved.emit();
 
       },
