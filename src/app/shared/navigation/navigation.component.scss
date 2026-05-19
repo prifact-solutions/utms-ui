@@ -563,28 +563,70 @@ app-navigation {
     justify-content: space-between;
     gap: 24px;
     flex: 1;
-
-    .button {
-      min-height: 38px;
-      min-width: 32px;
-      align-items: center;
-      justify-content: center;
+    .top-profile-details-wrapper{
       display: flex;
-      gap: 4px;
-      font-size: .875rem;
-      padding: 0 16px 0 8px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
-      line-height: 1em;
-      flex-shrink: 0;
-
-      &:hover {
-
-        border: 1px solid #111;
+      align-items: center;
+      gap: 8px;
+      padding: 0;
+      border-radius: 18px;
+      .top-profile-details{
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        justify-content: flex-end;
+        text-align: right;
+        .profile-name{
+          // font-size: 13px;
+          // line-height: 13px;
+          font-size: 0.875rem;
+          font-weight: 600;
+        }
+        .profile-email{
+          font-size: 12px;
+          line-height: 12px;
+          color: #666;
+          word-break: break-all;
+        }
       }
+      .profile-initials {
+        min-height: 36px;
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #111;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1;
+        flex-shrink: 0;
+        font-size: 14px;
+      }
+      .button {
+        min-height: 36px;
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        gap: 4px;
+        font-size: .875rem;
+        padding: 0;
+        line-height: 1em;
+        flex-shrink: 0;
+        background: #fff;
+        &:hover {
+          border: 1px solid #111;
+        }
 
-      svg {
-        width: 22px;
-        height: 22px;
+        svg {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
 
@@ -617,9 +659,21 @@ app-navigation {
         flex: auto;
         width: 100%;
       }
+      .top-profile-details-wrapper{
+        order:2;
+        width: calc(100% - 94px);
+        justify-content: flex-end;
+        gap: 5px;
+      }
     }
   }
-
+  @media (max-width: 500px) {
+    .auth-header .top-profile-details-wrapper{
+      .profile-initials{
+        display: none; 
+      }
+    }
+  }
 }
 
 .global-tooltip {
