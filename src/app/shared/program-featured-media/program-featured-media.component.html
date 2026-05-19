@@ -8,3 +8,8 @@
         <img [src]="url" alt="" (error)="onMediaLoadError()">
     </ng-container>
 </ng-container>
+<ng-container *ngIf="showFallbackThumbnail">
+    <div class="default-thumbnail-image">
+        <img src="assets/images/no-thumbnail.png" alt="No thumbnail">
+    </div>
+</ng-container>

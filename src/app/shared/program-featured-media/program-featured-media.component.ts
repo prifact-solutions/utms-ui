@@ -34,6 +34,16 @@ export class ProgramFeaturedMediaComponent {
     this.loadMediaUrl();
   }
 
+  get showFallbackThumbnail(): boolean {
+    if (this.url || !this.program) {
+      return false;
+    }
+
+    return (this.media_type === 'VIDEO' && !this.program.preview_video)
+      || (this.media_type === 'IMAGE' && !this.program.thumbnail)
+      || !this.media_type;
+  }
+
   onMediaLoadError(): void {
     if (this.hasRetriedAfterError || !this.program || !this.media_type) {
       return;

@@ -36,8 +36,8 @@
 
     .dashboard-banner.in-dashboard-page{
         display: flex;
-        margin-bottom: 48px;
-        align-items: end;
+        flex-direction: column;
+        margin-bottom: 34px;
         gap: 24px;
         padding-top: 0px;
 
@@ -58,25 +58,32 @@
             padding-left: 8px;
 
         }
-
-        .recent-card {
+        .recent-card-wrapper{
             display: flex;
             gap: 16px;
+            width: 100%;
+        }
+        .recent-card {
+            display: flex;
+            gap: 8px;
             align-items: center;
             border-radius: 8px;
             padding: 8px;
-
+            background-color: #f5f5f5;
+            border: solid 1px #ededed;
             cursor: pointer;
             transition: all 0.2s ease;
-
+            width: calc(25% - 16px);
             &:hover {
                 background-color: #f5f5f5;
-
+                border-color: #e1e1e1;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
                 .recent-arrow {
                     background-color: #111;
-
+                    opacity: 1;
                     svg {
                         color: #fff;
+                        opacity: 1;
                     }
                 }
             }
@@ -130,14 +137,14 @@
                 align-items: center;
                 justify-content: center;
                 border-radius: 50%;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 flex-shrink: 0;
-
+                opacity: 0;
+                transition: all 0.2s ease-in-out;
                 svg {
                     width: 20px;
                     height: 20px;
                     color: #111;
-                    transition: all 0.3s ease;
+                    opacity: 0;
                 }
             }
         }
@@ -250,5 +257,20 @@
                 }
             }
         }
+    }
+}
+
+@media (max-width: 1300px) {
+    .dashboard-page .recently-accessed-courses .recent-card-wrapper{
+        flex-wrap: wrap;
+    }
+    .dashboard-page .recently-accessed-courses .recent-card{
+        width: calc(50% - 16px);
+    }
+}
+
+@media (max-width: 700px) {
+    .dashboard-page .recently-accessed-courses .recent-card{
+        width: 100%;
     }
 }
