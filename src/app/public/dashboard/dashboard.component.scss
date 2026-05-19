@@ -59,7 +59,7 @@
         }
         .recent-card-wrapper{
             display: flex;
-            gap: 24px;
+            gap: 10px;
             width: 100%;
         }
         .recent-card {
@@ -72,7 +72,7 @@
             border: solid 1px #ededed;
             cursor: pointer;
             transition: all 0.2s ease;
-            width: 25%;
+            width: calc(25% - 5px);
             &:hover {
                 background-color: #fff;
                 border-color: #e1e1e1;
@@ -264,7 +264,7 @@
         flex-wrap: wrap;
     }
     .dashboard-page .recently-accessed-courses .recent-card{
-        width: 50%;
+        width: calc(50% - 5px);
     }
 }
 
