@@ -110,6 +110,20 @@ export class DetailsComponent extends ComponentBase {
     return this.openSections.has(index);
   }
 
+  private openActiveModuleSection(): void {
+    const activeModuleId = this.getActiveModuleId();
+    if (!this.catalog?.modules || !activeModuleId) {
+      return;
+    }
+
+    const activeModuleIndex = this.catalog.modules.findIndex(
+      (module) => module.id === activeModuleId,
+    );
+    if (activeModuleIndex >= 0) {
+      this.openSections.add(activeModuleIndex);
+    }
+  }
+
   public getContentIcon(type: string): string {
     switch (type) {
       case 'VIDEO':
@@ -165,6 +179,30 @@ export class DetailsComponent extends ComponentBase {
     return false;
   }
 
+  private getActiveModuleId(): number | null {
+    let child = this.route.firstChild;
+    while (child) {
+      const moduleId = child.snapshot.params['module_id'];
+      if (moduleId) {
+        return +moduleId;
+      }
+      child = child.firstChild;
+    }
+    return null;
+  }
+
+  public isCourseCompletedRouteActive(): boolean {
+    return this.route.firstChild?.snapshot.routeConfig?.path === 'completed';
+  }
+
+  public navigateToCourseCompleted(): void {
+    if (this.courseCompletionStatus !== 'COMPLETED') {
+      return;
+    }
+
+    this.router.navigateByUrl(`/programs/${this.programId}/details/completed`);
+  }
+
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.isLoading = true;
@@ -196,6 +234,7 @@ export class DetailsComponent extends ComponentBase {
               res.preview_video,
             );
           }
+          this.openActiveModuleSection();
           return this.programService.getMyPrograms();
         }),
       )
@@ -204,9 +243,19 @@ export class DetailsComponent extends ComponentBase {
           this.isEnrolled = true;
         }
         this.isLoading = false;
+        this.openActiveModuleSection();
         this.redirectEnrolledUserToContent();
       });
     this.registerSubscription(sub1);
+
+    const subRoute = this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+      )
+      .subscribe(() => {
+        this.openActiveModuleSection();
+      });
+    this.registerSubscription(subRoute);
 
     let sub2 = this.authService.currentUser$
       .pipe(
@@ -221,14 +270,19 @@ export class DetailsComponent extends ComponentBase {
         }),
       )
       .subscribe((progresses) => {
-        let allCompleted = true;
+        const contentCount = (this.catalog?.modules || []).reduce(
+          (count, module) => count + (module.module_contents?.length || 0),
+          0,
+        );
+        let completedCount = 0;
         progresses?.forEach((progress) => {
           this.progress[progress.content_id] = progress.status;
-          if (progress.status !== 'COMPLETED') {
-            allCompleted = false;
+          if (progress.status === 'COMPLETED') {
+            completedCount++;
           }
         });
-        this.courseCompletionStatus = allCompleted ? 'COMPLETED' : 'INCOMPLETE';
+        this.courseCompletionStatus =
+          contentCount > 0 && completedCount >= contentCount ? 'COMPLETED' : 'INCOMPLETE';
         this.progressLoaded = true;
         this.redirectEnrolledUserToContent();
       });

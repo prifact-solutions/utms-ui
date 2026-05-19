@@ -19,6 +19,7 @@ export class ViewLessonComponent extends ComponentBase {
 
   next_module_content: ModuleContent | null = null;
   previous_module_content: ModuleContent | null = null;
+  isLastContent: boolean = false;
 
   program_id: number = 0;
   module_id: number = 0;
@@ -51,6 +52,7 @@ export class ViewLessonComponent extends ComponentBase {
           this.module_id = params.module_id;
           this.isLoading = true;
           this.lesson = null;
+          this.isLastContent = false;
         }),
         switchMap((params) => {
           return combineLatest([
@@ -91,6 +93,7 @@ export class ViewLessonComponent extends ComponentBase {
             } else {
               this.next_module_content = null;
             }
+            this.isLastContent = currentIndex === contents.length - 1;
           }
         },
         error: (err) => {
@@ -139,8 +142,12 @@ export class ViewLessonComponent extends ComponentBase {
     if (this.next_module_content) {
       this.goToContent(this.next_module_content);
     } else {
-      this.goToCatalog();
+      this.goToCourseCompleted();
     }
+  }
+
+  private goToCourseCompleted(): void {
+    this.router.navigateByUrl(`/programs/${this.program_id}/details/completed`);
   }
 
   private triggerErrorToast(): void {

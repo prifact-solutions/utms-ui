@@ -194,6 +194,7 @@
           bottom: -8px;
           border-left: 1px solid #aaa;
           z-index: 1;
+          height: calc(100% - 10px);
         }
 
         .accordion-header {
@@ -303,6 +304,105 @@
 
           &:hover .chevron {
             border-color: #666;
+          }
+        }
+
+        &.course-completion-item {
+          .accordion-header {
+            cursor: pointer;
+
+            &:disabled {
+              cursor: default;
+            }
+          }
+
+          .completion-status-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            color: #aaa;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+            font-weight: 700;
+            svg{
+              opacity: 0;
+            }
+          }
+
+          &.status-completed {
+            .completion-status-icon {
+              background: #28a745;
+              border-color: #28a745;
+              color: #fff;
+              svg{
+                opacity: 1;
+                path {
+                  stroke: #fff;
+                }
+              }
+            }
+
+            .module-title {
+              color: #111;
+            }
+          }
+
+          &.active {
+            .completion-status-icon {
+              background: #28a745;
+              border-color: #28a745;
+              color: #fff;
+              svg{
+                opacity: 1;
+                path {
+                  stroke: #fff;
+                }
+              }
+            }
+            .accordion-header {
+              background: #111;
+              color: #fff;
+              border-top-right-radius: 16px;
+              border-bottom-right-radius: 16px;
+              padding-right: 10px;
+              position: relative;
+              opacity: 1;
+            }
+
+            .accordion-header::after{
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -16px;
+              width: 16px;
+              height: 100%;
+              background: #111;
+              border-top-left-radius: 16px;
+              border-bottom-left-radius: 16px;
+            }
+            
+
+            .completion-status-icon {
+              background: #28a745;
+              border-color: #28a745;
+              color: #fff;
+              svg{
+                opacity: 1;
+                path {
+                  stroke: #fff;
+                }
+              }
+            }
+
+            .module-title,
+            .module-meta {
+              color: #fff;
+            }
           }
         }
 

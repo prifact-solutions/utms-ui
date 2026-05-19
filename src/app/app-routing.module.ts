@@ -38,6 +38,7 @@ import { ManageCourseComponent } from './program-builder/manage-course/manage-co
 import { ExamComponent } from './programs/exams/exam/exam.component';
 import { ExamResultComponent } from './programs/exams/exam-result/exam-result.component';
 import { NotesComponent } from './public/notes/components/notes/notes.component';
+import { CourseCompletedComponent } from './programs/course-completed/course-completed.component';
 
 const routes: Routes = [
   {
@@ -111,6 +112,11 @@ const routes: Routes = [
             canActivate: [AuthGuard],
           },
         ],
+      },
+      {
+        path: 'completed',
+        component: CourseCompletedComponent,
+        canActivate: [AuthGuard],
       },
     ],
   },

@@ -183,6 +183,25 @@
                     </div>
                 </div>
             </div>
+
+            <div class="accordion-item course-completion-item"
+                [class.status-completed]="courseCompletionStatus === 'COMPLETED'"
+                [class.active]="isCourseCompletedRouteActive()">
+                <button class="accordion-header no-contents" type="button" (click)="navigateToCourseCompleted()"
+                    [disabled]="courseCompletionStatus !== 'COMPLETED'">
+                    <span class="completion-status-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none">
+                            <path d="M4.89163 13.2687L9.16582 17.5427L18.7085 8" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <div class="module-header-body">
+                        <span class="module-title">Course completed</span>
+                        <span class="module-meta">
+                            {{ courseCompletionStatus === 'COMPLETED' ? 'Completed' : 'Complete all course content' }}
+                        </span>
+                    </div>
+                </button>
+            </div>
         </div>
     </section>
 </div>

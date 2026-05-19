@@ -79,7 +79,7 @@
       <button
         class="btn-nav next"
         (click)="goToNextContent()"
-        [disabled]="!next_module_content"
+        [disabled]="!canGoToNextContent"
         aria-label="Next"
       >
         <svg

@@ -13,6 +13,7 @@ import { TakeExamComponent } from './exams/take-exam/take-exam.component';
 import { SharedModule } from '../shared/shared.module';
 import { ExamComponent } from './exams/exam/exam.component';
 import { ExamResultComponent } from './exams/exam-result/exam-result.component';
+import { CourseCompletedComponent } from './course-completed/course-completed.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ExamResultComponent } from './exams/exam-result/exam-result.component';
     TakeExamComponent,
     ExamComponent,
     ExamResultComponent,
+    CourseCompletedComponent,
   ],
   imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, SharedModule],
   providers: [

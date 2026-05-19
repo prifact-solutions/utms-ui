@@ -19,6 +19,7 @@ import { ProgramsService } from '../../services/programs.service';
 import {
   ExamAttemptStatus,
   ExamBackendService,
+  ExamResultStatus,
 } from 'src/app/shared/services/exam-backend.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
@@ -35,6 +36,8 @@ export class ExamComponent extends ComponentBase {
 
   next_module_content: ModuleContent | null = null;
   previous_module_content: ModuleContent | null = null;
+  isLastContent: boolean = false;
+  hasPassedExam: boolean = false;
 
   program_id: number = 0;
   module_id: number = 0;
@@ -51,6 +54,10 @@ export class ExamComponent extends ComponentBase {
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   private dateSubject = new Subject<string>();
+
+  get canGoToNextContent(): boolean {
+    return this.hasPassedExam && (!!this.next_module_content || this.isLastContent);
+  }
 
   constructor(
     private programService: ProgramsService,
@@ -78,6 +85,8 @@ export class ExamComponent extends ComponentBase {
           this.module_id = params.module_id;
           this.module_content_id = params.module_content_id;
           this.loading = true;
+          this.isLastContent = false;
+          this.hasPassedExam = false;
         }),
         switchMap((params) => {
           return forkJoin([
@@ -142,6 +151,7 @@ export class ExamComponent extends ComponentBase {
             } else {
               this.next_module_content = null;
             }
+            this.isLastContent = currentIndex === contents.length - 1;
           }
           return this.examService
             .getExamAttempt(this.program_id, examDetails.exam.id)
@@ -168,6 +178,7 @@ export class ExamComponent extends ComponentBase {
       .subscribe({
         next: (attempt) => {
           this.attemptId = attempt.id;
+          this.hasPassedExam = attempt.result === ExamResultStatus.PASSED;
 
           if (attempt.status == ExamAttemptStatus.COMPLETED) {
             this.router.navigate(['exam-result', this.exam.id], {
@@ -263,6 +274,10 @@ export class ExamComponent extends ComponentBase {
     this.router.navigateByUrl(`/programs/${this.program_id}/details`);
   }
   goToNextContent() {
+    if (!this.canGoToNextContent) {
+      return;
+    }
+
     if (this.next_module_content) {
       if (this.next_module_content?.content_type == 'LESSON') {
         this.router.navigateByUrl(
@@ -274,7 +289,7 @@ export class ExamComponent extends ComponentBase {
         );
       }
     } else {
-      this.router.navigateByUrl(`/programs/${this.program_id}/details`);
+      this.router.navigateByUrl(`/programs/${this.program_id}/details/completed`);
     }
   }
 }

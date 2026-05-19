@@ -111,6 +111,10 @@ export class ExamResultComponent extends ComponentBase {
   }
 
   next() {
+    if (!this.isExamPassed) {
+      return;
+    }
+
     var nextContent = null;
     this.programService
       .getProgramCatalog(this.program_id)
@@ -135,6 +139,8 @@ export class ExamResultComponent extends ComponentBase {
             this.router.navigateByUrl(
               `/programs/${this.program_id}/details/modules/${nextContent.module_id}/contents/${nextContent.id}/${path}`,
             );
+          } else {
+            this.router.navigateByUrl(`/programs/${this.program_id}/details/completed`);
           }
         }
       });
