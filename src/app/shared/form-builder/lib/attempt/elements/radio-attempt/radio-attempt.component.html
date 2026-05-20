@@ -21,7 +21,6 @@
                 for="attempt_{{ item.settings.uniqueId + '_' + v.choiceValue }}"
                 [ngClass]="{ hideInput: isReadOnly }"
             >
-                {{ i + 1 }}.
                 <span [innerHTML]="v.choiceContent.value"></span>
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">

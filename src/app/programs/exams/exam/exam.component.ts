@@ -8,6 +8,7 @@ import { QuestionPaperAttemptContext } from '../../../shared/form-builder/lib/mo
 import {
   EMPTY,
   catchError,
+  filter,
   forkJoin,
   map,
   of,
@@ -21,7 +22,7 @@ import {
   ExamBackendService,
   ExamResultStatus,
 } from 'src/app/shared/services/exam-backend.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 
 @Component({
@@ -53,10 +54,45 @@ export class ExamComponent extends ComponentBase {
   isSubmittingExam: boolean = false;
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
+  wasNextButtonDisabledInitially: boolean = false;
   private dateSubject = new Subject<string>();
 
   get canGoToNextContent(): boolean {
     return this.hasPassedExam && (!!this.next_module_content || this.isLastContent);
+  }
+
+  get shouldShowNextContentTooltip(): boolean {
+    return !this.hasPassedExam && (!!this.next_module_content || this.isLastContent);
+  }
+
+  get nextContentTooltip(): string | null {
+    if (!this.shouldShowNextContentTooltip) {
+      return null;
+    }
+
+    const contentType = this.next_module_content?.content_type === 'EXAM' ? 'exam' : 'lesson';
+    return `Please pass the current exam to go to the next ${contentType}.`;
+  }
+
+  get nextStatusNote(): string | null {
+    if (!this.wasNextButtonDisabledInitially) {
+      return null;
+    }
+
+    if (!this.canGoToNextContent) {
+      return this.nextContentTooltip;
+    }
+
+    if (this.next_module_content) {
+      const contentType = this.next_module_content.content_type === 'EXAM' ? 'exam' : 'lesson';
+      return `You have successfully completed this exam and can now go to the next ${contentType}.`;
+    }
+
+    if (this.isLastContent) {
+      return 'You have successfully completed this exam and can now complete the course.';
+    }
+
+    return null;
   }
 
   constructor(
@@ -87,6 +123,7 @@ export class ExamComponent extends ComponentBase {
           this.loading = true;
           this.isLastContent = false;
           this.hasPassedExam = false;
+          this.wasNextButtonDisabledInitially = false;
         }),
         switchMap((params) => {
           return forkJoin([
@@ -179,6 +216,7 @@ export class ExamComponent extends ComponentBase {
         next: (attempt) => {
           this.attemptId = attempt.id;
           this.hasPassedExam = attempt.result === ExamResultStatus.PASSED;
+          this.wasNextButtonDisabledInitially = !this.canGoToNextContent;
 
           if (attempt.status == ExamAttemptStatus.COMPLETED) {
             this.router.navigate(['exam-result', this.exam.id], {
@@ -193,6 +231,16 @@ export class ExamComponent extends ComponentBase {
         },
       });
     this.registerSubscription(sub);
+
+    const routeSub = this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        filter(() => this.router.url.includes('/exam-result/')),
+      )
+      .subscribe(() => {
+        this.refreshExamAttemptState();
+      });
+    this.registerSubscription(routeSub);
   }
 
   onSave(event: any) {
@@ -291,5 +339,18 @@ export class ExamComponent extends ComponentBase {
     } else {
       this.router.navigateByUrl(`/programs/${this.program_id}/details/completed`);
     }
+  }
+
+  private refreshExamAttemptState(): void {
+    if (!this.exam?.id) {
+      return;
+    }
+
+    const sub = this.examService
+      .getExamAttempt(this.program_id, this.exam.id)
+      .subscribe((attempt) => {
+        this.hasPassedExam = attempt?.result === ExamResultStatus.PASSED;
+      });
+    this.registerSubscription(sub);
   }
 }

@@ -140,11 +140,45 @@
 
   .nav-actions {
     display: flex;
-    gap: 8px;
+    gap: 20px;
+
+    .nav-tooltip {
+      position: relative;
+      display: inline-flex;
+
+      &.has-tooltip:hover::before,
+      &.has-tooltip:focus-within::before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 0px);
+        right: 0;
+        width: max-content;
+        max-width: 260px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        background: #111;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.35;
+        white-space: normal;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+        z-index: 2222;
+      }
+
+      &.has-tooltip:hover::after,
+      &.has-tooltip:focus-within::after {
+        content: "";
+        position: absolute;
+        bottom: calc(100% - 12px);
+        right: 7px;
+        border: 6px solid transparent;
+        border-top-color: #111;
+        z-index: 21;
+      }
+    }
 
     .btn-nav {
-      width: 44px;
-      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -155,38 +189,58 @@
       padding: 0;
       color: #666;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 2px solid #fff;
-
-      svg {
-        width: 22px;
-        height: 22px;
-        color: inherit;
-        transition: all 0.3s ease;
+      border: 0;
+      gap: 5px;
+      .btn-icons{
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        flex-shrink: 0;
+        transition: all 0.2s ease-in-out;
+        background: #f0f0f0;
+        svg {
+          width: 18px;
+          height: 18px;
+          color: #111;
+        }
       }
-
       &:hover:not(:disabled) {
-        background: #111;
-        fill: #fff;
+        color: #000;
+        .btn-icons{
+          background: #111;
+          svg {
+            color: #fff;
+          }
+        }
       }
 
       &:disabled {
-        opacity: 0.3;
+        opacity: 0.5;
         cursor: not-allowed;
         color: #ccc;
       }
 
       &.next {
-        // Reset previous styles
         background: transparent;
         color: #666;
         border: none;
 
         &:hover:not(:disabled) {
-          background: #111;
-          color: #fff;
+          background: none;
+          color: inherit;
         }
+      }
+    }
+
+    .btn-nav.prev{
+      svg{
+        transform: rotate(180deg);
       }
     }
   }
 }
+
 }

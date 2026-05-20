@@ -142,7 +142,7 @@ export class DetailsComponent extends ComponentBase {
   }
 
   public navigateToLesson(lesson: any) {
-    if (this.catalog && lesson) {
+    if (this.catalog && lesson && this.getStatus(lesson) !== 'LOCKED') {
       if (lesson.content_type == 'LESSON') {
         this.router.navigate(
           ['modules', lesson.module_id, 'contents', lesson.id, 'lesson'],
@@ -165,7 +165,29 @@ export class DetailsComponent extends ComponentBase {
     if (lesson && this.progress[lesson.id]) {
       return this.progress[lesson.id];
     }
+    if (this.isFirstCourseContent(lesson)) {
+      return 'IN_PROGRESS';
+    }
     return 'LOCKED';
+  }
+
+  private isFirstCourseContent(content: any): boolean {
+    if (!content || !this.catalog?.modules) {
+      return false;
+    }
+
+    const firstContent = this.catalog.modules
+      .flatMap((module) => module.module_contents || [])
+      .sort((a, b) => {
+        if (a.module_id !== b.module_id) {
+          const moduleA = this.catalog?.modules?.find((module) => module.id === a.module_id);
+          const moduleB = this.catalog?.modules?.find((module) => module.id === b.module_id);
+          return (moduleA?.order || 0) - (moduleB?.order || 0);
+        }
+        return (a.order || 0) - (b.order || 0);
+      })[0];
+
+    return firstContent?.id === content.id;
   }
 
   public isActiveLesson(lessonId: number): boolean {

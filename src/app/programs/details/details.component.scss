@@ -416,6 +416,7 @@
 
           &.open {
             max-height: 1000px;
+            overflow: visible;
           }
 
           .lesson-item {
@@ -543,6 +544,37 @@
 
               .content-title {
                 color: #666;
+              }
+            }
+
+            &.status-locked {
+              cursor: not-allowed;
+              color: #777;
+
+              &::before,
+              &::after {
+                pointer-events: none;
+              }
+
+              .lesson-number {
+                background: #eeeeee;
+                color: #777;
+              }
+
+              .content-title {
+                color: #111;
+              }
+
+              .content-duration {
+                color: #777;
+              }
+
+              &:hover {
+                color: #666;
+
+                .content-title {
+                  color: #111;
+                }
               }
             }
           }
