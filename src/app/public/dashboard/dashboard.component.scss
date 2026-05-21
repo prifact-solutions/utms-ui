@@ -121,6 +121,10 @@
                     font-size: .875rem;
                     margin-bottom: 4px;
                     display: block;
+                    max-width: 225px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
 
                 .recent-time {
@@ -130,6 +134,7 @@
             }
 
             .recent-arrow {
+                display: none;
                 width: 32px;
                 height: 32px;
                 display: flex;
@@ -266,10 +271,16 @@
     .dashboard-page .recently-accessed-courses .recent-card{
         width: calc(50% - 5px);
     }
+    .dashboard-page .recently-accessed-courses .recent-card .recent-info .recent-title{
+        max-width: calc(50vw - 140px);
+    }
 }
 
 @media (max-width: 700px) {
     .dashboard-page .recently-accessed-courses .recent-card{
         width: 100%;
+    }
+    .dashboard-page .recently-accessed-courses .recent-card .recent-info .recent-title{
+        max-width: calc(100vw - 170px);
     }
 }

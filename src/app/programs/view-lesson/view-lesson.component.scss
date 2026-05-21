@@ -251,12 +251,11 @@ app-view-lesson {
     .video-container {
       position: relative;
       width: 100%;
-      max-width: 1000px;
       margin: 0 auto;
-      aspect-ratio: 16/9;
 
       video {
         width: 100%;
+        min-height: 300px;
       }
 
       img {
