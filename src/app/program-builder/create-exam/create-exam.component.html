@@ -2,10 +2,8 @@
   <div [class.builder-layout]="false">
     <!-- Sidebar: Program Info -->
 
-
     <!-- Main Content: Create Exam Form -->
     <main [class.builder-main]="false">
-
       <!-- Alerts -->
       <div *ngIf="successMessage" class="alert-success-compact mb-4">
         {{ successMessage }}
@@ -14,74 +12,66 @@
         {{ errorMessage }}
       </div>
 
-
       <form *ngIf="examForm" [formGroup]="examForm" (ngSubmit)="onSubmit()">
         <div class="form-group mb-4">
-          <label for="title">Exam Title<span class="required-indicator">*</span></label>
-          <input id="title" type="text" formControlName="title" placeholder="e.g. Final Assessment: Web Fundamentals"
+          <label for="title"
+            >Exam Title<span class="required-indicator">*</span></label
+          >
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g. Final Assessment: Web Fundamentals"
             [class.is-invalid]="
-                examForm.get('title')?.invalid && examForm.get('title')?.touched
-              " />
-          <div class="invalid-feedback" *ngIf="
-                examForm.get('title')?.invalid && examForm.get('title')?.touched
-              ">
-            <span *ngIf="examForm.get('title')?.getError('required')">Title is required</span>
-            <span *ngIf="examForm.get('title')?.getError('minlength')">Title must be at least 3 characters</span>
+              examForm.get('title')?.invalid && examForm.get('title')?.touched
+            "
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              examForm.get('title')?.invalid && examForm.get('title')?.touched
+            "
+          >
+            <span *ngIf="examForm.get('title')?.getError('required')"
+              >Title is required</span
+            >
+            <span *ngIf="examForm.get('title')?.getError('minlength')"
+              >Title must be at least 3 characters</span
+            >
           </div>
         </div>
 
         <div class="form-group">
           <label for="context_text">Overview / Instructions</label>
-          <textarea id="context_text" formControlName="context_text" placeholder="Provide some context for this exam..."
-            rows="4"></textarea>
-        </div>
-        <div class="form-group-split-wrapper">
-          <div class="form-group">
-            <label for="total_score">Total score<span class="required-indicator">*</span></label>
-            <input id="total_score" type="number" formControlName="total_score" min="1" />
-            <div class="invalid-feedback" *ngIf="
-                  examForm.get('total_score')?.invalid &&
-                  examForm.get('total_score')?.touched
-                ">
-              <span *ngIf="examForm.get('total_score')?.getError('required')">Total score is required</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="min_score">Qualifying score<span class="required-indicator">*</span></label>
-            <input id="min_score" type="number" formControlName="min_score" min="1" />
-            <div class="invalid-feedback" *ngIf="
-                  examForm.get('min_score')?.invalid &&
-                  examForm.get('min_score')?.touched
-                ">
-              <span *ngIf="examForm.get('min_score')?.getError('required')">Qualifying score is required</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="duration">Exam duration (in hours)<span class="required-indicator">*</span></label>
-            <input id="duration" type="number" formControlName="duration" min="1" />
-            <div class="invalid-feedback" *ngIf="
-                examForm.get('duration')?.invalid &&
-                examForm.get('duration')?.touched
-              ">
-              <span *ngIf="examForm.get('duration')?.getError('required')">Exam duration is required</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="order">Display Order<span class="required-indicator">*</span></label>
-            <input id="order" type="number" formControlName="order" min="1" />
-          </div>
+          <textarea
+            id="context_text"
+            formControlName="context_text"
+            placeholder="Provide some context for this exam..."
+            rows="4"
+          ></textarea>
         </div>
         <div class="form-group">
-          <label for="question_paper" class="form-label d-flex justify-content-between align-items-center">
-            <span>Select Question Paper <span class="required-indicator">*</span></span>
+          <label
+            for="question_paper"
+            class="form-label d-flex justify-content-between align-items-center"
+          >
+            <span
+              >Select Question Paper
+              <span class="required-indicator">*</span></span
+            >
             <!-- <a [routerLink]="['/programs-builder', programId, 'question-papers']" target="_blank" class="small"
               style="font-weight: 500; font-size: 0.75rem;">Manage Question Papers ↗</a> -->
           </label>
-          <select id="question_paper" class="form-control" formControlName="question_paper" [class.is-invalid]="
-                examForm.get('question_paper')?.invalid &&
-                examForm.get('question_paper')?.touched
-              ">
+          <select
+            id="question_paper"
+            class="form-control"
+            formControlName="question_paper"
+            [class.is-invalid]="
+              examForm.get('question_paper')?.invalid &&
+              examForm.get('question_paper')?.touched
+            "
+            (change)="onQuestionPaperSelected($event)"
+          >
             <option value="" disabled selected>
               -- Select a Question Paper --
             </option>
@@ -90,25 +80,119 @@
             </option>
           </select>
 
-          <div class="invalid-feedback" *ngIf="
-                examForm.get('question_paper')?.invalid &&
-                examForm.get('question_paper')?.touched
-              ">
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              examForm.get('question_paper')?.invalid &&
+              examForm.get('question_paper')?.touched
+            "
+          >
             <span>Please select a question paper</span>
           </div>
+        </div>
+        <div class="form-group-split-wrapper">
+          <div class="form-group">
+            <label for="total_score"
+              >Total score<span class="required-indicator">*</span></label
+            >
+            <input
+              id="total_score"
+              type="number"
+              formControlName="total_score"
+              min="1"
+              (input)="autoPopulateMarks = !$any($event.target).value"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('total_score')?.invalid &&
+                examForm.get('total_score')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('total_score')?.getError('required')"
+                >Total score is required</span
+              >
+            </div>
+          </div>
 
+          <div class="form-group">
+            <label for="min_score"
+              >Qualifying score<span class="required-indicator">*</span></label
+            >
+            <input
+              id="min_score"
+              type="number"
+              formControlName="min_score"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('min_score')?.invalid &&
+                examForm.get('min_score')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('min_score')?.getError('required')"
+                >Qualifying score is required</span
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="duration"
+              >Exam duration (in hours)<span class="required-indicator"
+                >*</span
+              ></label
+            >
+            <input
+              id="duration"
+              type="number"
+              formControlName="duration"
+              min="1"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                examForm.get('duration')?.invalid &&
+                examForm.get('duration')?.touched
+              "
+            >
+              <span *ngIf="examForm.get('duration')?.getError('required')"
+                >Exam duration is required</span
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="order"
+              >Display Order<span class="required-indicator">*</span></label
+            >
+            <input id="order" type="number" formControlName="order" min="1" />
+          </div>
         </div>
         <div class="form-actions mt-5">
-          <button type="button" class="button" (click)="closed.emit()" [disabled]="isSubmitting">
+          <button
+            type="button"
+            class="button"
+            (click)="closed.emit()"
+            [disabled]="isSubmitting"
+          >
             Cancel
           </button>
-          <button type="submit" class="button primary" [disabled]="examForm.invalid || isSubmitting">
-            <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
-            <span class="button-loader-label">{{ isSubmitting ? 'Creating...' : 'Create Exam' }}</span>
+          <button
+            type="submit"
+            class="button primary"
+            [disabled]="examForm.invalid || isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="button-loader"
+              aria-hidden="true"
+            ></span>
+            <span class="button-loader-label">{{
+              isSubmitting ? "Creating..." : "Create Exam"
+            }}</span>
           </button>
         </div>
       </form>
-
     </main>
   </div>
 </div>

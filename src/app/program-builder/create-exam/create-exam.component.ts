@@ -58,7 +58,7 @@ export class CreateExamComponent
   successMessage = '';
   errorMessage = '';
   questionPapers: QuestionPaper[] = [];
-
+  autoPopulateMarks = true;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -125,7 +125,7 @@ export class CreateExamComponent
     const selectedQPId = this.examForm.get('question_paper')?.value;
     const selectedQP = this.questionPapers.find((qp) => qp.id == selectedQPId);
     if (selectedQP?.total_score != this.examForm.get('total_score')?.value) {
-      this.errorMessage = `Total score of the exam (${selectedQP?.total_score ?? 0}) does not match the selected question paper score (${this.examForm.get('total_score')?.value ?? 0})`;
+      this.errorMessage = `Total score of the exam (${this.examForm.get('total_score')?.value ?? 0}) does not match the selected question paper score (${selectedQP?.total_score ?? 0})`;
     }
 
     if (this.errorMessage) {
@@ -176,5 +176,19 @@ export class CreateExamComponent
   override ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onQuestionPaperSelected(event: Event) {
+    const selectedId = (event.target as HTMLSelectElement).value;
+    const selectedQP = this.questionPapers.find(
+      (qp) => qp.id == Number(selectedId),
+    );
+    if (!selectedQP) {
+      return;
+    }
+
+    if (this.autoPopulateMarks) {
+      this.examForm.get('total_score')?.setValue(selectedQP.total_score);
+    }
   }
 }

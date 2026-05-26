@@ -3,7 +3,8 @@
         <div class="dashboard-banner in-dashboard-page">
             <div>
                 <div class="user-details">
-                    <h1>Hi, <strong>{{ username }}</strong>! </h1>
+                    <h1 *ngIf="username">Hi, <strong>{{ username }}</strong>! </h1>
+                    <h1 *ngIf="!username">Hi there! </h1>
                     <p>Let's build something valuable today. <a (click)="goToExplore()">Explore</a> and begin.</p>
 
                 </div>

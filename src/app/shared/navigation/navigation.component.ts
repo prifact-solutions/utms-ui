@@ -82,7 +82,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (this.isAuthenticated) {
       const tokenData = Utils.decodeAuthToken();
       this.isStaff = tokenData.is_staff || false;
-      this.userName = tokenData.username || 'User';
+      this.userName = tokenData.name || 'User';
       this.userEmail = tokenData.email || '';
     } else {
       this.isStaff = false;
