@@ -4,16 +4,18 @@ import { firstValueFrom } from 'rxjs';
 import { AppSettings } from '../appsettings';
 
 interface TenantInfo {
-  appTitle?: string;
-  appEmail?: string;
-  appLogo?: string;
+  name?: string;
+  email?: string;
+  logo?: string;
+  showDemoFeatures?: boolean;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class TenantInfoService {
-  private readonly defaultAppTitle = 'UTMS';
+  private readonly defaultAppTitle = 'ULMS';
+  private readonly defaultEmail = 'ulms.support@upskillair.com';
   private readonly defaultAppLogo = 'assets/images/logo2.svg';
   private info: TenantInfo = {};
 
@@ -30,10 +32,14 @@ export class TenantInfoService {
   }
 
   get appTitle(): string {
-    return this.info.appTitle?.trim() || this.defaultAppTitle;
+    return this.info.name?.trim() || this.defaultAppTitle;
   }
 
   get appLogo(): string {
-    return this.info.appLogo?.trim() || this.defaultAppLogo;
+    return this.info.logo?.trim() || this.defaultAppLogo;
   } 
+
+  get showDemoFeatures(): boolean {
+    return this.info.showDemoFeatures ?? false;
+  }
 }

@@ -130,7 +130,7 @@
       </svg>
       <span class="nav-tooltip">My Notes</span>
     </a>
-    <a data-title="Achievements" routerLink="/achievements" routerLinkActive="active"
+    <a *ngIf="showDemoFeatures" data-title="Achievements" routerLink="/achievements" routerLinkActive="active"
       (mouseenter)="showTooltip($event, 'Achievements')"
       (mouseleave)="hideTooltip()">
       <svg width="64px" height="64px" viewBox="-5.52 -5.52 35.04 35.04" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -229,7 +229,7 @@
       <span class="nav-tooltip">Profile</span>
     </a>
 
-    <a data-title="Settings" routerLink="/settings" routerLinkActive="active"
+    <a *ngIf="showDemoFeatures" data-title="Settings" routerLink="/settings" routerLinkActive="active"
       (mouseenter)="showTooltip($event, 'Settings')"
       (mouseleave)="hideTooltip()">
       <svg width="64px" height="64px" viewBox="-1.44 -1.44 26.88 26.88" fill="none"

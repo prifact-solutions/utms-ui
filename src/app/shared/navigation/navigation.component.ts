@@ -38,6 +38,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
   get appLogoPath(): string {
     return this.tenantInfo.appLogo;
   }
+  get showDemoFeatures(): boolean {
+    return this.tenantInfo.showDemoFeatures;
+  }
 
   constructor(
     private authService: AuthService,
