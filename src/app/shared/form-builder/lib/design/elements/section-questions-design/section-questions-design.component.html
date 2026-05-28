@@ -1,4 +1,5 @@
 <div id={{item.settings.uniqueId}} cdkDropList [cdkDropListData]="item.questions" (cdkDropListDropped)="onDrop($event)"
+  [cdkDropListDisabled]="isReadOnly"
   [cdkDropListConnectedTo]="containerids" [cdkDropListEnterPredicate]="canDrop.bind(this)"
   (cdkDropListExited)="onDropExit($event)" class="question-container">
   <!-- using canDrop.bind(this) due to non availablity of this in canDrop context - https://github.com/angular/components/issues/16718-->
@@ -8,13 +9,14 @@
   <ng-container *ngFor="let question of item.questions;let i= index;">
 
     <div [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''" cdkDrag
+      [cdkDragDisabled]="isReadOnly"
       [cdkDragData]="question" appTrackClicks class="question-box draggable">
 
       <div *ngIf="question.elementType==FormElementType.descriptive" class="item-box ">
 
 
         <div class="item-box-header">
-          <div cdkDragHandle class="drag-handle">
+          <div cdkDragHandle class="drag-handle" *ngIf="!isReadOnly">
             <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
@@ -29,8 +31,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
-            <a (click)="removeField(question)" class="delete"
+            <a *ngIf="!isReadOnly" (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a *ngIf="!isReadOnly" (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -52,7 +54,7 @@
 
 
         <div class="item-box-header">
-          <div cdkDragHandle class="drag-handle">
+          <div cdkDragHandle class="drag-handle" *ngIf="!isReadOnly">
             <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
@@ -67,8 +69,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
-            <a (click)="removeField(question)" class="delete"
+            <a *ngIf="!isReadOnly" (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a *ngIf="!isReadOnly" (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -89,7 +91,7 @@
       <div *ngIf="question.elementType==FormElementType.multiple_choice" class="item-box ">
 
         <div class="item-box-header">
-          <div cdkDragHandle class="drag-handle">
+          <div cdkDragHandle class="drag-handle" *ngIf="!isReadOnly">
             <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
@@ -104,8 +106,8 @@
             <app-mark-display [marks]="question.marks"></app-mark-display>
           </div>
           <div class="item-box-options">
-            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
-            <a (click)="removeField(question)" class="delete"
+            <a *ngIf="!isReadOnly" (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a *ngIf="!isReadOnly" (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>
@@ -127,7 +129,7 @@
       </div>
       <div *ngIf="question.elementType==FormElementType.paragraph" class="item-box ">
         <div class="item-box-header">
-          <div cdkDragHandle class="drag-handle">
+          <div cdkDragHandle class="drag-handle" *ngIf="!isReadOnly">
             <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
@@ -139,8 +141,8 @@
 
           </div>
           <div class="item-box-options">
-            <a (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
-            <a (click)="removeField(question)" class="delete"
+            <a *ngIf="!isReadOnly" (click)="onClickInside($event, question)"><i class="fas fa-pencil-alt"></i></a>
+            <a *ngIf="!isReadOnly" (click)="removeField(question)" class="delete"
               [ngClass]="question.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
               <i class="fas fa-trash-alt"></i>
             </a>

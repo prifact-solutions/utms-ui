@@ -2,7 +2,25 @@
   <div class="loader"></div>
   <div class="loading-text">Loading Question Paper</div>
 </div>
-<div *ngIf="!loading">
+<div *ngIf="!loading" [class.qp-readonly-mode]="isReadOnly">
+  <p *ngIf="isReadOnly" class="qp-readonly-note">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20px"
+      height="20px"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M12 15H12.01M12 12V9M4.98207 19H19.0179C20.5615 19 21.5233 17.3256 20.7455 15.9923L13.7276 3.96153C12.9558 2.63852 11.0442 2.63852 10.2724 3.96153L3.25452 15.9923C2.47675 17.3256 3.43849 19 4.98207 19Z"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span>This question paper is already active. Content cannot be modified.</span>
+  </p>
   <div class="qp-title-box1">
     <div class="left-header-section">
       <div class="back-nav">
@@ -29,7 +47,7 @@
         <span class="marks-txt">Total Grade:</span>
         <span class="marks-count">{{ total_marks }}</span>
       </div>
-      <button class="button primary" (click)="onSave()" [disabled]="isSubmitting">
+      <button *ngIf="!isReadOnly" class="button primary" (click)="onSave()" [disabled]="isSubmitting">
         <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
         <span class="button-loader-label">{{ isSubmitting ? 'Saving...' : 'Save question paper' }}</span>
       </button>
@@ -41,7 +59,7 @@
         <span class="marks-txt">Total Grade:</span>
         <span class="marks-count">{{ total_marks }}</span>
       </div>
-      <button class="button primary" (click)="onSave()" [disabled]="isSubmitting">
+      <button *ngIf="!isReadOnly" class="button primary" (click)="onSave()" [disabled]="isSubmitting">
         <span *ngIf="isSubmitting" class="button-loader" aria-hidden="true"></span>
         <span class="button-loader-label">{{ isSubmitting ? 'Saving...' : 'Save' }}</span>
       </button>
@@ -53,7 +71,7 @@
     class="main form-design-wrapper"
     [class.edit-prop-loaded]="editPropLoaded"
   >
-    <div class="right-panel">
+    <div class="right-panel" *ngIf="!isReadOnly">
       <div class="right-panel-heading">
         <h3>Question Elements</h3>
         <p>
@@ -99,6 +117,7 @@
         cdkDropList
         id="root-form-container"
         [cdkDropListData]="qpContext.schema.sections"
+        [cdkDropListDisabled]="isReadOnly"
         (cdkDropListDropped)="onDrop($event)"
         [cdkDropListConnectedTo]="containerids"
         [cdkDropListEnterPredicate]="canDrop.bind(this)"
@@ -112,6 +131,7 @@
         <app-section-design
           *ngFor="let item of qpContext.schema.sections"
           [item]="item"
+          [isReadOnly]="isReadOnly"
         ></app-section-design>
       </div>
     </div>

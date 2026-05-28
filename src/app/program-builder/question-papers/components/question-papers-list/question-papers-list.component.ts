@@ -71,9 +71,9 @@ export class QuestionPapersListComponent extends ComponentBase {
 
   loadOptionForQP(qp: QuestionPaper) {
     if (qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
-      qp.actions = ['Clone'];
+      qp.actions = ['View', 'Clone'];
     } else if (!qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
-      qp.actions = ['Mark as Draft', 'Clone', 'Rename', 'Delete'];
+      qp.actions = ['View', 'Mark as Draft', 'Clone', 'Rename', 'Delete'];
     } else if (qp.status == QuestionPaperStatus.DRAFT) {
       qp.actions = [
         'Design question paper',
@@ -88,6 +88,13 @@ export class QuestionPapersListComponent extends ComponentBase {
   dotMenuOptionSelected(clickedIndex: any, qp: QuestionPaper) {
     let action: string = qp.actions[clickedIndex];
     switch (action) {
+      case 'View': {
+        this.router.navigate(
+          [`/programs-builder/${this.programId}/question-papers/${qp.id}/design`],
+          { queryParams: { mode: 'view' } },
+        );
+        break;
+      }
       case 'Design question paper': {
         this.router.navigate([
           `/programs-builder/${this.programId}/question-papers/${qp.id}/design`,

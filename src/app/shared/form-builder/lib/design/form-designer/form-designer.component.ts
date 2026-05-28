@@ -36,6 +36,7 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   qpContext: QuestionPaperDesignContext;
   @Input() qpId: number;
   @Input() selectedQuestionTypes: FormElementType[] = [];
+  @Input() isReadOnly: boolean = false;
   FormElementType = FormElementType;
   next_containerid: number = 0
   @Output() back: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -119,6 +120,9 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   }
   
   onSave() {
+    if (this.isReadOnly) {
+      return;
+    }
     if (this.isSubmitting) {
       return;
     }
@@ -174,6 +178,10 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   }
 
   onBack() {
+    if (this.isReadOnly) {
+      this.back.emit(true);
+      return;
+    }
     if (JSON.stringify(this.qpContext.schema) == this.savedSchema) {
       this.back.emit(true);
       return;
@@ -224,10 +232,16 @@ export class FormDesignerComponent implements OnInit, OnDestroy {
   }
 
   canDrop(drag: CdkDrag<FormElementTransientSettings>, drop: CdkDropList) {
+    if (this.isReadOnly) {
+      return false;
+    }
     return this.formSvc.resolveDraggedElementType(drag) == FormElementType.section;
   }
 
   onDrop(event: CdkDragDrop<any[]>) {
+    if (this.isReadOnly) {
+      return;
+    }
     let droppedFieldType = event.previousContainer.data[event.previousIndex];
 
     //if the dropped field is another container, register a target

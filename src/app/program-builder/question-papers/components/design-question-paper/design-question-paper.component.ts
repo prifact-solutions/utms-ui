@@ -25,12 +25,14 @@ export class DesignQuestionPaperComponent extends ComponentBase {
     FormElementType.paragraph,
     FormElementType.section,
   ];
+  isReadOnly: boolean = false;
 
   ngOnInit() {
     this.renderer.addClass(document.body, 'menu-clicked');
     this.renderer.addClass(document.documentElement, 'qp-form-design-route');
     this.programId = this.route.snapshot.params['program_id'];
     this.qpId = this.route.snapshot.params['qp_id'];
+    this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
     this.loading = false;
   }
 

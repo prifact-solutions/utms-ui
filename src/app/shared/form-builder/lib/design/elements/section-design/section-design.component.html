@@ -1,9 +1,9 @@
 <!--section container field-->
-<div class="item-box section-box" cdkDrag [cdkDragData]="item" appTrackClicks
+<div class="item-box section-box" cdkDrag [cdkDragData]="item" [cdkDragDisabled]="isReadOnly" appTrackClicks
     [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
 
     <div class="item-box-header">
-        <div cdkDragHandle class="drag-handle">
+        <div cdkDragHandle class="drag-handle" *ngIf="!isReadOnly">
             <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
                 <path
                     d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
@@ -15,8 +15,8 @@
             {{item.title}}
         </div>
         <div class="item-box-options">
-            <a (click)="onClickInside($event)"><i class="fas fa-pencil-alt"></i></a>
-            <a (click)="removeField()" class="delete"
+            <a *ngIf="!isReadOnly" (click)="onClickInside($event)"><i class="fas fa-pencil-alt"></i></a>
+            <a *ngIf="!isReadOnly" (click)="removeField()" class="delete"
                 [ngClass]="item.settings.uniqueId === selected_item_id_in_design_mode? 'highlight' : ''">
                 <i class="fas fa-trash-alt"></i>
             </a>
@@ -31,7 +31,7 @@
     <div *ngIf='!item.settings.toggle' class="item-details">
         <p [innerHtml]="item.description.value"></p>
         <h3>Questions</h3>
-        <app-section-questions-design [item]='item'></app-section-questions-design>
+        <app-section-questions-design [item]='item' [isReadOnly]="isReadOnly"></app-section-questions-design>
     </div>
 </div>
 

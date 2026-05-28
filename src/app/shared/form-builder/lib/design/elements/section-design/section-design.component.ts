@@ -12,6 +12,7 @@ export class SectionDesignComponent implements OnInit {
 
   @Input()
   item: SectionElement
+  @Input() isReadOnly: boolean = false;
   selected_item_id_in_design_mode: string;
   showDelConfirm: boolean = false;
   confirmMessage: string;
@@ -23,6 +24,9 @@ export class SectionDesignComponent implements OnInit {
   }
 
   removeField() {
+    if (this.isReadOnly) {
+      return;
+    }
     let hasItems = this.item.questions.length > 0
     this.confirmMessage = "Are you sure you want to remove this section?"
     if (hasItems) {
@@ -56,6 +60,9 @@ export class SectionDesignComponent implements OnInit {
   }
 
   onClickInside(event: Event) {
+    if (this.isReadOnly) {
+      return;
+    }
     this.formSvc.setSelectedElement(this.item);
   }
 

@@ -15,6 +15,7 @@ export class SectionQuestionsDesignComponent implements OnInit {
 
   @Input()
   item: SectionElement
+  @Input() isReadOnly: boolean = false;
 
   containerids: Array<string> = []
   FormElementType = FormElementType
@@ -43,6 +44,9 @@ export class SectionQuestionsDesignComponent implements OnInit {
   }
 
   removeField(question: QuestionElement) {
+    if (this.isReadOnly) {
+      return;
+    }
     this.selectedQuestion = question;
     document.getElementById('form-design').style.overflowY = "hidden";
     this.showDelConfirm = true;
@@ -66,6 +70,9 @@ export class SectionQuestionsDesignComponent implements OnInit {
   }
 
   canDrop(drag: CdkDrag<FormElementTransientSettings | FormElement>, drop: CdkDropList) {
+    if (this.isReadOnly) {
+      return false;
+    }
     //Drop can occuer from type list or from other question containers
     let retVal: boolean = this.formSvc.resolveDraggedElementType(drag) != FormElementType.section;
 
@@ -77,6 +84,9 @@ export class SectionQuestionsDesignComponent implements OnInit {
   }
 
   onDrop(event: CdkDragDrop<FormElement[], FormElementTransientSettings[] | FormElement[]>) {
+    if (this.isReadOnly) {
+      return;
+    }
     if (event.previousContainer === event.container) {
       //sorting items within a question container
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -115,6 +125,9 @@ export class SectionQuestionsDesignComponent implements OnInit {
 
 
   onClickInside(event: Event, question: QuestionElement) {
+    if (this.isReadOnly) {
+      return;
+    }
     this.formSvc.setSelectedElement(question);
   }
 

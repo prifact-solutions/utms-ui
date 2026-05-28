@@ -1,5 +1,28 @@
 @import '../../formstyle';
 
+.qp-readonly-note {
+	width: 100%;
+	margin: 0;
+	padding: 14px 16px 14px 18px;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #000;
+	letter-spacing: 0.01em;
+	background: #fffac7;
+	border-top: 1px solid rgb(227, 218, 119);
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 23;
+	svg + span {
+		max-width: calc(100% - 30px);
+	}
+}
+
 .qp-title-box1 {
 	border-top: 1px solid rgba(0, 0, 0, 0.12);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -53,6 +76,20 @@
 	}
 }
 
+.qp-readonly-mode {
+	.qp-title-box1 {
+		top: 49px;
+	}
+	.form-design-wrapper.main {
+		padding-top: 121px;
+		@media (max-width:1100px) {
+			padding-top: 160px;
+		}
+	}
+	.right-panel {
+		top: 49px;
+	}
+}
 
 .edit-draft-actions {
     margin-top: 16px;
