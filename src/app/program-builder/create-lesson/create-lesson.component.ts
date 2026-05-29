@@ -12,6 +12,7 @@ interface UploadFile {
   progress: number;
   uploaded: boolean;
   error: string | null;
+  videoMinutes?: number;
 }
 
 @Component({
@@ -65,10 +66,10 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
     });
   }
 
-  onFileSelected(event: Event): void {
+  async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      Array.from(input.files).forEach(file => {
+      for (const file of Array.from(input.files)) {
         const uploadFile: UploadFile = {
           file,
           progress: 0,
@@ -76,14 +77,51 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
           error: null
         };
         this.filesToUpload.push(uploadFile);
-      });
+
+        if (file.type.startsWith('video/') && !this.lessonForm.get('duration')?.dirty) {
+          try {
+            const minutes = await this.getVideoDurationMinutes(file);
+            uploadFile.videoMinutes = minutes;
+            this.bumpDuration(minutes);
+          } catch {
+            console.log('Could not read video duration');
+          }
+        }
+      }
     }
     // Reset input
     if (input) input.value = '';
   }
 
   removeFile(index: number): void {
+    const item = this.filesToUpload[index];
+    if (item.videoMinutes && !this.lessonForm.get('duration')?.dirty) {
+      this.bumpDuration(-item.videoMinutes);
+    }
     this.filesToUpload.splice(index, 1);
+  }
+
+  private getVideoDurationMinutes(file: File): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      const url = URL.createObjectURL(file);
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(url);
+        resolve(Math.max(0, Math.ceil(video.duration / 60)));
+      };
+      video.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not read video duration'));
+      };
+      video.src = url;
+    });
+  }
+
+  private bumpDuration(deltaMinutes: number): void {
+    const ctrl = this.lessonForm.get('duration');
+    const current = Number(ctrl?.value) || 0;
+    ctrl?.setValue(Math.max(0, current + deltaMinutes), { emitEvent: false });
   }
 
   onSubmit(): void {
