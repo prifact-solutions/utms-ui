@@ -35,6 +35,8 @@ export class ProgramsService {
   private httpInProgress = false;
   private cacheLoaded = false;
 
+  private categoriesSnapshot: Category[] = [];
+
   public getAllCategories() {
     if (this.cacheLoaded) {
       return this.categoriesCache$;
@@ -48,11 +50,25 @@ export class ProgramsService {
 
         .pipe(
           tap((categories) => {
+            this.categoriesSnapshot = categories;
             this.categoriesCache$.next(categories);
             this.cacheLoaded = true;
             this.httpInProgress = false;
           }));
     }
+  }
+
+  public createCategory(name: string) {
+    return this.http
+      .post<Category>(`${AppSettings.apiUrl}/categories/`, { name })
+      .pipe(
+        tap((category) => {
+          if (this.cacheLoaded) {
+            this.categoriesSnapshot = [...this.categoriesSnapshot, category];
+            this.categoriesCache$.next(this.categoriesSnapshot);
+          }
+        }),
+      );
   }
 
   public getAllPrograms() {

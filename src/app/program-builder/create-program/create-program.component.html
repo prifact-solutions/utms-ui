@@ -105,15 +105,20 @@
           </div>
           <!-- Categories -->
           <div class="form-group mb-5">
-            <label style="margin-bottom: 12px; display: block;">Categories<span class="required-indicator">*</span></label>
-
-          </div>
-          <div class="filter-options">
-            <label [class.selected]="isCategoryChecked(category.id)" *ngFor="let category of categories">
-              <input type="checkbox" [checked]="isCategoryChecked(category.id)"
-                (change)="onCategoryChange(category.id, $event)" style="display: none;">
-              <span>{{ category.name }}</span>
-            </label>
+            <div class="categories-label-row">
+              <label>Categories<span class="required-indicator">*</span></label>
+              <button type="button" class="btn-black-small" (click)="openAddCategoryModal()"
+                [disabled]="isSubmitting" aria-label="Add category" title="Add category">
+                +
+              </button>
+            </div>
+            <div class="filter-options">
+              <label [class.selected]="isCategoryChecked(category.id)" *ngFor="let category of categories">
+                <input type="checkbox" [checked]="isCategoryChecked(category.id)"
+                  (change)="onCategoryChange(category.id, $event)" style="display: none;">
+                <span>{{ category.name }}</span>
+              </label>
+            </div>
           </div>
           <div class="button-group">
             <button type="button" class="button" (click)="cancel()" [disabled]="isSubmitting">Cancel</button>
@@ -125,5 +130,42 @@
         </form>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal-overlay" *ngIf="showAddCategoryModal">
+  <div class="modal-content-wrapper shadow-lg add-category-modal">
+    <div class="modal-header">
+      <h4>Add Category</h4>
+      <button type="button" class="modal-close" (click)="closeAddCategoryModal()" [disabled]="isSavingCategory">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" fill="none" />
+          <path d="M7 17L16.8995 7.10051" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M7 7.00001L16.8995 16.8995" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="categoryModalError" class="alert-error-compact mb-3">
+        {{ categoryModalError }}
+      </div>
+      <div class="form-group">
+        <label for="categoryName">Category name<span class="required-indicator">*</span></label>
+        <input id="categoryName" type="text" [(ngModel)]="newCategoryName" [ngModelOptions]="{ standalone: true }"
+          placeholder="e.g. Web Development" [disabled]="isSavingCategory"
+          (keyup.enter)="saveCategory()">
+      </div>
+      <div class="button-group mt-4">
+        <button type="button" class="button" (click)="closeAddCategoryModal()" [disabled]="isSavingCategory">
+          Cancel
+        </button>
+        <button type="button" class="button primary" (click)="saveCategory()"
+          [disabled]="isSavingCategory || !newCategoryName.trim()">
+          <span *ngIf="isSavingCategory" class="button-loader" aria-hidden="true"></span>
+          <span class="button-loader-label">{{ isSavingCategory ? 'Saving...' : 'Save' }}</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

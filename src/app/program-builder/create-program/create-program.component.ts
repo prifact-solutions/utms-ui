@@ -27,6 +27,10 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   videoFile: File | null = null;
 
   categories: Array<Category> = [];
+  showAddCategoryModal = false;
+  newCategoryName = '';
+  isSavingCategory = false;
+  categoryModalError: string | null = null;
   @Input() inModal = false;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
@@ -43,7 +47,9 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.programsService.getAllCategories().subscribe((categories) => {
-      this.categories = categories;
+      this.categories = categories.sort((a, b) =>
+          a.name.localeCompare(b.name),
+        );;
     });
   }
 
@@ -78,6 +84,60 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   isCategoryChecked(categoryValue: number): boolean {
     const categories = this.programForm.get('categories')?.value || [];
     return categories.includes(categoryValue);
+  }
+
+  openAddCategoryModal(): void {
+    this.newCategoryName = '';
+    this.categoryModalError = null;
+    this.showAddCategoryModal = true;
+  }
+
+  closeAddCategoryModal(): void {
+    if (this.isSavingCategory) {
+      return;
+    }
+    this.showAddCategoryModal = false;
+  }
+
+  private categoryNameExists(name: string): boolean {
+    const normalized = name.trim().toLowerCase();
+    return this.categories.some(
+      (category) => category.name.trim().toLowerCase() === normalized,
+    );
+  }
+
+  saveCategory(): void {
+    const name = this.newCategoryName.trim();
+    if (!name) {
+      this.categoryModalError = 'Category name is required.';
+      return;
+    }
+
+    if (this.categoryNameExists(name)) {
+      this.categoryModalError = 'A category with this name already exists.';
+      return;
+    }
+
+    this.isSavingCategory = true;
+    this.categoryModalError = null;
+
+    const subscription = this.programsService.createCategory(name).subscribe({
+      next: (category) => {
+        const categoriesArray = (this.programForm.get('categories')?.value || []).slice();
+        if (!categoriesArray.includes(category.id)) {
+          categoriesArray.push(category.id);
+          this.programForm.patchValue({ categories: categoriesArray });
+        }
+        this.isSavingCategory = false;
+        this.showAddCategoryModal = false;
+      },
+      error: (error) => {
+        this.categoryModalError =
+          error.error?.detail || 'Failed to create category. Please try again.';
+        this.isSavingCategory = false;
+      },
+    });
+    this.registerSubscription(subscription);
   }
 
   onThumbnailSelected(event: any): void {

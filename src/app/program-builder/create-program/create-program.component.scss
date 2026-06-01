@@ -45,6 +45,91 @@
   min-width: 124px;
 }
 
+.categories-label-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  label {
+    margin-bottom: 0;
+  }
+
+  .btn-black-small {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    font-weight: 300;
+    transition: all 0.2s;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #333;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.media-upload-row {
+  .upload-container {
+    display: flex;
+    align-items: center;
+
+    .upload-actions {
+      width: 100%;
+      padding: 8px 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.875rem;
+    }
+  }
+
+  .btn-black-small {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    font-weight: 300;
+    transition: all 0.2s;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #333;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.add-category-modal {
+  max-width: 450px;
+}
+
 .spinner-btn {
   display: inline-block;
   width: 14px;
