@@ -1,4 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -14,7 +27,7 @@ import { ProgramsService } from 'src/app/programs/services/programs.service';
   styleUrls: ['./create-program.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CreateProgramComponent extends ComponentBase implements OnInit {
+export class CreateProgramComponent extends ComponentBase implements OnInit, OnDestroy {
   programForm: FormGroup;
   isSubmitting = false;
   successMessage: string | null = null;
@@ -31,6 +44,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   newCategoryName = '';
   isSavingCategory = false;
   categoryModalError: string | null = null;
+  @ViewChild('addCategoryModal') addCategoryModalRef?: ElementRef<HTMLElement>;
   @Input() inModal = false;
   @Output() saved = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
@@ -38,10 +52,19 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
   constructor(
     private fb: FormBuilder,
     private programsService: ProgramsService,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     super();
     this.programForm = this.fb.group({});
+  }
+
+  override ngOnDestroy(): void {
+    const modalEl = this.addCategoryModalRef?.nativeElement;
+    if (modalEl?.parentNode === this.document.body) {
+      this.renderer.removeChild(this.document.body, modalEl);
+    }
   }
 
   ngOnInit(): void {
@@ -90,6 +113,14 @@ export class CreateProgramComponent extends ComponentBase implements OnInit {
     this.newCategoryName = '';
     this.categoryModalError = null;
     this.showAddCategoryModal = true;
+    setTimeout(() => this.attachCategoryModalToBody());
+  }
+
+  private attachCategoryModalToBody(): void {
+    const modalEl = this.addCategoryModalRef?.nativeElement;
+    if (modalEl && modalEl.parentElement !== this.document.body) {
+      this.renderer.appendChild(this.document.body, modalEl);
+    }
   }
 
   closeAddCategoryModal(): void {

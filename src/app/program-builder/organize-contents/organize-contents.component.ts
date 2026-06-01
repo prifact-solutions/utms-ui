@@ -194,6 +194,13 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     this.errorMessage = null;
     this.successMessage = null;
 
+    if (this.organizedModules.some((module) => module.contents.length == 0)) {
+      this.errorMessage =
+        'This course contains modules without any content. Please remove them to proceed.';
+      this.isSaving = false;
+      return;
+    }
+
     // Collect all contents from all modules
     const allContents = this.organizedModules.flatMap(mg => mg.contents);
 

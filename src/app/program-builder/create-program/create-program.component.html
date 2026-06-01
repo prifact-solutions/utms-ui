@@ -134,7 +134,7 @@
 </div>
 
 <!-- Add Category Modal -->
-<div class="modal-overlay" *ngIf="showAddCategoryModal">
+<div class="modal-overlay add-category-overlay" *ngIf="showAddCategoryModal" #addCategoryModal>
   <div class="modal-content-wrapper shadow-lg add-category-modal">
     <div class="modal-header">
       <h4>Add Category</h4>
@@ -156,7 +156,7 @@
           placeholder="e.g. Web Development" [disabled]="isSavingCategory"
           (keyup.enter)="saveCategory()">
       </div>
-      <div class="button-group mt-4">
+      <div class="button-group">
         <button type="button" class="button" (click)="closeAddCategoryModal()" [disabled]="isSavingCategory">
           Cancel
         </button>
