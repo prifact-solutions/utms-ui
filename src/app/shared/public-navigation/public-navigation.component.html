@@ -12,7 +12,7 @@
     </nav>
 
 
-    <div>
+    <div *ngIf="allowSignIn">
         <!-- <a class="button text-only">Need Help?</a> -->
         <!-- <a class="button primary black" routerLink="/login">Sign in</a> -->
         <a class="button primary black" (click)="signIn($event)">Sign in</a>

@@ -22,6 +22,10 @@ export class PublicNavigationComponent {
     return this.tenantInfo.appLogo;
   }
 
+  get allowSignIn(): boolean {
+    return this.tenantInfo.allowSignIn;
+  }
+
   public signIn($event: any) {
     this.authService.keycloakLogin();
   }
