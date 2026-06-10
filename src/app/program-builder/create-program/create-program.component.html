@@ -117,7 +117,10 @@
                       Select JPG/PNG
                     </div>
                   </div>
-                  <div *ngIf="thumbnailPreview" class="media-replace-actions">
+                  <div
+                    *ngIf="thumbnailPreview"
+                    style="display: flex; align-items: center; gap: 8px"
+                  >
                     <button
                       type="button"
                       class="btn-black-small"
@@ -190,7 +193,10 @@
                       MP4 or WebM (AVI/WMV not supported)
                     </div>
                   </div>
-                  <div *ngIf="videoPreviewUrl" class="media-replace-actions">
+                  <div
+                    *ngIf="videoPreviewUrl"
+                    style="display: flex; align-items: center; gap: 8px"
+                  >
                     <button
                       type="button"
                       class="btn-black-small"
