@@ -61,6 +61,12 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
   }
 
   override ngOnDestroy(): void {
+    if (this.thumbnailPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.thumbnailPreview);
+    }
+    if (this.videoPreviewUrl?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+    }
     const modalEl = this.addCategoryModalRef?.nativeElement;
     if (modalEl?.parentNode === this.document.body) {
       this.renderer.removeChild(this.document.body, modalEl);
@@ -175,11 +181,10 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
     const file: File = event.target.files?.[0];
     if (file) {
       this.thumbnailFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.thumbnailPreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      if (this.thumbnailPreview?.startsWith('blob:')) {
+        URL.revokeObjectURL(this.thumbnailPreview);
+      }
+      this.thumbnailPreview = URL.createObjectURL(file);
     }
   }
 
@@ -197,7 +202,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
     }
     this.errorMessage = null;
     this.videoFile = file;
-    if (this.videoPreviewUrl) {
+    if (this.videoPreviewUrl?.startsWith('blob:')) {
       URL.revokeObjectURL(this.videoPreviewUrl);
     }
     this.videoPreviewUrl = URL.createObjectURL(file);
@@ -302,11 +307,14 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
 
   resetForm(): void {
     this.programForm.reset({ categories: [], allow_enrollment: true });
-    this.thumbnailPreview = null;
-    this.thumbnailFile = null;
-    if (this.videoPreviewUrl) {
+    if (this.thumbnailPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.thumbnailPreview);
+    }
+    if (this.videoPreviewUrl?.startsWith('blob:')) {
       URL.revokeObjectURL(this.videoPreviewUrl);
     }
+    this.thumbnailPreview = null;
+    this.thumbnailFile = null;
     this.videoPreviewUrl = null;
     this.videoFile = null;
     this.successMessage = null;

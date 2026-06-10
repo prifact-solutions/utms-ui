@@ -67,15 +67,72 @@
             <!-- Thumbnail Image Upload -->
             <div class="form-group flex-1">
               <label>Thumbnail Image</label>
-              <div class="upload-container ">
-                <div class="upload-actions">
-                  <input id="thumbnail" type="file" accept="image/*" (change)="onThumbnailSelected($event)"
-                    style="display: none;" #thumbInput>
-                  <button type="button" class="btn-black-small" (click)="thumbInput.click()" [disabled]="isSubmitting">
-                    +
-                  </button>
-                  <p class="" *ngIf="thumbnailFile">{{ thumbnailFile.name }}</p>
-                  <p class="text-muted small m-0" *ngIf="!thumbnailFile">Select JPG/PNG</p>
+              <div class="upload-container">
+                <div
+                  class="upload-actions"
+                  style="flex-direction: column; align-items: flex-start"
+                >
+                  <input
+                    id="thumbnail"
+                    type="file"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    style="display: none"
+                    #thumbInput
+                  />
+                  <div
+                    class="image-preview-box"
+                    (click)="!thumbnailPreview && thumbInput.click()"
+                    [class.clickable]="!thumbnailPreview"
+                  >
+                    <img
+                      *ngIf="thumbnailPreview"
+                      [src]="thumbnailPreview"
+                      alt="Thumbnail preview"
+                    />
+                    <div class="placeholder" *ngIf="!thumbnailPreview">
+                      <span class="plus-icon">
+                        <svg
+                          width="64px"
+                          height="64px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect width="24" height="24"></rect>
+                          <path
+                            d="M12 6V18"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M6 12H18"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </svg>
+                      </span>
+                      Select JPG/PNG
+                    </div>
+                  </div>
+                  <div *ngIf="thumbnailPreview" class="media-replace-actions">
+                    <button
+                      type="button"
+                      class="btn-black-small"
+                      (click)="thumbInput.click()"
+                      [disabled]="isSubmitting"
+                      aria-label="Replace thumbnail"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 20 20" fill="none">
+                        <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.8 12.963L2 18l4.8-.63L18.11 6.58a2.612 2.612 0 00-3.601-3.785L3.8 12.963z"/>
+                      </svg>
+                    </button>
+                    <p class="small text-truncate m-0" *ngIf="thumbnailFile">
+                      {{ thumbnailFile.name }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -84,14 +141,71 @@
             <div class="form-group flex-1">
               <label>Preview Video</label>
               <div class="upload-container">
-                <div class="upload-actions">
-                  <input id="previewVideo" type="file" accept="video/*" (change)="onVideoSelected($event)"
-                    style="display: none;" #videoInput>
-                  <button type="button" class="btn-black-small" (click)="videoInput.click()" [disabled]="isSubmitting">
-                    +
-                  </button>
-                  <p class="" *ngIf="videoFile">{{ videoFile.name }}</p>
-                  <p class="text-muted small m-0" *ngIf="!videoFile">MP4 or WebM (AVI/WMV not supported)</p>
+                <div
+                  class="upload-actions"
+                  style="flex-direction: column; align-items: flex-start"
+                >
+                  <input
+                    id="previewVideo"
+                    type="file"
+                    accept="video/*"
+                    (change)="onVideoSelected($event)"
+                    style="display: none"
+                    #videoInput
+                  />
+                  <div
+                    class="video-preview-box"
+                    (click)="!videoPreviewUrl && videoInput.click()"
+                    [class.clickable]="!videoPreviewUrl"
+                  >
+                    <video
+                      *ngIf="videoPreviewUrl"
+                      controls
+                      [src]="videoPreviewUrl"
+                    ></video>
+                    <div class="placeholder" *ngIf="!videoPreviewUrl">
+                      <span class="plus-icon">
+                        <svg
+                          width="64px"
+                          height="64px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect width="24" height="24"></rect>
+                          <path
+                            d="M12 6V18"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M6 12H18"
+                            stroke="#000000"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </svg>
+                      </span>
+                      MP4 or WebM (AVI/WMV not supported)
+                    </div>
+                  </div>
+                  <div *ngIf="videoPreviewUrl" class="media-replace-actions">
+                    <button
+                      type="button"
+                      class="btn-black-small"
+                      (click)="videoInput.click()"
+                      [disabled]="isSubmitting"
+                      aria-label="Replace preview video"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 20 20" fill="none">
+                        <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.8 12.963L2 18l4.8-.63L18.11 6.58a2.612 2.612 0 00-3.601-3.785L3.8 12.963z"/>
+                      </svg>
+                    </button>
+                    <p class="small text-truncate m-0" *ngIf="videoFile">
+                      {{ videoFile.name }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

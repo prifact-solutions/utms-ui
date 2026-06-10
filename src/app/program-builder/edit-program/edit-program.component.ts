@@ -7,6 +7,7 @@ import { ComponentBase } from 'src/app/common/componentbase';
 import { Utils } from 'src/app/common/utils';
 import { Category, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { ProgramFeaturedMediaComponent } from 'src/app/shared/program-featured-media/program-featured-media.component';
 
 @Component({
   selector: 'app-edit-program',
@@ -78,12 +79,44 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       allow_enrollment: [this.program.allow_enrollment ?? true]
     });
 
-    if (this.program.thumbnail) {
-      this.thumbnailPreview = this.program.thumbnail;
+    this.loadExistingMediaPreviews();
+  }
+
+  private loadExistingMediaPreviews(): void {
+    if (!this.program) {
+      return;
     }
 
-    if (this.program.preview_video) {
-      this.videoPreviewUrl = this.program.preview_video;
+    if (!this.thumbnailFile) {
+      if (this.program.thumbnail) {
+        const thumbnailSub = this.programsService
+          .getProgramThumbnailViewUrl(this.programId)
+          .subscribe((res) => {
+            this.thumbnailPreview = res.file_url;
+          });
+        this.registerSubscription(thumbnailSub);
+      } else {
+        if (this.thumbnailPreview?.startsWith('blob:')) {
+          URL.revokeObjectURL(this.thumbnailPreview);
+        }
+        this.thumbnailPreview = null;
+      }
+    }
+
+    if (!this.videoFile) {
+      if (this.program.preview_video) {
+        const videoSub = this.programsService
+          .getProgramVideoViewUrl(this.programId)
+          .subscribe((res) => {
+            this.videoPreviewUrl = res.file_url;
+          });
+        this.registerSubscription(videoSub);
+      } else {
+        if (this.videoPreviewUrl?.startsWith('blob:')) {
+          URL.revokeObjectURL(this.videoPreviewUrl);
+        }
+        this.videoPreviewUrl = null;
+      }
     }
   }
 
@@ -113,11 +146,10 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     const file: File = event.target.files?.[0];
     if (file) {
       this.thumbnailFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.thumbnailPreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      if (this.thumbnailPreview?.startsWith('blob:')) {
+        URL.revokeObjectURL(this.thumbnailPreview);
+      }
+      this.thumbnailPreview = URL.createObjectURL(file);
     }
   }
 
@@ -195,21 +227,42 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
       allow_enrollment: formValue.allow_enrollment
     };
 
+    const hadMediaUpload = !!(this.thumbnailFile || this.videoFile);
+
     const subscription = this.programsService.updateProgram(this.programId, fd).pipe(
-      switchMap(() => this.uploadProgramMedia())
+      switchMap(() => this.uploadProgramMedia()),
+      switchMap(() => this.programsService.getProgramById(this.programId)),
     ).subscribe({
-      next: () => {
+      next: (updatedProgram) => {
         this.successMessage = 'Program updated successfully!';
         this.isSubmitting = false;
-        this.program.title = formValue.title;
-        this.program.description = formValue.description;
-        this.program.duration = parseFloat(formValue.duration);
-        this.program.difficulty = formValue.difficulty;
-        this.program.video_hours = formValue.video_hours;
-        this.program.categories = categories;
-        this.program.allow_enrollment = formValue.allow_enrollment;
-        this.saved.emit();
 
+        if (this.program) {
+          this.program.title = updatedProgram.title;
+          this.program.description = updatedProgram.description;
+          this.program.duration = updatedProgram.duration;
+          this.program.difficulty = updatedProgram.difficulty;
+          this.program.video_hours = updatedProgram.video_hours;
+          this.program.categories = updatedProgram.categories;
+          this.program.allow_enrollment = updatedProgram.allow_enrollment;
+          this.program.thumbnail = updatedProgram.thumbnail;
+          this.program.preview_video = updatedProgram.preview_video;
+        }
+
+        if (hadMediaUpload) {
+          ProgramFeaturedMediaComponent.clearCacheForProgram(this.programId);
+          this.thumbnailFile = null;
+          this.videoFile = null;
+          if (this.thumbnailPreview?.startsWith('blob:')) {
+            URL.revokeObjectURL(this.thumbnailPreview);
+          }
+          if (this.videoPreviewUrl?.startsWith('blob:')) {
+            URL.revokeObjectURL(this.videoPreviewUrl);
+          }
+          this.loadExistingMediaPreviews();
+        }
+
+        this.saved.emit();
       },
       error: (error) => {
         console.error('Error updating program:', error);
@@ -234,9 +287,15 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   }
 
   resetForm(): void {
-    this.initializeForm();
+    if (this.thumbnailPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.thumbnailPreview);
+    }
+    if (this.videoPreviewUrl?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+    }
     this.thumbnailFile = null;
     this.videoFile = null;
+    this.initializeForm();
     this.successMessage = null;
     this.errorMessage = null;
   }

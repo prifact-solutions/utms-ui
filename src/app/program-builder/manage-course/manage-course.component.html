@@ -474,53 +474,6 @@
         </div>
         <div class="c-media">
           <div class="media-item">
-            <label>Preview Video</label>
-            <div
-              class="video-preview-box"
-              (click)="!program.preview_video && openEditModal()"
-              [class.clickable]="!program.preview_video"
-            >
-              <app-program-featured-media
-                [program]="program"
-                media_type="VIDEO"
-                *ngIf="program.preview_video"
-              ></app-program-featured-media>
-              <div class="placeholder" *ngIf="!program.preview_video">
-                <span class="plus-icon"
-                  ><svg
-                    width="64px"
-                    height="64px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                      <rect width="24" height="24"></rect>
-                      <path
-                        d="M12 6V18"
-                        stroke="#000000"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                      <path
-                        d="M6 12H18"
-                        stroke="#000000"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                    </g></svg
-                ></span>
-                No preview video uploaded
-              </div>
-            </div>
-          </div>
-          <div class="media-item">
             <label>Thumbnail / Featured Image</label>
             <div
               class="image-preview-box"
@@ -564,6 +517,53 @@
                     </g></svg
                 ></span>
                 No image uploaded
+              </div>
+            </div>
+          </div>
+                    <div class="media-item">
+            <label>Preview Video</label>
+            <div
+              class="video-preview-box"
+              (click)="!program.preview_video && openEditModal()"
+              [class.clickable]="!program.preview_video"
+            >
+              <app-program-featured-media
+                [program]="program"
+                media_type="VIDEO"
+                *ngIf="program.preview_video"
+              ></app-program-featured-media>
+              <div class="placeholder" *ngIf="!program.preview_video">
+                <span class="plus-icon"
+                  ><svg
+                    width="64px"
+                    height="64px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <rect width="24" height="24"></rect>
+                      <path
+                        d="M12 6V18"
+                        stroke="#000000"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M6 12H18"
+                        stroke="#000000"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </g></svg
+                ></span>
+                No preview video uploaded
               </div>
             </div>
           </div>

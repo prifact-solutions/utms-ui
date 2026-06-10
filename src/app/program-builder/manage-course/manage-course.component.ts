@@ -16,6 +16,7 @@ import {
   ModuleContent,
 } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { ProgramFeaturedMediaComponent } from 'src/app/shared/program-featured-media/program-featured-media.component';
 import { switchMap } from 'rxjs';
 
 @Component({
@@ -187,6 +188,8 @@ export class ManageCourseComponent
 
   onProgramUpdated(): void {
     this.showEditModal = false;
+    ProgramFeaturedMediaComponent.clearCacheForProgram(this.programId);
+    this.loadProgram();
   }
 
   goBack(): void {

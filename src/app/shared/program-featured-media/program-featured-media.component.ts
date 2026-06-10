@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 
 export interface ProgramLike {
@@ -18,7 +18,7 @@ interface CachedMediaUrl {
   styleUrls: ['./program-featured-media.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ProgramFeaturedMediaComponent {
+export class ProgramFeaturedMediaComponent implements OnChanges {
 
   private static cache: Map<string, CachedMediaUrl> = new Map();
   private static readonly fallbackCacheTtlMs = 5 * 60 * 1000;
@@ -32,6 +32,14 @@ export class ProgramFeaturedMediaComponent {
 
   ngOnInit(): void {
     this.loadMediaUrl();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['program'] && !changes['program'].firstChange) {
+      this.hasRetriedAfterError = false;
+      this.url = '';
+      this.loadMediaUrl();
+    }
   }
 
   get showFallbackThumbnail(): boolean {
@@ -89,6 +97,11 @@ export class ProgramFeaturedMediaComponent {
 
   private getCacheKey(): string {
     return `${this.program?.id}_${this.media_type}`;
+  }
+
+  static clearCacheForProgram(programId: number): void {
+    ProgramFeaturedMediaComponent.cache.delete(`${programId}_IMAGE`);
+    ProgramFeaturedMediaComponent.cache.delete(`${programId}_VIDEO`);
   }
 
   private getExpiryFromSignedUrl(fileUrl: string): number {
