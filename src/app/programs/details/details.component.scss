@@ -34,6 +34,7 @@
 
     &.no-video {
       cursor: default;
+      display: none;
     }
 
     img {
@@ -155,6 +156,9 @@
     gap: 48px;
     justify-content: space-between;
     align-items: flex-start;
+  }
+  .program-info.no-preview-video {
+    padding-top: 20px;
   }
 
   .syllabus-container {

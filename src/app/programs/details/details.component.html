@@ -116,7 +116,7 @@
                     *ngIf="showVideo"></app-program-featured-media>
             </div>
 
-            <div class="program-info">
+            <div class="program-info" [class.no-preview-video]="!catalog.preview_video">
                 <div>
                     <div class="course-meta">
                         <span>
