@@ -8,4 +8,5 @@ export interface UserModel {
     //is_staff: boolean;
     is_active: boolean;
     role: UserRoleName | null;
+    last_login: string | null;
 }

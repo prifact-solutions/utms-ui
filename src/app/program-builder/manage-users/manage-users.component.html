@@ -67,6 +67,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <!-- <th>Status</th> -->
+                <th>Last Login</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -102,6 +103,13 @@
                     >{{ getStatusLabel(user) }}</span
                   >
                 </td> -->
+                <td>
+                  {{
+                    user.last_login
+                      ? (user.last_login | date: "dd MMM yyyy")
+                      : "Never"
+                  }}
+                </td>
                 <td>
                   <div class="table-actions">
                     <button
