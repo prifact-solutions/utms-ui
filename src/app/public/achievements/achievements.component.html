@@ -3,73 +3,105 @@
         <div class="dashboard-banner">
             <div class="user-details">
                 <h1>My <strong>Achievements</strong></h1>
-                <p>Celebrate your milestones and track your badges earned through learning.</p>
+                <p>Track your learning milestones here.</p>
             </div>
         </div>
 
         <div class="container achievements-content">
             <section class="section">
-                <div class="stats-overview">
-                    <div class="stat-item">
-                        <span class="stat-value">12</span>
-                        <span class="stat-label">Badges Earned</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">5</span>
-                        <span class="stat-label">Courses Completed</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">85%</span>
-                        <span class="stat-label">Avg. Quiz Score</span>
+                <div class="stats-overview" *ngIf="loading">
+                    <div class="stat-item" *ngFor="let _ of [1, 2, 3, 4]">
+                        <span class="stat-value skeleton-stat">&nbsp;</span>
+                        <span class="stat-label skeleton-stat-label">&nbsp;</span>
                     </div>
                 </div>
 
-                <div class="achievements-section">
-                    <h2>Recent Badges</h2>
-                    <div class="badges-grid">
-                        <div class="badge-card">
-                            <div class="badge-icon gold">
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
-                            </div>
-                            <h3>Quick Learner</h3>
-                            <p>Completed your first module within 24 hours.</p>
-                        </div>
+                <div class="load-error" *ngIf="!loading && loadError">
+                    Could not load achievements. Please try again later.
+                </div>
 
-                        <div class="badge-card">
-                            <div class="badge-icon silver">
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                                    <path d="M4 22h16"></path>
-                                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                                </svg>
-                            </div>
-                            <h3>Top Performer</h3>
-                            <p>Scored 100% on the Project Management final exam.</p>
+                <ng-container *ngIf="!loading && !loadError">
+                    <div class="stats-overview">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.badges_earned }}</span>
+                            <span class="stat-label">Badges Earned</span>
                         </div>
-
-                        <div class="badge-card locked">
-                            <div class="badge-icon grey">
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                            </div>
-                            <h3>Knowledge Master</h3>
-                            <p>Earned by completing 10 different courses.</p>
-                            <span class="progress-info">Progress: 5/10</span>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.courses_completed }}</span>
+                            <span class="stat-label">Courses Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stats.estimated_hours | number : '1.0-1' }}</span>
+                            <span class="stat-label">Estimated Learning Hours</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">
+                                {{ stats.avg_exam_score_pct != null ? (stats.avg_exam_score_pct | number : '1.0-0') + '%' : '—' }}
+                            </span>
+                            <span class="stat-label">Avg. Quiz Score</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="under-construction-banner">
-                    <p>More detailed analytics and certificate downloads are coming soon!</p>
-                </div>
+                    <div class="achievements-section">
+                        <h2>Badges</h2>
+                        <div class="badges-grid" *ngIf="badges.length > 0">
+                            <div class="badge-card" *ngFor="let badge of badges" [class.locked]="!badge.earned" [class.earned]="badge.earned">
+                                <div class="badge-icon-wrap">
+                                    <div class="badge-icon" [ngClass]="badge.tone">
+                                        <svg *ngIf="badge.earned" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="8" r="7"></circle>
+                                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                        </svg>
+                                        <svg *ngIf="!badge.earned" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="badge-check" *ngIf="badge.earned" aria-hidden="true">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <h3>{{ badge.title }}</h3>
+                                <p>{{ badge.description }}</p>
+                                <span class="progress-info" *ngIf="!badge.earned">
+                                    Progress: {{ badge.progress }}/{{ badge.target }}
+                                </span>
+                                <span class="earned-badge" *ngIf="badge.earned">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Earned
+                                </span>
+                            </div>
+                        </div>
+                        <p class="empty-state" *ngIf="badges.length === 0">No badges available yet.</p>
+                    </div>
+
+                    <!-- <div class="achievements-section">
+                        <h2>Course Progress</h2>
+                        <div class="courses-list" *ngIf="courses.length > 0">
+                            <button type="button" class="course-progress-card" *ngFor="let course of courses" (click)="openCourse(course)">
+                                <div class="course-progress-main">
+                                    <strong class="course-title">{{ course.title }}</strong>
+                                    <span class="course-status" [ngClass]="course.status === 'COMPLETED' ? 'completed' : 'in-progress'">
+                                        {{ getStatusLabel(course.status) }}
+                                    </span>
+                                </div>
+                                <div class="course-progress-meta">
+                                    <div class="progress-bar-track">
+                                        <div class="progress-bar-fill" [style.width.%]="course.completion_pct"></div>
+                                    </div>
+                                    <span class="progress-pct">{{ course.completion_pct | number : '1.0-0' }}%</span>
+                                </div>
+                            </button>
+                        </div>
+                        <p class="empty-state" *ngIf="courses.length === 0">
+                            Enroll in a course to start tracking progress.
+                        </p>
+                    </div> -->
+                </ng-container>
             </section>
         </div>
     </div>
