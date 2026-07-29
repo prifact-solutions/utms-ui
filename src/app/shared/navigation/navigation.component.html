@@ -162,7 +162,7 @@
       </svg>
       <span class="nav-tooltip">Build Course</span>
     </a>
-    <a data-title="Manage Users" routerLink="/manage-users" routerLinkActive="active"
+    <a *ngIf="isAdmin" data-title="Manage Users" routerLink="/manage-users" routerLinkActive="active"
       (mouseenter)="showTooltip($event, 'Manage Users')"
       (mouseleave)="hideTooltip()">
       <svg width="64px" height="64px" viewBox="-3.84 -3.84 31.68 31.68" fill="none"

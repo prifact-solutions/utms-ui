@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { AppSettings } from 'src/app/common/appsettings';
+import { UserRoleName } from '../models/role.model';
 
 export interface UserUpdatePayload {
   first_name: string;
   last_name: string;
-  is_staff: boolean;
+  role: UserRoleName;
 }
 
 @Injectable({

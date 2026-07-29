@@ -24,6 +24,7 @@ import { TenantInfoService } from 'src/app/common/services/tenant-info.service';
 export class NavigationComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isStaff = false;
+  isAdmin = false;
   private authSubscription: Subscription | null = null;
 
   userName = '';
@@ -84,7 +85,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.isAuthenticated = this.authService.isAuthenticated();
     if (this.isAuthenticated) {
       const tokenData = Utils.decodeAuthToken();
-      this.isStaff = tokenData.is_staff || false;
+      this.isStaff = Utils.isStaff() || false;
+      this.isAdmin = Utils.isAdmin() || false;
       this.userName = tokenData.name || 'User';
       this.userEmail = tokenData.email || '';
     } else {
