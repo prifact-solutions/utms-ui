@@ -23,7 +23,7 @@ export class ManageUsersComponent extends ComponentBase {
   inviteEmail = '';
   inviteFirstName = '';
   inviteLastName = '';
-  inviteRole: 'student' | 'staff' = 'student';
+  inviteRole: 'LEARNER' | 'INSTRUCTOR' | 'ADMIN' = 'LEARNER';
   inviteStatusMessage = '';
   inviteStatusType: 'success' | 'error' | '' = '';
   isInviting = false;
@@ -33,8 +33,9 @@ export class ManageUsersComponent extends ComponentBase {
   inviteEmailBlurred = false;
 
   readonly roleOptions = [
-    { value: 'student', label: 'Student' },
-    { value: 'staff', label: 'Instructor' },
+    { value: 'LEARNER', label: 'Student' },
+    { value: 'INSTRUCTOR', label: 'Instructor' },
+    { value: 'ADMIN', label: 'Admin' }
   ] as const;
 
   users: UserModel[] = [];
@@ -44,7 +45,7 @@ export class ManageUsersComponent extends ComponentBase {
   editingUser: UserModel | null = null;
   editFirstName = '';
   editLastName = '';
-  editRole: 'student' | 'staff' = 'student';
+  editRole: 'LEARNER' | 'INSTRUCTOR' | 'ADMIN' = 'LEARNER';
   editStatusMessage = '';
   editStatusType: 'success' | 'error' | '' = '';
   isSavingUser = false;
@@ -60,7 +61,7 @@ export class ManageUsersComponent extends ComponentBase {
       .getAllUsers()
       .pipe(finalize(() => (this.usersLoading = false)))
       .subscribe((users) => {
-        this.users = users;
+        this.users = this.sortUsers(users);
       });
     this.registerSubscription(sub);
   }
@@ -77,7 +78,7 @@ export class ManageUsersComponent extends ComponentBase {
     this.inviteEmail = '';
     this.inviteFirstName = '';
     this.inviteLastName = '';
-    this.inviteRole = 'student';
+    this.inviteRole = 'LEARNER';
     this.inviteStatusMessage = '';
     this.inviteStatusType = '';
     this.inviteFirstNameBlurred = false;
@@ -124,7 +125,7 @@ export class ManageUsersComponent extends ComponentBase {
       return;
     }
     this.isInviting = true;
-    const isStaffAccount = this.inviteRole === 'staff';
+    //const isStaffAccount = this.inviteRole === 'staff';
     const invitePayload = {
       firstName: this.inviteFirstName.trim(),
       lastName: this.inviteLastName.trim(),
@@ -133,7 +134,7 @@ export class ManageUsersComponent extends ComponentBase {
     this.authService
       .sendInvite(
         invitePayload.email,
-        isStaffAccount,
+        this.inviteRole,
         invitePayload.firstName,
         invitePayload.lastName,
       )
@@ -144,7 +145,7 @@ export class ManageUsersComponent extends ComponentBase {
       )
       .subscribe({
         next: (users) => {
-          this.users = users;
+          this.users = this.sortUsers(users);
           const displayName = [invitePayload.firstName, invitePayload.lastName]
             .filter((p) => p.length > 0)
             .join(' ');
@@ -158,7 +159,7 @@ export class ManageUsersComponent extends ComponentBase {
           this.inviteEmail = '';
           this.inviteFirstName = '';
           this.inviteLastName = '';
-          this.inviteRole = 'student';
+          this.inviteRole = 'LEARNER';
           this.isInviting = false;
         },
         error: (err) => {
@@ -185,10 +186,11 @@ export class ManageUsersComponent extends ComponentBase {
   }
 
   getRoleLabel(user: UserModel) {
-    if (user.is_staff) {
-      return 'Instructor';
-    } else {
-      return 'Student';
+    switch (user.role) {
+      case 'ADMIN': return 'Admin';
+      case 'INSTRUCTOR': return 'Instructor';
+      case 'LEARNER': return 'Student';
+      default: return 'Unknown';
     }
   }
 
@@ -213,7 +215,7 @@ export class ManageUsersComponent extends ComponentBase {
     this.editingUser = user;
     this.editFirstName = user.first_name?.trim() ?? '';
     this.editLastName = user.last_name?.trim() ?? '';
-    this.editRole = user.is_staff ? 'staff' : 'student';
+    this.editRole = user.role;
     this.editStatusMessage = '';
     this.editStatusType = '';
     this.editFirstNameBlurred = false;
@@ -225,7 +227,7 @@ export class ManageUsersComponent extends ComponentBase {
     this.editingUser = null;
     this.editFirstName = '';
     this.editLastName = '';
-    this.editRole = 'student';
+    this.editRole = 'LEARNER';
     this.editStatusMessage = '';
     this.editStatusType = '';
     this.editFirstNameBlurred = false;
@@ -253,7 +255,8 @@ export class ManageUsersComponent extends ComponentBase {
     const payload = {
       first_name: this.editFirstName.trim(),
       last_name: this.editLastName.trim(),
-      is_staff: this.editRole === 'staff',
+      role: this.editRole
+      //is_staff: this.editRole === 'staff',
     };
     this.usersService
       .updateUser(this.editingUser.id, payload)
@@ -263,7 +266,7 @@ export class ManageUsersComponent extends ComponentBase {
       )
       .subscribe({
         next: (users) => {
-          this.users = users;
+          this.users = this.sortUsers(users);
           this.closeEditUserModal();
         },
         error: () => {
@@ -299,7 +302,7 @@ export class ManageUsersComponent extends ComponentBase {
       )
       .subscribe({
         next: (users) => {
-          this.users = users;
+          this.users = this.sortUsers(users);
           this.closeDeleteConfirm();
         },
         error: () => {
@@ -308,4 +311,12 @@ export class ManageUsersComponent extends ComponentBase {
         },
       });
   }
+
+  private sortUsers(users: UserModel[]): UserModel[] {
+  return [...users].sort((a, b) => {
+    const nameA = `${a.first_name ?? ''} ${a.last_name ?? ''}`.trim().toLowerCase();
+    const nameB = `${b.first_name ?? ''} ${b.last_name ?? ''}`.trim().toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+}
 }

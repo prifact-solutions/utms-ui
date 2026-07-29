@@ -6,6 +6,7 @@ import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
 import { AppSettings } from 'src/app/common/appsettings';
 import { KeycloakConfig } from '../models/keycloak-config.model';
+import { UserRoleName } from 'src/app/users/models/role.model';
 
 @Injectable({
   providedIn: 'root',
@@ -120,14 +121,16 @@ export class AuthService {
 
   public sendInvite(
     email: string,
-    isStaffAccount: boolean = false,
+    //isStaffAccount: boolean = false,
+    userRole: UserRoleName,
     firstName: string,
     lastName?: string,
   ): Observable<string> {
     return this.http.post<string>(`${AppSettings.apiUrl}/auth/invite-user/`, {
       email,
       redirectUri: `${this.getKeyCloakLoginRedirectUrl()}`,
-      isStaffAccount: isStaffAccount,
+      //isStaffAccount: isStaffAccount,
+      role: userRole,
       firstName: firstName,
       lastName: lastName,
     });

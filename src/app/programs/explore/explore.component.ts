@@ -147,7 +147,7 @@ export class ExploreComponent extends ComponentBase implements OnInit {
 
     if (this.isAuthenticated) {
       try {
-        this.isStaff = Utils.decodeAuthToken().is_staff;
+        this.isStaff = Utils.isStaff();
       } catch (e) { }
     }
   }

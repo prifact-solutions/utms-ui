@@ -1,3 +1,5 @@
+import { UserRoleName, UserRoles } from "../users/models/role.model";
+
 export class Utils {
     public static stringToColor(str: string): string {
         let hash = 0;
@@ -22,6 +24,43 @@ export class Utils {
         }
         let parts = token?.split(".");
         return JSON.parse(atob(parts[1]));
+    }
+
+    public static getRole(): UserRoleName | null {
+        const role = Utils.decodeAuthToken()?.role;
+        // console.log("The role is " + role);
+        return role ?? null;
+    }
+    
+    public static hasAnyRole(...roles: UserRoleName[]): boolean {
+        const role = this.getRole();
+        return !!role && roles.includes(role);
+    }
+
+    public static isAdmin(): boolean {
+        return this.hasAnyRole(UserRoles.ADMIN);
+    }
+
+    public static isInstructor(): boolean {
+        return this.hasAnyRole(UserRoles.INSTRUCTOR);
+    }
+
+    public static isStaff(): boolean {
+        return this.hasAnyRole(UserRoles.ADMIN, UserRoles.INSTRUCTOR);
+    }
+
+    public static isLearner(): boolean {
+        return this.hasAnyRole(UserRoles.LEARNER);
+    }
+
+    public static getRoleLabel(): string {
+        switch(this.getRole()){
+            case UserRoles.ADMIN: return 'Admin';
+            case UserRoles.INSTRUCTOR: return 'Instructor';
+            case UserRoles.LEARNER: return 'Student';
+            default: return 'Unknown';
+        }
+
     }
 
     /**

@@ -124,96 +124,115 @@ const routes: Routes = [
     path: 'programs-builder',
     component: ProgramListComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/manage',
     component: ManageCourseComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/add',
     component: CreateProgramComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/edit',
     component: EditProgramComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'reports',
     component: ReportComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'reports/:program_id',
     component: ProgramReportComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules',
     component: ListModulesComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/organize-contents',
     component: OrganizeContentsComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/add',
     component: CreateModuleComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/edit',
     component: EditModuleComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons',
     component: ListModuleContentComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/add',
     component: CreateLessonComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/lessons/:lesson_id/edit',
     component: EditLessonComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/exams/add',
     component: CreateExamComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/modules/:module_id/exams/:content_id/edit',
     component: EditExamComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/question-papers',
     component: QuestionPapersListComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/question-papers/add',
     component: CreateQuestionPaperComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'programs-builder/:program_id/question-papers/:qp_id/design',
     component: DesignQuestionPaperComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN', 'INSTRUCTOR'] }
   },
   {
     path: 'manage-users',
     component: ManageUsersComponent,
     canActivate: [StaffAuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'auth-callback',

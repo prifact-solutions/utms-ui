@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { Utils } from '../common/utils';
 import { AuthService } from '../utms-auth/services/auth.service';
+import { UserRoleName, UserRoles } from '../users/models/role.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +29,12 @@ export class StaffAuthGuard implements CanActivate {
     | boolean
     | UrlTree {
     const isAuthenticated = this.isUserAuthenticated();
-
-    if (isAuthenticated && Utils.decodeAuthToken().is_staff) {
+    const allowedRoles = (route.data['roles'] as UserRoleName[]) ?? [
+      UserRoles.ADMIN,
+      UserRoles.INSTRUCTOR,
+    ];
+    
+    if (isAuthenticated && Utils.hasAnyRole(...allowedRoles)) {
       return true;
     } else {
       this.authService.keycloakLogin(state.url);
