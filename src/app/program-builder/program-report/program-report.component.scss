@@ -108,6 +108,16 @@
   th.num,
   td.num {
     text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th.completion-col,
+  td.completion-col {
+    text-align: left;
+  }
+
+  td .pct {
+    text-align: left;
   }
 }
 
@@ -127,12 +137,13 @@
 .completion {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 10px;
+  width: 100%;
 }
 
 .bar {
-  width: 140px;
+  flex: 1 1 auto;
+  min-width: 0;
   height: 10px;
   background: rgba($border-color, 0.6);
   border-radius: 999px;
@@ -146,11 +157,14 @@
 }
 
 .pct {
-  min-width: 46px;
-  text-align: right;
+  display: inline-block;
+  width: 3.25rem;
+  flex-shrink: 0;
+  text-align: left;
   font-weight: 700;
   color: $text-main;
   font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 900px) {

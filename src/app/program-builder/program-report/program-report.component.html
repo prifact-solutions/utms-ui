@@ -53,8 +53,8 @@
             <tr>
               <th>Student</th>
               <th>Email</th>
-              <th class="num">Avg score</th>
-              <th class="num">Completion</th>
+              <th>Avg score</th>
+              <th class="completion-col">Completion</th>
               <!-- <th>Last activity</th> -->
               <th>Status</th>
             </tr>
@@ -65,13 +65,13 @@
                 <div class="student-name">{{ row.studentName }}</div>
               </td>
               <td class="muted">{{ row.email || '-' }}</td>
-              <td class="num">{{ row.avgScore | number:'1.0-0' }}%</td>
-              <td class="num">
+              <td><span class="pct">{{ row.avgScore | number:'1.0-0' }}%</span></td>
+              <td class="completion-col">
                 <div class="completion">
                   <div class="bar">
                     <div class="fill" [style.width.%]="row.completionPercentage"></div>
                   </div>
-                  <div class="pct">{{ row.completionPercentage | number:'1.0-0' }}%</div>
+                  <span class="pct">{{ row.completionPercentage | number:'1.0-0' }}%</span>
                 </div>
               </td>
               <!-- <td class="muted">{{ row.lastActivity | date:'dd-MMM-yyyy, HH:mm' }}</td> -->
