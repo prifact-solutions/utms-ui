@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { finalize, switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { TenantInfoService } from 'src/app/common/services/tenant-info.service';
 import { UserModel } from 'src/app/users/models/user.model';
 import { UsersService } from 'src/app/users/services/users.service';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
@@ -16,6 +17,7 @@ export class ManageUsersComponent extends ComponentBase {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    private tenantInfo: TenantInfoService
   ) {
     super();
   }
@@ -55,6 +57,10 @@ export class ManageUsersComponent extends ComponentBase {
   userPendingDelete: UserModel | null = null;
   isDeletingUser = false;
   deleteErrorMessage = '';
+
+  get enableUserManagementActions(): boolean {
+    return this.tenantInfo.enableUserManagementActions;
+  }
 
   ngOnInit() {
     const sub = this.usersService

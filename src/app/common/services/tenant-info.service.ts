@@ -9,6 +9,7 @@ interface TenantInfo {
   logo?: string;
   showDemoFeatures?: boolean;
   allowSignIn?: boolean;
+  enableUserManagementActions?: boolean;
 }
 
 @Injectable({
@@ -46,5 +47,9 @@ export class TenantInfoService {
 
   get allowSignIn(): boolean {
     return this.info.allowSignIn ?? false;
+  }
+
+  get enableUserManagementActions(): boolean {
+    return this.info.enableUserManagementActions ?? true;
   }
 }

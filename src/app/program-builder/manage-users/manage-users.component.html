@@ -5,7 +5,7 @@
         <h1>Manage <strong>Users</strong></h1>
         <p>Administrative panel to manage faculty and student access roles.</p>
       </div>
-      <div class="action-bar">
+      <div class="action-bar" *ngIf="enableUserManagementActions">
         <button class="button primary black" (click)="openInviteModal()">
           Invite user
         </button>
@@ -68,7 +68,7 @@
                 <th>Role</th>
                 <!-- <th>Status</th> -->
                 <th>Last Login</th>
-                <th>Actions</th>
+                <th *ngIf="enableUserManagementActions">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -110,7 +110,7 @@
                       : "Never"
                   }}
                 </td>
-                <td>
+                <td *ngIf="enableUserManagementActions">
                   <div class="table-actions">
                     <button
                       type="button"
