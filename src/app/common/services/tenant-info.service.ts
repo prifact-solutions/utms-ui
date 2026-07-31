@@ -50,6 +50,6 @@ export class TenantInfoService {
   }
 
   get enableUserManagementActions(): boolean {
-    return this.info.enableUserManagementActions ?? true;
+    return this.info.enableUserManagementActions ?? false;
   }
 }
