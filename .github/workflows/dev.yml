@@ -2,8 +2,8 @@ name: Deploy Dev
 
 on:
   push:
-    branches:
-      - "master"
+    tags:
+      - "dev_*"
 
 concurrency:
   group: deploy-master
