@@ -34,8 +34,7 @@ interface UploadFile {
 })
 export class EditLessonComponent
   extends ComponentBase
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   @Input() inModal = false;
   @Input() set programIdInput(id: number) {
     if (id) this.programId = id;
@@ -224,6 +223,7 @@ export class EditLessonComponent
           this.lessonId,
           uploadFile.file.name,
           uploadFile.file.type,
+          false
         )
         .pipe(takeUntil(this.destroy$))
         .subscribe({
