@@ -62,8 +62,13 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       content_type: ['LESSON', Validators.required],
       context_text: [''],
       duration: ['', Validators.required],
-      order: [this.previous_order + 1, Validators.required]
+      order: [this.previous_order + 1, Validators.required],
+      split_pdf_to_lessons: [false]
     });
+  }
+
+  get isSinglePdf(): boolean {
+    return this.filesToUpload.length === 1 && this.filesToUpload[0].file.type === 'application/pdf';
   }
 
   async onFileSelected(event: Event): Promise<void> {
@@ -134,13 +139,17 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
     this.errorMessage = '';
     this.successMessage = '';
 
-    const lessonPayload: Partial<ModuleContent> = {
+    const lessonPayload: any = {
       title: this.lessonForm.get('title')?.value,
       content_type: this.lessonForm.get('content_type')?.value,
       context_text: this.lessonForm.get('context_text')?.value,
       duration: this.lessonForm.get('duration')?.value,
       order: this.lessonForm.get('order')?.value
     };
+
+    if (this.isSinglePdf) {
+      lessonPayload['split_pdf_to_lessons'] = this.lessonForm.get('split_pdf_to_lessons')?.value;
+    }
 
     this.programsService.createLesson(this.programId, this.moduleId, lessonPayload)
       .pipe(takeUntil(this.destroy$))
