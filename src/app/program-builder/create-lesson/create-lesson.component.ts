@@ -183,7 +183,8 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
         this.moduleId,
         this.moduleContentId!,
         uploadFile.file.name,
-        uploadFile.file.type
+        uploadFile.file.type,
+        this.lessonForm.get('split_pdf_to_lessons')?.value
       )
         .pipe(takeUntil(this.destroy$))
         .subscribe({

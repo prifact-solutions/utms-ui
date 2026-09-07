@@ -258,12 +258,14 @@ export class ProgramsService {
     module_content_id: number,
     file_name: string,
     file_type: string,
+    split_pdf_to_lessons
   ) {
     return this.http.post<{ url: string; mime_type: string }>(
       `${AppSettings.apiUrl}/programs/${program_id}/modules/${module_id}/contents/${module_content_id}/upload-url`,
       {
         file_name: file_name,
         file_type: file_type,
+        split_pdf_to_lessons: split_pdf_to_lessons
       },
     );
   }
