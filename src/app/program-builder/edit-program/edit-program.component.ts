@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, ElementRef, Inject, OnInit, Input, Output, EventEmitter, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -28,6 +29,11 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   isLoading = false;
 
   categories: Array<Category> = [];
+  showAddCategoryModal = false;
+  newCategoryName = '';
+  isSavingCategory = false;
+  categoryModalError: string | null = null;
+  @ViewChild('addCategoryModal') addCategoryModalRef?: ElementRef<HTMLElement>;
 
   @Input() programId: number = 0;
   @Input() program: Program | null = null;
@@ -39,7 +45,9 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     private fb: FormBuilder,
     private programsService: ProgramsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
     super();
     this.programForm = this.fb.group({});
@@ -51,8 +59,16 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     }
     this.loadProgram();
     this.programsService.getAllCategories().subscribe((categories) => {
-      this.categories = categories;
+      this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
     });
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    const modalEl = this.addCategoryModalRef?.nativeElement;
+    if (modalEl?.parentNode === this.document.body) {
+      this.renderer.removeChild(this.document.body, modalEl);
+    }
   }
 
   loadProgram(): void {
@@ -140,6 +156,75 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
   isCategoryChecked(categoryValue: number): boolean {
     const categories = this.programForm.get('categories')?.value || [];
     return categories.includes(categoryValue);
+  }
+
+  openAddCategoryModal(): void {
+    this.newCategoryName = '';
+    this.categoryModalError = null;
+    this.showAddCategoryModal = true;
+    setTimeout(() => this.attachCategoryModalToBody());
+  }
+
+  private attachCategoryModalToBody(): void {
+    const modalEl = this.addCategoryModalRef?.nativeElement;
+    if (modalEl && modalEl.parentElement !== this.document.body) {
+      this.renderer.appendChild(this.document.body, modalEl);
+    }
+  }
+
+  closeAddCategoryModal(): void {
+    if (this.isSavingCategory) {
+      return;
+    }
+    this.showAddCategoryModal = false;
+  }
+
+  private categoryNameExists(name: string): boolean {
+    const normalized = name.trim().toLowerCase();
+    return this.categories.some(
+      (category) => category.name.trim().toLowerCase() === normalized,
+    );
+  }
+
+  saveCategory(): void {
+    if (this.isSavingCategory) return;  // Guard against double-calls (keyup.enter + re-render race)
+    const name = this.newCategoryName.trim();
+    if (!name) {
+      this.categoryModalError = 'Category name is required.';
+      return;
+    }
+
+    if (this.categoryNameExists(name)) {
+      this.categoryModalError = 'A category with this name already exists.';
+      return;
+    }
+
+    this.isSavingCategory = true;
+    this.categoryModalError = null;
+
+    const subscription = this.programsService.createCategory(name).subscribe({
+      next: (category) => {
+        // Refresh from server to get authoritative list — prevents duplicates
+        // from any manual push racing with a re-fetch
+        this.programsService.getAllCategories().subscribe((categories) => {
+          this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
+        });
+        // Auto-select the newly created category in the form
+        const categoriesArray = (this.programForm.get('categories')?.value || []).slice();
+        if (!categoriesArray.includes(category.id)) {
+          categoriesArray.push(category.id);
+          this.programForm.patchValue({ categories: categoriesArray });
+        }
+        this.isSavingCategory = false;
+        this.showAddCategoryModal = false;
+      },
+      error: (error) => {
+        this.categoryModalError =
+          error.error?.detail || 'Failed to create category. Please try again.';
+        this.isSavingCategory = false;
+      },
+    });
+    this.registerSubscription(subscription);
   }
 
   onThumbnailSelected(event: any): void {
