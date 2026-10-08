@@ -53,6 +53,10 @@ export class ManageCourseComponent
   public isPublishing: boolean = false;
   public showDeleteToast: boolean = false;
   public contentItemsLoading: boolean = false;
+  public splittingLessonId: number | null = null;
+  private pdfSplitPollTimer: ReturnType<typeof setInterval> | null = null;
+  private readonly PDF_SPLIT_POLL_INTERVAL_MS = 3000;
+  private readonly PDF_SPLIT_MAX_POLLS = 40; 
 
   public showUnpublishConfirm: boolean = false;
   constructor(
@@ -97,6 +101,7 @@ export class ManageCourseComponent
   }
 
   override ngOnDestroy(): void {
+    this.stopPdfSplitPolling();
     this.renderer.removeClass(this.document.body, 'manage-course-view');
     super.ngOnDestroy();
   }
@@ -257,11 +262,48 @@ export class ManageCourseComponent
     this.showAddLessonModal = false;
   }
 
-  onLessonAdded(): void {
+  onLessonAdded(splittingLessonId: number | null): void {
     this.showAddLessonModal = false;
     if (this.selectedModule) {
       this.fetchModuleContents(this.selectedModule);
+      if (splittingLessonId) {
+        this.waitForPdfSplit(this.selectedModule, splittingLessonId);
+      }
     }
+  }
+
+  private waitForPdfSplit(module: Module, lessonId: number): void {
+    this.stopPdfSplitPolling();
+    this.splittingLessonId = lessonId;
+    let attempts = 0;
+    this.pdfSplitPollTimer = setInterval(() => {
+      attempts++;
+      const sub = this.programService
+        .getModuleContentsForModule(this.programId, module.id)
+        .subscribe({
+          next: (contents) => {
+            const stillSplitting = contents.some((c) => c.id === lessonId);
+            if (!stillSplitting || attempts >= this.PDF_SPLIT_MAX_POLLS) {
+              this.stopPdfSplitPolling();
+              this.fetchModuleContents(module);
+            }
+          },
+          error: () => {
+            if (attempts >= this.PDF_SPLIT_MAX_POLLS) {
+              this.stopPdfSplitPolling();
+            }
+          },
+        });
+      this.registerSubscription(sub);
+    }, this.PDF_SPLIT_POLL_INTERVAL_MS);
+  }
+
+  private stopPdfSplitPolling(): void {
+    if (this.pdfSplitPollTimer) {
+      clearInterval(this.pdfSplitPollTimer);
+      this.pdfSplitPollTimer = null;
+    }
+    this.splittingLessonId = null;
   }
 
   openAddExamModal(): void {
