@@ -104,111 +104,6 @@ span.status-badge {
         }
     }
 
-    .manage-layout {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 32px;
-        align-items: start;
-
-        @media (max-width: 1200px) {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .manage-card {
-        background: #fff;
-        border-radius: 20px;
-        border: 1px solid #eee;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-
-        .card-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid #f5f5f5;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            h3 {
-                margin: 0;
-                font-size: 1.125rem;
-                font-weight: 700;
-                color: #111;
-            }
-
-            .btn-edit {
-                background: #f0f0f0;
-                border: none;
-                padding: 6px 16px;
-                border-radius: 8px;
-                font-size: 0.8125rem;
-                font-weight: 600;
-                color: #666;
-                cursor: pointer;
-                transition: all 0.2s;
-
-                &:hover {
-                    background: #111;
-                    color: #fff;
-                }
-            }
-
-            .action-buttons {
-                display: flex;
-                gap: 12px;
-            }
-        }
-
-        .card-body {
-            padding: 32px;
-            flex: 1;
-        }
-    }
-
-    .info-group {
-        margin-bottom: 24px;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #999;
-            margin-bottom: 8px;
-        }
-
-        .val-text {
-            font-size: 1rem;
-            color: #333;
-            line-height: 1.5;
-
-            &.title {
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: #111;
-            }
-
-            &.desc {
-                white-space: pre-wrap;
-                color: #555;
-            }
-        }
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin-bottom: 24px;
-    }
-
     .tag-list {
         display: flex;
         flex-wrap: wrap;
@@ -1125,4 +1020,67 @@ span.status-badge {
     display: flex;
     gap: 16px;
     align-items: flex-start;
+}
+
+// Loader for a lesson whose PDF is being split into per-page lessons.
+// Spinner reuses the global .button-loader; inset shadows give the tint + border
+// without overriding the .content-item background.
+.is-splitting {
+    position: relative;
+    overflow: hidden;
+    cursor: progress;
+    box-shadow: inset 0 0 0 1px #90398f2e, inset 0 0 0 99px #90398f0a;
+}
+
+.split-status {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.split-spinner {
+    color: #90398f;
+    border-color: #90398f33;
+    border-top-color: currentColor;
+    margin-top: 2px;
+}
+
+.split-title {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #90398f;
+}
+
+.split-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.split-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: #90398f1f;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, #90398f, transparent);
+        animation: manage-course-skeleton-shimmer 1.4s infinite;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .split-spinner,
+    .split-progress::after {
+        animation: none;
+        transform: none;
+    }
 }

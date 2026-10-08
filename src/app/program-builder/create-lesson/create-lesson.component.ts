@@ -24,7 +24,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
 
   @Input() moduleId: number = 0;
   @Input() programId: number = 0;
-  @Output() saved = new EventEmitter<void>();
+  @Output() saved = new EventEmitter<number | null>();
   @Output() closed = new EventEmitter<void>();
 
   @Input() program: Program | null = null;
@@ -171,7 +171,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       this.isSubmitting = false;
 
 
-      this.saved.emit();
+      this.saved.emit(null);
 
       return;
     }
@@ -196,7 +196,8 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
                 this.isSubmitting = false;
 
 
-                this.saved.emit();
+                const isSplitPdf = this.isSinglePdf && !!this.lessonForm.get('split_pdf_to_lessons')?.value;
+                this.saved.emit(isSplitPdf && uploadFile.uploaded ? this.moduleContentId : null);
 
               }
             });

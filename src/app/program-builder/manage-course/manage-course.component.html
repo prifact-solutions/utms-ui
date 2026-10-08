@@ -274,17 +274,27 @@
                     </ng-container>
 
                     <ng-template #contentItems>
-                    <div class="content-item" *ngFor="let content of selectedModule.module_contents">
+                    <div class="content-item" *ngFor="let content of selectedModule.module_contents"
+                      [class.is-splitting]="content.id === splittingLessonId"
+                      [attr.aria-busy]="content.id === splittingLessonId ? 'true' : null">
 
 
 
             <div class="content-info">
               <span class="content-title">{{ content.title }}</span>
-              <span class="content-meta">Order: {{ content.order }}</span>
+              <span class="content-meta" *ngIf="content.id !== splittingLessonId">Order: {{ content.order }}</span>
+              <div class="split-status" *ngIf="content.id === splittingLessonId" role="status" aria-live="polite">
+                <span class="button-loader split-spinner" aria-hidden="true"></span>
+                <span>
+                  <span class="split-title">Splitting PDF into lessons…</span>
+                  <span class="split-hint">Each page becomes a lesson. The list will refresh automatically.</span>
+                </span>
+              </div>
             </div>
+            <div class="split-progress" *ngIf="content.id === splittingLessonId" aria-hidden="true"></div>
             <div class="content-actions">
               <div class="content-links">
-                <ng-container *ngIf="!isCurriculumReadonly">
+                <ng-container *ngIf="!isCurriculumReadonly && content.id !== splittingLessonId">
                   <a class="link-edit" (click)="editContent(content)">Edit</a>
                   <a class="link-delete" (click)="deleteContent(content)"
                     >Delete</a
@@ -359,7 +369,7 @@
         [inModal]="true"
         [programId]="programId"
         [moduleId]="selectedModule.id"
-        (saved)="onLessonAdded()"
+        (saved)="onLessonAdded($event)"
         (closed)="closeAddLessonModal()"
       >
       </app-create-lesson>
