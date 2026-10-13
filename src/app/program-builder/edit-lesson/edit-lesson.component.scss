@@ -104,3 +104,169 @@
     }
   }
 }
+
+.attachment-section {
+  margin-top: 28px;
+
+  h3 {
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+
+  h3 + .attachment-list {
+    margin-top: 0;
+  }
+}
+
+.attachment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.attachment-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    border-color: #cfcfcf;
+    background: #fafafa;
+  }
+
+  &.has-error {
+    border-color: #f1b5b0;
+    background: #fff8f7;
+  }
+}
+
+.attachment-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #f1f1f1;
+  color: #333;
+  font-size: 15px;
+
+  &.is-done {
+    background: #e6f4ea;
+    color: #1e8e3e;
+  }
+}
+
+.attachment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.attachment-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  color: #111;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+
+  .name-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  i {
+    flex-shrink: 0;
+    font-size: 10px;
+    color: #999;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .name-text {
+      text-decoration: underline;
+    }
+
+    i {
+      color: #111;
+    }
+  }
+}
+
+.attachment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: #777;
+
+  span + span::before {
+    content: "·";
+    margin: 0 6px;
+    color: #bbb;
+  }
+
+  .attachment-error {
+    color: #d93025;
+  }
+}
+
+.attachment-progress {
+  height: 3px;
+  margin-top: 6px;
+  border-radius: 2px;
+  background: #eee;
+  overflow: hidden;
+
+  div {
+    width: 40%;
+    height: 100%;
+    border-radius: 2px;
+    background: #111;
+    animation: attachment-progress-slide 1.1s ease-in-out infinite;
+  }
+}
+
+@keyframes attachment-progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+
+.attachment-row .btn-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+  color: #555;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #d93025;
+    border-color: #d93025;
+    background: #fff5f4;
+  }
+}

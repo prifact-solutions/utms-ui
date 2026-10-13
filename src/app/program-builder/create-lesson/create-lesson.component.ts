@@ -41,6 +41,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   contentTypes = ['EXAM', 'LESSON'];
 
   private destroy$ = new Subject<void>();
+  private previewUrls: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -104,6 +105,28 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       this.bumpDuration(-item.videoMinutes);
     }
     this.filesToUpload.splice(index, 1);
+  }
+
+  getFileIcon(mimeType: string): string {
+    const type = mimeType || '';
+    if (type === 'application/pdf') return 'fa-file-pdf';
+    if (type.startsWith('image/')) return 'fa-file-image';
+    if (type.startsWith('video/')) return 'fa-file-video';
+    if (type.startsWith('audio/')) return 'fa-file-audio';
+    if (type.includes('word')) return 'fa-file-word';
+    return 'fa-file-alt';
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+  }
+
+  openLocalFile(file: File): void {
+    const url = URL.createObjectURL(file);
+    this.previewUrls.push(url);
+    window.open(url, '_blank');
   }
 
   private getVideoDurationMinutes(file: File): Promise<number> {
@@ -231,6 +254,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   }
 
   override ngOnDestroy(): void {
+    this.previewUrls.forEach((url) => URL.revokeObjectURL(url));
     this.destroy$.next();
     this.destroy$.complete();
   }
