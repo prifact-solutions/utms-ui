@@ -15,7 +15,7 @@
           <hr />
           <div class="meta-row">
             <span
-              >Duration: <strong>{{ program.duration }}d</strong></span
+              >Duration: <strong>{{ program.duration | durationMinutes }}</strong></span
             >
             <span class="badge" [class.bg-success]="program.is_active">{{
               program.status == "ACTIVE" ? "Active" : "Draft"

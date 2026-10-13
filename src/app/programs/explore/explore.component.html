@@ -145,7 +145,7 @@
                     {{ getProgramInitials(program.title) }}
                 </div>
 
-                <span class="c-top-bubble">{{program.duration}} days</span>
+                <span class="c-top-bubble">{{program.duration | durationMinutes}}</span>
 
                 <div class="card-content">
                     <div class="card-title-row">

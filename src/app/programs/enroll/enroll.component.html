@@ -21,7 +21,7 @@
                         <div class="flex-1">
                             <h3 class="mb-2">{{ program.title }}</h3>
                             <div class="meta-info d-flex gap-3 text-muted small">
-                                <span>⏱ <strong>{{ program.duration }} days</strong> duration</span>
+                                <span>⏱ <strong>{{ program.duration | durationMinutes }}</strong> duration</span>
                                 <span *ngIf="program.difficulty">⏺ <strong>{{ program.difficulty }}</strong>
                                     level</span>
                             </div>

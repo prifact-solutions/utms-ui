@@ -87,7 +87,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     this.programForm = this.fb.group({
       title: [this.program.title, [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       description: [this.program.description, [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
-      duration: [this.program.duration.toString(), [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
+      duration: [this.program.duration.toString(), [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
       // is_active: [this.program.is_active, Validators.required],
       categories: [this.program.categories || []],
       difficulty: [this.program.difficulty || 'Beginner', Validators.required],
@@ -304,7 +304,7 @@ export class EditProgramComponent extends ComponentBase implements OnInit {
     const fd: any = {
       title: formValue.title,
       description: formValue.description,
-      duration: parseFloat(formValue.duration),
+      duration: parseInt(formValue.duration, 10),
       // is_active: formValue.is_active,
       difficulty: formValue.difficulty,
       video_hours: formValue.video_hours,
