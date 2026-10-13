@@ -20,7 +20,7 @@
           <hr />
           <div class="meta-row">
             <span
-              >Duration: <strong>{{ program.duration | durationMinutes }}</strong></span
+              >Duration: <strong>{{ program.duration | durationHours }}</strong></span
             >
             <span class="badge" [class.bg-success]="program.is_active">{{
               program.status == "ACTIVE" ? "Active" : "Draft"
@@ -87,7 +87,7 @@
             </div>
             <div class="form-group">
               <label for="duration"
-                >Duration (minutes)<span class="required-indicator">*</span></label
+                >Duration (hours)<span class="required-indicator">*</span></label
               >
               <input
                 id="duration"
@@ -107,7 +107,7 @@
                   programForm.get('duration')?.touched
                 "
               >
-                Enter whole minutes, 1 or more
+                Enter whole hours, 1 or more
               </div>
             </div>
             <!-- <div class="form-group">

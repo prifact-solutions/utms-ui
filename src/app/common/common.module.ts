@@ -4,11 +4,11 @@ import { ConfirmComponent } from './popups/confirm/confirm.component';
 import { DeleteConfirmComponent } from './popups/delete-confirm/delete-confirm.component';
 import { DotMenuComponent } from './dot-menu/dot-menu.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
-import { DurationMinutesPipe } from './pipes/duration-minutes.pipe';
+import { DurationHoursPipe } from './pipes/duration-hours.pipe';
 
 @NgModule({
-  declarations: [DotMenuComponent, ClickOutsideDirective, DeleteConfirmComponent, ConfirmComponent, DurationMinutesPipe],
+  declarations: [DotMenuComponent, ClickOutsideDirective, DeleteConfirmComponent, ConfirmComponent, DurationHoursPipe],
   imports: [CommonModule],
-  exports: [DotMenuComponent, ClickOutsideDirective, DeleteConfirmComponent, ConfirmComponent, DurationMinutesPipe],
+  exports: [DotMenuComponent, ClickOutsideDirective, DeleteConfirmComponent, ConfirmComponent, DurationHoursPipe],
 })
 export class UtmsCommonModule {}
