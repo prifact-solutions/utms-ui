@@ -88,4 +88,21 @@ export class Utils {
         }
         return null;
     }
+
+    /** Font Awesome icon class for a file's MIME type. */
+    public static getFileIcon(mimeType: string): string {
+        const type = mimeType || '';
+        if (type === 'application/pdf') return 'fa-file-pdf';
+        if (type.startsWith('image/')) return 'fa-file-image';
+        if (type.startsWith('video/')) return 'fa-file-video';
+        if (type.startsWith('audio/')) return 'fa-file-audio';
+        if (type.includes('word')) return 'fa-file-word';
+        return 'fa-file-alt';
+    }
+
+    public static formatFileSize(bytes: number): string {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+    }
 }
