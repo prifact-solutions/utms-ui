@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { combineLatest, map, Subject, switchMap, tap } from 'rxjs';
 import { ModuleContent, ModuleContentFile } from '../models/program.model';
+import { Utils } from 'src/app/common/utils';
+import { PreviewSession } from '../preview-session';
 
 @Component({
   selector: 'app-view-lesson',
@@ -28,6 +30,7 @@ export class ViewLessonComponent extends ComponentBase {
   errorMessage = '';
   showErrorToast = false;
   wasNextButtonDisabledInitially: boolean = false;
+  canOpenAnyContent: boolean = false;
 
   constructor(
     private programService: ProgramsService,
@@ -79,6 +82,7 @@ export class ViewLessonComponent extends ComponentBase {
           });
           this.isLoading = false;
 
+          this.canOpenAnyContent = !!catalog && Utils.canPreviewProgram(catalog.created_by);
           if (catalog && catalog.modules) {
             const contents = catalog.modules.flatMap(
               (m) => m.module_contents || [],
@@ -146,6 +150,11 @@ export class ViewLessonComponent extends ComponentBase {
       this.progress[next_content.id] || 'IN_PROGRESS';
   }
   goToCatalog() {
+    // Preview tabs opened from the publish page go back there
+    if (PreviewSession.isActive(+this.program_id)) {
+      PreviewSession.backToPublish(this.router, +this.program_id);
+      return;
+    }
     this.router.navigateByUrl(`/programs/${this.program_id}/details`);
   }
   goToPreviousContent() {
@@ -235,7 +244,8 @@ export class ViewLessonComponent extends ComponentBase {
   }
 
   private getContentStatus(content: ModuleContent): string {
-    return this.progress[content.id] || 'LOCKED';
+    // Staff previewing a program they manage can open contents in any order
+    return this.progress[content.id] || (this.canOpenAnyContent ? 'NOT_STARTED' : 'LOCKED');
   }
 
   private goToCourseCompleted(): void {

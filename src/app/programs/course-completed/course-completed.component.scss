@@ -80,6 +80,13 @@ app-course-completed {
     }
   }
 
+  .completion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
   .completion-icon {
     width: 100px;
     height: 100px;

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PreviewSession } from '../../preview-session';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { forkJoin, map, of, Subject, switchMap, tap } from 'rxjs';
@@ -148,6 +149,11 @@ export class TakeExamComponent extends ComponentBase {
     this.next_module_content = next_content;
   }
   goToCatalog() {
+    // Preview tabs opened from the publish page go back there
+    if (PreviewSession.isActive(+this.program_id)) {
+      PreviewSession.backToPublish(this.router, +this.program_id);
+      return;
+    }
     this.router.navigateByUrl(`/programs/${this.program_id}/details`);
   }
   goToNextContent() {
