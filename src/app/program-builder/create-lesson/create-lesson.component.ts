@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { Utils } from 'src/app/common/utils';
 
 interface UploadFile {
   file: File;
@@ -39,8 +40,11 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   errorMessage = '';
 
   contentTypes = ['EXAM', 'LESSON'];
+  readonly getFileIcon = Utils.getFileIcon;
+  readonly formatFileSize = Utils.formatFileSize;
 
   private destroy$ = new Subject<void>();
+  private previewUrls: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -104,6 +108,12 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
       this.bumpDuration(-item.videoMinutes);
     }
     this.filesToUpload.splice(index, 1);
+  }
+
+  openLocalFile(file: File): void {
+    const url = URL.createObjectURL(file);
+    this.previewUrls.push(url);
+    window.open(url, '_blank');
   }
 
   private getVideoDurationMinutes(file: File): Promise<number> {
@@ -231,6 +241,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   }
 
   override ngOnDestroy(): void {
+    this.previewUrls.forEach((url) => URL.revokeObjectURL(url));
     this.destroy$.next();
     this.destroy$.complete();
   }

@@ -1,4 +1,5 @@
 @import "src/styles/variables";
+@import "src/styles/attachments";
 
 .bg-off-white {
   background-color: $bg-off-white;
@@ -102,5 +103,18 @@
       background: #ccc;
       cursor: not-allowed;
     }
+  }
+}
+
+.attachment-section {
+  margin-top: 28px;
+
+  h3 {
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+
+  h3 + .attachment-list {
+    margin-top: 0;
   }
 }

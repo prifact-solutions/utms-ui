@@ -84,15 +84,26 @@
           </div>
 
           <!-- Existing Files Section -->
-          <div *ngIf="lesson && lesson.files && lesson.files.length > 0" class="mt-5">
+          <div *ngIf="lesson && lesson.files && lesson.files.length > 0" class="attachment-section">
             <h3 class="mb-3" style="font-size: 1.1rem">Existing Attachments</h3>
 
-            <div *ngFor="let file of lesson.files" class="file-item">
-              <span>{{ file.file_name }}</span>
-              <div>
-                <span class="text-muted small">{{ file.mime_type }}</span>
-                <span class="section-badge" style="font-size: 0.7rem">Stored</span>
-                <button type="button" class="btn-icon text-error" (click)="deleteFile(file)">
+            <div class="attachment-list">
+              <div *ngFor="let file of lesson.files" class="attachment-row">
+                <span class="attachment-icon">
+                  <i class="fas" [ngClass]="getFileIcon(file.mime_type)"></i>
+                </span>
+                <div class="attachment-body">
+                  <a class="attachment-name" role="button" tabindex="0" title="Open in new tab"
+                    (click)="openStoredFile(file)" (keydown.enter)="openStoredFile(file)">
+                    <span class="name-text">{{ file.file_name }}</span>
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                  <div class="attachment-meta">
+                    <span>{{ file.mime_type }}</span>
+                    <span>Stored</span>
+                  </div>
+                </div>
+                <button type="button" class="btn-icon" title="Remove file" (click)="deleteFile(file)">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -100,7 +111,7 @@
           </div>
 
           <!-- File Upload Section -->
-          <div class="add-files">
+          <div class="add-files attachment-section">
             <h3 class="mb-3" style="font-size: 1.1rem">Add New Files</h3>
 
             <div class="media-upload-row">
@@ -119,39 +130,31 @@
               </div>
             </div>
 
-            <div *ngIf="filesToUpload.length > 0" class="curriculum-list mt-3">
-              <div *ngFor="let uploadFile of filesToUpload; let i = index"
-                class="card p-3 d-flex flex-row align-items-center gap-3">
-                <span class="type-icon" style="font-size: 1.5rem">
-                  {{ uploadFile.uploaded ? "✅" : "📎" }}
+            <div *ngIf="filesToUpload.length > 0" class="attachment-list">
+              <div *ngFor="let uploadFile of filesToUpload; let i = index" class="attachment-row"
+                [class.has-error]="uploadFile.error">
+                <span class="attachment-icon" [class.is-done]="uploadFile.uploaded">
+                  <i class="fas" [ngClass]="uploadFile.uploaded ? 'fa-check' : getFileIcon(uploadFile.file.type)"></i>
                 </span>
-                <div class="flex-1">
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <strong class="small">{{ uploadFile.file.name }}</strong>
-                    <span class="text-muted small">{{
-                      (uploadFile.file.size / 1024 / 1024).toFixed(2)
-                      }}
-                      MB</span>
+                <div class="attachment-body">
+                  <a class="attachment-name" role="button" tabindex="0" title="Open in new tab"
+                    (click)="openLocalFile(uploadFile.file)" (keydown.enter)="openLocalFile(uploadFile.file)">
+                    <span class="name-text">{{ uploadFile.file.name }}</span>
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                  <div class="attachment-meta">
+                    <span>{{ formatFileSize(uploadFile.file.size) }}</span>
+                    <span *ngIf="isSubmitting && !uploadFile.uploaded && !uploadFile.error">Uploading…</span>
+                    <span *ngIf="uploadFile.uploaded">Uploaded</span>
+                    <span *ngIf="uploadFile.error" class="attachment-error">{{ uploadFile.error }}</span>
                   </div>
-                  <div class="progress-bar-container" *ngIf="!uploadFile.uploaded && !isSubmitting" style="
-                      height: 4px;
-                      background: #eee;
-                      border-radius: 2px;
-                      overflow: hidden;
-                    ">
-                    <div [style.width.%]="uploadFile.progress" style="
-                        height: 100%;
-                        background: var(--accent-color, #a435f0);
-                        transition: width 0.3s;
-                      "></div>
-                  </div>
-                  <div *ngIf="uploadFile.error" class="text-error small mt-1">
-                    {{ uploadFile.error }}
+                  <div class="attachment-progress" *ngIf="isSubmitting && !uploadFile.uploaded && !uploadFile.error">
+                    <div></div>
                   </div>
                 </div>
-                <button type="button" class="btn-icon text-error" (click)="removeFile(i)"
+                <button type="button" class="btn-icon" title="Remove file" (click)="removeFile(i)"
                   *ngIf="!isSubmitting && !uploadFile.uploaded">
-                  🗑️
+                  <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
             </div>
