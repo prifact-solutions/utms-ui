@@ -86,7 +86,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
     this.programForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
-      duration: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
+      duration: ['', [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
       video_hours: [0],
       categories: [],
       allow_enrollment: [true]
@@ -258,7 +258,7 @@ export class CreateProgramComponent extends ComponentBase implements OnInit, OnD
     const fd: any = {
       title: formValue.title,
       description: formValue.description,
-      duration: parseFloat(formValue.duration),
+      duration: parseInt(formValue.duration, 10),
       is_active: false,
       difficulty: 'Beginner',
       video_hours: formValue.video_hours ?? 0,

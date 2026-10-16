@@ -157,7 +157,7 @@
                 <div class="card-content">
                     <h3>{{ program.title }}</h3>
                     <div class="card-meta-inline">
-                        <span>{{ program.duration }} days</span>
+                        <span>{{ program.duration | durationHours }}</span>
                         <!-- <span class="dot">•</span>
                         <span>{{ program.modules?.length || 0 }} modules</span> -->
                     </div>

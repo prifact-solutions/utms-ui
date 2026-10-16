@@ -476,7 +476,7 @@
             >
           </div>
           <div class="c-info">
-            {{ program.duration }} Days ● {{ program.video_hours || 0 }} Hours
+            {{ program.duration | durationHours }}
           </div>
         </div>
         <div class="c-info">

@@ -14,6 +14,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ExamComponent } from './exams/exam/exam.component';
 import { ExamResultComponent } from './exams/exam-result/exam-result.component';
 import { CourseCompletedComponent } from './course-completed/course-completed.component';
+import { UtmsCommonModule } from '../common/common.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { CourseCompletedComponent } from './course-completed/course-completed.co
     ExamResultComponent,
     CourseCompletedComponent,
   ],
-  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, SharedModule],
+  imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, SharedModule, UtmsCommonModule],
   providers: [
     { provide: FormBuilderBackendService, useClass: ExamBackendService },
   ],
