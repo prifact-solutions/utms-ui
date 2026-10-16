@@ -32,9 +32,13 @@
       </div>
     </div>
     <div class="main-header-actions">
-      <button class="button primary black" type="button" (click)="saveAllChanges()" [disabled]="isSaving">
-        <span *ngIf="isSaving" class="button-loader" aria-hidden="true"></span>
-        <span class="button-loader-label">{{ isSaving ? "Saving..." : "Confirm & Publish" }}</span>
+      <button class="button" type="button" (click)="onPreview()" [disabled]="isSaving">
+        <span *ngIf="savingAction === 'preview'" class="button-loader" aria-hidden="true"></span>
+        <span class="button-loader-label">{{ savingAction === "preview" ? "Preparing..." : "Preview" }}</span>
+      </button>
+      <button class="button primary black" type="button" (click)="onPublish()" [disabled]="isSaving">
+        <span *ngIf="savingAction === 'publish'" class="button-loader" aria-hidden="true"></span>
+        <span class="button-loader-label">{{ savingAction === "publish" ? "Publishing..." : "Publish" }}</span>
       </button>
     </div>
   </div>

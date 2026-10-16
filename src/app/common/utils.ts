@@ -53,6 +53,13 @@ export class Utils {
         return this.hasAnyRole(UserRoles.LEARNER);
     }
 
+    /** Mirrors backend user_can_preview_program: admins any program, instructors their own. */
+    public static canPreviewProgram(createdBy: number | null | undefined): boolean {
+        if (this.isAdmin()) return true;
+        const userId = Number(Utils.decodeAuthToken()?.user_id);
+        return this.isInstructor() && !!userId && userId === Number(createdBy);
+    }
+
     public static getRoleLabel(): string {
         switch(this.getRole()){
             case UserRoles.ADMIN: return 'Admin';
