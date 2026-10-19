@@ -123,7 +123,7 @@
                             <strong>{{ (catalog.modules?.length || 0) * 4 }} hours</strong> on-demand
                         </span>
                         <span>
-                            Duration: <strong>{{ catalog.duration }} days</strong>
+                            Duration: <strong>{{ catalog.duration | durationHours }}</strong>
                         </span>
                         <span *ngIf="catalog.difficulty">
                             Level: <strong>{{ catalog.difficulty }}</strong>
