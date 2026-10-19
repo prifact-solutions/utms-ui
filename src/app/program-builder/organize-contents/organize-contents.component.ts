@@ -1,9 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
-import { ContentOrganizationUpdate, Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
+import {
+  ContentOrganizationUpdate,
+  Module,
+  ModuleContent,
+  Program,
+} from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { PreviewSession } from 'src/app/programs/preview-session';
 
@@ -22,9 +28,12 @@ interface OrganizedModule {
 @Component({
   selector: 'app-organize-contents',
   templateUrl: './organize-contents.component.html',
-  styleUrls: ['./organize-contents.component.scss']
+  styleUrls: ['./organize-contents.component.scss'],
 })
-export class OrganizeContentsComponent extends ComponentBase implements OnInit, OnDestroy {
+export class OrganizeContentsComponent
+  extends ComponentBase
+  implements OnInit, OnDestroy
+{
   program: Program | null = null;
   organizedModules: OrganizedModule[] = [];
   selectedModuleGroup: OrganizedModule | null = null;
@@ -41,7 +50,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     private programsService: ProgramsService,
     private renderer: Renderer2,
     private location: Location,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
   ) {
     super();
   }
@@ -61,43 +70,51 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.route.params.pipe(
-      switchMap(params => {
-        return this.programsService.getProgramCatalog(params["program_id"]);
-      })
-    ).subscribe({
-      next: (program) => {
-        this.program = program;
-        this.organizeContents(program.modules || []);
-        this.selectedModuleGroup = this.organizedModules[0] || null;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading program catalog:', error);
-        this.errorMessage = 'Failed to load program data. Please try again.';
-        this.isLoading = false;
-      }
-    });
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.programsService.getProgramCatalog(params['program_id']);
+        }),
+      )
+      .subscribe({
+        next: (program) => {
+          this.program = program;
+          this.organizeContents(program.modules || []);
+          this.selectedModuleGroup = this.organizedModules[0] || null;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading program catalog:', error);
+          this.errorMessage = 'Failed to load program data. Please try again.';
+          this.isLoading = false;
+        },
+      });
   }
 
   organizeContents(modules: Module[]): void {
     this.organizedModules = [];
 
     // Sort modules by order
-    const sortedModules = modules.sort((a, b) => (a.order || 0) - (b.order || 0));
+    const sortedModules = modules.sort(
+      (a, b) => (a.order || 0) - (b.order || 0),
+    );
 
-    sortedModules.forEach(module => {
+    sortedModules.forEach((module) => {
       // Sort contents by order
-      const sortedContents = module.module_contents.sort((a, b) => a.order - b.order);
+      const sortedContents = module.module_contents.sort(
+        (a, b) => a.order - b.order,
+      );
 
-      const organizedContents: OrganizedContent[] = sortedContents.map(content => ({
-        ...content,
-        module_title: module.title
-      }));
+      const organizedContents: OrganizedContent[] = sortedContents.map(
+        (content) => ({
+          ...content,
+          module_title: module.title,
+        }),
+      );
 
       this.organizedModules.push({
         module,
-        contents: organizedContents
+        contents: organizedContents,
       });
     });
 
@@ -109,31 +126,34 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
   }
 
   updateOrderAndPrevious(): void {
-    let globalModuleOrder = 1, globalContentOrder = 1;
+    let globalModuleOrder = 1,
+      globalContentOrder = 1;
     const allContents: OrganizedContent[] = [];
 
     //This recalculated order is only for display purposes and is not saved to DB
-    this.organizedModules.forEach(moduleGroup => {
+    this.organizedModules.forEach((moduleGroup) => {
       moduleGroup.module.order = globalModuleOrder++;
-    })
+    });
 
     // First pass: collect all contents in order and assign global orders
-    this.organizedModules.forEach(moduleGroup => {
-      moduleGroup.contents.forEach(content => {
+    this.organizedModules.forEach((moduleGroup) => {
+      moduleGroup.contents.forEach((content) => {
         content.order = globalContentOrder++;
         allContents.push(content);
       });
     });
 
     // Second pass: set previous content options and relationships
-    this.organizedModules.forEach(moduleGroup => {
+    this.organizedModules.forEach((moduleGroup) => {
       moduleGroup.contents.forEach((content, moduleContentIndex) => {
         const contentIndex = allContents.indexOf(content);
 
         // Previous content options: all contents before this one in the global sequence
         content.previous_content_options = [
           { id: 0, title: 'None (First Content)' },
-          ...allContents.slice(0, contentIndex).map(c => ({ id: c.id, title: c.title }))
+          ...allContents
+            .slice(0, contentIndex)
+            .map((c) => ({ id: c.id, title: c.title })),
         ];
 
         // Auto-set previous content to the immediately previous content in sequence
@@ -146,26 +166,44 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     });
   }
 
-  onOrderChange(content: OrganizedContent, newOrderStr: string): void {
-    const newOrder = parseInt(newOrderStr, 10);
-    if (isNaN(newOrder)) return;
+  onOrderChange(content: OrganizedContent, input: HTMLInputElement): void {
+    const newOrder = parseInt(input.value, 10);
+    // Always show the real order afterwards: [value] won't refresh the box when
+    // the order ends up unchanged (invalid, out-of-range or same-position input)
+    const resetInput = () => (input.value = String(content.order));
+    if (isNaN(newOrder)) {
+      resetInput();
+      return;
+    }
 
     // Find which module this content belongs to
-    const moduleGroup = this.organizedModules.find(mg =>
-      mg.contents.some(c => c.id === content.id)
+    const moduleGroup = this.organizedModules.find((mg) =>
+      mg.contents.some((c) => c.id === content.id),
     );
 
-    if (!moduleGroup) return;
+    if (!moduleGroup) {
+      resetInput();
+      return;
+    }
 
     // Remove the content from current position
     const moduleContents = moduleGroup.contents;
-    const currentIndex = moduleContents.findIndex(c => c.id === content.id);
-    if (currentIndex === -1) return;
+    const currentIndex = moduleContents.findIndex((c) => c.id === content.id);
+    if (currentIndex === -1) {
+      resetInput();
+      return;
+    }
+
+    // Displayed orders are course-wide; convert to a position within this module
+    const moduleOffset = moduleContents[0].order - 1;
 
     const [item] = moduleContents.splice(currentIndex, 1);
 
     // Insert at new position (clamped between 1 and max contents)
-    const normalizedOrder = Math.max(1, Math.min(newOrder, moduleContents.length + 1));
+    const normalizedOrder = Math.max(
+      1,
+      Math.min(newOrder - moduleOffset, moduleContents.length + 1),
+    );
     moduleContents.splice(normalizedOrder - 1, 0, item);
 
     // Reassign continuous ordering 1...N
@@ -178,9 +216,25 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
 
     // Trigger explicit change detection by re-assigning organizedModules reference
     this.organizedModules = [...this.organizedModules];
-    this.selectedModuleGroup = this.organizedModules.find(mg =>
-      mg.module.id === moduleGroup.module.id
-    ) || null;
+    this.selectedModuleGroup =
+      this.organizedModules.find(
+        (mg) => mg.module.id === moduleGroup.module.id,
+      ) || null;
+    resetInput();
+  }
+
+  /** Drag-and-drop reorder within a module; recomputes order numbers and sequence like onOrderChange. */
+  onContentDrop(
+    moduleGroup: OrganizedModule,
+    event: CdkDragDrop<OrganizedContent[]>,
+  ): void {
+    if (event.previousIndex === event.currentIndex) return;
+    moveItemInArray(
+      moduleGroup.contents,
+      event.previousIndex,
+      event.currentIndex,
+    );
+    this.updateOrderAndPrevious();
   }
 
   getContentTypeClass(content: OrganizedContent): string {
@@ -223,16 +277,20 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     }
 
     const contentUpdates: ContentOrganizationUpdate[] = this.organizedModules
-      .flatMap(mg => mg.contents)
-      .map(content => ({
+      .flatMap((mg) => mg.contents)
+      .map((content) => ({
         content_id: content.id,
         previous_content_id: content.previous_content_id || null,
-        order: content.order
+        order: content.order,
       }));
 
-    const request$ = mode === 'preview'
-      ? this.programsService.previewProgram(this.program.id, contentUpdates)
-      : this.programsService.updateContentOrganization(this.program.id, contentUpdates);
+    const request$ =
+      mode === 'preview'
+        ? this.programsService.previewProgram(this.program.id, contentUpdates)
+        : this.programsService.updateContentOrganization(
+            this.program.id,
+            contentUpdates,
+          );
 
     this.isSaving = true;
     this.savingAction = mode;
@@ -255,10 +313,12 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
         console.error(`Error saving course (${mode}):`, err);
         this.discardPreviewTab(previewTab);
         const reason = err?.error?.error;
-        this.errorMessage = `Failed to ${mode} the course.` + (reason ? ` ${reason}.` : ' Please try again.');
+        this.errorMessage =
+          `Failed to ${mode} the course.` +
+          (reason ? ` ${reason}.` : ' Please try again.');
         this.isSaving = false;
         this.savingAction = null;
-      }
+      },
     });
   }
 
@@ -267,8 +327,17 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
   }
 
   private openPreview(previewTab: Window | null): void {
-    if (!PreviewSession.showCourse(previewTab, this.router, this.location, this.programId, 'publish')) {
-      this.errorMessage = 'Preview is ready, but the new tab was blocked. Please allow pop-ups for this site and try again.';
+    if (
+      !PreviewSession.showCourse(
+        previewTab,
+        this.router,
+        this.location,
+        this.programId,
+        'publish',
+      )
+    ) {
+      this.errorMessage =
+        'Preview is ready, but the new tab was blocked. Please allow pop-ups for this site and try again.';
       return;
     }
     this.successMessage = 'Course saved. Preview opened in a new tab.';
@@ -276,8 +345,10 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
 
   getPreviousContentTitle(content: OrganizedContent): string {
     if (!content.previous_content_id) return 'None';
-    const allContents = this.organizedModules.flatMap(mg => mg.contents);
-    const prevContent = allContents.find(c => c.id === content.previous_content_id);
+    const allContents = this.organizedModules.flatMap((mg) => mg.contents);
+    const prevContent = allContents.find(
+      (c) => c.id === content.previous_content_id,
+    );
     return prevContent ? prevContent.title : 'Unknown';
   }
 

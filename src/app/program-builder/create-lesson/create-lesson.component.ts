@@ -32,7 +32,7 @@ export class CreateLessonComponent extends ComponentBase implements OnInit, OnDe
   module: Module | null = null;
   lessonForm!: FormGroup;
   moduleContentId: number | null = null;
-  previous_order: number = 0;
+  @Input() previous_order: number = 0;
 
   filesToUpload: UploadFile[] = [];
   isSubmitting = false;
