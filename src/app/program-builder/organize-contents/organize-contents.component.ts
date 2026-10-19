@@ -196,8 +196,13 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
   }
 
   /** Drag-and-drop reorder within a module; recomputes order numbers and sequence like onOrderChange. */
+  /** Published courses can't be reordered (backend rejects it too). */
+  get isReorderLocked(): boolean {
+    return this.program?.status === 'ACTIVE';
+  }
+
   onContentDrop(moduleGroup: OrganizedModule, event: CdkDragDrop<OrganizedContent[]>): void {
-    if (event.previousIndex === event.currentIndex) return;
+    if (this.isReorderLocked || event.previousIndex === event.currentIndex) return;
     moveItemInArray(moduleGroup.contents, event.previousIndex, event.currentIndex);
     this.updateOrderAndPrevious();
   }

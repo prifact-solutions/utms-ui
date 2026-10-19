@@ -380,7 +380,8 @@ export class ManageCourseComponent
    */
   onModuleDrop(event: CdkDragDrop<Module[]>): void {
     const modules = this.program?.modules;
-    if (!modules || this.isReorderingModules || event.previousIndex === event.currentIndex) {
+    // Published courses can't be reordered (the drop list is also disabled in the template)
+    if (!modules || this.isCurriculumReadonly || this.isReorderingModules || event.previousIndex === event.currentIndex) {
       return;
     }
     const moved = modules[event.previousIndex];
