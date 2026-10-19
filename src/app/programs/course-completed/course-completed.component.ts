@@ -42,13 +42,17 @@ export class CourseCompletedComponent extends ComponentBase {
 
   goBack(): void {
     if (this.isPreview) {
-      this.backToPublish();
+      this.returnToBuilder();
     } else {
       this.goToCatalog();
     }
   }
 
-  backToPublish(): void {
-    PreviewSession.backToPublish(this.router, this.programId);
+  get returnLabel(): string {
+    return PreviewSession.returnLabel(this.programId);
+  }
+
+  returnToBuilder(): void {
+    PreviewSession.returnToBuilder(this.router, this.programId);
   }
 }

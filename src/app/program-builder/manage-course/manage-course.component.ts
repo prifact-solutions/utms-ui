@@ -6,7 +6,7 @@ import {
   Inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import {
@@ -18,6 +18,8 @@ import {
 import { ProgramsService } from 'src/app/programs/services/programs.service';
 import { ProgramFeaturedMediaComponent } from 'src/app/shared/program-featured-media/program-featured-media.component';
 import { switchMap } from 'rxjs';
+import { Utils } from 'src/app/common/utils';
+import { PreviewSession } from 'src/app/programs/preview-session';
 
 @Component({
   selector: 'app-manage-course',
@@ -51,6 +53,7 @@ export class ManageCourseComponent
   public moduleToDelete: Module | null = null;
   public contentToDelete: ModuleContent | null = null;
   public isPublishing: boolean = false;
+  public isPreviewing: boolean = false;
   public showDeleteToast: boolean = false;
   public contentItemsLoading: boolean = false;
   public splittingLessonId: number | null = null;
@@ -64,6 +67,7 @@ export class ManageCourseComponent
     private router: Router,
     private programService: ProgramsService,
     private renderer: Renderer2,
+    private location: Location,
     @Inject(DOCUMENT) private document: Document,
   ) {
     super();
@@ -518,6 +522,34 @@ export class ManageCourseComponent
       this.showUnpublishConfirm = false;
       this.loadProgram();
     });
+  }
+
+  /** Published courses: admins can preview any, instructors their own (backend enforces the same). */
+  get canPreviewPublished(): boolean {
+    return this.program?.status === 'ACTIVE' && Utils.canPreviewProgram(this.program.created_by);
+  }
+
+  /** Reset this user's enrollment and open the published course in the preview tab. */
+  previewCourse(): void {
+    if (!this.program || this.isPreviewing) return;
+    // Open synchronously in the click handler so popup blockers allow it
+    const tab = PreviewSession.openTab(this.programId);
+    this.isPreviewing = true;
+    const sub = this.programService.previewProgram(this.programId).subscribe({
+      next: () => {
+        this.isPreviewing = false;
+        if (!PreviewSession.showCourse(tab, this.router, this.location, this.programId, 'builder')) {
+          alert('Preview is ready, but the new tab was blocked. Please allow pop-ups for this site and try again.');
+        }
+      },
+      error: (err: any) => {
+        console.error('Error starting preview', err);
+        this.isPreviewing = false;
+        PreviewSession.discardTab(tab);
+        alert(err?.error?.error || 'Failed to start the preview');
+      },
+    });
+    this.registerSubscription(sub);
   }
 
   togglePublish(): void {

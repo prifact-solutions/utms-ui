@@ -322,7 +322,7 @@ export class ExamComponent extends ComponentBase {
   goToCatalog() {
     // Preview tabs opened from the publish page go back there
     if (PreviewSession.isActive(+this.program_id)) {
-      PreviewSession.backToPublish(this.router, +this.program_id);
+      PreviewSession.returnToBuilder(this.router, +this.program_id);
       return;
     }
     this.router.navigateByUrl(`/programs/${this.program_id}/details`);

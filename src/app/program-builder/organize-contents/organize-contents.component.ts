@@ -196,7 +196,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     if (this.isSaving) return;
     // Open the tab synchronously in the click handler so popup blockers allow it.
     // A named target reuses this course's preview tab instead of piling up new ones.
-    const previewTab = window.open('', this.previewTabName);
+    const previewTab = PreviewSession.openTab(this.programId);
     this.saveCourse('preview', previewTab);
   }
 
@@ -262,45 +262,12 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     });
   }
 
-  /** Close the preview tab only if we just opened it blank; never close a preview the user is using. */
   private discardPreviewTab(previewTab: Window | null): void {
-    try {
-      if (previewTab && !previewTab.closed && previewTab.location.href === 'about:blank') {
-        previewTab.close();
-      }
-    } catch {
-      // Not accessible: leave it open
-    }
-  }
-
-  private get previewTabName(): string {
-    return `course-preview-${this.programId}`;
+    PreviewSession.discardTab(previewTab);
   }
 
   private openPreview(previewTab: Window | null): void {
-    const path = this.location.prepareExternalUrl(
-      this.router.serializeUrl(this.router.createUrlTree(
-        ['/programs', this.programId, 'details'],
-        { queryParams: { [PreviewSession.QUERY_PARAM]: 1 } }
-      ))
-    );
-    // Absolute URL: don't rely on the blank tab inheriting this page's base URL
-    const url = new URL(path, window.location.href).href;
-    if (previewTab && !previewTab.closed) {
-      // A reused tab still holds the old preview's state; with hash routing a
-      // URL change alone won't reload it, so force a fresh load after the reset.
-      let reused = false;
-      try {
-        reused = previewTab.location.href !== 'about:blank';
-      } catch {
-        reused = true;
-      }
-      previewTab.location.href = url;
-      if (reused) {
-        previewTab.location.reload();
-      }
-      previewTab.focus();
-    } else if (!window.open(url, this.previewTabName)) {
+    if (!PreviewSession.showCourse(previewTab, this.router, this.location, this.programId, 'publish')) {
       this.errorMessage = 'Preview is ready, but the new tab was blocked. Please allow pop-ups for this site and try again.';
       return;
     }

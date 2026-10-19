@@ -251,8 +251,9 @@ export class DetailsComponent extends ComponentBase {
           this.hasAutoNavigatedToContent = false;
           this.isRedirectingToContent = false;
           this.programId = +params['program_id']; // Ensure it's a number
-          if (this.route.snapshot.queryParamMap.get(PreviewSession.QUERY_PARAM)) {
-            PreviewSession.mark(this.programId);
+          const previewSource = this.route.snapshot.queryParamMap.get(PreviewSession.QUERY_PARAM);
+          if (previewSource) {
+            PreviewSession.mark(this.programId, previewSource);
           }
           return this.programService.getProgramCatalog(params['program_id']);
         }),

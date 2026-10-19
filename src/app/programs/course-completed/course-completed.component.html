@@ -34,7 +34,7 @@
       <p>You have successfully completed the course<strong *ngIf="catalog"> - {{ catalog.title }}</strong></p>
       <div class="completion-actions" *ngIf="isPreview; else learnerActions">
         <button class="button" type="button" (click)="goToCatalog()">Back to course details</button>
-        <button class="button primary" type="button" (click)="backToPublish()">Back to Publish</button>
+        <button class="button primary" type="button" (click)="returnToBuilder()">{{ returnLabel }}</button>
       </div>
       <ng-template #learnerActions>
         <button class="button primary" type="button" (click)="goToCatalog()">Back to course details</button>

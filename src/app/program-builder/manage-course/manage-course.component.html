@@ -105,6 +105,15 @@
         Preview & Publish
       </button>
       <button
+        *ngIf="canPreviewPublished"
+        type="button"
+        (click)="previewCourse()"
+        class="button"
+        [disabled]="isPreviewing"
+      >
+        {{ isPreviewing ? "Preparing..." : "Preview" }}
+      </button>
+      <button
         *ngIf="program.status != 'DRAFT'"
         type="button"
         (click)="showUnpublishConfirm=true"

@@ -249,9 +249,10 @@ export class ProgramsService {
       { contents: contentUpdates },
     );
   }
+  /** Fresh preview enrollment. Drafts also save `contentUpdates`; published courses ignore it. */
   public previewProgram(
     program_id: number,
-    contentUpdates: ContentOrganizationUpdate[],
+    contentUpdates: ContentOrganizationUpdate[] = [],
   ) {
     return this.http.post(
       `${AppSettings.apiUrl}/programs/${program_id}/preview/`,
