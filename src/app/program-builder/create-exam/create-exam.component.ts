@@ -51,7 +51,7 @@ export class CreateExamComponent
   examForm!: FormGroup;
 
   moduleContentId: number | null = null;
-  previous_order: number = 1;
+  @Input() previous_order: number = 1;
 
   filesToUpload: UploadFile[] = [];
   isSubmitting = false;

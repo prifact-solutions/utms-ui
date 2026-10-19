@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
 import {
@@ -51,6 +52,7 @@ export class ManageCourseComponent
   public moduleToDelete: Module | null = null;
   public contentToDelete: ModuleContent | null = null;
   public isPublishing: boolean = false;
+  public isReorderingModules: boolean = false;
   public showDeleteToast: boolean = false;
   public contentItemsLoading: boolean = false;
   public splittingLessonId: number | null = null;
@@ -167,6 +169,16 @@ export class ManageCourseComponent
 
   getCategoryLabel(id: number): string | undefined {
     return this.categories.find((c) => c.id === id)?.name;
+  }
+
+  /**
+   * Course-wide order of the selected module's last content, so Add Lesson/Exam
+   * default to the end of this module. Empty module: 0 (the backend clamps the
+   * new item into the module's range).
+   */
+  get selectedModuleLastOrder(): number {
+    const contents = this.selectedModule?.module_contents || [];
+    return contents.reduce((max, c) => Math.max(max, c.order ?? 0), 0);
   }
 
   /** Published courses: structure changes are disabled in the UI (unpublish to edit). */
@@ -358,6 +370,43 @@ export class ManageCourseComponent
     this.showEditModuleModal = false;
     this.moduleToEdit = null;
     this.loadProgram();
+  }
+
+  /**
+   * Drag-and-drop module reorder. Reuses the module update endpoint, which inserts
+   * the module at `order` and shifts the following ones: dragging up takes the
+   * target's order (insert before it), dragging down takes target order + 1
+   * (insert after it). The list then reloads so the server order stays the truth.
+   */
+  onModuleDrop(event: CdkDragDrop<Module[]>): void {
+    const modules = this.program?.modules;
+    // Published courses can't be reordered (the drop list is also disabled in the template)
+    if (!modules || this.isCurriculumReadonly || this.isReorderingModules || event.previousIndex === event.currentIndex) {
+      return;
+    }
+    const moved = modules[event.previousIndex];
+    const target = modules[event.currentIndex];
+    if (target.order == null) {
+      return;
+    }
+    const newOrder = event.currentIndex < event.previousIndex ? target.order : target.order + 1;
+
+    moveItemInArray(modules, event.previousIndex, event.currentIndex); // optimistic
+    this.isReorderingModules = true;
+    const sub = this.programService
+      .updateModule(this.programId, moved.id, { title: moved.title, order: newOrder })
+      .subscribe({
+        next: () => {
+          this.isReorderingModules = false;
+          this.loadProgram();
+        },
+        error: (err: any) => {
+          console.error('Error reordering modules', err);
+          this.isReorderingModules = false;
+          this.loadProgram(); // revert to the saved order
+        },
+      });
+    this.registerSubscription(sub);
   }
 
   deleteModule(module: Module, event: Event): void {

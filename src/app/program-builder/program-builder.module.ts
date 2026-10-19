@@ -6,6 +6,7 @@ import { CreateProgramComponent } from './create-program/create-program.componen
 import { CreateModuleComponent } from './create-module/create-module.component';
 import { CreateLessonComponent } from './create-lesson/create-lesson.component';
 import { RouterModule } from '@angular/router';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ListModulesComponent } from './list-modules/list-modules.component';
 import { ListModuleContentComponent } from './list-module-content/list-module-content.component';
 import { EditProgramComponent } from './edit-program/edit-program.component';
@@ -48,7 +49,8 @@ import { ManageCourseComponent } from './manage-course/manage-course.component';
     FormsModule,
     QuestionPapersModule,
     SharedModule,
-    UtmsCommonModule
+    UtmsCommonModule,
+    DragDropModule
   ]
 })
 export class ProgramBuilderModule { }

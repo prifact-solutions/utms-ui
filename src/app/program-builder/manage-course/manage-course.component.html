@@ -188,14 +188,30 @@
           </svg>
         </button>
       </div>
-      <div class="curriculum-list">
+      <div
+        class="curriculum-list"
+        cdkDropList
+        cdkDropListLockAxis="y"
+        [cdkDropListDisabled]="isCurriculumReadonly || isReorderingModules"
+        (cdkDropListDropped)="onModuleDrop($event)"
+      >
         <div
           class="module-item"
           *ngFor="let module of program.modules"
+          cdkDrag
+          cdkDragPreviewContainer="parent"
           [class.active]="selectedModule?.id === module.id"
           (click)="selectModule(module)"
         >
           <div class="module-title-group">
+            <span
+              *ngIf="!isCurriculumReadonly"
+              class="module-handle"
+              cdkDragHandle
+              title="Drag to reorder"
+              (click)="$event.stopPropagation()"
+              >&#8801;</span
+            >
             <span class="module-title">{{ module.title }}</span>
           </div>
           <div class="module-links">
@@ -369,6 +385,7 @@
         [inModal]="true"
         [programId]="programId"
         [moduleId]="selectedModule.id"
+        [previous_order]="selectedModuleLastOrder"
         (saved)="onLessonAdded($event)"
         (closed)="closeAddLessonModal()"
       >
@@ -414,6 +431,7 @@
         [inModal]="true"
         [programId]="programId"
         [moduleId]="selectedModule.id"
+        [previous_order]="selectedModuleLastOrder"
         (saved)="onExamAdded()"
         (closed)="closeAddExamModal()"
       >

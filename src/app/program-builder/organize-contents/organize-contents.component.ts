@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
@@ -141,26 +142,41 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     });
   }
 
-  onOrderChange(content: OrganizedContent, newOrderStr: string): void {
-    const newOrder = parseInt(newOrderStr, 10);
-    if (isNaN(newOrder)) return;
+  onOrderChange(content: OrganizedContent, input: HTMLInputElement): void {
+    const newOrder = parseInt(input.value, 10);
+    // Always show the real order afterwards: [value] won't refresh the box when
+    // the order ends up unchanged (invalid, out-of-range or same-position input)
+    const resetInput = () => (input.value = String(content.order));
+    if (isNaN(newOrder) || this.isReorderLocked) {
+      resetInput();
+      return;
+    }
 
     // Find which module this content belongs to
     const moduleGroup = this.organizedModules.find(mg =>
       mg.contents.some(c => c.id === content.id)
     );
 
-    if (!moduleGroup) return;
+    if (!moduleGroup) {
+      resetInput();
+      return;
+    }
 
     // Remove the content from current position
     const moduleContents = moduleGroup.contents;
     const currentIndex = moduleContents.findIndex(c => c.id === content.id);
-    if (currentIndex === -1) return;
+    if (currentIndex === -1) {
+      resetInput();
+      return;
+    }
+
+    // Displayed orders are course-wide; convert to a position within this module
+    const moduleOffset = moduleContents[0].order - 1;
 
     const [item] = moduleContents.splice(currentIndex, 1);
 
     // Insert at new position (clamped between 1 and max contents)
-    const normalizedOrder = Math.max(1, Math.min(newOrder, moduleContents.length + 1));
+    const normalizedOrder = Math.max(1, Math.min(newOrder - moduleOffset, moduleContents.length + 1));
     moduleContents.splice(normalizedOrder - 1, 0, item);
 
     // Reassign continuous ordering 1...N
@@ -176,6 +192,19 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     this.selectedModuleGroup = this.organizedModules.find(mg =>
       mg.module.id === moduleGroup.module.id
     ) || null;
+    resetInput();
+  }
+
+  /** Published courses can't be reordered; unpublish first (same rule as the course builder). */
+  get isReorderLocked(): boolean {
+    return this.program?.status === 'ACTIVE';
+  }
+
+  /** Drag-and-drop reorder within a module; recomputes order numbers and sequence like onOrderChange. */
+  onContentDrop(moduleGroup: OrganizedModule, event: CdkDragDrop<OrganizedContent[]>): void {
+    if (this.isReorderLocked || event.previousIndex === event.currentIndex) return;
+    moveItemInArray(moduleGroup.contents, event.previousIndex, event.currentIndex);
+    this.updateOrderAndPrevious();
   }
 
   getContentTypeClass(content: OrganizedContent): string {

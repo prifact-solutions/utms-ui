@@ -63,13 +63,22 @@
               <!-- <span>({{ moduleGroup.contents.length }} {{ moduleGroup.contents.length === 1 ? "item" : "items" }})</span> -->
             </div>
 
-            <div class="content-list" *ngIf="moduleGroup.contents.length > 0; else noContent">
+            <div
+              class="content-list"
+              *ngIf="moduleGroup.contents.length > 0; else noContent"
+              cdkDropList
+              cdkDropListLockAxis="y"
+              [cdkDropListDisabled]="isSaving || isReorderLocked"
+              (cdkDropListDropped)="onContentDrop(moduleGroup, $event)"
+            >
               <div
                 class="content-item"
                 *ngFor="let content of moduleGroup.contents; trackBy: trackByContentId"
+                cdkDrag
+                cdkDragPreviewContainer="parent"
               >
                 <div class="content-item-left-section">
-                  <span class="drag-handle" aria-hidden="true">&#8801;</span>
+                  <span *ngIf="!isReorderLocked" class="drag-handle" cdkDragHandle title="Drag to reorder">&#8801;</span>
                   <div class="content-info">
                     <span class="content-title">{{ content.title }}</span>
                     <!-- <span class="content-meta">Order: {{ content.order }}</span> -->
@@ -81,7 +90,8 @@
                     <input
                       type="number"
                       [value]="content.order"
-                      (change)="onOrderChange(content, $any($event.target).value)"
+                      (change)="onOrderChange(content, $any($event.target))"
+                      [disabled]="isReorderLocked"
                       [min]="1"
                     />
                   </label>
