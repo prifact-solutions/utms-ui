@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { DOCUMENT, Location } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -147,7 +147,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     // Always show the real order afterwards: [value] won't refresh the box when
     // the order ends up unchanged (invalid, out-of-range or same-position input)
     const resetInput = () => (input.value = String(content.order));
-    if (isNaN(newOrder)) {
+    if (isNaN(newOrder) || this.isReorderLocked) {
       resetInput();
       return;
     }
@@ -195,12 +195,12 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     resetInput();
   }
 
-  /** Drag-and-drop reorder within a module; recomputes order numbers and sequence like onOrderChange. */
-  /** Published courses can't be reordered (backend rejects it too). */
+  /** Published courses can't be reordered; unpublish first (same rule as the course builder). */
   get isReorderLocked(): boolean {
     return this.program?.status === 'ACTIVE';
   }
 
+  /** Drag-and-drop reorder within a module; recomputes order numbers and sequence like onOrderChange. */
   onContentDrop(moduleGroup: OrganizedModule, event: CdkDragDrop<OrganizedContent[]>): void {
     if (this.isReorderLocked || event.previousIndex === event.currentIndex) return;
     moveItemInArray(moduleGroup.contents, event.previousIndex, event.currentIndex);
