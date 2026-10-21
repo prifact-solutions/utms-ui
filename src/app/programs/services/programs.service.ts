@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AppSettings } from 'src/app/common/appsettings';
 import {
   Category,
+  ContentOrganizationUpdate,
   Exam,
   Module,
   ModuleContent,
@@ -241,14 +242,20 @@ export class ProgramsService {
   }
   public updateContentOrganization(
     program_id: number,
-    contentUpdates: Array<{
-      content_id: number;
-      previous_content_id: number | null;
-      order: number;
-    }>,
+    contentUpdates: ContentOrganizationUpdate[],
   ) {
     return this.http.put(
       `${AppSettings.apiUrl}/programs/${program_id}/organize-contents/`,
+      { contents: contentUpdates },
+    );
+  }
+  /** Fresh preview enrollment. Drafts also save `contentUpdates`; published courses ignore it. */
+  public previewProgram(
+    program_id: number,
+    contentUpdates: ContentOrganizationUpdate[] = [],
+  ) {
+    return this.http.post(
+      `${AppSettings.apiUrl}/programs/${program_id}/preview/`,
       { contents: contentUpdates },
     );
   }

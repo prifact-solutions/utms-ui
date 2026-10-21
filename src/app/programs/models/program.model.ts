@@ -5,6 +5,12 @@ export interface ModuleContentWithFiles {
   content: ModuleContent;
   files: ModuleContentFile[];
 }
+export interface ContentOrganizationUpdate {
+  content_id: number;
+  previous_content_id: number | null;
+  order: number;
+}
+
 export interface ModuleContent {
   id: number;
   module_id: number;

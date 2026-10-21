@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { PreviewSession } from '../preview-session';
 import { ModuleContent, Program } from '../models/program.model';
 import { ProgramsService } from '../services/programs.service';
 
@@ -14,6 +15,8 @@ export class CourseCompletedComponent extends ComponentBase {
   catalog: Program | null = null;
   programId: number = 0;
   isLoading: boolean = true;
+  // Preview tabs opened from the publish page return there, not to the learner flow
+  isPreview: boolean = false;
 
   constructor(
     private programService: ProgramsService,
@@ -25,6 +28,7 @@ export class CourseCompletedComponent extends ComponentBase {
 
   ngOnInit(): void {
     this.programId = +this.route.snapshot.params['program_id'];
+    this.isPreview = PreviewSession.isActive(this.programId);
     const sub = this.programService.getProgramCatalog(this.programId).subscribe((catalog) => {
       this.catalog = catalog;
       this.isLoading = false;
@@ -34,5 +38,21 @@ export class CourseCompletedComponent extends ComponentBase {
 
   goToCatalog(): void {
     this.router.navigateByUrl(`/programs/${this.programId}/details`);
+  }
+
+  goBack(): void {
+    if (this.isPreview) {
+      this.returnToBuilder();
+    } else {
+      this.goToCatalog();
+    }
+  }
+
+  get returnLabel(): string {
+    return PreviewSession.returnLabel(this.programId);
+  }
+
+  returnToBuilder(): void {
+    PreviewSession.returnToBuilder(this.router, this.programId);
   }
 }

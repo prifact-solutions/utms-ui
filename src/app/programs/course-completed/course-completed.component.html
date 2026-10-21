@@ -11,7 +11,7 @@
 <div class="course-completed-page" *ngIf="!isLoading">
   <div class="learning-header">
     <div class="title-area">
-      <a (click)="goToCatalog()" class="back-link">
+      <a (click)="goBack()" class="back-link">
         <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" width="64px" height="64px" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
           <g>
             <path d="M48.6,23H15.4c-0.9,0-1.3-1.1-0.7-1.7l9.6-9.6c0.6-0.6,0.6-1.5,0-2.1l-2.2-2.2c-0.6-0.6-1.5-0.6-2.1,0 L2.5,25c-0.6,0.6-0.6,1.5,0,2.1L20,44.6c0.6,0.6,1.5,0.6,2.1,0l2.1-2.1c0.6-0.6,0.6-1.5,0-2.1l-9.6-9.6C14,30.1,14.4,29,15.3,29 h33.2c0.8,0,1.5-0.6,1.5-1.4v-3C50,23.8,49.4,23,48.6,23z"></path>
@@ -32,7 +32,13 @@
       <h4>Course Completed</h4>
       <h3>Well done!</h3>
       <p>You have successfully completed the course<strong *ngIf="catalog"> - {{ catalog.title }}</strong></p>
-      <button class="button primary" type="button" (click)="goToCatalog()">Back to course details</button>
+      <div class="completion-actions" *ngIf="isPreview; else learnerActions">
+        <button class="button" type="button" (click)="goToCatalog()">Back to course details</button>
+        <button class="button primary" type="button" (click)="returnToBuilder()">{{ returnLabel }}</button>
+      </div>
+      <ng-template #learnerActions>
+        <button class="button primary" type="button" (click)="goToCatalog()">Back to course details</button>
+      </ng-template>
     </div>
   </main>
 </div>

@@ -6,6 +6,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, startWith, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/utms-auth/services/auth.service';
 import { RecentProgramsService } from 'src/app/common/recent-programs.service';
+import { Utils } from 'src/app/common/utils';
+import { PreviewSession } from '../preview-session';
 
 @Component({
   selector: 'app-details',
@@ -22,6 +24,7 @@ export class DetailsComponent extends ComponentBase {
   public isAuthenticated: boolean = false;
   public isLoading: boolean = true;
   public isEnrolled: boolean = false;
+  public canOpenAnyContent: boolean = false;
   public programId!: number;
   public showEnrollModal: boolean = false;
   public isSubmitting: boolean = false;
@@ -168,6 +171,10 @@ export class DetailsComponent extends ComponentBase {
     if (this.isFirstCourseContent(lesson)) {
       return 'IN_PROGRESS';
     }
+    // Staff previewing a program they manage can open contents in any order
+    if (this.isEnrolled && this.canOpenAnyContent) {
+      return 'NOT_STARTED';
+    }
     return 'LOCKED';
   }
 
@@ -237,16 +244,22 @@ export class DetailsComponent extends ComponentBase {
         switchMap((params) => {
           this.isLoading = true;
           this.catalog = null;
+          this.canOpenAnyContent = false;
           this.isEnrolled = false; // Reset enrollment state
           this.progress = {};
           this.progressLoaded = false;
           this.hasAutoNavigatedToContent = false;
           this.isRedirectingToContent = false;
           this.programId = +params['program_id']; // Ensure it's a number
+          const previewSource = this.route.snapshot.queryParamMap.get(PreviewSession.QUERY_PARAM);
+          if (previewSource) {
+            PreviewSession.mark(this.programId, previewSource);
+          }
           return this.programService.getProgramCatalog(params['program_id']);
         }),
         switchMap((res) => {
           this.catalog = res;
+          this.canOpenAnyContent = !!res && Utils.canPreviewProgram(res.created_by);
           // Record access for the dashboard's recently accessed section
           if (res) {
             this.recentProgramsService.recordAccess(

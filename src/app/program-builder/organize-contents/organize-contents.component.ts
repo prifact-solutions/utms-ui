@@ -1,10 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ComponentBase } from 'src/app/common/componentbase';
-import { Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
+import { ContentOrganizationUpdate, Module, ModuleContent, Program } from 'src/app/programs/models/program.model';
 import { ProgramsService } from 'src/app/programs/services/programs.service';
+import { PreviewSession } from 'src/app/programs/preview-session';
+
+type SaveMode = 'preview' | 'publish';
 
 interface OrganizedContent extends ModuleContent {
   module_title?: string;
@@ -27,6 +30,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
   selectedModuleGroup: OrganizedModule | null = null;
   isLoading = false;
   isSaving = false;
+  savingAction: SaveMode | null = null;
   programId: number = 0;
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -36,6 +40,7 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     public router: Router,
     private programsService: ProgramsService,
     private renderer: Renderer2,
+    private location: Location,
     @Inject(DOCUMENT) private document: Document
   ) {
     super();
@@ -187,46 +192,86 @@ export class OrganizeContentsComponent extends ComponentBase implements OnInit, 
     content.previous_content_id = previousId || null;
   }
 
-  saveAllChanges(): void {
-    if (!this.program) return;
+  onPreview(): void {
+    if (this.isSaving) return;
+    // Open the tab synchronously in the click handler so popup blockers allow it.
+    // A named target reuses this course's preview tab instead of piling up new ones.
+    const previewTab = PreviewSession.openTab(this.programId);
+    this.saveCourse('preview', previewTab);
+  }
 
-    this.isSaving = true;
+  onPublish(): void {
+    if (this.isSaving) return;
+    this.saveCourse('publish');
+  }
+
+  /** Shared save for preview and publish: validates, saves ordering, then runs the mode-specific step. */
+  private saveCourse(mode: SaveMode, previewTab: Window | null = null): void {
+    if (!this.program) {
+      this.discardPreviewTab(previewTab);
+      return;
+    }
+
     this.errorMessage = null;
     this.successMessage = null;
 
     if (this.organizedModules.some((module) => module.contents.length == 0)) {
       this.errorMessage =
         'This course contains modules without any content. Please remove them to proceed.';
-      this.isSaving = false;
+      this.discardPreviewTab(previewTab);
       return;
     }
 
-    // Collect all contents from all modules
-    const allContents = this.organizedModules.flatMap(mg => mg.contents);
+    const contentUpdates: ContentOrganizationUpdate[] = this.organizedModules
+      .flatMap(mg => mg.contents)
+      .map(content => ({
+        content_id: content.id,
+        previous_content_id: content.previous_content_id || null,
+        order: content.order
+      }));
 
-    // Prepare content updates array
-    const contentUpdates = allContents.map(content => ({
-      content_id: content.id,
-      previous_content_id: content.previous_content_id == 0 ? null : content.previous_content_id,
-      order: content.order
-    }));
+    const request$ = mode === 'preview'
+      ? this.programsService.previewProgram(this.program.id, contentUpdates)
+      : this.programsService.updateContentOrganization(this.program.id, contentUpdates);
 
-    // Make single API call
-    this.programsService.updateContentOrganization(this.program.id, contentUpdates).subscribe({
+    this.isSaving = true;
+    this.savingAction = mode;
+
+    request$.subscribe({
       next: () => {
-        this.successMessage = 'Content organization saved successfully!';
-        this.isSaving = false;
+        this.savingAction = null;
+        if (mode === 'preview') {
+          this.isSaving = false;
+          this.openPreview(previewTab);
+          return;
+        }
+        // Keep buttons disabled until we leave: the course is now published
+        this.successMessage = 'Course published successfully!';
         setTimeout(() => {
           this.router.navigate(['/programs-builder', this.programId, 'manage']);
         }, 1500);
       },
       error: (err) => {
-        console.error('Error saving changes:', err);
-        // this.errorMessage = 'Failed to save changes. Please try again.';
-        this.errorMessage = 'Failed to save changes. ' + err.error.error + '.';
+        console.error(`Error saving course (${mode}):`, err);
+        this.discardPreviewTab(previewTab);
+        const reason = err?.error?.error;
+        this.errorMessage = `Failed to ${mode} the course.` + (reason ? ` ${reason}.` : ' Please try again.');
         this.isSaving = false;
+        this.savingAction = null;
       }
     });
+  }
+
+  private discardPreviewTab(previewTab: Window | null): void {
+    PreviewSession.discardTab(previewTab);
+  }
+
+  private openPreview(previewTab: Window | null): void {
+    if (!PreviewSession.showCourse(previewTab, this.router, this.location, this.programId, 'publish')) {
+      this.errorMessage = 'Preview is ready, but the new tab was blocked. Please allow pop-ups for this site and try again.';
+      return;
+    }
+    this.successMessage = 'Course saved. Preview opened in a new tab.';
   }
 
   getPreviousContentTitle(content: OrganizedContent): string {
