@@ -57,6 +57,8 @@ export interface Program {
   preview_video: string | null;
   short_description?: string;
   modules?: Module[];
+  module_count?: number;
+  lesson_count?: number;
   is_enrolled?: boolean;
   allow_enrollment: boolean;
 }

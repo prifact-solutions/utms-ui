@@ -21,3 +21,6 @@ export enum QuestionPaperStatus {
   ACTIVE = 'ACTIVE',
   ARCHIVED = 'ARCHIVED'
 }
+export function suggestedQualifyingScore(totalScore: number): number {
+  return Math.ceil((totalScore || 0) * 0.8);
+}

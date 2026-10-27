@@ -157,9 +157,18 @@
                 <div class="card-content">
                     <h3>{{ program.title }}</h3>
                     <div class="card-meta-inline">
-                        <span>{{ program.duration | durationHours }}</span>
-                        <!-- <span class="dot">•</span>
-                        <span>{{ program.modules?.length || 0 }} modules</span> -->
+                        <span class="meta-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {{ program.duration | durationHours }}
+                        </span>
+                        <span class="meta-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {{ program.module_count || 0 }} {{ program.module_count === 1 ? 'module' : 'modules' }}
+                        </span>
+                        <span class="meta-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5A2.5 2.5 0 0 1 4 20.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                            {{ program.lesson_count || 0 }} {{ program.lesson_count === 1 ? 'lesson' : 'lessons' }}
+                        </span>
                     </div>
                     <p>{{ program.description | slice:0:100 }}...</p>
 

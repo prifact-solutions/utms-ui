@@ -22,6 +22,7 @@ import { ComponentBase } from 'src/app/common/componentbase';
 import {
   QuestionPaper,
   QuestionPaperStatus,
+  suggestedQualifyingScore,
 } from '../question-papers/models/question-paper';
 import { QuestionPapersService } from '../question-papers/services/question-papers.service';
 
@@ -58,7 +59,6 @@ export class CreateExamComponent
   successMessage = '';
   errorMessage = '';
   questionPapers: QuestionPaper[] = [];
-  autoPopulateMarks = true;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -86,7 +86,6 @@ export class CreateExamComponent
         this.examForm = this.fb.group({
           title: ['', [Validators.required, Validators.minLength(3)]],
           context_text: [''],
-          total_score: [null, [Validators.required, Validators.min(1)]],
           min_score: [null, [Validators.required, Validators.min(1)]],
           duration: [null, [Validators.required, Validators.min(1)]],
           question_paper: ['', Validators.required],
@@ -114,18 +113,10 @@ export class CreateExamComponent
       this.errorMessage = 'Please fill in all required fields';
     }
 
-    if (
-      this.examForm.get('total_score')?.value <
-      this.examForm.get('min_score')?.value
-    ) {
-      this.errorMessage =
-        'Total score must be greater than the Qualifying score';
-    }
-
-    const selectedQPId = this.examForm.get('question_paper')?.value;
-    const selectedQP = this.questionPapers.find((qp) => qp.id == selectedQPId);
-    if (selectedQP?.total_score != this.examForm.get('total_score')?.value) {
-      this.errorMessage = `Total score of the exam (${this.examForm.get('total_score')?.value ?? 0}) does not match the selected question paper score (${selectedQP?.total_score ?? 0})`;
+    // The exam's total score always comes from the selected question paper
+    const totalScore = this.selectedQuestionPaper?.total_score ?? 0;
+    if (totalScore < this.examForm.get('min_score')?.value) {
+      this.errorMessage = `Qualifying score cannot be more than the question paper's max score (${totalScore})`;
     }
 
     if (this.errorMessage) {
@@ -145,7 +136,7 @@ export class CreateExamComponent
 
     const examPayload: Partial<Exam> = {
       name: this.examForm.get('title')?.value,
-      total_score: this.examForm.get('total_score')?.value,
+      total_score: totalScore,
       minimum_score: this.examForm.get('min_score')?.value,
       duration_hours: this.examForm.get('duration')?.value,
       question_paper: this.examForm.get('question_paper')?.value,
@@ -178,17 +169,19 @@ export class CreateExamComponent
     this.destroy$.complete();
   }
 
-  onQuestionPaperSelected(event: Event) {
-    const selectedId = (event.target as HTMLSelectElement).value;
-    const selectedQP = this.questionPapers.find(
-      (qp) => qp.id == Number(selectedId),
-    );
+  get selectedQuestionPaper(): QuestionPaper | undefined {
+    const selectedId = this.examForm?.get('question_paper')?.value;
+    return this.questionPapers.find((qp) => qp.id == selectedId);
+  }
+
+  onQuestionPaperSelected() {
+    const selectedQP = this.selectedQuestionPaper;
     if (!selectedQP) {
       return;
     }
-
-    if (this.autoPopulateMarks) {
-      this.examForm.get('total_score')?.setValue(selectedQP.total_score);
-    }
+    // Suggest 80% of the paper's score; the user can still change it
+    this.examForm
+      .get('min_score')
+      ?.setValue(suggestedQualifyingScore(selectedQP.total_score));
   }
 }

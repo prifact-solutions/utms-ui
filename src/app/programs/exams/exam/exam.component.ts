@@ -25,6 +25,7 @@ import {
 } from 'src/app/shared/services/exam-backend.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { Utils } from 'src/app/common/utils';
 
 @Component({
   selector: 'app-exam',
@@ -56,14 +57,16 @@ export class ExamComponent extends ComponentBase {
   showSaveConfirm: boolean = false;
   emittedEvent: QuestionPaperAttemptContext | undefined;
   wasNextButtonDisabledInitially: boolean = false;
+  // Staff previewing a program they manage can move on without passing the exam
+  canOpenAnyContent: boolean = false;
   private dateSubject = new Subject<string>();
 
   get canGoToNextContent(): boolean {
-    return this.hasPassedExam && (!!this.next_module_content || this.isLastContent);
+    return (this.hasPassedExam || this.canOpenAnyContent) && (!!this.next_module_content || this.isLastContent);
   }
 
   get shouldShowNextContentTooltip(): boolean {
-    return !this.hasPassedExam && (!!this.next_module_content || this.isLastContent);
+    return !this.hasPassedExam && !this.canOpenAnyContent && (!!this.next_module_content || this.isLastContent);
   }
 
   get nextContentTooltip(): string | null {
@@ -170,6 +173,7 @@ export class ExamComponent extends ComponentBase {
           this.examContent = examDetails.content;
           this.exam = examDetails.exam;
           this.timeDiff = examDetails.exam.duration_hours * 60 * 60 * 1000;
+          this.canOpenAnyContent = !!catalog && Utils.canPreviewProgram(catalog.created_by);
           if (catalog && catalog.modules) {
             const contents = catalog.modules.flatMap(
               (m) => m.module_contents || [],

@@ -70,13 +70,13 @@
               examForm.get('question_paper')?.invalid &&
               examForm.get('question_paper')?.touched
             "
-            (change)="onQuestionPaperSelected($event)"
+            (change)="onQuestionPaperSelected()"
           >
             <option value="" disabled selected>
               -- Select a Question Paper --
             </option>
             <option *ngFor="let paper of questionPapers" [value]="paper.id">
-              {{ paper.name }}
+              {{ paper.name }} (Max score: {{ paper.total_score }})
             </option>
           </select>
 
@@ -90,30 +90,7 @@
             <span>Please select a question paper</span>
           </div>
         </div>
-        <div class="form-group-split-wrapper">
-          <div class="form-group">
-            <label for="total_score"
-              >Total score<span class="required-indicator">*</span></label
-            >
-            <input
-              id="total_score"
-              type="number"
-              formControlName="total_score"
-              min="1"
-              (input)="autoPopulateMarks = !$any($event.target).value"
-            />
-            <div
-              class="invalid-feedback"
-              *ngIf="
-                examForm.get('total_score')?.invalid &&
-                examForm.get('total_score')?.touched
-              "
-            >
-              <span *ngIf="examForm.get('total_score')?.getError('required')"
-                >Total score is required</span
-              >
-            </div>
-          </div>
+        <div class="form-group-split-wrapper three-col">
 
           <div class="form-group">
             <label for="min_score"
