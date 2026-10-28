@@ -51,6 +51,7 @@
           </g>
         </svg></a>
       <h3>{{ lesson.title }}</h3>
+      <app-preview-badge *ngIf="canOpenAnyContent"></app-preview-badge>
     </div>
     <div class="nav-actions">
       <span class="nav-tooltip" *ngIf="previous_module_content" [class.has-tooltip]="isPreviousContentLocked()"

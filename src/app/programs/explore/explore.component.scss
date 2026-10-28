@@ -291,6 +291,28 @@
             align-items: center;
         }
     }
+
+    .card-meta-inline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 14px;
+      margin: 6px 0 2px;
+      font-size: 0.8rem;
+      color: #555;
+
+      .meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+
+        svg {
+          flex-shrink: 0;
+          color: #999;
+        }
+      }
+    }
 }
 
 

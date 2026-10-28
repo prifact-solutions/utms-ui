@@ -62,8 +62,13 @@
         width: calc(50% - 10px);
     }
 
+    &.three-col .form-group {
+        width: calc((100% - 40px) / 3);
+    }
+
     @media (max-width: 500px) {
-        .form-group {
+        .form-group,
+        &.three-col .form-group {
             width: 100%;
         }
     }

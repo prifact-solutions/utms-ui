@@ -316,15 +316,23 @@
 .admin-card {
   .card-meta-inline {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: 6px 14px;
+    margin: 6px 0 2px;
     font-size: 0.8rem;
-    color: #6a6f73;
+    color: #555;
 
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
 
-    .dot {
-      color: #d1d7dc;
-      font-size: 1rem;
+      svg {
+        flex-shrink: 0;
+        color: #999;
+      }
     }
   }
 

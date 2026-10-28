@@ -224,8 +224,17 @@ export class DetailsComponent extends ComponentBase {
     return this.route.firstChild?.snapshot.routeConfig?.path === 'completed';
   }
 
+  /** Staff previewing a program they manage skip the learner progression rules. */
+  public get isPreviewMode(): boolean {
+    return this.isEnrolled && this.canOpenAnyContent;
+  }
+
+  public get canOpenCourseCompleted(): boolean {
+    return this.courseCompletionStatus === 'COMPLETED' || this.isPreviewMode;
+  }
+
   public navigateToCourseCompleted(): void {
-    if (this.courseCompletionStatus !== 'COMPLETED') {
+    if (!this.canOpenCourseCompleted) {
       return;
     }
 

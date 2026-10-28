@@ -16,6 +16,8 @@ import { ExamResultComponent } from './exams/exam-result/exam-result.component';
 import { CourseCompletedComponent } from './course-completed/course-completed.component';
 import { UtmsCommonModule } from '../common/common.module';
 
+import { PreviewBadgeComponent } from './preview-badge/preview-badge.component';
+
 @NgModule({
   declarations: [
     ExploreComponent,
@@ -26,6 +28,7 @@ import { UtmsCommonModule } from '../common/common.module';
     ExamComponent,
     ExamResultComponent,
     CourseCompletedComponent,
+    PreviewBadgeComponent,
   ],
   imports: [CommonModule, FormsModule, FileViewerModule, RouterModule, SharedModule, UtmsCommonModule],
   providers: [

@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from 'src/app/common/componentbase';
+import { Utils } from 'src/app/common/utils';
 import { PreviewSession } from '../preview-session';
 import { ModuleContent, Program } from '../models/program.model';
 import { ProgramsService } from '../services/programs.service';
@@ -17,6 +18,8 @@ export class CourseCompletedComponent extends ComponentBase {
   isLoading: boolean = true;
   // Preview tabs opened from the publish page return there, not to the learner flow
   isPreview: boolean = false;
+  // Staff previewing a program they manage
+  canOpenAnyContent: boolean = false;
 
   constructor(
     private programService: ProgramsService,
@@ -31,6 +34,7 @@ export class CourseCompletedComponent extends ComponentBase {
     this.isPreview = PreviewSession.isActive(this.programId);
     const sub = this.programService.getProgramCatalog(this.programId).subscribe((catalog) => {
       this.catalog = catalog;
+      this.canOpenAnyContent = !!catalog && Utils.canPreviewProgram(catalog.created_by);
       this.isLoading = false;
     });
     this.registerSubscription(sub);
