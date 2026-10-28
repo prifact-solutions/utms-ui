@@ -76,7 +76,7 @@ export class TakeExamComponent extends ComponentBase {
                 switchMap((examDetails) => {
                   this.exam = examDetails.exam;
                   this.timeDiff =
-                    examDetails.exam.duration_hours * 60 * 60 * 1000;
+                    examDetails.exam.duration * 60 * 1000;
                   return this.examService
                     .getExamAttempt(this.program_id, examDetails.exam.id)
                     .pipe(

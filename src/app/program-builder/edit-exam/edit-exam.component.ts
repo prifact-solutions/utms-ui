@@ -119,7 +119,7 @@ export class EditExamComponent
             [Validators.required, Validators.min(1)],
           ],
           duration: [
-            this.examContent.exam.duration_hours,
+            this.examContent.exam.duration,
             [Validators.required, Validators.min(1)],
           ],
           question_paper: [
@@ -167,7 +167,7 @@ export class EditExamComponent
       title: this.examForm.get('title')?.value,
       content_type: this.examForm.get('content_type')?.value,
       context_text: this.examForm.get('context_text')?.value,
-      duration: this.examForm.get('duration')?.value * 60,
+      duration: this.examForm.get('duration')?.value,
       order: this.examForm.get('order')?.value,
     };
 
@@ -175,7 +175,7 @@ export class EditExamComponent
       name: this.examForm.get('title')?.value,
       total_score: totalScore,
       minimum_score: this.examForm.get('min_score')?.value,
-      duration_hours: this.examForm.get('duration')?.value,
+      duration: this.examForm.get('duration')?.value,
       question_paper: this.examForm.get('question_paper')?.value,
     };
 
