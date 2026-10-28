@@ -74,7 +74,7 @@ export interface Exam {
   question_paper: number;
   total_score: number;
   minimum_score: number;
-  duration_hours: number;
+  duration: number; // minutes
   created_at: string;
 }
 

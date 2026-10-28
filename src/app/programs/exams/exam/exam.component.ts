@@ -142,7 +142,7 @@ export class ExamComponent extends ComponentBase {
             //     this.examContent = examDetails.content;
             //     this.exam = examDetails.exam;
             //     this.timeDiff =
-            //       examDetails.exam.duration_hours * 60 * 60 * 1000;
+            //       examDetails.exam.duration * 60 * 1000;
             //     return this.examService
             //       .getExamAttempt(this.program_id, examDetails.exam.id)
             //       .pipe(
@@ -172,7 +172,7 @@ export class ExamComponent extends ComponentBase {
         switchMap(([examDetails, catalog]) => {
           this.examContent = examDetails.content;
           this.exam = examDetails.exam;
-          this.timeDiff = examDetails.exam.duration_hours * 60 * 60 * 1000;
+          this.timeDiff = examDetails.exam.duration * 60 * 1000;
           this.canOpenAnyContent = !!catalog && Utils.canPreviewProgram(catalog.created_by);
           if (catalog && catalog.modules) {
             const contents = catalog.modules.flatMap(
