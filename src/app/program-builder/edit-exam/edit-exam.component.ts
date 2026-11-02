@@ -105,8 +105,11 @@ export class EditExamComponent
     this.qpService
       .getAllQuestionPapersForProgram(this.programId)
       .subscribe((questionPapers) => {
+        // Keep the exam's own paper even while it's a draft being edited
         this.questionPapers = questionPapers.filter(
-          (qp) => qp.status == QuestionPaperStatus.ACTIVE,
+          (qp) =>
+            qp.status == QuestionPaperStatus.ACTIVE ||
+            qp.id == this.examContent.exam.question_paper,
         );
         this.examForm = this.fb.group({
           title: [
@@ -154,6 +157,10 @@ export class EditExamComponent
     const totalScore = this.selectedQuestionPaper?.total_score ?? 0;
     if (totalScore < this.examForm.get('min_score')?.value) {
       this.errorMessage = `Qualifying score cannot be more than the question paper's max score (${totalScore})`;
+    }
+
+    if (this.selectedQuestionPaper?.status == QuestionPaperStatus.DRAFT) {
+      this.errorMessage = `Question paper "${this.selectedQuestionPaper.name}" is in draft. Mark it as active before saving this exam`;
     }
 
     if (this.errorMessage) {
