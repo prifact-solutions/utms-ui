@@ -118,8 +118,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
           this.totalQuestions = this.qpContext.totalQuestions;
           this.maxScore = this.qpContext.maxScore;
         });
-      this.sub = timer(0, 1000).subscribe((res) => {
-        this.timeleft = this.timeDiff - res * 1000;
+      // Measured against the clock because timer ticks stop while the device sleeps
+      const deadline = Date.now() + this.timeDiff;
+      this.sub = timer(0, 1000).subscribe(() => {
+        this.timeleft = deadline - Date.now();
 
         let hours = Math.floor(
           (this.timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
@@ -244,8 +246,10 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
       }
       this.showSaveConfirm = true;
     } else {
-      this.formSvc.saveAnswersOfPage(this.currentPage).subscribe((_) => {
-        this.save.emit(true);
+      // Submit even if this save is refused: the server grades what it already has
+      this.formSvc.saveAnswersOfPage(this.currentPage).subscribe({
+        next: (_) => this.save.emit(true),
+        error: (_) => this.save.emit(true),
       });
     }
   }
@@ -274,8 +278,14 @@ export class FormAttemptComponent implements OnInit, OnDestroy {
     this.formBackEndService
       .saveAnswers(this.attemptId.toString(), this.qpContext.answers)
       .pipe(finalize(() => (this.isSubmittingExam = false)))
-      .subscribe((_) => {
-        this.save.emit(true);
+      .subscribe({
+        next: (_) => this.save.emit(true),
+        error: (err) => {
+          // 409: the attempt is already closed, so go on to its result
+          if (err?.status === 409) {
+            this.save.emit(true);
+          }
+        },
       });
   }
 

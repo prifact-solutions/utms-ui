@@ -188,6 +188,8 @@ export class ExamAttempt {
   public total_score?: number;
   public result?: ExamResultStatus;
   public status!: ExamAttemptStatus;
+  public remaining_seconds?: number | null;
+  public timed_out?: boolean;
 }
 
 export class ExamAnswer {
