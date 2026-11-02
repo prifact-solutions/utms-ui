@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, Input, Renderer2 } from '@angular/core';
 import { ComponentBase } from 'src/app/common/componentbase';
 import { QuestionPapersService } from '../../services/question-papers.service';
 import { combineLatest, switchMap } from 'rxjs';
@@ -26,6 +26,8 @@ export class QuestionPapersListComponent extends ComponentBase {
     super();
   }
 
+  /** Papers used by exams can only change while the course is in draft. */
+  @Input() courseIsDraft: boolean = false;
   loading: boolean = true;
   questionPapers: QuestionPaper[] = [];
   selectedQP: QuestionPaper | null = null;
@@ -69,10 +71,19 @@ export class QuestionPapersListComponent extends ComponentBase {
     this.registerSubscription(sub);
   }
 
+  // Course can be unpublished while this tab is open
+  ngOnChanges() {
+    this.questionPapers.forEach((qp) => this.loadOptionForQP(qp));
+  }
+
   loadOptionForQP(qp: QuestionPaper) {
-    if (qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
+    if (qp.is_linked && !this.courseIsDraft) {
       qp.actions = ['View', 'Clone'];
-    } else if (!qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
+    } else if (qp.is_linked && qp.status == QuestionPaperStatus.ACTIVE) {
+      qp.actions = ['View', 'Mark as Draft', 'Clone'];
+    } else if (qp.is_linked && qp.status == QuestionPaperStatus.DRAFT) {
+      qp.actions = ['Design question paper', 'Mark as Active', 'Clone'];
+    } else if (qp.status == QuestionPaperStatus.ACTIVE) {
       qp.actions = ['View', 'Mark as Draft', 'Clone', 'Rename', 'Delete'];
     } else if (qp.status == QuestionPaperStatus.DRAFT) {
       qp.actions = [
