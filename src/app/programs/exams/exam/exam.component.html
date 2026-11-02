@@ -68,5 +68,8 @@
       </span>
     </div>
   </div>
-<router-outlet></router-outlet>
+  <!-- The child page has its own loader, so keep it hidden while this one shows -->
+  <div [style.display]="loading ? 'none' : 'contents'">
+    <router-outlet></router-outlet>
+  </div>
 </div>

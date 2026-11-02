@@ -75,8 +75,6 @@ export class TakeExamComponent extends ComponentBase {
               .pipe(
                 switchMap((examDetails) => {
                   this.exam = examDetails.exam;
-                  this.timeDiff =
-                    examDetails.exam.duration * 60 * 1000;
                   return this.examService
                     .getExamAttempt(this.program_id, examDetails.exam.id)
                     .pipe(
@@ -100,6 +98,8 @@ export class TakeExamComponent extends ComponentBase {
       )
       .subscribe(([attempt]) => {
         this.attemptId = attempt.id;
+        // The server owns the deadline, so a reload continues the clock instead of restarting it
+        this.timeDiff = (attempt.remaining_seconds ?? 0) * 1000;
         this.loading = false;
       });
     this.registerSubscription(sub);
