@@ -203,6 +203,8 @@
     font-size: 1.4rem;
     line-height: 1;
     cursor: grab;
+    user-select: none;
+    touch-action: none;
   }
 
   .content-info {
@@ -333,4 +335,23 @@
       justify-content: space-between;
       padding-left: 21px;
   }
+}
+
+// Drag-and-drop reorder (Angular CDK)
+.content-item.cdk-drag-preview {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.content-item.cdk-drag-placeholder {
+  opacity: 0.4;
+}
+
+.content-item.cdk-drag-animating,
+.content-list.cdk-drop-list-dragging .content-item:not(.cdk-drag-placeholder) {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .drag-handle,
+.drag-handle:active {
+  cursor: grabbing;
 }
